@@ -1,0 +1,2 @@
+default_provider_name=team.opentech.usher.rpc.cluster.provider.impl.ProviderDefaultCluster
+default_consumer_name=team.opentech.usher.rpc.cluster.consumer.impl.ConsumerDefaultCluster

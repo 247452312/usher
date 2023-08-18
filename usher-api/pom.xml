@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>team.opentech.usher</groupId>
+        <artifactId>usher</artifactId>
+        <version>2.0.0.0.usher-SNAPSHOT</version>
+    </parent>
+    <artifactId>usher-api</artifactId>
+    <version>2.0.0.0.usher-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>usher-api-provider-user</module>
+        <module>usher-api-provider-log</module>
+        <module>usher-api-provider-software</module>
+        <module>usher-api-provider-distribute</module>
+        <module>usher-api-provider-push</module>
+        <module>usher-api-provider-mongo</module>
+        <module>usher-api-provider-algorithm</module>
+        <module>usher-api-provider-work-orders</module>
+        <module>usher-api-provider-gateway</module>
+        <module>usher-api-provider-gateway-sdk</module>
+    </modules>
+
+
+</project>

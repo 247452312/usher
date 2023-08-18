@@ -1,0 +1,2 @@
+org.springframework.context.ApplicationContextInitializer=team.opentech.usher.util.SpringUtil
+org.springframework.context.ApplicationListener=team.opentech.usher.util.SpringUtil

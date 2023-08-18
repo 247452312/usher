@@ -1,0 +1,32 @@
+server:
+  port: 8003
+rpc:
+  provider:
+    port: 20803
+  application:
+    name: provider-log
+
+log-out:
+  dir-name: log
+
+#访问警告数量 如果总数超出12次,则不进行对比
+black-list:
+  size: 12
+  # 用户访问请求的平均间隔方差最小值 请求时间的单位为ms
+  spider:
+    frequency: 10
+
+spring:
+  datasource:
+    url: jdbc:mysql://prod:3306/usher_log?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+    username: root
+    password: 123456
+
+id:
+  organization:
+    # 机构代码
+    code: 4
+
+#mybatis-plus:
+#  configuration:
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

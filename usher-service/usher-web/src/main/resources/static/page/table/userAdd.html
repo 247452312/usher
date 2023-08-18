@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta content="webkit" name="renderer">
+    <!--设置1个小时的缓存-->
+    <meta content="max-age=3200" http-equiv="Cache-Control"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport">
+    <link href="../../lib/layui-v2.5.5/css/layui.css" media="all" rel="stylesheet">
+    <link href="../../css/public.css" media="all" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        .layui-transfer-box {
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form layuimini-form">
+    <!--  父id    -->
+    <input name="id" style="display:none;" type="text" value="">
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">角色昵称</label>
+        <div class="layui-input-block">
+            <input class="layui-input" lay-verify="required" name="nickName" placeholder="请输入角色昵称" type="text"
+                   value="">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">角色用户名</label>
+        <div class="layui-input-block">
+            <input class="layui-input" lay-verify="required" name="userName" placeholder="请输入角色用户名" type="text"
+                   value="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">邮箱</label>
+        <div class="layui-input-block">
+            <input class="layui-input" lay-verify="required" name="mail" placeholder="请输入邮箱" type="text"
+                   value="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">手机</label>
+        <div class="layui-input-block">
+            <input class="layui-input" lay-verify="required" name="phone" placeholder="请输入手机" type="text"
+                   value="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">头像</label>
+        <div class="layui-input-block">
+            <input class="layui-input" lay-verify="required" type="file"
+                   value="">
+            <img alt="" id="headPortraitImg" src="" style="display: none;height: 50px;width: 100px;">
+            <input id="headPortrait" name="headPortrait" style="display: none" type="text"/>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label required">密码</label>
+        <div class="layui-input-block">
+            <input class="layui-input" lay-verify="required" name="password" placeholder="请输入密码" type="password"
+                   value="">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label required">角色Id</label>
+        <div class="layui-input-block">
+            <select lay-filter="aihao" name="roleId"></select>
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn layui-btn-normal" lay-filter="saveBtn" lay-submit>确认保存</button>
+        </div>
+    </div>
+</div>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/usher.js"></script>
+<script charset="utf-8" src="../../lib/layui-v2.5.5/layui.js"></script>
+<script>
+    layui.use(['form'], function () {
+        var form = layui.form,
+            layer = layui.layer,
+            $ = layui.$;
+
+        $.getUrlParam = function (name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);
+            if (r != null) return unescape(r[2]);
+            return null;
+        };
+        let id = $.getUrlParam('id');
+        let func = $.getUrlParam('func');
+        bandUpFile($('[type="file"]'), function (name, base) {
+            /* 1.取消img 的隐藏 */
+            $('#headPortraitImg').css("display", "block");
+
+            /* 2.添加img的src */
+            $('#headPortraitImg').attr("src", base);
+
+            /* 3.添加input的name */
+            $('#headPortrait').val(name);
+        });
+        pushRequest("RoleProvider", "getRoles", {}, function (data) {
+            for (let i = 0; i < data.length; i++) {
+                let roleId = data[i].id;
+                let name = data[i].name;
+                let option = '<option value="' + roleId + '">' + name + '</option>';
+                $("[name='roleId']").append(option);
+            }
+        });
+
+        if (func == 'edit') { // 这是修改
+            pushRequest("UserProvider", "getUserById", {
+                id: id
+            }, function (data) {
+
+                $('[name="id"]').attr('value', data.id);
+                $('[name="nickName"]').attr('value', data.nickName);
+                $('[name="userName"]').attr('value', data.userName);
+                $('[name="mail"]').attr('value', data.mail);
+                $('[name="phone"]').attr('value', data.phone);
+                $('[name="password"]').parent().parent().remove();
+
+                /* 1.取消img 的隐藏 */
+                $('#headPortraitImg').css("display", "block");
+
+                /* 2.添加img的src */
+                $('#headPortraitImg').attr("src", download(data.headPortrait));
+
+                /* 3.添加input的name */
+                $('#headPortrait').val(data.headPortrait);
+
+                let s = '[name="roleId"] option[value="' + data.role.id + '"]';
+                $(s).attr("selected", true);
+
+                form.render();
+            })
+        }
+
+
+        var closeAndReload = function () {
+            var iframeIndex = parent.layer.getFrameIndex(window.name);
+            parent.$.reloadTable();
+            parent.layer.close(iframeIndex);
+        };
+        //监听提交
+        form.on('submit(saveBtn)', function (data) {
+            var index = layer.alert(JSON.stringify(data.field), {
+                title: '最终的提交信息'
+            }, function () {
+                // 关闭弹出层
+                layer.close(index);
+                if (func === 'add') {
+                    pushRequest("UserProvider", "insert", {data: data.field}, function () {
+                    });
+                    closeAndReload();
+                } else if (func === 'edit') {
+                    pushRequest("UserProvider", "update", {data: data.field}, function () {
+                    });
+                    closeAndReload();
+                }
+            });
+            return false;
+        });
+        form.render();
+
+    });
+</script>
+</body>
+</html>

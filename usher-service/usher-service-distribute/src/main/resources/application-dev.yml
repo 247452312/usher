@@ -1,0 +1,15 @@
+server:
+  port: 8005
+rpc:
+  provider:
+    port: 20805
+  application:
+    name: provider-distribute
+
+log-out:
+  dir-name: distribute
+
+id:
+  organization:
+    # 机构代码
+    code: 3

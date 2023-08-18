@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>team.opentech.usher</groupId>
+        <artifactId>usher</artifactId>
+        <version>2.0.0.0.usher-SNAPSHOT</version>
+    </parent>
+    <artifactId>usher-common</artifactId>
+    <version>2.0.0.0.usher-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>usher-common-base</module>
+        <module>usher-common-service</module>
+        <module>usher-common-mq</module>
+        <module>usher-common-inside-package</module>
+        <module>usher-common-data</module>
+        <module>usher-common-hot-spot</module>
+        <module>usher-common-log</module>
+        <module>usher-common-util</module>
+        <module>usher-common-event-bus</module>
+        <module>usher-common-elegant</module>
+        <module>usher-common-swagger</module>
+        <module>usher-common-rpc</module>
+    </modules>
+
+
+</project>

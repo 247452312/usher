@@ -1,0 +1,1 @@
+default_rpc_spi_proxy=team.opentech.usher.rpc.proxy.handler.RpcProxyDefaultHandler

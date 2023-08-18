@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>team.opentech.usher</groupId>
+        <artifactId>usher-common</artifactId>
+        <version>2.0.0.0.usher-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>usher-common-service</artifactId>
+
+    <dependencies>
+        <!--引入AOP依赖-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-common-base</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-common-log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-common-swagger</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-common-event-bus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-common-data-redis</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/team.opentech.usher/usher-rpc-spring-start -->
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-common-rpc-spring-start</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-common-hot-spot</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-common-elegant</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+        </dependency>
+        <!-- druid连接池 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+
+    </dependencies>
+
+</project>

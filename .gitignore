@@ -1,0 +1,31 @@
+database/
+!.mvn/wrapper/maven-wrapper.jar
+*.log
+**/venv/**
+**/target/**
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.DS_Store
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+### db2 ###
+h2db.trace.db
