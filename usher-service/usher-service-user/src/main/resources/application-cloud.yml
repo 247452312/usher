@@ -1,0 +1,24 @@
+server:
+  port: 8002
+
+rpc:
+  provider:
+    port: 20802
+  application:
+    name: provider-user
+log-out:
+  dir-name: user
+spring:
+  datasource:
+    url: jdbc:mysql://cloud:3306/usher_user?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+    username: root
+    password: 123456
+    ignore:
+      tables: sys_dept_menu,sys_dept_power,sys_role_dept
+id:
+  organization:
+    # 机构代码
+    code: 10
+
+dynamic:
+  mark: dy_user
