@@ -1,6 +1,6 @@
 package team.opentech.usher.context;
 
-import team.opentech.usher.MyThreadLocal;
+import team.opentech.usher.UsherThreadLocal;
 import team.opentech.usher.enums.LogDetailTypeEnum;
 import team.opentech.usher.enums.LogTypeEnum;
 import team.opentech.usher.util.IdUtil;
@@ -44,17 +44,17 @@ public class MyTraceIdContext {
     /**
      * 保存traceId的地方
      */
-    private static final MyThreadLocal<Long> thraceId = new MyThreadLocal<>();
+    private static final UsherThreadLocal<Long> thraceId = new UsherThreadLocal<>();
 
     /**
      * 保存上一次调用链顺序的地方
      */
-    private static final MyThreadLocal<List<Integer>> rpcId = new MyThreadLocal<>();
+    private static final UsherThreadLocal<List<Integer>> rpcId = new UsherThreadLocal<>();
 
     /**
      * 这一次调用的RPCid
      */
-    private static final MyThreadLocal<AtomicInteger> thisRpcId = new MyThreadLocal<>();
+    private static final UsherThreadLocal<AtomicInteger> thisRpcId = new UsherThreadLocal<>();
 
     /**
      * 项目名称

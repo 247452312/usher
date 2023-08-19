@@ -1,6 +1,6 @@
 package team.opentech.usher.context;
 
-import team.opentech.usher.MyThreadLocal;
+import team.opentech.usher.UsherThreadLocal;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -8,7 +8,7 @@ import team.opentech.usher.MyThreadLocal;
  */
 public class TempContext {
 
-    public static final MyThreadLocal<String> temp = new MyThreadLocal<>();
+    public static final UsherThreadLocal<String> temp = new UsherThreadLocal<>();
 
 
     public static final ThreadLocal<String> temp2 = new InheritableThreadLocal<>();

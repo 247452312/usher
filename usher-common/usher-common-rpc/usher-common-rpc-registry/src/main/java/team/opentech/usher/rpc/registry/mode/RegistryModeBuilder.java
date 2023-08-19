@@ -4,7 +4,7 @@ import team.opentech.usher.rpc.cluster.enums.LoadBalanceEnum;
 import team.opentech.usher.rpc.config.ProviderConfig;
 import team.opentech.usher.rpc.config.RpcConfig;
 import team.opentech.usher.rpc.config.RpcConfigFactory;
-import team.opentech.usher.rpc.exchange.content.MyRpcContent;
+import team.opentech.usher.rpc.exchange.content.UsherRpcContent;
 import team.opentech.usher.rpc.registry.pojo.RegistryMetadata;
 import team.opentech.usher.rpc.registry.pojo.RegistryMetadataOfInterface;
 import team.opentech.usher.rpc.registry.pojo.RegistryMetadataOfMethod;
@@ -53,7 +53,7 @@ public class RegistryModeBuilder {
         RegistryProviderNecessaryInfo necessaryInfo = new RegistryProviderNecessaryInfo();
         necessaryInfo.setHost(IpUtil.getIp());
         necessaryInfo.setPort(port);
-        necessaryInfo.setRpcVersion(MyRpcContent.VERSION);
+        necessaryInfo.setRpcVersion(UsherRpcContent.VERSION);
         necessaryInfo.setInterfaceName(clazz.getName());
         necessaryInfo.setHealth(true);
         necessaryInfo.setWeight(20d);

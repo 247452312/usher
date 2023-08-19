@@ -1,6 +1,6 @@
 package team.opentech.usher.util;
 
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.cqe.DefaultCQE;
 
@@ -35,7 +35,7 @@ public final class DefaultCQEBuildUtil {
      */
     public static UserDTO getAdminUserDTO() {
         UserDTO user = new UserDTO();
-        user.setId(MyContext.ADMIN_USER_ID);
+        user.setId(UsherContext.ADMIN_USER_ID);
         user.setUsername("admin");
         return user;
     }

@@ -1,6 +1,6 @@
 package team.opentech.usher.util;
 
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -47,7 +47,7 @@ public class IdUtil {
         long sq = sequence.getAndIncrement();
 
         // 如果序列号超出,则阻塞到下一个毫秒继续获取序列号
-        if (sq > MyContext.SEQUENCE_MASK) {
+        if (sq > UsherContext.SEQUENCE_MASK) {
             try {
                 Thread.sleep(1L);
             } catch (InterruptedException e) {
@@ -60,13 +60,13 @@ public class IdUtil {
             code = -1L;
         }
         // 从配置文件中获取 代表学校码
-        long distributedResult = (code & MyContext.DISTRIBUTED_MASK) << MyContext.DISTRIBUTED_DISPLACEMENT;
+        long distributedResult = (code & UsherContext.DISTRIBUTED_MASK) << UsherContext.DISTRIBUTED_DISPLACEMENT;
 
         //时间戳
-        long timeResult = (time & MyContext.TIME_MASK) << MyContext.TIME_DISPLACEMENT;
+        long timeResult = (time & UsherContext.TIME_MASK) << UsherContext.TIME_DISPLACEMENT;
 
         // 序列数
-        long sqResult = (sq & MyContext.SEQUENCE_MASK) << MyContext.SEQUENCE_DISPLACEMENT;
+        long sqResult = (sq & UsherContext.SEQUENCE_MASK) << UsherContext.SEQUENCE_DISPLACEMENT;
 
         return timeResult | sqResult | distributedResult;
     }

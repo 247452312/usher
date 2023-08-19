@@ -1,6 +1,6 @@
 package team.opentech.usher.druid.filter.limit;
 
-import team.opentech.usher.MyThreadLocal;
+import team.opentech.usher.UsherThreadLocal;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -9,9 +9,9 @@ import team.opentech.usher.MyThreadLocal;
  */
 public class RowsLimitThreadContext {
 
-    private static MyThreadLocal<Boolean> rowsLimitEnableThreadLocal = new MyThreadLocal();
+    private static UsherThreadLocal<Boolean> rowsLimitEnableThreadLocal = new UsherThreadLocal();
 
-    private static MyThreadLocal<Integer> rowsLimitSizeThreadLocal = new MyThreadLocal();
+    private static UsherThreadLocal<Integer> rowsLimitSizeThreadLocal = new UsherThreadLocal();
 
     public static Integer getRowsLimitSizeInCurrentThread() {
         return rowsLimitSizeThreadLocal.get();

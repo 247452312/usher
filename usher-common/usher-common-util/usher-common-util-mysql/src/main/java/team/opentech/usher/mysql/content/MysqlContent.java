@@ -1,6 +1,6 @@
 package team.opentech.usher.mysql.content;
 
-import team.opentech.usher.MyThreadLocal;
+import team.opentech.usher.UsherThreadLocal;
 import team.opentech.usher.mysql.handler.MysqlTcpInfo;
 import io.netty.channel.ChannelId;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class MysqlContent {
     /**
      * 当前连接的mysql信息
      */
-    public static final MyThreadLocal<MysqlTcpInfo> MYSQL_TCP_INFO = new MyThreadLocal<>();
+    public static final UsherThreadLocal<MysqlTcpInfo> MYSQL_TCP_INFO = new UsherThreadLocal<>();
 
 
     /**

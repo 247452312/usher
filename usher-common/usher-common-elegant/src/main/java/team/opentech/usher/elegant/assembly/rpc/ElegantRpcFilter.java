@@ -6,7 +6,7 @@ import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
 import team.opentech.usher.rpc.netty.spi.filter.FilterContext;
 import team.opentech.usher.rpc.netty.spi.filter.filter.ProviderFilter;
 import team.opentech.usher.rpc.netty.spi.filter.invoker.RpcInvoker;
-import team.opentech.usher.rpc.registry.manager.MyRpcRegistryManager;
+import team.opentech.usher.rpc.registry.manager.UsherRpcRegistryManager;
 import team.opentech.usher.util.LogUtil;
 
 /**
@@ -21,7 +21,7 @@ public class ElegantRpcFilter extends AbstractElegantHandler implements Provider
     /**
      * rpcRegistry管理器
      */
-    private MyRpcRegistryManager registryManager;
+    private UsherRpcRegistryManager registryManager;
 
     public ElegantRpcFilter() throws InterruptedException {
 
@@ -30,7 +30,7 @@ public class ElegantRpcFilter extends AbstractElegantHandler implements Provider
     @Override
     public void init(Object... params) throws InterruptedException {
         ProviderFilter.super.init(params);
-        registryManager = (MyRpcRegistryManager) params[0];
+        registryManager = (UsherRpcRegistryManager) params[0];
         LogUtil.info("优雅上下线rpcFilter初始化成功");
     }
 

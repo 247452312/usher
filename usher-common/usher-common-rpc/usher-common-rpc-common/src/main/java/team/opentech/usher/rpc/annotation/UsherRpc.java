@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Documented
 @Target(value = {ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MyRpc {
+public @interface UsherRpc {
 
     /**
      * 手动添加扫描包

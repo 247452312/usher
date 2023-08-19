@@ -6,14 +6,14 @@ package team.opentech.usher.rpc.exception;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年06月27日 09时29分
  */
-public class MyRpcProviderThrowException extends RpcException {
+public class UsherRpcProviderThrowException extends RpcException {
 
 
-    public MyRpcProviderThrowException(String message) {
+    public UsherRpcProviderThrowException(String message) {
         super(message);
     }
 
-    public MyRpcProviderThrowException(Throwable th) {
+    public UsherRpcProviderThrowException(Throwable th) {
         super(th);
     }
 

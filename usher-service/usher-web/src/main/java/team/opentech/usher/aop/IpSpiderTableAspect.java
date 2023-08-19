@@ -1,7 +1,7 @@
 package team.opentech.usher.aop;
 
 import team.opentech.usher.MyExecutorWrapper;
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.context.SpiderContext;
 import team.opentech.usher.enums.ServiceCode;
 import team.opentech.usher.pojo.DTO.UserDTO;
@@ -81,7 +81,7 @@ public class IpSpiderTableAspect {
             return pjp.proceed();
         }
         //如果是获取验证码的请求,忽略
-        if (action.getInterfaceName().equals(MyContext.VERIFICATION_CODE_INTERFACE) && action.getMethodName().equals(MyContext.GET_VERIFICATION_CODE_METHOD)) {
+        if (action.getInterfaceName().equals(UsherContext.VERIFICATION_CODE_INTERFACE) && action.getMethodName().equals(UsherContext.GET_VERIFICATION_CODE_METHOD)) {
             return pjp.proceed();
         }
         Redisable jedis = redisPoolHandle.getRedisPool().getJedis();
@@ -118,7 +118,7 @@ public class IpSpiderTableAspect {
                 /*验证 验证码 是否正确*/
                 String interfaceName = action.getInterfaceName();
                 String methodName = action.getMethodName();
-                if (interfaceName.equals(MyContext.VERIFICATION_CODE_INTERFACE) && methodName.equals(MyContext.VERIFICATION_CODE_METHOD)) {
+                if (interfaceName.equals(UsherContext.VERIFICATION_CODE_INTERFACE) && methodName.equals(UsherContext.VERIFICATION_CODE_METHOD)) {
                     WebResponse proceed = (WebResponse) pjp.proceed();
                     Boolean data = (Boolean) proceed.getData();
                     // 验证码验证失败
@@ -145,7 +145,7 @@ public class IpSpiderTableAspect {
             }, es);
             GetLogIntervalByIpQuery defaultRequest = new GetLogIntervalByIpQuery();
             UserDTO user = new UserDTO();
-            user.setId(MyContext.ADMIN_USER_ID);
+            user.setId(UsherContext.ADMIN_USER_ID);
             user.setUsername("admin");
             defaultRequest.setUser(user);
             defaultRequest.setIp(ip);
@@ -199,7 +199,7 @@ public class IpSpiderTableAspect {
                 // 加入永久黑名单
                 AddBlackIpRequest build = AddBlackIpRequest.build(ip);
                 UserDTO user = new UserDTO();
-                user.setId(MyContext.ADMIN_USER_ID);
+                user.setId(UsherContext.ADMIN_USER_ID);
                 build.setUser(user);
                 blackListService.addBlackIp(build);
                 // 清空临时冻结

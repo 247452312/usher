@@ -1,7 +1,7 @@
 package team.opentech.usher.pojo.entity;
 
 import team.opentech.usher.BaseTest;
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.enums.ReadWriteTypeEnum;
 import team.opentech.usher.pojo.DTO.MethodDisableDTO;
 import team.opentech.usher.pojo.DTO.request.DelMethodDisableCommand;
@@ -30,7 +30,7 @@ public class MethodDisableTest extends BaseTest {
         MethodDisable methodDisable = new MethodDisable(dto);
         methodDisable.completionClassName();
         String s = methodDisable.toInterfaceMethodName();
-        Asserts.assertTrue(s.equals(MyContext.SERVICE_PACKAGE_PREFIX + classSingleName + "#" + method));
+        Asserts.assertTrue(s.equals(UsherContext.SERVICE_PACKAGE_PREFIX + classSingleName + "#" + method));
     }
 
     @Test

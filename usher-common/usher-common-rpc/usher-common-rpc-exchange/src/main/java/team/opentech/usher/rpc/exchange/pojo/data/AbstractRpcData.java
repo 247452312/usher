@@ -1,10 +1,10 @@
 package team.opentech.usher.rpc.exchange.pojo.data;
 
-import team.opentech.usher.rpc.exception.MyRpcException;
+import team.opentech.usher.rpc.exception.UsherRpcException;
 import team.opentech.usher.rpc.exception.RpcSpiInitException;
 import team.opentech.usher.rpc.exception.RpcTypeNotSupportedException;
 import team.opentech.usher.rpc.exception.RpcVersionNotSupportedException;
-import team.opentech.usher.rpc.exchange.content.MyRpcContent;
+import team.opentech.usher.rpc.exchange.content.UsherRpcContent;
 import team.opentech.usher.rpc.exchange.pojo.content.RpcContent;
 import team.opentech.usher.rpc.exchange.pojo.head.RpcHeader;
 import team.opentech.usher.rpc.exchange.pojo.head.RpcHeaderFactory;
@@ -94,27 +94,27 @@ public abstract class AbstractRpcData implements RpcData {
     @Override
     public byte[] toBytes() {
         //头部
-        byte[] previousBytes = new byte[MyRpcContent.RPC_DATA_ITEM_SIZE.stream().mapToInt(t -> t).sum()];
+        byte[] previousBytes = new byte[UsherRpcContent.RPC_DATA_ITEM_SIZE.stream().mapToInt(t -> t).sum()];
         // 写索引
         AtomicInteger writeIndex = new AtomicInteger(0);
         // 写入mark头
         System.arraycopy(
-            MyRpcContent.AGREEMENT_START,
+            UsherRpcContent.AGREEMENT_START,
             0,
             previousBytes,
-            writeIndex.getAndAdd(MyRpcContent.RPC_DATA_ITEM_SIZE.get(MyRpcContent.RPC_DATA_MARK_INDEX)),
-            MyRpcContent.RPC_DATA_ITEM_SIZE.get(MyRpcContent.RPC_DATA_MARK_INDEX));
+            writeIndex.getAndAdd(UsherRpcContent.RPC_DATA_ITEM_SIZE.get(UsherRpcContent.RPC_DATA_MARK_INDEX)),
+            UsherRpcContent.RPC_DATA_ITEM_SIZE.get(UsherRpcContent.RPC_DATA_MARK_INDEX));
 
         // 写入version and type
         byte[] src = {(byte) ((rpcVersion() << 2) + (type() << 1))};
-        int andAdd = writeIndex.getAndAdd(MyRpcContent.RPC_DATA_ITEM_SIZE.get(MyRpcContent.RPC_DATA_VERSION_REQ_RES_INDEX));
-        System.arraycopy(src, 0, previousBytes, andAdd, MyRpcContent.RPC_DATA_ITEM_SIZE.get(MyRpcContent.RPC_DATA_VERSION_REQ_RES_INDEX));
+        int andAdd = writeIndex.getAndAdd(UsherRpcContent.RPC_DATA_ITEM_SIZE.get(UsherRpcContent.RPC_DATA_VERSION_REQ_RES_INDEX));
+        System.arraycopy(src, 0, previousBytes, andAdd, UsherRpcContent.RPC_DATA_ITEM_SIZE.get(UsherRpcContent.RPC_DATA_VERSION_REQ_RES_INDEX));
 
         //获取head 和 content 的压缩后的数组 并写入size
         byte[] headAndContent = headerAndContent().getBytes(StandardCharsets.UTF_8);
         headAndContent = BytesUtil.compress(headAndContent);
-        System.arraycopy(BytesUtil.changeIntegerToByte(headAndContent.length), 0, previousBytes, writeIndex.getAndAdd(MyRpcContent.RPC_DATA_ITEM_SIZE.get(MyRpcContent.RPC_DATA_SIZE_INDEX)),
-                         MyRpcContent.RPC_DATA_ITEM_SIZE.get(MyRpcContent.RPC_DATA_SIZE_INDEX));
+        System.arraycopy(BytesUtil.changeIntegerToByte(headAndContent.length), 0, previousBytes, writeIndex.getAndAdd(UsherRpcContent.RPC_DATA_ITEM_SIZE.get(UsherRpcContent.RPC_DATA_SIZE_INDEX)),
+                         UsherRpcContent.RPC_DATA_ITEM_SIZE.get(UsherRpcContent.RPC_DATA_SIZE_INDEX));
 
         // 写入状态
         previousBytes[writeIndex.getAndAdd(1)] = getStatus();
@@ -124,8 +124,8 @@ public abstract class AbstractRpcData implements RpcData {
         System.arraycopy(uniqueBytes,
                          0,
                          previousBytes,
-                         writeIndex.getAndAdd(MyRpcContent.RPC_DATA_ITEM_SIZE.get(MyRpcContent.RPC_DATA_UNIQUE_INDEX)),
-                         MyRpcContent.RPC_DATA_ITEM_SIZE.get(MyRpcContent.RPC_DATA_UNIQUE_INDEX));
+                         writeIndex.getAndAdd(UsherRpcContent.RPC_DATA_ITEM_SIZE.get(UsherRpcContent.RPC_DATA_UNIQUE_INDEX)),
+                         UsherRpcContent.RPC_DATA_ITEM_SIZE.get(UsherRpcContent.RPC_DATA_UNIQUE_INDEX));
 
         return BytesUtil.concat(previousBytes, headAndContent);
     }
@@ -290,7 +290,7 @@ public abstract class AbstractRpcData implements RpcData {
      * @param readIndex
      */
     protected void initSize(byte[] data, AtomicInteger readIndex) {
-        int sizeSize = MyRpcContent.RPC_DATA_ITEM_SIZE.get(MyRpcContent.RPC_DATA_SIZE_INDEX);
+        int sizeSize = UsherRpcContent.RPC_DATA_ITEM_SIZE.get(UsherRpcContent.RPC_DATA_SIZE_INDEX);
         int startIndex = readIndex.get();
         byte[] sizeBytes = Arrays.copyOfRange(data, startIndex, startIndex + sizeSize);
         this.size = BytesUtil.changeByteToInteger(sizeBytes);
@@ -298,7 +298,7 @@ public abstract class AbstractRpcData implements RpcData {
     }
 
     protected void initUnique(byte[] data, AtomicInteger readIndex) {
-        int uniqueSize = MyRpcContent.RPC_DATA_ITEM_SIZE.get(MyRpcContent.RPC_DATA_UNIQUE_INDEX);
+        int uniqueSize = UsherRpcContent.RPC_DATA_ITEM_SIZE.get(UsherRpcContent.RPC_DATA_UNIQUE_INDEX);
         int startIndex = readIndex.get();
         byte[] uniqueBytes = Arrays.copyOfRange(data, startIndex, startIndex + uniqueSize);
         this.unique = BytesUtil.changeByteToLong(uniqueBytes);
@@ -306,7 +306,7 @@ public abstract class AbstractRpcData implements RpcData {
     }
 
     protected void initStatus(byte[] data, AtomicInteger readIndex) {
-        int statusSize = MyRpcContent.RPC_DATA_ITEM_SIZE.get(MyRpcContent.RPC_DATA_STATUS_INDEX);
+        int statusSize = UsherRpcContent.RPC_DATA_ITEM_SIZE.get(UsherRpcContent.RPC_DATA_STATUS_INDEX);
         assert statusSize == 1;
         int startIndex = readIndex.get();
         byte[] dataStatus = Arrays.copyOfRange(data, startIndex, startIndex + statusSize);
@@ -365,7 +365,7 @@ public abstract class AbstractRpcData implements RpcData {
             throw new RpcTypeNotSupportedException(dataType, type());
         }
         this.version = dataVersion;
-        readIndex.addAndGet(MyRpcContent.RPC_DATA_ITEM_SIZE.get(MyRpcContent.RPC_DATA_VERSION_REQ_RES_INDEX));
+        readIndex.addAndGet(UsherRpcContent.RPC_DATA_ITEM_SIZE.get(UsherRpcContent.RPC_DATA_VERSION_REQ_RES_INDEX));
 
     }
 
@@ -373,7 +373,7 @@ public abstract class AbstractRpcData implements RpcData {
         try {
             AtomicInteger readIndex = new AtomicInteger(0);
             // 判断是不是myRpc的协议
-            isMyRpc(data, readIndex);
+            isUsherRpc(data, readIndex);
 
             // 确定版本以及类型是否兼容(正确)
             initVersionAndType(data, readIndex);
@@ -412,15 +412,15 @@ public abstract class AbstractRpcData implements RpcData {
      * @param data
      * @param readIndex
      *
-     * @throws MyRpcException
+     * @throws UsherRpcException
      */
-    private void isMyRpc(byte[] data, AtomicInteger readIndex) throws MyRpcException {
+    private void isUsherRpc(byte[] data, AtomicInteger readIndex) throws UsherRpcException {
         int from = readIndex.get();
-        byte[] bytes = Arrays.copyOfRange(data, from, from + MyRpcContent.AGREEMENT_START.length);
-        boolean startByteEquals = Arrays.equals(bytes, MyRpcContent.AGREEMENT_START);
+        byte[] bytes = Arrays.copyOfRange(data, from, from + UsherRpcContent.AGREEMENT_START.length);
+        boolean startByteEquals = Arrays.equals(bytes, UsherRpcContent.AGREEMENT_START);
         if (!startByteEquals) {
-            throw new MyRpcException();
+            throw new UsherRpcException();
         }
-        readIndex.addAndGet(MyRpcContent.RPC_DATA_ITEM_SIZE.get(MyRpcContent.RPC_DATA_MARK_INDEX));
+        readIndex.addAndGet(UsherRpcContent.RPC_DATA_ITEM_SIZE.get(UsherRpcContent.RPC_DATA_MARK_INDEX));
     }
 }

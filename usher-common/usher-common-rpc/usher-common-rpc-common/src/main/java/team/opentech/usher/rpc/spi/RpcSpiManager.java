@@ -1,6 +1,6 @@
 package team.opentech.usher.rpc.spi;
 
-import team.opentech.usher.rpc.annotation.MyRpc;
+import team.opentech.usher.rpc.annotation.UsherRpc;
 import team.opentech.usher.rpc.annotation.RpcSpi;
 import team.opentech.usher.rpc.exception.RpcBeanNotFoundException;
 import team.opentech.usher.rpc.exception.RpcRunTimeException;
@@ -220,7 +220,7 @@ public class RpcSpiManager {
         }
 
         // 扫描启动类下的myRpc注解 然后扫描此注解下的所有spi
-        List<Class<?>> rpcSpiList = scanRunClassMyRpcPackageSpiSubclass();
+        List<Class<?>> rpcSpiList = scanRunClassUsherRpcPackageSpiSubclass();
         /*将扫描出来的类分发到各个类里面去*/
         Set<Class<?>> rootClazz = cacheClass.keySet();
         // 遍历每个spi类
@@ -289,9 +289,9 @@ public class RpcSpiManager {
     /**
      * 扫描启动类下的myRpc注解 然后扫描此注解下的所有spi,加载进来
      */
-    private static List<Class<?>> scanRunClassMyRpcPackageSpiSubclass() {
+    private static List<Class<?>> scanRunClassUsherRpcPackageSpiSubclass() {
         /*1.获取启动类*/
-        /*2.获取启动类包下所有的@MyRpc注解*/
+        /*2.获取启动类包下所有的@UsherRpc注解*/
         /*3.获取myRpc注解下所有的spi,除了手动排除的部分*/
 
         //获取启动类
@@ -310,8 +310,8 @@ public class RpcSpiManager {
             return Collections.emptyList();
         }
 
-        // 获取所有@MyRpc注解
-        List<Class<?>> classHaveMyRpc = mainClassScanCLassNames.stream().filter(t -> t.getAnnotation(MyRpc.class) != null).collect(Collectors.toList());
+        // 获取所有@UsherRpc注解
+        List<Class<?>> classHaveUsherRpc = mainClassScanCLassNames.stream().filter(t -> t.getAnnotation(UsherRpc.class) != null).collect(Collectors.toList());
 
         /*扫描包的规则, exclude优先级最高,一定不会扫*/
         // 要扫描的包
@@ -319,13 +319,13 @@ public class RpcSpiManager {
         // 不要扫描的包
         Set<String> excludePackageName = new HashSet<>();
         //  ...... 获取包.
-        classHaveMyRpc.forEach(t -> {
-            MyRpc myRpc = t.getAnnotation(MyRpc.class);
-            if (myRpc == null) {
+        classHaveUsherRpc.forEach(t -> {
+            UsherRpc usherRpc = t.getAnnotation(UsherRpc.class);
+            if (usherRpc == null) {
                 return;
             }
-            String[] scanPackages = myRpc.baseScanPackage();
-            String[] excludePackages = myRpc.excludePackage();
+            String[] scanPackages = usherRpc.baseScanPackage();
+            String[] excludePackages = usherRpc.excludePackage();
             String name = t.getPackage().getName();
 
             packageName.addAll(Arrays.asList(scanPackages));

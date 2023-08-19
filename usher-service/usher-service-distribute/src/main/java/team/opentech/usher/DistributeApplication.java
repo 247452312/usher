@@ -1,6 +1,6 @@
 package team.opentech.usher;
 
-import team.opentech.usher.rpc.annotation.MyRpc;
+import team.opentech.usher.rpc.annotation.UsherRpc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@MyRpc
+@UsherRpc
 @EnableTransactionManagement
 public class DistributeApplication {
 

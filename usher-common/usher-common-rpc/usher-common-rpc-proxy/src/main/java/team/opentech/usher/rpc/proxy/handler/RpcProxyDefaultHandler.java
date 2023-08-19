@@ -11,7 +11,7 @@ import team.opentech.usher.rpc.config.RpcConfigFactory;
 import team.opentech.usher.rpc.content.RpcHeaderContext;
 import team.opentech.usher.rpc.enums.RpcResponseTypeEnum;
 import team.opentech.usher.rpc.enums.RpcTypeEnum;
-import team.opentech.usher.rpc.exception.MyRpcProviderThrowException;
+import team.opentech.usher.rpc.exception.UsherRpcProviderThrowException;
 import team.opentech.usher.rpc.exchange.pojo.content.RpcResponseContent;
 import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
 import team.opentech.usher.rpc.exchange.pojo.data.factory.RpcFactory;
@@ -192,7 +192,7 @@ public class RpcProxyDefaultHandler implements RpcProxyHandlerInterface {
         RpcResponseTypeEnum parse = RpcResponseTypeEnum.parse(content.responseType());
         switch (parse) {
             case EXCEPTION:
-                throw new MyRpcProviderThrowException((Throwable) JSONObject.parse(content.getResponseContent()));
+                throw new UsherRpcProviderThrowException((Throwable) JSONObject.parse(content.getResponseContent()));
             case STRING_BACK:
                 //后置自定义扩展处理返回
                 return postProcessing(invoke, JSON.parse(content.getResponseContent(), Feature.SupportAutoType));

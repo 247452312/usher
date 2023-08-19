@@ -1,6 +1,6 @@
 package team.opentech.usher.pojo.entity;
 
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.enums.ReadWriteTypeEnum;
 import team.opentech.usher.pojo.DTO.MethodDisableDTO;
 import team.opentech.usher.pojo.DTO.request.DelMethodDisableCommand;
@@ -84,7 +84,7 @@ public class MethodDisable extends AbstractEntity {
 
     public void completionClassName() {
         if (!className.contains(INTERFACE_NAME_PACKAGE_SEPARATOR)) {
-            className = MyContext.SERVICE_PACKAGE_PREFIX + className;
+            className = UsherContext.SERVICE_PACKAGE_PREFIX + className;
         }
     }
 

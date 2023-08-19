@@ -4,7 +4,7 @@ import com.alibaba.fastjson.parser.ParserConfig;
 import team.opentech.usher.rpc.config.RpcConfigFactory;
 import team.opentech.usher.rpc.enums.RpcStatusEnum;
 import team.opentech.usher.rpc.enums.RpcTypeEnum;
-import team.opentech.usher.rpc.exchange.content.MyRpcContent;
+import team.opentech.usher.rpc.exchange.content.UsherRpcContent;
 import team.opentech.usher.rpc.exchange.pojo.content.RpcContent;
 import team.opentech.usher.rpc.exchange.pojo.content.impl.RpcRequestContentImpl;
 import team.opentech.usher.rpc.exchange.pojo.data.NormalRequestRpcData;
@@ -35,7 +35,7 @@ public class NormalRpcRequestFactoryTest {
         // 返回一个构造完成的消费者
         NormalRequestRpcData rpcNormalRequest = new NormalRequestRpcData();
         rpcNormalRequest.setType(RpcTypeEnum.REQUEST.getCode());
-        rpcNormalRequest.setVersion(MyRpcContent.VERSION);
+        rpcNormalRequest.setVersion(UsherRpcContent.VERSION);
         rpcNormalRequest.setHeaders(new RpcHeader[]{new RpcHeader("ke", "va")});
         rpcNormalRequest.setContentArray(contentArray);
         rpcNormalRequest.setStatus(RpcStatusEnum.NULL.getCode());

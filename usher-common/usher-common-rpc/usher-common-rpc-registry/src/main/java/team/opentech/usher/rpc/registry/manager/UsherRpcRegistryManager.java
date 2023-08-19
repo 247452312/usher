@@ -8,7 +8,7 @@ import team.opentech.usher.rpc.spi.RpcSpiExtension;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年08月04日 09时08分
  */
-public interface MyRpcRegistryManager extends RpcSpiExtension {
+public interface UsherRpcRegistryManager extends RpcSpiExtension {
 
     /**
      * 允许应用对外提供服务

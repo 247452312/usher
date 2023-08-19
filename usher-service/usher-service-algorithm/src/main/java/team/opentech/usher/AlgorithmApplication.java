@@ -1,6 +1,6 @@
 package team.opentech.usher;
 
-import team.opentech.usher.rpc.annotation.MyRpc;
+import team.opentech.usher.rpc.annotation.UsherRpc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -12,7 +12,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@MyRpc
+@UsherRpc
 public class AlgorithmApplication {
 
     public static void main(String[] args) {

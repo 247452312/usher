@@ -1,7 +1,7 @@
 package team.opentech.usher.util.page;
 
 import team.opentech.usher.assembler.PushPageMsgAssembler;
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.dao.PushPageMsgDao;
 import team.opentech.usher.pojo.DO.PushPageMsgDO;
 import team.opentech.usher.pojo.DTO.PushPageMsgDTO;
@@ -27,7 +27,7 @@ public class SendPage {
         // 构造系统请求
         DefaultCQE request = new DefaultCQE();
         UserDTO user = new UserDTO();
-        user.setId(MyContext.ADMIN_USER_ID);
+        user.setId(UsherContext.ADMIN_USER_ID);
         request.setUser(user);
         PushPageMsgDO pushPageMsgDO = assembler.toDo(sendPageEntity);
 

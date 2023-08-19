@@ -1,7 +1,7 @@
 package team.opentech.usher.pojo.entity;
 
 import team.opentech.usher.annotation.Default;
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.enums.OrderNodeFieldValueTypeEnum;
 import team.opentech.usher.pojo.DO.OrderNodeFieldDO;
 import team.opentech.usher.pojo.DO.OrderNodeFieldValueDO;
@@ -48,18 +48,18 @@ public class OrderNodeFieldValue extends AbstractDoEntity<OrderNodeFieldValueDO>
         OrderNodeFieldValueTypeEnum parse = OrderNodeFieldValueTypeEnum.parse(orderNodeFieldDO.getValueType());
         switch (parse) {
             case DATE:
-                Asserts.assertTrue(realValue.matches(MyContext.DATE_REGEX), "类型错误,应该为日期类型:" + orderNodeFieldDO.getName());
+                Asserts.assertTrue(realValue.matches(UsherContext.DATE_REGEX), "类型错误,应该为日期类型:" + orderNodeFieldDO.getName());
                 break;
             case EMAIL:
-                Asserts.assertTrue(realValue.matches(MyContext.EMAIL_REGEX), "类型错误,应该为email类型:" + orderNodeFieldDO.getName());
+                Asserts.assertTrue(realValue.matches(UsherContext.EMAIL_REGEX), "类型错误,应该为email类型:" + orderNodeFieldDO.getName());
                 break;
             case VALUE:
-                Asserts.assertTrue(realValue.matches(MyContext.VALUE_REGEX), "类型错误,应该为数字类型:" + orderNodeFieldDO.getName());
+                Asserts.assertTrue(realValue.matches(UsherContext.VALUE_REGEX), "类型错误,应该为数字类型:" + orderNodeFieldDO.getName());
                 break;
             case STRING:
                 break;
             case ENGLISH:
-                Asserts.assertTrue(realValue.matches(MyContext.ENGLISH_REGEX), "类型错误,应该为英文类型:" + orderNodeFieldDO.getName());
+                Asserts.assertTrue(realValue.matches(UsherContext.ENGLISH_REGEX), "类型错误,应该为英文类型:" + orderNodeFieldDO.getName());
                 break;
             default:
                 Asserts.throwException("类型错误,找不到指定类型:" + orderNodeFieldDO.getName());

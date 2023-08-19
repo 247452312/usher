@@ -1,7 +1,7 @@
 package team.opentech.usher;
 
 
-import team.opentech.usher.rpc.annotation.MyRpc;
+import team.opentech.usher.rpc.annotation.UsherRpc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @date 文件创建日期 2020年04月20日 12时05分
  */
 @SpringBootApplication
-@MyRpc
+@UsherRpc
 @EnableTransactionManagement
 public class GatewayApplication {
 

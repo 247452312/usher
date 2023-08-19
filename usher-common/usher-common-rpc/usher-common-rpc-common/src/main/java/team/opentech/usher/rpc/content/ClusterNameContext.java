@@ -1,6 +1,6 @@
 package team.opentech.usher.rpc.content;
 
-import team.opentech.usher.MyThreadLocal;
+import team.opentech.usher.UsherThreadLocal;
 import team.opentech.usher.util.StringUtil;
 
 /**
@@ -12,7 +12,7 @@ public class ClusterNameContext {
     /**
      * 指定的集群名称
      */
-    private static volatile MyThreadLocal<String> APPOINT_CLUSTER = new MyThreadLocal<>();
+    private static volatile UsherThreadLocal<String> APPOINT_CLUSTER = new UsherThreadLocal<>();
 
 
     /**

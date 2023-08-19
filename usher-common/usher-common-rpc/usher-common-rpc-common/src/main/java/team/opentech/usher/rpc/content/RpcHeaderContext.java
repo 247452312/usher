@@ -1,6 +1,6 @@
 package team.opentech.usher.rpc.content;
 
-import team.opentech.usher.MyThreadLocal;
+import team.opentech.usher.UsherThreadLocal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +16,7 @@ public class RpcHeaderContext {
     /**
      * 标题头
      */
-    private static volatile MyThreadLocal<Map<String, String>> headers = new MyThreadLocal<>();
+    private static volatile UsherThreadLocal<Map<String, String>> headers = new UsherThreadLocal<>();
 
     /**
      * 获取header

@@ -1,6 +1,6 @@
 package team.opentech.usher.pojo.entity;
 
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.enums.UserTypeEnum;
 import team.opentech.usher.pojo.DO.base.TokenInfo;
 import team.opentech.usher.pojo.entity.base.AbstractEntity;
@@ -82,7 +82,7 @@ public class Token extends AbstractEntity<String> {
             int hourNow = Integer.parseInt(format.substring(2, 4));
             int monNow = Integer.parseInt(format.substring(4, 6));
             // 如果分钟差超过30
-            if (monNow - Integer.parseInt(mon) >= MyContext.LOGIN_TIME_OUT_MIN) {
+            if (monNow - Integer.parseInt(mon) >= UsherContext.LOGIN_TIME_OUT_MIN) {
                 tokenInfo.setTimeOut(Boolean.TRUE);
             } else if (hourNow - Integer.parseInt(hour) > 0) {
                 tokenInfo.setTimeOut(Boolean.TRUE);

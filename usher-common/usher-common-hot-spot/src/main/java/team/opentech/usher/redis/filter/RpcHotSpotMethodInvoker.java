@@ -1,7 +1,7 @@
 package team.opentech.usher.redis.filter;
 
 import com.alibaba.fastjson.JSON;
-import team.opentech.usher.MyThreadLocal;
+import team.opentech.usher.UsherThreadLocal;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.context.HotSpotContext;
 import team.opentech.usher.enums.CacheTypeEnum;
@@ -75,7 +75,7 @@ public class RpcHotSpotMethodInvoker implements MethodInvoker {
     /**
      * 注解的ThreadLocal
      */
-    private final MyThreadLocal<CacheTypeEnum> markThreadLocal = new MyThreadLocal<>();
+    private final UsherThreadLocal<CacheTypeEnum> markThreadLocal = new UsherThreadLocal<>();
 
     @Autowired
     private HotSpotRedisPool hotSpotRedisPool;
@@ -205,7 +205,7 @@ public class RpcHotSpotMethodInvoker implements MethodInvoker {
 
     }
 
-    public MyThreadLocal<CacheTypeEnum> getMarkThreadLocal() {
+    public UsherThreadLocal<CacheTypeEnum> getMarkThreadLocal() {
         return markThreadLocal;
     }
 

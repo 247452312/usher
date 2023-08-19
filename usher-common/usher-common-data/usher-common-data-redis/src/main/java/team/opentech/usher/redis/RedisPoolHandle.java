@@ -2,7 +2,7 @@ package team.opentech.usher.redis;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.StringUtil;
@@ -67,9 +67,9 @@ public class RedisPoolHandle {
             String value = JSONObject.toJSONString(user);
             jedis.set(token, value);
             //半个小时
-            jedis.expire(token, 60 * MyContext.LOGIN_TIME_OUT_MIN);
+            jedis.expire(token, 60 * UsherContext.LOGIN_TIME_OUT_MIN);
             jedis.set(user.getId().toString(), token);
-            jedis.expire(user.getId().toString(), 60 * MyContext.LOGIN_TIME_OUT_MIN);
+            jedis.expire(user.getId().toString(), 60 * UsherContext.LOGIN_TIME_OUT_MIN);
 
         } catch (JedisConnectionException e) {
             LogUtil.error(this, e);
@@ -92,8 +92,8 @@ public class RedisPoolHandle {
                 return Optional.empty();
             }
             UserDTO userEntity = JSON.parseObject(userJson, UserDTO.class);
-            jedis.expire(token, 60 * MyContext.LOGIN_TIME_OUT_MIN);
-            jedis.expire(userEntity.getId().toString(), 60 * MyContext.LOGIN_TIME_OUT_MIN);
+            jedis.expire(token, 60 * UsherContext.LOGIN_TIME_OUT_MIN);
+            jedis.expire(userEntity.getId().toString(), 60 * UsherContext.LOGIN_TIME_OUT_MIN);
             return Optional.of(userEntity);
         } catch (JedisConnectionException e) {
             LogUtil.error(this, e);
@@ -333,17 +333,17 @@ public class RedisPoolHandle {
     public Boolean checkMethodDisable(String className, String methodFullName, Integer readWriteType) {
 
         try (Redisable jedis = redisPool.getJedis()) {
-            Boolean exists = jedis.exists(MyContext.SERVICE_USEABLE_SWITCH);
+            Boolean exists = jedis.exists(UsherContext.SERVICE_USEABLE_SWITCH);
             // 如果不存在这个hash串,则全部放行
             if (!exists) {
                 return Boolean.TRUE;
             }
-            String methodPower = jedis.hget(MyContext.SERVICE_USEABLE_SWITCH, methodFullName);
+            String methodPower = jedis.hget(UsherContext.SERVICE_USEABLE_SWITCH, methodFullName);
             if (methodPower != null) {
                 //如果是0返回不禁用.如果不是0返回禁用
                 return 0 == Integer.parseInt(methodPower);
             } else {
-                String classPower = jedis.hget(MyContext.SERVICE_USEABLE_SWITCH, className);
+                String classPower = jedis.hget(UsherContext.SERVICE_USEABLE_SWITCH, className);
                 if (classPower != null) {
                     int classPowerInt = Integer.parseInt(classPower);
                     if (classPowerInt == 3) {

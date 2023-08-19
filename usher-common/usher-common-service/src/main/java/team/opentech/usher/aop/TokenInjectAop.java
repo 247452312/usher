@@ -1,6 +1,6 @@
 package team.opentech.usher.aop;
 
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.context.UserInfoHelper;
 import team.opentech.usher.enums.UserTypeEnum;
 import team.opentech.usher.exception.LoginOutException;
@@ -142,7 +142,7 @@ public class TokenInjectAop {
         /* 查询是否有权限 */
         // 超级管理员直接放行
         if (ADMIN.equals(userDTO.getUsername())) {
-            userDTO.setRoleId(MyContext.ADMIN_ROLE_ID);
+            userDTO.setRoleId(UsherContext.ADMIN_ROLE_ID);
             arg.setUser(userDTO);
             //执行方法
             return pjp.proceed(new DefaultCQE[]{arg});

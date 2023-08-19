@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * @date 文件创建日期 2022年08月04日 09时22分
  */
 @RpcSpi
-public class MyRpcRegistryManagerImpl implements MyRpcRegistryManager {
+public class UsherRpcRegistryManagerImpl implements UsherRpcRegistryManager {
 
     /**
      * 允许应用对外提供服务

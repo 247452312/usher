@@ -4,7 +4,7 @@ import team.opentech.usher.enums.ServiceCode;
 import team.opentech.usher.exception.AssertException;
 import team.opentech.usher.exception.NoLoginException;
 import team.opentech.usher.pojo.DTO.response.WebResponse;
-import team.opentech.usher.rpc.exception.MyRpcProviderThrowException;
+import team.opentech.usher.rpc.exception.UsherRpcProviderThrowException;
 import team.opentech.usher.rpc.exception.RpcNetException;
 import java.util.concurrent.ExecutionException;
 
@@ -26,7 +26,7 @@ public class WebExceptionHandler {
             return onException(th.getCause());
         }
         // 解析rpc包装异常
-        if (th instanceof MyRpcProviderThrowException) {
+        if (th instanceof UsherRpcProviderThrowException) {
             return onException(th.getCause());
         }
         // 断言异常 返回前端

@@ -2,7 +2,7 @@ package team.opentech.usher.service.impl;
 
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.TraceInfoAssembler;
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.enums.LogTypeEnum;
 import team.opentech.usher.facade.DictFacade;
 import team.opentech.usher.facade.ServiceControlFacade;
@@ -97,7 +97,7 @@ public class TraceInfoServiceImpl extends AbstractDoService<TraceInfoDO, TraceIn
         Long concurrentNumber = this.getConcurrentNumber(request);
 
         //获取字典中人工设置的自动降级的并发数
-        List<DictItemDTO> code = dictFacade.getByCode(MyContext.CONCURRENT_NUM_DICT_CODE);
+        List<DictItemDTO> code = dictFacade.getByCode(UsherContext.CONCURRENT_NUM_DICT_CODE);
         Asserts.assertTrue(CollectionUtil.isNotEmpty(code));
         DictItemDTO dictItemEntity = code.get(0);
         Long concurrentNumberSetable = Long.parseLong(dictItemEntity.getValue());

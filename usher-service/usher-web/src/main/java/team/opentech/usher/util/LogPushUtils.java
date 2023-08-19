@@ -2,7 +2,7 @@ package team.opentech.usher.util;
 
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.util.disruptor.JsonEvent;
 import team.opentech.usher.util.disruptor.JsonEventConsumer;
 import team.opentech.usher.util.disruptor.JsonEventFactory;
@@ -38,22 +38,22 @@ public class LogPushUtils {
         //X-Forwarded-For：Squid 服务代理
         String ipAddresses = request.getHeader("X-Forwarded-For");
 
-        if (ipAddresses == null || ipAddresses.length() == 0 || MyContext.UN_KNOW.equalsIgnoreCase(ipAddresses)) {
+        if (ipAddresses == null || ipAddresses.length() == 0 || UsherContext.UN_KNOW.equalsIgnoreCase(ipAddresses)) {
             //Proxy-Client-IP：apache 服务代理
             ipAddresses = request.getHeader("Proxy-Client-IP");
         }
 
-        if (ipAddresses == null || ipAddresses.length() == 0 || MyContext.UN_KNOW.equalsIgnoreCase(ipAddresses)) {
+        if (ipAddresses == null || ipAddresses.length() == 0 || UsherContext.UN_KNOW.equalsIgnoreCase(ipAddresses)) {
             //WL-Proxy-Client-IP：weblogic 服务代理
             ipAddresses = request.getHeader("WL-Proxy-Client-IP");
         }
 
-        if (ipAddresses == null || ipAddresses.length() == 0 || MyContext.UN_KNOW.equalsIgnoreCase(ipAddresses)) {
+        if (ipAddresses == null || ipAddresses.length() == 0 || UsherContext.UN_KNOW.equalsIgnoreCase(ipAddresses)) {
             //HTTP_CLIENT_IP：有些代理服务器
             ipAddresses = request.getHeader("HTTP_CLIENT_IP");
         }
 
-        if (ipAddresses == null || ipAddresses.length() == 0 || MyContext.UN_KNOW.equalsIgnoreCase(ipAddresses)) {
+        if (ipAddresses == null || ipAddresses.length() == 0 || UsherContext.UN_KNOW.equalsIgnoreCase(ipAddresses)) {
             //X-Real-IP：nginx服务代理
             ipAddresses = request.getHeader("X-Real-IP");
         }
@@ -64,7 +64,7 @@ public class LogPushUtils {
         }
 
         //还是不能获取到，最后再通过request.getRemoteAddr();获取
-        if (ip == null || ip.length() == 0 || MyContext.UN_KNOW.equalsIgnoreCase(ipAddresses)) {
+        if (ip == null || ip.length() == 0 || UsherContext.UN_KNOW.equalsIgnoreCase(ipAddresses)) {
             ip = request.getRemoteAddr();
         }
         return ip;

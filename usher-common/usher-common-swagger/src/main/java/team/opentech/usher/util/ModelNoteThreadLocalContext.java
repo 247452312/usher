@@ -1,6 +1,6 @@
 package team.opentech.usher.util;
 
-import team.opentech.usher.MyThreadLocal;
+import team.opentech.usher.UsherThreadLocal;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  */
 public class ModelNoteThreadLocalContext {
 
-    private static final MyThreadLocal<Set<String>> PARSEING_MODEL_NOTES = new MyThreadLocal<>();
+    private static final UsherThreadLocal<Set<String>> PARSEING_MODEL_NOTES = new UsherThreadLocal<>();
 
     public static <T> T tryInit(Supplier<T> supplier) {
         boolean init = init();

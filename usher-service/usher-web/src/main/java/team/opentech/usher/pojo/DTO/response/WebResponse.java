@@ -1,6 +1,6 @@
 package team.opentech.usher.pojo.DTO.response;
 
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.enums.ServiceCode;
 import team.opentech.usher.pojo.DTO.base.ServiceResult;
 import team.opentech.usher.pojo.cqe.DefaultCQE;
@@ -52,7 +52,7 @@ public class WebResponse implements Serializable {
 
                 List<DefaultCQE> args = new ArrayList<>();
                 args.add(DefaultCQEBuildUtil.getAdminDefaultCQE());
-                serializableWebResponse.setData(RpcApiUtil.rpcApiTool(MyContext.VERIFICATION_CODE_INTERFACE, MyContext.GET_VERIFICATION_CODE_METHOD, args, new DefaultCQE()));
+                serializableWebResponse.setData(RpcApiUtil.rpcApiTool(UsherContext.VERIFICATION_CODE_INTERFACE, UsherContext.GET_VERIFICATION_CODE_METHOD, args, new DefaultCQE()));
                 serializableWebResponse.setMsg(code.getMsg());
                 return serializableWebResponse;
             }

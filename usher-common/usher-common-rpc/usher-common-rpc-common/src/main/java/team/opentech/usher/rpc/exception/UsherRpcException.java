@@ -6,9 +6,9 @@ package team.opentech.usher.rpc.exception;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2020年12月18日 11时30分
  */
-public class MyRpcException extends RpcException {
+public class UsherRpcException extends RpcException {
 
-    public MyRpcException() {
-        super("请求协议不是MyRpc");
+    public UsherRpcException() {
+        super("请求协议不是UsherRpc");
     }
 }

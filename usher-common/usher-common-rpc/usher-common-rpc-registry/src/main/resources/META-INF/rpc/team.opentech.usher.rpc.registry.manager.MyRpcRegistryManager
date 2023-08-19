@@ -1,1 +1,1 @@
-default_register_manager=team.opentech.usher.rpc.registry.manager.MyRpcRegistryManagerImpl
+default_register_manager=team.opentech.usher.rpc.registry.manager.UsherRpcRegistryManagerImpl

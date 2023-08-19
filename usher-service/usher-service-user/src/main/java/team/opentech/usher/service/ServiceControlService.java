@@ -1,7 +1,7 @@
 package team.opentech.usher.service;
 
 
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.enums.ReadWriteTypeEnum;
 import team.opentech.usher.pojo.DTO.MethodDisableDTO;
 import team.opentech.usher.pojo.entity.type.InterfaceName;
@@ -15,7 +15,7 @@ import java.util.List;
  * redis中的命名规则
  * </h3>
  * <span>
- * 1. hashkey为{@link MyContext#SERVICE_USEABLE_SWITCH}
+ * 1. hashkey为{@link UsherContext#SERVICE_USEABLE_SWITCH}
  * 2. hash中的key:
  *    2.1 如果是classname 则是接口全名
  *    2.2 如果是methodName 则是{接口全名#方法名称}

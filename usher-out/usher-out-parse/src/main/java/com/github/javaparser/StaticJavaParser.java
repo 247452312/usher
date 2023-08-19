@@ -43,7 +43,7 @@ import com.github.javaparser.ast.type.ClassOrInterfaceType;
 import com.github.javaparser.ast.type.Type;
 import com.github.javaparser.ast.type.TypeParameter;
 import com.github.javaparser.javadoc.Javadoc;
-import team.opentech.usher.MyThreadLocal;
+import team.opentech.usher.UsherThreadLocal;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -58,7 +58,7 @@ import java.nio.file.Path;
 public final class StaticJavaParser {
 
     // use ThreadLocal to resolve possible concurrency issues.
-    private static MyThreadLocal<ParserConfiguration> localConfiguration = new MyThreadLocal<>();
+    private static UsherThreadLocal<ParserConfiguration> localConfiguration = new UsherThreadLocal<>();
 
     static {
         localConfiguration.set(new ParserConfiguration());

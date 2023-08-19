@@ -11,7 +11,7 @@ import team.opentech.usher.rpc.exception.RpcBeanNotFoundException;
 import team.opentech.usher.rpc.exception.RpcBusinessException;
 import team.opentech.usher.rpc.exception.RpcSpiInitException;
 import team.opentech.usher.rpc.exception.RpcVersionNotSupportedException;
-import team.opentech.usher.rpc.exchange.content.MyRpcContent;
+import team.opentech.usher.rpc.exchange.content.UsherRpcContent;
 import team.opentech.usher.rpc.exchange.pojo.content.RpcContent;
 import team.opentech.usher.rpc.exchange.pojo.content.RpcRequestContent;
 import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
@@ -110,8 +110,8 @@ public class RpcDefaultRequestCallBack implements RpcCallBack {
         RpcData request = createRpcData(data);
         Integer version = request.rpcVersion();
 
-        if (version > MyRpcContent.VERSION) {
-            throw new RpcVersionNotSupportedException(version, MyRpcContent.VERSION);
+        if (version > UsherRpcContent.VERSION) {
+            throw new RpcVersionNotSupportedException(version, UsherRpcContent.VERSION);
         }
         return request.content();
 

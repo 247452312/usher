@@ -8,14 +8,14 @@ import java.util.Optional;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年06月27日 15时01分
  */
-public class MyThreadLocal<T> extends InheritableThreadLocal<T> {
+public class UsherThreadLocal<T> extends InheritableThreadLocal<T> {
 
-    private static Map<Thread, Map<MyThreadLocal<?>, Object>> cacheMyThreadLocal = new HashMap<>();
+    private static Map<Thread, Map<UsherThreadLocal<?>, Object>> cacheMyThreadLocal = new HashMap<>();
 
-    public MyThreadLocal() {
+    public UsherThreadLocal() {
     }
 
-    public static Map<MyThreadLocal<?>, Object> copy() {
+    public static Map<UsherThreadLocal<?>, Object> copy() {
         Thread t = Thread.currentThread();
         return cacheMyThreadLocal.get(t);
     }
@@ -25,7 +25,7 @@ public class MyThreadLocal<T> extends InheritableThreadLocal<T> {
      *
      * @param cache
      */
-    public static void initChildThreadLocal(Map<MyThreadLocal<?>, Object> cache) {
+    public static void initChildThreadLocal(Map<UsherThreadLocal<?>, Object> cache) {
         cacheMyThreadLocal.put(Thread.currentThread(), cache);
     }
 
@@ -40,21 +40,21 @@ public class MyThreadLocal<T> extends InheritableThreadLocal<T> {
     @Override
     public T get() {
         Thread thread = Thread.currentThread();
-        Optional<Map<MyThreadLocal<?>, Object>> myThreadLocalObjectMap = Optional.ofNullable(cacheMyThreadLocal.get(thread));
+        Optional<Map<UsherThreadLocal<?>, Object>> myThreadLocalObjectMap = Optional.ofNullable(cacheMyThreadLocal.get(thread));
         return myThreadLocalObjectMap.map(t -> (T) t.get(this)).orElse(initialValue());
     }
 
     @Override
     public void set(T value) {
         Thread thread = Thread.currentThread();
-        Map<MyThreadLocal<?>, Object> myThreadLocalObjectMap = cacheMyThreadLocal.computeIfAbsent(thread, k -> new HashMap<>());
+        Map<UsherThreadLocal<?>, Object> myThreadLocalObjectMap = cacheMyThreadLocal.computeIfAbsent(thread, k -> new HashMap<>());
         myThreadLocalObjectMap.put(this, value);
     }
 
     @Override
     public void remove() {
         Thread thread = Thread.currentThread();
-        Map<MyThreadLocal<?>, Object> myThreadLocalObjectMap = cacheMyThreadLocal.get(thread);
+        Map<UsherThreadLocal<?>, Object> myThreadLocalObjectMap = cacheMyThreadLocal.get(thread);
         if (myThreadLocalObjectMap == null) {
             return;
         }

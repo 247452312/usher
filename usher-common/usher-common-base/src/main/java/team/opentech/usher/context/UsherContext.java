@@ -6,7 +6,7 @@ package team.opentech.usher.context;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2020年06月10日 07时25分
  */
-public interface MyContext {
+public interface UsherContext {
 
     /**
      * 空字符串

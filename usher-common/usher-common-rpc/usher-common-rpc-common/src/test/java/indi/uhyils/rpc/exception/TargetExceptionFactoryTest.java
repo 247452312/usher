@@ -12,8 +12,8 @@
 //
 //    @Test
 //    void createExceptionByExceptionStr() throws Throwable {
-//String s = ExceptionUtil.parseException(new RuntimeException(new MyRpcProviderThrowException("hello")));
-//MyRpcProviderThrowException exception = ProviderExceptionFactory.createExceptionByExceptionStr(s);
+//String s = ExceptionUtil.parseException(new RuntimeException(new UsherRpcProviderThrowException("hello")));
+//UsherRpcProviderThrowException exception = ProviderExceptionFactory.createExceptionByExceptionStr(s);
 //        Asserts.assertException(() -> {
 //            throw exception;
 //        });

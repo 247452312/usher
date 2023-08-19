@@ -8,7 +8,7 @@ import team.opentech.usher.rpc.enums.RpcResponseTypeEnum;
 import team.opentech.usher.rpc.enums.RpcStatusEnum;
 import team.opentech.usher.rpc.enums.RpcTypeEnum;
 import team.opentech.usher.rpc.exception.RpcException;
-import team.opentech.usher.rpc.exchange.content.MyRpcContent;
+import team.opentech.usher.rpc.exchange.content.UsherRpcContent;
 import team.opentech.usher.rpc.exchange.pojo.content.RpcContent;
 import team.opentech.usher.rpc.exchange.pojo.content.RpcRequestContent;
 import team.opentech.usher.rpc.exchange.pojo.content.RpcRequestContentFactory;
@@ -50,7 +50,7 @@ public class NormalRpcRequestFactory extends AbstractRpcFactory implements Reque
         // 返回一个构造完成的消费者
         NormalRequestRpcData rpcNormalRequest = (NormalRequestRpcData) RpcSpiManager.createOrGetExtensionByClass(RpcData.class, registryName);
         rpcNormalRequest.setType(RpcTypeEnum.REQUEST.getCode());
-        rpcNormalRequest.setVersion(MyRpcContent.VERSION);
+        rpcNormalRequest.setVersion(UsherRpcContent.VERSION);
         rpcNormalRequest.setHeaders(rpcHeaders);
         rpcNormalRequest.setContentArray(contentArray);
         rpcNormalRequest.setStatus(RpcStatusEnum.NULL.getCode());
@@ -76,7 +76,7 @@ public class NormalRpcRequestFactory extends AbstractRpcFactory implements Reque
         // 返回一个构造完成的消费者
         NormalRequestRpcData rpcNormalRequest = (NormalRequestRpcData) RpcSpiManager.createOrGetExtensionByClass(RpcData.class, registryName);
         rpcNormalRequest.setType(RpcTypeEnum.REQUEST.getCode());
-        rpcNormalRequest.setVersion(MyRpcContent.VERSION);
+        rpcNormalRequest.setVersion(UsherRpcContent.VERSION);
         rpcNormalRequest.setHeaders(request.rpcHeaders());
         String[] contentArray = {String.valueOf(RpcResponseTypeEnum.EXCEPTION.getCode()), "消费者超时,超时时间为:" + timeout + ", 调用应用:" + abstractRpcContent.getServiceName() + ",调用方法:" + abstractRpcContent.getMethodName()};
         rpcNormalRequest.setContentArray(contentArray);
@@ -96,7 +96,7 @@ public class NormalRpcRequestFactory extends AbstractRpcFactory implements Reque
     public RpcData createExceptionResponse(RpcData request, Throwable th) throws InterruptedException {
         NormalResponseRpcData rpcNormalRequest = NormalRpcResponseFactory.createNewNormalResponseRpcData();
         rpcNormalRequest.setType(RpcTypeEnum.REQUEST.getCode());
-        rpcNormalRequest.setVersion(MyRpcContent.VERSION);
+        rpcNormalRequest.setVersion(UsherRpcContent.VERSION);
         rpcNormalRequest.setHeaders(request.rpcHeaders());
         String[] contentArray = {String.valueOf(RpcResponseTypeEnum.EXCEPTION.getCode()), "错误: " + th.getMessage()};
         rpcNormalRequest.setContentArray(contentArray);
@@ -115,7 +115,7 @@ public class NormalRpcRequestFactory extends AbstractRpcFactory implements Reque
     public RpcData createFallback(RpcData request, Object response) throws InterruptedException {
         NormalResponseRpcData rpcNormalRequest = NormalRpcResponseFactory.createNewNormalResponseRpcData();
         rpcNormalRequest.setType(RpcTypeEnum.REQUEST.getCode());
-        rpcNormalRequest.setVersion(MyRpcContent.VERSION);
+        rpcNormalRequest.setVersion(UsherRpcContent.VERSION);
         rpcNormalRequest.setHeaders(request.rpcHeaders());
         String[] contentArray = {String.valueOf(RpcResponseTypeEnum.STRING_BACK.getCode()), JSON.toJSONString(response, SerializerFeature.WriteClassName)};
         rpcNormalRequest.setContentArray(contentArray);

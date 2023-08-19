@@ -1,6 +1,6 @@
 package team.opentech.usher.rpc.cluster.load;
 
-import team.opentech.usher.MyThreadLocal;
+import team.opentech.usher.UsherThreadLocal;
 import team.opentech.usher.rpc.annotation.RpcSpi;
 import team.opentech.usher.rpc.cluster.pojo.NettyInfo;
 import team.opentech.usher.rpc.cluster.pojo.SendInfo;
@@ -22,7 +22,7 @@ public class FastestReturnSpeedLoadBalanceImpl extends AbstractLoadBalance {
     /**
      * 记录返回时间用
      */
-    private MyThreadLocal<Long> timeThreadLocal;
+    private UsherThreadLocal<Long> timeThreadLocal;
 
     private Map<NettyInfo, Long> lastFiveSendAvgTimeMap = new HashMap<>();
 
@@ -53,7 +53,7 @@ public class FastestReturnSpeedLoadBalanceImpl extends AbstractLoadBalance {
     @Override
     protected void preprocessing(NettyInfo nettyInfo, RpcNetty netty) {
         long l = System.currentTimeMillis();
-        timeThreadLocal = new MyThreadLocal<>();
+        timeThreadLocal = new UsherThreadLocal<>();
         timeThreadLocal.set(l);
     }
 

@@ -1,6 +1,6 @@
 package team.opentech.usher.context;
 
-import team.opentech.usher.MyThreadLocal;
+import team.opentech.usher.UsherThreadLocal;
 import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.cqe.DefaultCQE;
 import team.opentech.usher.util.DefaultCQEBuildUtil;
@@ -23,11 +23,11 @@ public class UserInfoHelper {
      */
     public static final String USER_IP_RPC_KEY = "user_ip";
 
-    private static final MyThreadLocal<UserDTO> USER = new MyThreadLocal<>();
+    private static final UsherThreadLocal<UserDTO> USER = new UsherThreadLocal<>();
 
-    private static final MyThreadLocal<String> TOKEN = new MyThreadLocal<>();
+    private static final UsherThreadLocal<String> TOKEN = new UsherThreadLocal<>();
 
-    private static final MyThreadLocal<String> IP = new MyThreadLocal<>();
+    private static final UsherThreadLocal<String> IP = new UsherThreadLocal<>();
 
     public static UserDTO setUser(UserDTO userDO) {
         UserDTO lastUser = USER.get();

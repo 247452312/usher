@@ -1,6 +1,6 @@
 package team.opentech.usher;
 
-import team.opentech.usher.rpc.annotation.MyRpc;
+import team.opentech.usher.rpc.annotation.UsherRpc;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
  * @date 文件创建日期 2020年04月27日 16时46分
  */
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@MyRpc(baseScanPackage = {"team.opentech.usher.*.*"})
+@UsherRpc(baseScanPackage = {"team.opentech.usher.*.*"})
 public class WebApplication {
 
     public static void main(String[] args) throws Exception {

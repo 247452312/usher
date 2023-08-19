@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.naming.NamingFactory;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.listener.NamingEvent;
-import team.opentech.usher.rpc.annotation.MyRpc;
+import team.opentech.usher.rpc.annotation.UsherRpc;
 import team.opentech.usher.rpc.config.RpcConfigFactory;
 import team.opentech.usher.rpc.enums.RpcTypeEnum;
 import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
@@ -25,7 +25,7 @@ import org.springframework.util.Assert;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2020年12月27日 16时20分
  */
-@MyRpc
+@UsherRpc
 class RegistryFactoryTest {
 
     @Test

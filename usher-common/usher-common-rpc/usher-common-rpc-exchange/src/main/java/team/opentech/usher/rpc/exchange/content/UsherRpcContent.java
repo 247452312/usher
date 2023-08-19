@@ -11,7 +11,7 @@ import java.util.List;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2020年12月18日 09时23分
  */
-public class MyRpcContent {
+public class UsherRpcContent {
 
     /**
      * rpc版本
@@ -66,7 +66,7 @@ public class MyRpcContent {
         (byte) (AGREEMENT_START_INT & 0xff)
     };
 
-    private MyRpcContent() {
+    private UsherRpcContent() {
     }
 
 

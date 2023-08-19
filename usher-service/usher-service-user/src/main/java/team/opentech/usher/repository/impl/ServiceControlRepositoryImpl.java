@@ -1,7 +1,7 @@
 package team.opentech.usher.repository.impl;
 
 import team.opentech.usher.annotation.Repository;
-import team.opentech.usher.context.MyContext;
+import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.enums.ReadWriteTypeEnum;
 import team.opentech.usher.pojo.DTO.MethodDisableDTO;
 import team.opentech.usher.pojo.entity.MethodDisable;
@@ -32,12 +32,12 @@ public class ServiceControlRepositoryImpl implements ServiceControlRepository {
     @Override
     public Boolean checkMethodDisable(String fullMethodName) {
         try (Redisable jedis = redisPoolHandle.getJedis()) {
-            Boolean exists = jedis.exists(MyContext.SERVICE_USEABLE_SWITCH);
+            Boolean exists = jedis.exists(UsherContext.SERVICE_USEABLE_SWITCH);
             // 如果不存在这个hash串,则全部放行
             if (!exists) {
                 return Boolean.TRUE;
             }
-            String methodPower = jedis.hget(MyContext.SERVICE_USEABLE_SWITCH, fullMethodName);
+            String methodPower = jedis.hget(UsherContext.SERVICE_USEABLE_SWITCH, fullMethodName);
             if (methodPower != null) {
                 //如果是0返回不禁用.如果不是0返回禁用
                 return 0 == Integer.parseInt(methodPower);
@@ -53,7 +53,7 @@ public class ServiceControlRepositoryImpl implements ServiceControlRepository {
             return true;
         }
         try (Redisable jedis = redisPoolHandle.getJedis()) {
-            String classPower = jedis.hget(MyContext.SERVICE_USEABLE_SWITCH, className);
+            String classPower = jedis.hget(UsherContext.SERVICE_USEABLE_SWITCH, className);
             if (classPower != null) {
                 int classPowerInt = Integer.parseInt(classPower);
                 //3代表禁用全部
@@ -78,12 +78,12 @@ public class ServiceControlRepositoryImpl implements ServiceControlRepository {
     @Override
     public List<MethodDisableDTO> findAll() {
         try (Redisable jedis = redisPoolHandle.getJedis()) {
-            Boolean exists = jedis.exists(MyContext.SERVICE_USEABLE_SWITCH);
+            Boolean exists = jedis.exists(UsherContext.SERVICE_USEABLE_SWITCH);
             // 如果不存在禁用对应的key
             if (!exists) {
                 return new ArrayList<>();
             }
-            Map<String, String> allMethodDisable = jedis.hgetAll(MyContext.SERVICE_USEABLE_SWITCH);
+            Map<String, String> allMethodDisable = jedis.hgetAll(UsherContext.SERVICE_USEABLE_SWITCH);
             List<MethodDisableDTO> list = new ArrayList<>();
             for (Map.Entry<String, String> entry : allMethodDisable.entrySet()) {
                 String key = entry.getKey();
@@ -106,7 +106,7 @@ public class ServiceControlRepositoryImpl implements ServiceControlRepository {
             MethodDisableDTO data = methodDisable.toDTO();
             String className = data.getClassName();
             if (className != null && !className.contains(MethodDisable.INTERFACE_NAME_PACKAGE_SEPARATOR)) {
-                className = MyContext.SERVICE_PACKAGE_PREFIX + className;
+                className = UsherContext.SERVICE_PACKAGE_PREFIX + className;
             }
             String methodName = data.getMethodName();
             // 这是一个方法
@@ -114,9 +114,9 @@ public class ServiceControlRepositoryImpl implements ServiceControlRepository {
                 String key = className + MethodDisable.METHOD_LINK_CLASS_SYMBOL + methodName;
                 Integer type = data.getDisableType();
                 type = type == null ? 0 : type;
-                jedis.hset(MyContext.SERVICE_USEABLE_SWITCH, key, type.toString());
+                jedis.hset(UsherContext.SERVICE_USEABLE_SWITCH, key, type.toString());
             } else {
-                jedis.hset(MyContext.SERVICE_USEABLE_SWITCH, className, data.getDisableType().toString());
+                jedis.hset(UsherContext.SERVICE_USEABLE_SWITCH, className, data.getDisableType().toString());
             }
         }
     }
@@ -125,7 +125,7 @@ public class ServiceControlRepositoryImpl implements ServiceControlRepository {
     public void delMethodDisable(MethodDisable methodDisable) {
         MethodDisableDTO methodDisableDTO = methodDisable.toDTO();
         try (Redisable jedis = redisPoolHandle.getJedis()) {
-            Boolean exists = jedis.exists(MyContext.SERVICE_USEABLE_SWITCH);
+            Boolean exists = jedis.exists(UsherContext.SERVICE_USEABLE_SWITCH);
             // 如果不存在禁用对应的key
             if (!exists) {
                 return;
@@ -133,7 +133,7 @@ public class ServiceControlRepositoryImpl implements ServiceControlRepository {
             String key;
             String className = methodDisableDTO.getClassName();
             if (className != null && !className.contains(MethodDisable.INTERFACE_NAME_PACKAGE_SEPARATOR)) {
-                key = MyContext.SERVICE_PACKAGE_PREFIX + className;
+                key = UsherContext.SERVICE_PACKAGE_PREFIX + className;
             } else {
                 key = className;
             }
@@ -141,7 +141,7 @@ public class ServiceControlRepositoryImpl implements ServiceControlRepository {
             if (methodName != null) {
                 key = methodDisable.toInterfaceMethodName();
             }
-            jedis.hdel(MyContext.SERVICE_USEABLE_SWITCH, key);
+            jedis.hdel(UsherContext.SERVICE_USEABLE_SWITCH, key);
         }
     }
 }

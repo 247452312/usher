@@ -61,7 +61,7 @@ public class MyExecutorWrapper extends ThreadPoolExecutor {
      */
     class MyRunnableWrapper implements Runnable {
 
-        private final AtomicReference<Map<MyThreadLocal<?>, Object>> tempSaveThreadLocal = new AtomicReference<>(MyThreadLocal.copy());
+        private final AtomicReference<Map<UsherThreadLocal<?>, Object>> tempSaveThreadLocal = new AtomicReference<>(UsherThreadLocal.copy());
 
         private final Runnable runnable;
 
@@ -72,11 +72,11 @@ public class MyExecutorWrapper extends ThreadPoolExecutor {
 
         @Override
         public void run() {
-            MyThreadLocal.initChildThreadLocal(tempSaveThreadLocal.get());
+            UsherThreadLocal.initChildThreadLocal(tempSaveThreadLocal.get());
             try {
                 runnable.run();
             } finally {
-                MyThreadLocal.removeChildThreadLocal();
+                UsherThreadLocal.removeChildThreadLocal();
                 tempSaveThreadLocal.set(null);
             }
         }

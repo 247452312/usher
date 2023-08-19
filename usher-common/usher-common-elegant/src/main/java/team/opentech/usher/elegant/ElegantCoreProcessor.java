@@ -2,7 +2,7 @@ package team.opentech.usher.elegant;
 
 import team.opentech.usher.MyExecutorWrapper;
 import team.opentech.usher.rpc.netty.spi.filter.RpcFilter;
-import team.opentech.usher.rpc.registry.manager.MyRpcRegistryManagerFactory;
+import team.opentech.usher.rpc.registry.manager.UsherRpcRegistryManagerFactory;
 import team.opentech.usher.rpc.spi.RpcSpiManager;
 import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.SpringUtil;
@@ -37,7 +37,7 @@ public class ElegantCoreProcessor implements InitializingBean, ApplicationListen
         LogUtil.info("应用优雅上下线核心处理器开始行动!");
         this.handlers = new ArrayList<>();
         this.handlers.addAll(SpringUtil.getBeans(ElegantHandler.class));
-        this.handlers.add((ElegantHandler) RpcSpiManager.createOrGetExtensionByClass(RpcFilter.class, "elegantRpcFilter", MyRpcRegistryManagerFactory.createOrGetMyRpcRegistryManager()));
+        this.handlers.add((ElegantHandler) RpcSpiManager.createOrGetExtensionByClass(RpcFilter.class, "elegantRpcFilter", UsherRpcRegistryManagerFactory.createOrGetUsherRpcRegistryManager()));
         es.execute(new ElegantHandlerStartMonitor());
     }
 

@@ -11,7 +11,7 @@ import team.opentech.usher.rpc.enums.RpcResponseTypeEnum;
 import team.opentech.usher.rpc.enums.RpcStatusEnum;
 import team.opentech.usher.rpc.enums.RpcTypeEnum;
 import team.opentech.usher.rpc.exception.RpcBusinessException;
-import team.opentech.usher.rpc.exchange.content.MyRpcContent;
+import team.opentech.usher.rpc.exchange.content.UsherRpcContent;
 import team.opentech.usher.rpc.exchange.pojo.content.RpcContent;
 import team.opentech.usher.rpc.exchange.pojo.content.RpcResponseContentFactory;
 import team.opentech.usher.rpc.exchange.pojo.data.NormalResponseRpcData;
@@ -55,7 +55,7 @@ public class NormalRpcResponseFactory extends AbstractRpcFactory implements Resp
         NormalResponseRpcData rpcNormalRequest = createNewNormalResponseRpcData();
 
         rpcNormalRequest.setType(RpcTypeEnum.RESPONSE.getCode());
-        rpcNormalRequest.setVersion(MyRpcContent.VERSION);
+        rpcNormalRequest.setVersion(UsherRpcContent.VERSION);
         rpcNormalRequest.setHeaders(rpcHeaders);
         rpcNormalRequest.setContentArray(contentArray);
         rpcNormalRequest.setStatus((Byte) others[0]);
@@ -73,7 +73,7 @@ public class NormalRpcResponseFactory extends AbstractRpcFactory implements Resp
         NormalResponseRpcData rpcNormalRequest = createNewNormalResponseRpcData();
 
         rpcNormalRequest.setType(RpcTypeEnum.RESPONSE.getCode());
-        rpcNormalRequest.setVersion(MyRpcContent.VERSION);
+        rpcNormalRequest.setVersion(UsherRpcContent.VERSION);
         Map<String, String> rpcHeaderMap = RpcHeaderContext.get();
         RpcHeader[] rpcHeaderArray = rpcHeaderMap.entrySet().stream().map(t -> new RpcHeader(t.getKey(), t.getValue())).toArray(RpcHeader[]::new);
         rpcNormalRequest.setHeaders(rpcHeaderArray);
@@ -95,7 +95,7 @@ public class NormalRpcResponseFactory extends AbstractRpcFactory implements Resp
         NormalResponseRpcData rpcNormalRequest = createNewNormalResponseRpcData();
 
         rpcNormalRequest.setType(RpcTypeEnum.REQUEST.getCode());
-        rpcNormalRequest.setVersion(MyRpcContent.VERSION);
+        rpcNormalRequest.setVersion(UsherRpcContent.VERSION);
         rpcNormalRequest.setHeaders(request.rpcHeaders());
         String[] contentArray = {String.valueOf(RpcResponseTypeEnum.EXCEPTION.getCode()), "生产者超时:" + timeout};
         rpcNormalRequest.setContentArray(contentArray);
@@ -122,7 +122,7 @@ public class NormalRpcResponseFactory extends AbstractRpcFactory implements Resp
         NormalResponseRpcData rpcNormalRequest = createNewNormalResponseRpcData();
 
         rpcNormalRequest.setType(RpcTypeEnum.RESPONSE.getCode());
-        rpcNormalRequest.setVersion(MyRpcContent.VERSION);
+        rpcNormalRequest.setVersion(UsherRpcContent.VERSION);
         rpcNormalRequest.setHeaders(rpcHeaders);
         String exceptionStr = JSON.toJSONString(e);
         String[] contentArray = new String[]{RpcResponseTypeEnum.EXCEPTION.getCode().toString(), e == null ? RpcStatusEnum.PROVIDER_ERROR.getName() : exceptionStr};
@@ -150,7 +150,7 @@ public class NormalRpcResponseFactory extends AbstractRpcFactory implements Resp
         NormalResponseRpcData rpcNormalRequest = createNewNormalResponseRpcData();
 
         rpcNormalRequest.setType(RpcTypeEnum.RESPONSE.getCode());
-        rpcNormalRequest.setVersion(MyRpcContent.VERSION);
+        rpcNormalRequest.setVersion(UsherRpcContent.VERSION);
         rpcNormalRequest.setHeaders(rpcHeaders);
         Throwable cause = businessException.getCause();
         String exceptionStr = JSON.toJSONString(cause);

@@ -1,6 +1,6 @@
 package team.opentech.usher.rpc.exchange.pojo.data.factory;
 
-import team.opentech.usher.rpc.exchange.content.MyRpcContent;
+import team.opentech.usher.rpc.exchange.content.UsherRpcContent;
 import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
 import team.opentech.usher.rpc.exchange.pojo.head.RpcHeader;
 import team.opentech.usher.rpc.spi.RpcSpiExtension;
@@ -60,7 +60,7 @@ public interface RpcFactory extends RpcSpiExtension {
      * @return
      */
     default RpcData getHealth() {
-        return MyRpcContent.RPC_HEALTH_DATA;
+        return UsherRpcContent.RPC_HEALTH_DATA;
     }
 
 }

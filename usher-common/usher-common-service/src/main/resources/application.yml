@@ -94,8 +94,8 @@ redis:
 rabbit:
   host: prod
   port: 5672
-  username: uhyils
-  password: 123456
+  username: admin
+  password: admin
 
 id:
   organization:
