@@ -14,12 +14,12 @@ import java.util.concurrent.atomic.AtomicReference;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年06月27日 15时03分
  */
-public class MyExecutorWrapper extends ThreadPoolExecutor {
+public class UsherExecutorWrapper extends ThreadPoolExecutor {
 
 
     private final ExecutorService executor;
 
-    private MyExecutorWrapper(ThreadPoolExecutor executor) {
+    private UsherExecutorWrapper(ThreadPoolExecutor executor) {
         super(executor.getCorePoolSize(), executor.getMaximumPoolSize(), executor.getKeepAliveTime(TimeUnit.NANOSECONDS), TimeUnit.NANOSECONDS, executor.getQueue(), executor.getThreadFactory(), executor.getRejectedExecutionHandler());
         this.executor = executor;
     }
@@ -31,8 +31,8 @@ public class MyExecutorWrapper extends ThreadPoolExecutor {
      *
      * @return
      */
-    public static MyExecutorWrapper createByThreadPoolExecutor(ThreadPoolExecutor executor) {
-        return new MyExecutorWrapper(executor);
+    public static UsherExecutorWrapper createByThreadPoolExecutor(ThreadPoolExecutor executor) {
+        return new UsherExecutorWrapper(executor);
     }
 
     @Override

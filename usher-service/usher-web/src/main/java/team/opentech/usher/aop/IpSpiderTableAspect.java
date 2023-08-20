@@ -1,6 +1,6 @@
 package team.opentech.usher.aop;
 
-import team.opentech.usher.MyExecutorWrapper;
+import team.opentech.usher.UsherExecutorWrapper;
 import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.context.SpiderContext;
 import team.opentech.usher.enums.ServiceCode;
@@ -44,7 +44,7 @@ import org.springframework.stereotype.Component;
 public class IpSpiderTableAspect {
 
 
-    private static ExecutorService es = MyExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(5, 100, 3000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(10)));
+    private static ExecutorService es = UsherExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(5, 100, 3000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(10)));
 
     @RpcReference
     private BlackListProvider blackListService;

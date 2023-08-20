@@ -40,24 +40,25 @@ public class UsherThreadLocal<T> extends InheritableThreadLocal<T> {
     @Override
     public T get() {
         Thread thread = Thread.currentThread();
-        Optional<Map<UsherThreadLocal<?>, Object>> myThreadLocalObjectMap = Optional.ofNullable(cacheMyThreadLocal.get(thread));
-        return myThreadLocalObjectMap.map(t -> (T) t.get(this)).orElse(initialValue());
+        Optional<Map<UsherThreadLocal<?>, Object>> usherThreadLocalObjectMap = Optional.ofNullable(cacheMyThreadLocal.get(thread));
+        return usherThreadLocalObjectMap.map(t -> (T) t.get(this)).orElse(super.get());
     }
 
     @Override
     public void set(T value) {
         Thread thread = Thread.currentThread();
-        Map<UsherThreadLocal<?>, Object> myThreadLocalObjectMap = cacheMyThreadLocal.computeIfAbsent(thread, k -> new HashMap<>());
-        myThreadLocalObjectMap.put(this, value);
+        Map<UsherThreadLocal<?>, Object> usherThreadLocalObjectMap = cacheMyThreadLocal.computeIfAbsent(thread, k -> new HashMap<>());
+        usherThreadLocalObjectMap.put(this, value);
+        super.set(value);
     }
 
     @Override
     public void remove() {
         Thread thread = Thread.currentThread();
-        Map<UsherThreadLocal<?>, Object> myThreadLocalObjectMap = cacheMyThreadLocal.get(thread);
-        if (myThreadLocalObjectMap == null) {
+        Map<UsherThreadLocal<?>, Object> usherThreadLocalObjectMap = cacheMyThreadLocal.get(thread);
+        if (usherThreadLocalObjectMap == null) {
             return;
         }
-        myThreadLocalObjectMap.remove(this);
+        usherThreadLocalObjectMap.remove(this);
     }
 }

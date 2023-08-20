@@ -9,12 +9,12 @@ import java.util.concurrent.TimeUnit;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年06月28日 14时18分
  */
-class MyExecutorWrapperTest {
+class UsherExecutorWrapperTest {
 
     @org.junit.jupiter.api.Test
     void execute() throws InterruptedException {
 
-        MyExecutorWrapper wrapper = MyExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(1, 1, 3000L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100)));
+        UsherExecutorWrapper wrapper = UsherExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(1, 1, 3000L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100)));
         for (int i = 1; i < 100; i++) {
             if (i % 2 == 0) {
                 TempContext.temp.set("asd" + i);
@@ -32,7 +32,7 @@ class MyExecutorWrapperTest {
     @org.junit.jupiter.api.Test
     void execute2() throws InterruptedException {
 
-        MyExecutorWrapper wrapper = MyExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(1, 1, 3000L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100)));
+        UsherExecutorWrapper wrapper = UsherExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(1, 1, 3000L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100)));
         for (int i = 1; i < 100; i++) {
             if (i % 2 == 0) {
                 TempContext.temp2.set("asd" + i);
