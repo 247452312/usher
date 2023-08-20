@@ -118,6 +118,11 @@ public class MysqlGlobalVariables {
      */
     private Integer maxUserConnections = 0;
 
+    /**
+     * 版本
+     */
+    private String version_comment = "MySQL Community Server - GPL";
+
     public Integer getBackLog() {
         return backLog;
     }
@@ -260,5 +265,13 @@ public class MysqlGlobalVariables {
 
     public void setMaxUserConnections(Integer maxUserConnections) {
         this.maxUserConnections = maxUserConnections;
+    }
+
+    public String getVersion_comment() {
+        return version_comment;
+    }
+
+    public void setVersion_comment(String version_comment) {
+        this.version_comment = version_comment;
     }
 }

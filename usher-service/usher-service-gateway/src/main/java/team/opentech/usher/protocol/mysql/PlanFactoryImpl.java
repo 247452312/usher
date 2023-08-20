@@ -2,8 +2,12 @@ package team.opentech.usher.protocol.mysql;
 
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLObject;
+import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLMethodInvokeExpr;
 import com.alibaba.druid.sql.ast.statement.SQLSelectItem;
+import java.util.List;
+import java.util.Map;
+import org.springframework.stereotype.Component;
 import team.opentech.usher.plan.MysqlPlan;
 import team.opentech.usher.plan.PlanFactory;
 import team.opentech.usher.plan.pojo.MySQLSelectItem;
@@ -14,6 +18,7 @@ import team.opentech.usher.plan.pojo.plan.InnerJoinSqlPlan;
 import team.opentech.usher.plan.pojo.plan.LeftJoinSqlPlan;
 import team.opentech.usher.plan.pojo.plan.MethodInvokePlan;
 import team.opentech.usher.plan.pojo.plan.RightJoinSqlPlan;
+import team.opentech.usher.plan.pojo.plan.impl.BinarySqlPlanImpl;
 import team.opentech.usher.plan.pojo.plan.impl.InnerJoinSqlPlanImpl;
 import team.opentech.usher.plan.pojo.plan.impl.LeftJoinSqlPlanImpl;
 import team.opentech.usher.plan.pojo.plan.impl.MethodInvokePlanImpl;
@@ -21,9 +26,6 @@ import team.opentech.usher.plan.pojo.plan.impl.ResultMappingPlanImpl;
 import team.opentech.usher.plan.pojo.plan.impl.RightJoinSqlPlanImpl;
 import team.opentech.usher.plan.pojo.plan.impl.UnionSqlPlanImpl;
 import team.opentech.usher.protocol.mysql.plan.BlockQuerySelectSqlPlanImpl;
-import java.util.List;
-import java.util.Map;
-import org.springframework.stereotype.Component;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -73,4 +75,11 @@ public class PlanFactoryImpl implements PlanFactory {
     public MysqlPlan buildUnionSelectSqlPlan(Map<String, String> headers, List<Long> planIds) {
         return new UnionSqlPlanImpl(headers, planIds);
     }
+
+    @Override
+    public MysqlPlan buildBinarySqlPlan(Map<String, String> headers, SQLExpr leftExpr, SQLBinaryOperator operator, SQLExpr rightExpr) {
+        return new BinarySqlPlanImpl(headers, leftExpr, operator, rightExpr);
+    }
+
+
 }

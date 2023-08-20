@@ -94,9 +94,7 @@ public class GatewaySdkServiceImpl implements GatewaySdkService {
 
         // 1.判断密码是否正确
         if (company.checkSkByMysqlChallenge(mysqlTcpInfo.getRandomByte(), command.getChallenge())) {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setIp(UserInfoHelper.getUserIp().orElse(null));
-            userDTO.setId(company.unique.getId());
+            UserDTO userDTO = company.mysqlLogin();
             mysqlTcpInfo.setUserDTO(userDTO);
             return new OkResponse(SqlTypeEnum.NULL);
         }
