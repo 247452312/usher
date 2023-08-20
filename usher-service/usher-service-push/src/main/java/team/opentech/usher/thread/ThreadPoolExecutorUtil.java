@@ -1,6 +1,6 @@
 package team.opentech.usher.thread;
 
-import team.opentech.usher.MyExecutorWrapper;
+import team.opentech.usher.UsherExecutorWrapper;
 import team.opentech.usher.util.SpringUtil;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -15,7 +15,7 @@ public class ThreadPoolExecutorUtil {
 
     public static ThreadPoolExecutor getPoll() {
         AsyncTaskProperties properties = SpringUtil.getBean(AsyncTaskProperties.class);
-        return MyExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(
+        return UsherExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(
             properties.getCorePoolSize(),
             properties.getMaxPoolSize(),
             properties.getKeepAliveSeconds(),

@@ -1,6 +1,6 @@
 package team.opentech.usher.elegant;
 
-import team.opentech.usher.MyExecutorWrapper;
+import team.opentech.usher.UsherExecutorWrapper;
 import team.opentech.usher.rpc.netty.spi.filter.RpcFilter;
 import team.opentech.usher.rpc.registry.manager.UsherRpcRegistryManagerFactory;
 import team.opentech.usher.rpc.spi.RpcSpiManager;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ElegantCoreProcessor implements InitializingBean, ApplicationListener<ContextClosedEvent> {
 
-    private static ExecutorService es = MyExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(2, 100, 3000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(10)));
+    private static ExecutorService es = UsherExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(2, 100, 3000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(10)));
 
     private List<ElegantHandler> handlers;
 

@@ -4,7 +4,7 @@ package team.opentech.usher.protocol.mq;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Envelope;
-import team.opentech.usher.MyExecutorWrapper;
+import team.opentech.usher.UsherExecutorWrapper;
 import team.opentech.usher.annotation.MyMq;
 import team.opentech.usher.bus.BusInterface;
 import team.opentech.usher.enums.LogDetailTypeEnum;
@@ -68,7 +68,7 @@ public class RabbitLogInfoConsumer extends AbstractMqConsumer {
         super(channel);
         this.bus = applicationContext.getBean(BusInterface.class);
         int process = Runtime.getRuntime().availableProcessors();
-        executor = MyExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(process, process * 2, 3000L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100), new LogDealThreadFactory(), new CallerRunsPolicy()));
+        executor = UsherExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(process, process * 2, 3000L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100), new LogDealThreadFactory(), new CallerRunsPolicy()));
         traceDetailService = applicationContext.getBean(TraceDetailService.class);
         traceInfoService = applicationContext.getBean(TraceInfoService.class);
         traceLogService = applicationContext.getBean(TraceLogService.class);
