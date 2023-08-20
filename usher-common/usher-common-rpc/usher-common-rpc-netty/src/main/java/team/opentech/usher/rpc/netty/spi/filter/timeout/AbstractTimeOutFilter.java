@@ -1,6 +1,6 @@
 package team.opentech.usher.rpc.netty.spi.filter.timeout;
 
-import team.opentech.usher.MyExecutorWrapper;
+import team.opentech.usher.UsherExecutorWrapper;
 import team.opentech.usher.rpc.exception.RpcException;
 import team.opentech.usher.rpc.exchange.pojo.content.RpcRequestContent;
 import team.opentech.usher.rpc.exchange.pojo.data.AbstractRequestRpcData;
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeoutException;
  */
 public abstract class AbstractTimeOutFilter {
 
-    private static final ExecutorService es = MyExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(5, 100, 3000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(10)));
+    private static final ExecutorService es = UsherExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(5, 100, 3000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(10)));
 
     protected RpcData invoke0(RpcInvoker invoker, FilterContext invokerContext) throws InterruptedException {
         RpcData requestData = invokerContext.getRequestData();
