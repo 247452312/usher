@@ -1,5 +1,10 @@
 package team.opentech.usher.mysql.pojo.response.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.enums.MysqlServerStatusEnum;
 import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
@@ -7,11 +12,6 @@ import team.opentech.usher.mysql.pojo.response.AbstractMysqlResponse;
 import team.opentech.usher.mysql.util.MysqlUtil;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.MapUtil;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -60,6 +60,27 @@ public class ResultSetResponse extends AbstractMysqlResponse {
     @Override
     public byte getFirstByte() {
         return (byte) 0xFF;
+    }
+
+    @Override
+    public String toResponseStr() {
+        StringBuilder sb = new StringBuilder("返回表格:\n");
+        for (FieldInfo field : fields) {
+            sb.append("|");
+            sb.append(field.getFieldName());
+            sb.append("\t");
+        }
+        sb.append("\n");
+        for (Map<String, Object> entry : jsonInfo) {
+            for (FieldInfo field : fields) {
+                Object o = entry.get(field.getFieldName());
+                sb.append("|");
+                sb.append(o);
+                sb.append("\t");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 
     @Override

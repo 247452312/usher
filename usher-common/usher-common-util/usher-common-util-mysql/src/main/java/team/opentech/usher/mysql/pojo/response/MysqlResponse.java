@@ -28,4 +28,12 @@ public interface MysqlResponse {
     byte getFirstByte();
 
 
+    /**
+     * 结果字符串
+     *
+     * @return
+     */
+    String toResponseStr();
+
+
 }

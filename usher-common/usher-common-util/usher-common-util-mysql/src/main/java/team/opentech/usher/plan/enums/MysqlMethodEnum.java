@@ -1,7 +1,6 @@
 package team.opentech.usher.plan.enums;
 
 import com.alibaba.druid.sql.ast.SQLExpr;
-import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +12,7 @@ import team.opentech.usher.mysql.enums.FieldTypeEnum;
 import team.opentech.usher.mysql.handler.MysqlTcpInfo;
 import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
+import team.opentech.usher.mysql.util.MysqlUtil;
 import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.StringUtil;
@@ -59,22 +59,28 @@ public enum MysqlMethodEnum {
      * concat
      */
     CONCAT("concat", -1, String.class, true, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
-        List<Map<String, Object>> parentResult = parentInvokeResult.getResult();
-        List<Map<String, Object>> result = new ArrayList<>();
-        // 遍历每一行
-        for (Map<String, Object> lineResult : parentResult) {
-            StringBuilder sb = new StringBuilder();
-            for (SQLExpr argument : arguments) {
-                // todo 这里需要处理argument 如果argument有前缀之类的(a.name)就需要单独处理
-
-                Object o = lineResult.get(argument.toString());
-                sb.append(o);
+        List<StringBuilder> argList = new ArrayList<>();
+        for (int i = 0; i < arguments.size(); i++) {
+            SQLExpr sqlExpr = arguments.get(i);
+            List<String> strList = MysqlUtil.parse(sqlExpr, lastAllPlanResult, parentInvokeResult);
+            for (int j = 0; j < strList.size(); j++) {
+                if (argList.size() <= j) {
+                    argList.add(new StringBuilder());
+                }
+                StringBuilder stringBuilder = argList.get(j);
+                stringBuilder.append(strList.get(j));
             }
-            Map<String, Object> e = new HashMap<>();
-            e.put(fieldName, sb.toString());
-            result.add(e);
+        }
+
+        List<Map<String, Object>> result = new ArrayList<>();
+        for (StringBuilder stringBuilder : argList) {
+            String string = stringBuilder.toString();
+            Map<String, Object> item = new HashMap<>();
+            item.put(fieldName, string);
+            result.add(item);
         }
         return result;
+        // todo 这里还要考虑 select count(a.id) from xxx 的情况
     }),
 
     /**
@@ -83,8 +89,15 @@ public enum MysqlMethodEnum {
     LEFT("left", 2, String.class, true, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
         SQLExpr str = arguments.get(0);
         SQLExpr length = arguments.get(1);
+        List<String> strList = MysqlUtil.parse(str, lastAllPlanResult, parentInvokeResult);
+        List<Number> lengthList = MysqlUtil.parse(length, lastAllPlanResult, parentInvokeResult);
         List<Map<String, Object>> result = new ArrayList<>();
-
+        for (int i = 0; i < strList.size(); i++) {
+            Map<String, Object> item = new HashMap<>();
+            Number ch = lengthList.get(i);
+            item.put(fieldName, strList.get(i).substring(0, ch.intValue()));
+            result.add(item);
+        }
         return result;
     }),
     /**
@@ -93,10 +106,15 @@ public enum MysqlMethodEnum {
     INSTR("instr", -1, String.class, true, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
         SQLExpr str = arguments.get(0);
         SQLExpr length = arguments.get(1);
-        str = parse(str, lastAllPlanResult);
-        length = parse(length, lastAllPlanResult);
+        List<String> strList = MysqlUtil.parse(str, lastAllPlanResult, parentInvokeResult);
+        List<String> lengthList = MysqlUtil.parse(length, lastAllPlanResult, parentInvokeResult);
+        Asserts.assertTrue(strList.size() == lengthList.size(), "方法入参对应前执行计划结果数量不匹配");
         List<Map<String, Object>> result = new ArrayList<>();
-
+        for (int i = 0; i < strList.size(); i++) {
+            Map<String, Object> item = new HashMap<>();
+            item.put(fieldName, strList.get(i).indexOf(lengthList.get(i)));
+            result.add(item);
+        }
         return result;
     }),
     SUM("sum", 1, Long.class, false, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
@@ -229,24 +247,6 @@ public enum MysqlMethodEnum {
         }
         Asserts.throwException("未知的mysql方法名称,name:{},参数个数:{}", name, paramCount.toString());
         return null;
-    }
-
-    /**
-     * 解析str
-     *
-     * @param str
-     * @param allResult
-     *
-     * @return
-     */
-    private static SQLExpr parse(SQLExpr str, Map<Long, NodeInvokeResult> allResult) {
-        if (str instanceof SQLCharExpr && team.opentech.usher.mysql.util.StringUtil.cleanQuotation(str.toString()).startsWith("&")) {
-            String planId = str.toString().substring(1);
-            NodeInvokeResult nodeInvokeResult = allResult.get(Long.parseLong(planId));
-            Asserts.assertTrue(nodeInvokeResult != null, "未找到临时变量对应的执行计划");
-            return str;
-        }
-        return str;
     }
 
     public Boolean getSingleLine() {

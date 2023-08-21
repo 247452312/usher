@@ -1,14 +1,14 @@
 package team.opentech.usher.mysql.pojo.response.impl;
 
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import team.opentech.usher.mysql.enums.MysqlServerStatusEnum;
 import team.opentech.usher.mysql.enums.SqlTypeEnum;
 import team.opentech.usher.mysql.pojo.response.AbstractMysqlResponse;
 import team.opentech.usher.mysql.util.MysqlUtil;
 import team.opentech.usher.util.Asserts;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -74,6 +74,11 @@ public class OkResponse extends AbstractMysqlResponse {
 
     public OkResponse() {
         super();
+    }
+
+    @Override
+    public String toResponseStr() {
+        return "服务器处理成功";
     }
 
     @Override

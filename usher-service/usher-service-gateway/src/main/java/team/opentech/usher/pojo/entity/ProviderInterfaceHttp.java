@@ -58,7 +58,6 @@ public class ProviderInterfaceHttp extends AbstractProviderExample<ProviderInter
                     Asserts.throwException("http调用方式:{} 还未开放,敬请期待", byCode.getName());
             }
         } catch (Exception e) {
-            LogUtil.error(this, e);
             Asserts.throwException(e);
         }
         return parseHttpResponse(httpResult);

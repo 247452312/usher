@@ -1,14 +1,14 @@
 package team.opentech.usher.mysql.pojo.response.impl;
 
-import team.opentech.usher.mysql.content.MysqlContent;
-import team.opentech.usher.mysql.enums.MysqlServerStatusEnum;
-import team.opentech.usher.mysql.pojo.response.AbstractMysqlResponse;
-import team.opentech.usher.mysql.util.MysqlUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.RandomUtils;
+import team.opentech.usher.mysql.content.MysqlContent;
+import team.opentech.usher.mysql.enums.MysqlServerStatusEnum;
+import team.opentech.usher.mysql.pojo.response.AbstractMysqlResponse;
+import team.opentech.usher.mysql.util.MysqlUtil;
 
 
 /**
@@ -21,9 +21,13 @@ import org.apache.commons.lang3.RandomUtils;
 public class AuthResponse extends AbstractMysqlResponse {
 
 
-
     public AuthResponse() {
         super();
+    }
+
+    @Override
+    public String toResponseStr() {
+        return "认证成功," + mysqlTcpInfo.getUserDTO().getUsername();
     }
 
     /**
@@ -32,7 +36,6 @@ public class AuthResponse extends AbstractMysqlResponse {
      * @return
      */
     @Override
-
     public byte getFirstByte() {
         return 0x0A;
     }

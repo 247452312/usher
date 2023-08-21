@@ -1,6 +1,5 @@
 package team.opentech.usher.util;
 
-import team.opentech.usher.annotation.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,6 +9,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import team.opentech.usher.annotation.NotNull;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
  * @date 文件创建日期 2021年07月31日 21时33分
  */
 public final class StringUtil {
+
+    private static final Pattern PATTERN = Pattern.compile("^[-\\+]?[\\d]*$");
 
     /**
      * 匹配大写字符
@@ -231,7 +233,6 @@ public final class StringUtil {
         return true;
     }
 
-
     /**
      * 全不包含
      *
@@ -393,5 +394,16 @@ public final class StringUtil {
             return false;
         }
         return s1.equalsIgnoreCase(s2);
+    }
+
+    /**
+     * 判断是否可以转化为数字
+     *
+     * @param str
+     *
+     * @return
+     */
+    public static boolean isDigit(String str) {
+        return PATTERN.matcher(str).matches();
     }
 }

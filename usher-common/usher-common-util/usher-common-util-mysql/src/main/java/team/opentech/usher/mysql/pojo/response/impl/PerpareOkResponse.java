@@ -1,12 +1,12 @@
 package team.opentech.usher.mysql.pojo.response.impl;
 
-import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
-import team.opentech.usher.mysql.pojo.response.AbstractMysqlResponse;
-import team.opentech.usher.mysql.util.MysqlUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
+import team.opentech.usher.mysql.pojo.response.AbstractMysqlResponse;
+import team.opentech.usher.mysql.util.MysqlUtil;
 
 
 /**
@@ -47,6 +47,11 @@ public class PerpareOkResponse extends AbstractMysqlResponse {
 
     protected PerpareOkResponse() {
         super();
+    }
+
+    @Override
+    public String toResponseStr() {
+        return "预处理完成";
     }
 
     @Override

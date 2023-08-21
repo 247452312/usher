@@ -123,6 +123,16 @@ public class MysqlGlobalVariables {
      */
     private String version_comment = "MySQL Community Server - GPL";
 
+    /**
+     * 缓冲区大小
+     */
+    private Long max_allowed_packet = 1024L * 1024L * 100L;
+
+    /**
+     * 查询缓存大小
+     */
+    private Long query_cache_size = max_allowed_packet;
+
     public Integer getBackLog() {
         return backLog;
     }
@@ -273,5 +283,21 @@ public class MysqlGlobalVariables {
 
     public void setVersion_comment(String version_comment) {
         this.version_comment = version_comment;
+    }
+
+    public Long getMax_allowed_packet() {
+        return max_allowed_packet;
+    }
+
+    public void setMax_allowed_packet(Long max_allowed_packet) {
+        this.max_allowed_packet = max_allowed_packet;
+    }
+
+    public Long getQuery_cache_size() {
+        return query_cache_size;
+    }
+
+    public void setQuery_cache_size(Long query_cache_size) {
+        this.query_cache_size = query_cache_size;
     }
 }
