@@ -4,11 +4,6 @@ import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.ast.statement.SQLExprTableSource;
-import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
-import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
-import team.opentech.usher.plan.AbstractMysqlSqlPlan;
-import team.opentech.usher.plan.pojo.SqlTableSourceBinaryTree;
-import team.opentech.usher.util.StringUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,6 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
+import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
+import team.opentech.usher.plan.AbstractMysqlSqlPlan;
+import team.opentech.usher.plan.pojo.SqlTableSourceBinaryTree;
+import team.opentech.usher.util.StringUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -60,7 +60,7 @@ public abstract class JoinSqlPlan extends AbstractMysqlSqlPlan {
     protected SQLBinaryOpExpr condition;
 
     protected JoinSqlPlan(Map<String, String> headers, SqlTableSourceBinaryTree tree, Long leftPlanId, Long rightPlanId) {
-        super(null, headers, new HashMap<>());
+        super("select * from " + tree.getLeftTree().getTableSource().getName() + " " + tree.getCondition().toString() + " " + tree.getRightTree().getTableSource().getName(), headers, new HashMap<>());
         this.leftResultPlanId = leftPlanId;
         this.rightResultPlanId = rightPlanId;
         this.leftTree = tree.getLeftTree();

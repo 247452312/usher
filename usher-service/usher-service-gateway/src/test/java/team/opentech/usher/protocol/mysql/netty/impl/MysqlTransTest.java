@@ -1,16 +1,16 @@
 package team.opentech.usher.protocol.mysql.netty.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.Test;
 import team.opentech.usher.mysql.enums.FieldTypeEnum;
 import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
 import team.opentech.usher.mysql.pojo.response.impl.ResultSetResponse;
 import team.opentech.usher.mysql.util.MysqlUtil;
 import team.opentech.usher.protocol.mysql.netty.impl.other.MysqlNettyTest;
 import team.opentech.usher.util.LogUtil;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.junit.jupiter.api.Test;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -21,7 +21,7 @@ public class MysqlTransTest {
 
     @Test
     void trans() throws InterruptedException {
-        MysqlNettyTest mysqlNettyTest = new MysqlNettyTest();
+        MysqlNettyTest mysqlNettyTest = new MysqlNettyTest(3300, "mac", 3307);
         mysqlNettyTest.init();
         Thread.sleep(100000000L);
     }

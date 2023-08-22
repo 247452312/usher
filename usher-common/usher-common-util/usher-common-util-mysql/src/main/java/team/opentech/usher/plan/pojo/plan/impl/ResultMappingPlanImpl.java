@@ -3,6 +3,15 @@ package team.opentech.usher.plan.pojo.plan.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Objects;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.content.MysqlGlobalVariables;
@@ -20,15 +29,6 @@ import team.opentech.usher.plan.pojo.plan.JoinSqlPlan;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
 import team.opentech.usher.util.SpringUtil;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -123,8 +123,11 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
         }
         List<FieldInfo> newFieldInfo = new ArrayList<>();
         Set<String> newFieldNameSet = new HashSet<>();
-        Map<String, FieldInfo> fieldInfoMap = lastFieldInfos.stream().collect(Collectors.toMap(FieldInfo::getTableNameDotFieldName, t -> t));
-        for (String needFieldName : needFields) {
+        Map<String, FieldInfo> fieldInfoMap = lastFieldInfos.stream().collect(Collectors.toMap(FieldInfo::getFieldName, t -> t));
+
+        for (MySQLSelectItem needField : selectList) {
+            String needFieldName = needField.getExpr().toString();
+            String realFieldName = team.opentech.usher.util.StringUtil.isNotEmpty(needField.getAlias()) ? needField.getAlias() : needFieldName;
             /*2.如果结果列存在A.* 或者B.* 则通过tableName回溯寻找表来源,进行一个列表的拼*/
             if (needFieldName.endsWith("*")) {
                 String needTableName = needFieldName.substring(0, needFieldName.indexOf('.') + 1);
@@ -141,15 +144,15 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
                 NodeInvokeResult nodeInvokeResult = lastAllPlanResult.get(Long.parseLong(needFieldName.substring(1)));
                 List<FieldInfo> specialLastFieldInfos = nodeInvokeResult.getFieldInfos();
                 Asserts.assertTrue(specialLastFieldInfos != null && specialLastFieldInfos.size() == 1, "映射时需要有且仅有一个字段来映射");
-                FieldInfo fieldInfo = specialLastFieldInfos.get(0);
+                FieldInfo fieldInfo = dealLastFieldInfo(newFieldNameSet, specialLastFieldInfos.get(0));
                 newFieldInfo.add(fieldInfo);
                 newFieldNameSet.add(fieldInfo.getFieldName());
                 continue;
             }
             /*4.如果列是查询系统配置的,则返回*/
             if (needFieldName.startsWith("@@")) {
-                newFieldInfo.add(new FieldInfo(MysqlContent.DUAL_DATABASES, "dual", "dual", needFieldName, needFieldName, 0, 0, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
-                newFieldNameSet.add(needFieldName);
+                newFieldInfo.add(new FieldInfo(MysqlContent.DUAL_DATABASES, "dual", "dual", realFieldName, needFieldName, 0, 0, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
+                newFieldNameSet.add(realFieldName);
                 continue;
             }
 
@@ -160,22 +163,26 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
             if (fieldInfo == null) {
                 Asserts.throwException("未找到字段:" + key);
             }
+            fieldInfo = fieldInfo.copyWithNewFieldName(realFieldName);
             fieldInfo = dealLastFieldInfo(newFieldNameSet, fieldInfo);
             newFieldInfo.add(fieldInfo);
-            newFieldNameSet.add(fieldInfo.getFieldName());
+            newFieldNameSet.add(realFieldName);
         }
-        List<Map<String, Object>> newResultList = lastResult.stream().map(t -> {
+
+        Map<String, String> lastResultAliasMap = selectList.stream().collect(Collectors.toMap(t -> t.getExpr().toString(), t -> team.opentech.usher.util.StringUtil.isEmpty(t.getAlias()) ? t.getExpr().toString() : t.getAlias()));
+        List<Map<String, Object>> newResultList = lastResult.stream().map(lineData -> {
             Map<String, Object> newResult = new HashMap<>(selectList.size());
-            for (Entry<String, Object> entry : t.entrySet()) {
+            for (Entry<String, Object> entry : lineData.entrySet()) {
                 if (MysqlUtil.ignoreCaseAndQuotesContains(needFields, entry.getKey()) || needFields.contains("*")) {
-                    newResult.put(entry.getKey(), entry.getValue());
+                    newResult.put(lastResultAliasMap.get(entry.getKey()), entry.getValue());
                 }
             }
             for (MySQLSelectItem mySQLSelectItem : selectList) {
-                String variable = mySQLSelectItem.toString();
+                String variable = mySQLSelectItem.getExpr().toString();
                 if (variable.startsWith("@@")) {
+                    String realFieldName = team.opentech.usher.util.StringUtil.isNotEmpty(mySQLSelectItem.getAlias()) ? mySQLSelectItem.getAlias() : variable;
                     String variableCleanName = variable.substring(2);
-                    newResult.put(variable, mysqlSystemVariables.get(variableCleanName));
+                    newResult.put(realFieldName, mysqlSystemVariables.get(variableCleanName));
                 }
             }
             return newResult;
@@ -263,10 +270,7 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
         Set<String> keys = fieldInfoMap.keySet();
         String targetKey = null;
         for (String key : keys) {
-            String[] split = key.split("\\.");
-            Asserts.assertTrue(split.length == 2, "查询语句中字段名称:{},有问题", key);
-            String fieldName = split[1];
-            if (team.opentech.usher.util.StringUtil.equalsIgnoreCase(fieldName, sourceFieldName)) {
+            if (team.opentech.usher.util.StringUtil.equalsIgnoreCase(key, sourceFieldName)) {
                 Asserts.assertTrue(targetKey == null, "查询语句中字段名称:{},重复,多个子表都存在此字段", key);
                 targetKey = key;
             }
@@ -276,7 +280,7 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
     }
 
     /**
-     * 处理新字段
+     * 处理新字段 如果有两个相同名称的字段, 则第二个自动变成 xxx(1)
      *
      * @param newFieldNameSet
      * @param lastFieldInfo

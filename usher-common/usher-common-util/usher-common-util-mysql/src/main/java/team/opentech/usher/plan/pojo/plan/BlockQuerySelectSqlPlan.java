@@ -1,8 +1,8 @@
 package team.opentech.usher.plan.pojo.plan;
 
+import java.util.Map;
 import team.opentech.usher.plan.AbstractMysqlSqlPlan;
 import team.opentech.usher.plan.pojo.SqlTableSourceBinaryTree;
-import java.util.Map;
 
 /**
  * 简单sql执行计划
@@ -18,7 +18,7 @@ public abstract class BlockQuerySelectSqlPlan extends AbstractMysqlSqlPlan {
     protected SqlTableSourceBinaryTree froms;
 
     protected BlockQuerySelectSqlPlan(SqlTableSourceBinaryTree froms, Map<String, String> headers, Map<String, Object> params) {
-        super(null, headers, params);
+        super("select * from " + froms.getTableSource().getName(), headers, params);
         this.froms = froms;
     }
 

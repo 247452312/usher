@@ -133,6 +133,13 @@ public class MysqlGlobalVariables {
      */
     private Long query_cache_size = max_allowed_packet;
 
+    /**
+     * 0：以实际指定大小写存储，以区分大小比较，就是大小写敏感，Linux默认值
+     * 1：以小写存储，以不区分大小比较，就是大小写不敏感
+     * 2：以实际指定大小写存储，以小写比较，也算大小写不敏感
+     */
+    private Integer lower_case_table_names = 2;
+
     public Integer getBackLog() {
         return backLog;
     }
@@ -299,5 +306,13 @@ public class MysqlGlobalVariables {
 
     public void setQuery_cache_size(Long query_cache_size) {
         this.query_cache_size = query_cache_size;
+    }
+
+    public Integer getLower_case_table_names() {
+        return lower_case_table_names;
+    }
+
+    public void setLower_case_table_names(Integer lower_case_table_names) {
+        this.lower_case_table_names = lower_case_table_names;
     }
 }
