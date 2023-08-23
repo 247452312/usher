@@ -1,6 +1,7 @@
 package team.opentech.usher.pojo.entity.sys;
 
 import team.opentech.usher.mysql.enums.TableTypeEnum;
+import team.opentech.usher.mysql.pojo.DTO.IUserPrivilegesInfo;
 import team.opentech.usher.mysql.pojo.DTO.MUserInfo;
 import team.opentech.usher.mysql.pojo.DTO.ProfilingInfo;
 import team.opentech.usher.util.StringUtil;
@@ -16,7 +17,7 @@ class ITablesTableTest {
 
     @Test
     public void testTableInfo() {
-        Field[] fields = MUserInfo.class.getDeclaredFields();
+        Field[] fields = IUserPrivilegesInfo.class.getDeclaredFields();
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
             String name = field.getName();
@@ -35,7 +36,7 @@ class ITablesTableTest {
             if (typeStr == null) {
                 throw new RuntimeException("不对," + name + ",类型是:" + type.getName());
             }
-            System.out.println("fieldInfos.add(new FieldInfo(\"mysql\", \"user\", \"user\", \"" + upperCase + "\", \"" + upperCase + "\", 0, 1, FieldTypeEnum." + typeStr + ", (short) 0, (byte) 0));");
+            System.out.println("fieldInfos.add(new FieldInfo(\"information_schema\", \"user_privileges\", \"user_privileges\", \"" + upperCase + "\", \"" + upperCase + "\", 0, 1, FieldTypeEnum." + typeStr + ", (short) 0, (byte) 0));");
         }
     }
 

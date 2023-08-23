@@ -2,6 +2,8 @@ package team.opentech.usher.assembler;
 
 
 import org.mapstruct.Mapper;
+import team.opentech.usher.mysql.content.MysqlContent;
+import team.opentech.usher.mysql.pojo.DTO.IUserPrivilegesInfo;
 import team.opentech.usher.mysql.pojo.DTO.MUserInfo;
 import team.opentech.usher.pojo.DO.CompanyDO;
 import team.opentech.usher.pojo.DTO.CompanyDTO;
@@ -76,5 +78,14 @@ public abstract class CompanyAssembler extends AbstractAssembler<CompanyDO, Comp
         mUserInfo.setPasswordRequireCurrent(null);
         mUserInfo.setUserAttributes(null);
         return mUserInfo;
+    }
+
+    public IUserPrivilegesInfo toIUserPrivileges(CompanyDTO user) {
+        IUserPrivilegesInfo iUserPrivilegesInfo = new IUserPrivilegesInfo();
+        iUserPrivilegesInfo.setGrantee(user.getAk() + "@%");
+        iUserPrivilegesInfo.setTableCatalog(MysqlContent.CATALOG_NAME);
+        iUserPrivilegesInfo.setPrivilegeType("SELECT");
+        iUserPrivilegesInfo.setIsGrantable(MYSQL_NO);
+        return iUserPrivilegesInfo;
     }
 }

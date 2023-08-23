@@ -13,6 +13,7 @@ import team.opentech.usher.pojo.entity.sys.IRoutines;
 import team.opentech.usher.pojo.entity.sys.ISchemata;
 import team.opentech.usher.pojo.entity.sys.ITables;
 import team.opentech.usher.pojo.entity.sys.IView;
+import team.opentech.usher.pojo.entity.sys.IUserPrivileges;
 import team.opentech.usher.pojo.entity.sys.MDual;
 import team.opentech.usher.pojo.entity.sys.MUser;
 import team.opentech.usher.pojo.entity.sys.PGlobalVariables;
@@ -63,6 +64,10 @@ public enum SysTableEnum {
      * 排序规则
      */
     INFORMATION_SCHEMA_COLLATIONS("information_schema", "collations", ICollatinos::new),
+    /**
+     * 用户表另一个显示
+     */
+    INFORMATION_SCHEMA_USER_PRIVILEGES("information_schema", "user_privileges", IUserPrivileges::new),
     /**
      * 系统参数
      */
