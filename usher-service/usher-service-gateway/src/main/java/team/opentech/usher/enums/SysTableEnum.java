@@ -1,8 +1,10 @@
 package team.opentech.usher.enums;
 
 import com.google.common.base.Function;
+import java.util.Map;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.mysql.util.MysqlUtil;
+import team.opentech.usher.pojo.entity.sys.ICollatinos;
 import team.opentech.usher.pojo.entity.sys.IColumns;
 import team.opentech.usher.pojo.entity.sys.IEngines;
 import team.opentech.usher.pojo.entity.sys.IParameters;
@@ -12,11 +14,11 @@ import team.opentech.usher.pojo.entity.sys.ISchemata;
 import team.opentech.usher.pojo.entity.sys.ITables;
 import team.opentech.usher.pojo.entity.sys.IView;
 import team.opentech.usher.pojo.entity.sys.MDual;
+import team.opentech.usher.pojo.entity.sys.MUser;
 import team.opentech.usher.pojo.entity.sys.PGlobalVariables;
 import team.opentech.usher.pojo.entity.sys.SysTable;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.StringUtil;
-import java.util.Map;
 
 /**
  * 系统表枚举
@@ -58,9 +60,17 @@ public enum SysTableEnum {
      */
     INFORMATION_SCHEMA_PROFILING("information_schema", "profiling", IProfiling::new),
     /**
+     * 排序规则
+     */
+    INFORMATION_SCHEMA_COLLATIONS("information_schema", "collations", ICollatinos::new),
+    /**
      * 系统参数
      */
     PERFORMANCE_SCHEMA_GLOBAL_VARIABLES("performance_schema", "global_variables", PGlobalVariables::new),
+    /**
+     * 用户参数表
+     */
+    MYSQL_USER("mysql", "user", MUser::new),
     /**
      * 系统参数
      */

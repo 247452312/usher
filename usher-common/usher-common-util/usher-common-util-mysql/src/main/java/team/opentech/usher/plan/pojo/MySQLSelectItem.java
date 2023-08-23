@@ -1,6 +1,7 @@
 package team.opentech.usher.plan.pojo;
 
 import com.alibaba.druid.sql.ast.SQLExpr;
+import com.alibaba.druid.sql.ast.expr.SQLVariantRefExpr;
 import com.alibaba.druid.sql.ast.statement.SQLSelectItem;
 import team.opentech.usher.plan.enums.MysqlMethodEnum;
 
@@ -46,6 +47,14 @@ public class MySQLSelectItem extends SQLSelectItem {
      */
     public MysqlMethodEnum method() {
         return methodEnum;
+    }
+
+    public Boolean isGlobal() {
+        SQLExpr selectItemExpr = selectItem.getExpr();
+        if (selectItemExpr instanceof SQLVariantRefExpr) {
+            return ((SQLVariantRefExpr) selectItemExpr).isGlobal();
+        }
+        return false;
     }
 
 

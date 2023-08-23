@@ -127,7 +127,7 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
 
         for (MySQLSelectItem needField : selectList) {
             String needFieldName = needField.getExpr().toString();
-            String realFieldName = team.opentech.usher.util.StringUtil.isNotEmpty(needField.getAlias()) ? needField.getAlias() : needFieldName;
+            String finalName = team.opentech.usher.util.StringUtil.isNotEmpty(needField.getAlias()) ? needField.getAlias() : needFieldName;
             /*2.如果结果列存在A.* 或者B.* 则通过tableName回溯寻找表来源,进行一个列表的拼*/
             if (needFieldName.endsWith("*")) {
                 String needTableName = needFieldName.substring(0, needFieldName.indexOf('.') + 1);
@@ -150,12 +150,16 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
                 continue;
             }
             /*4.如果列是查询系统配置的,则返回*/
-            if (needFieldName.startsWith("@@")) {
-                newFieldInfo.add(new FieldInfo(MysqlContent.DUAL_DATABASES, "dual", "dual", realFieldName, needFieldName, 0, 0, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
-                newFieldNameSet.add(realFieldName);
+            if (needFieldName.startsWith("@@") || needField.isGlobal()) {
+                newFieldInfo.add(new FieldInfo(MysqlContent.DUAL_DATABASES, "dual", "dual", finalName, needFieldName, 0, 0, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
+                newFieldNameSet.add(finalName);
                 continue;
             }
-
+            if (needFieldName.startsWith("'") && needFieldName.endsWith("'")) {
+                newFieldInfo.add(new FieldInfo(MysqlContent.DUAL_DATABASES, "dual", "dual", finalName, needFieldName, 0, 0, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
+                newFieldNameSet.add(finalName);
+                continue;
+            }
             /*4.如果结果列为 A.name 则通过tableName回溯寻找表来源,拼装*/
 
             String key = StringUtil.cleanQuotation(needFieldName);
@@ -163,10 +167,10 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
             if (fieldInfo == null) {
                 Asserts.throwException("未找到字段:" + key);
             }
-            fieldInfo = fieldInfo.copyWithNewFieldName(realFieldName);
+            fieldInfo = fieldInfo.copyWithNewFieldName(finalName);
             fieldInfo = dealLastFieldInfo(newFieldNameSet, fieldInfo);
             newFieldInfo.add(fieldInfo);
-            newFieldNameSet.add(realFieldName);
+            newFieldNameSet.add(finalName);
         }
 
         Map<String, String> lastResultAliasMap = selectList.stream().collect(Collectors.toMap(t -> t.getExpr().toString(), t -> team.opentech.usher.util.StringUtil.isEmpty(t.getAlias()) ? t.getExpr().toString() : t.getAlias()));
@@ -179,10 +183,12 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
             }
             for (MySQLSelectItem mySQLSelectItem : selectList) {
                 String variable = mySQLSelectItem.getExpr().toString();
-                if (variable.startsWith("@@")) {
+                if (variable.startsWith("@@") || mySQLSelectItem.isGlobal()) {
                     String realFieldName = team.opentech.usher.util.StringUtil.isNotEmpty(mySQLSelectItem.getAlias()) ? mySQLSelectItem.getAlias() : variable;
-                    String variableCleanName = variable.substring(2);
-                    newResult.put(realFieldName, mysqlSystemVariables.get(variableCleanName));
+                    if (variable.startsWith("@@")) {
+                        variable = variable.substring(2);
+                    }
+                    newResult.put(realFieldName, mysqlSystemVariables.get(variable));
                 }
             }
             return newResult;

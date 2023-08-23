@@ -1,4 +1,4 @@
-hosts: prod
+hosts: cloud
 spring:
   profiles:
     active: dev

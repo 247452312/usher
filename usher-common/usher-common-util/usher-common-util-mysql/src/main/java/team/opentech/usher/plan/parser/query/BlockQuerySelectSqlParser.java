@@ -4,6 +4,7 @@ import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.expr.SQLAllColumnExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
+import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLInListExpr;
 import com.alibaba.druid.sql.ast.expr.SQLInSubQueryExpr;
@@ -42,6 +43,7 @@ import team.opentech.usher.plan.pojo.MySqlListExpr;
 import team.opentech.usher.plan.pojo.SqlTableSourceBinaryTree;
 import team.opentech.usher.plan.pojo.plan.AbstractResultMappingPlan;
 import team.opentech.usher.plan.pojo.plan.MethodInvokePlan;
+import team.opentech.usher.plan.pojo.plan.impl.BinarySqlPlanImpl;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
 
@@ -116,6 +118,16 @@ public class BlockQuerySelectSqlParser extends AbstractSelectSqlParser {
             MethodInvokePlan newPlan = planFactory.buildMethodInvokePlan(headers, index, methodName, newArguments, sqlMethodInvokeExpr);
             result.add(newPlan);
             return new MySQLSelectItem(new SQLIdentifierExpr("&" + newPlan.getId()), selectItem.getAlias(), selectItem, newPlan.getMethodEnum());
+        }
+        if (expr instanceof SQLBinaryOpExpr) {
+            SQLBinaryOpExpr binaryOpExpr = (SQLBinaryOpExpr) expr;
+            List<SQLExpr> sqlExprs = parseMethodArgument(result, headers, Arrays.asList(binaryOpExpr.getLeft(), binaryOpExpr.getRight()));
+            BinarySqlPlanImpl newPlan = new BinarySqlPlanImpl(headers, sqlExprs.get(0), binaryOpExpr.getOperator(), sqlExprs.get(1));
+            result.add(newPlan);
+            return new MySQLSelectItem(new SQLIdentifierExpr("&" + newPlan.getId()), selectItem.getAlias(), selectItem);
+        }
+        if (expr instanceof SQLCharExpr) {
+            return new MySQLSelectItem(expr, selectItem.getAlias(), selectItem);
         }
         Asserts.throwException("查询报错,子查询类型找不到:{},内容为:{}", expr.getClass().getName(), selectItem.toString());
         return null;

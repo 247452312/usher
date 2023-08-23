@@ -175,6 +175,16 @@ public enum MysqlMethodEnum {
         maps.add(item);
         return maps;
     }),
+    LOWER("lower", 1, String.class, false, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
+        SQLExpr argName = arguments.get(0);
+        List<Map<String, Object>> maps = new ArrayList<>();
+        for (Map<String, Object> objectMap : parentInvokeResult.getResult()) {
+            Map<String, Object> item = new HashMap<>();
+            item.put(fieldName, objectMap.get(argName));
+            maps.add(item);
+        }
+        return maps;
+    }),
     GROUP_CONCAT("group_concat", 1, String.class, false, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
         List<Map<String, Object>> parentResult = parentInvokeResult.getResult();
         List<Map<String, Object>> result = new ArrayList<>();
