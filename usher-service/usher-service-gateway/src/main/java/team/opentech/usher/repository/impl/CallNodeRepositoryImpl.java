@@ -2,6 +2,9 @@ package team.opentech.usher.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import java.util.List;
+import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.CallNodeAssembler;
@@ -13,6 +16,7 @@ import team.opentech.usher.pojo.DO.CallNodeDO;
 import team.opentech.usher.pojo.DTO.CallNodeDTO;
 import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.DTO.base.IdDTO;
+import team.opentech.usher.pojo.cqe.CallNodeQuery;
 import team.opentech.usher.pojo.entity.CallNode;
 import team.opentech.usher.repository.CallNodeRepository;
 import team.opentech.usher.repository.NodeRepository;
@@ -20,9 +24,6 @@ import team.opentech.usher.repository.ProviderInterfaceRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.StringUtil;
-import java.util.List;
-import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -79,6 +80,14 @@ public class CallNodeRepositoryImpl extends AbstractRepository<CallNode, CallNod
     public Boolean judgeSysTable(String path) {
         String lowerPath = path.toLowerCase();
         return MysqlContent.SYS_DATABASE.stream().anyMatch(t -> lowerPath.contains(t + MysqlContent.PATH_SEPARATOR));
+    }
+
+    @Override
+    public List<CallNode> query(Long userId, CallNodeQuery callNodeQuery) {
+        LambdaQueryWrapper<CallNodeDO> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.eq(userId != null, CallNodeDO::getCompanyId, userId);
+        List<CallNodeDO> callNodeDOS = dao.selectList(queryWrapper);
+        return assembler.listToEntity(callNodeDOS);
     }
 
 }

@@ -11,6 +11,7 @@ import team.opentech.usher.pojo.entity.sys.IParameters;
 import team.opentech.usher.pojo.entity.sys.IProfiling;
 import team.opentech.usher.pojo.entity.sys.IRoutines;
 import team.opentech.usher.pojo.entity.sys.ISchemata;
+import team.opentech.usher.pojo.entity.sys.ISchemaPrivileges;
 import team.opentech.usher.pojo.entity.sys.ITables;
 import team.opentech.usher.pojo.entity.sys.IView;
 import team.opentech.usher.pojo.entity.sys.IUserPrivileges;
@@ -68,6 +69,10 @@ public enum SysTableEnum {
      * 用户表另一个显示
      */
     INFORMATION_SCHEMA_USER_PRIVILEGES("information_schema", "user_privileges", IUserPrivileges::new),
+    /**
+     * 数据库表权限
+     */
+    INFORMATION_SCHEMA_SCHEMA_PRIVILEGES("information_schema", "schema_privileges", ISchemaPrivileges::new),
     /**
      * 系统参数
      */

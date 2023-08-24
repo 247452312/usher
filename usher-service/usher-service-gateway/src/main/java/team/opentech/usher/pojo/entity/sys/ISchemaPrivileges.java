@@ -6,18 +6,17 @@ import com.alibaba.fastjson.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import team.opentech.usher.assembler.CompanyAssembler;
+import team.opentech.usher.assembler.CallNodeAssembler;
 import team.opentech.usher.mysql.enums.FieldTypeEnum;
 import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
-import team.opentech.usher.mysql.pojo.DTO.IUserPrivilegesInfo;
+import team.opentech.usher.mysql.pojo.DTO.ISchemaPrivilegesInfo;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
-import team.opentech.usher.pojo.DTO.CompanyDTO;
-import team.opentech.usher.pojo.cqe.UserQuery;
+import team.opentech.usher.pojo.DTO.CallNodeDTO;
+import team.opentech.usher.pojo.cqe.CallNodeQuery;
 import team.opentech.usher.service.GatewaySdkService;
 import team.opentech.usher.util.SpringUtil;
 
 /**
- *
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2023年08月23日 13时51分
  */
@@ -25,30 +24,32 @@ public class ISchemaPrivileges extends AbstractSysTable {
 
     private final GatewaySdkService service;
 
-    private final CompanyAssembler companyAssembler;
+
+    private final CallNodeAssembler callNodeAssembler;
 
     public ISchemaPrivileges(Map<String, Object> params) {
         super(params);
         this.service = SpringUtil.getBean(GatewaySdkService.class);
-        this.companyAssembler = SpringUtil.getBean(CompanyAssembler.class);
+        this.callNodeAssembler = SpringUtil.getBean(CallNodeAssembler.class);
     }
 
     @Override
     protected NodeInvokeResult doGetResultNoParams() {
         List<FieldInfo> fieldInfos = new ArrayList<>();
         /*数据从company里取,*/
-        List<CompanyDTO> users = service.queryUser(new UserQuery());
+        List<CallNodeDTO> callNodeDTOS = service.queryCallNode(new CallNodeQuery());
 
-        List<IUserPrivilegesInfo> userInfos = new ArrayList<>();
-        for (CompanyDTO user : users) {
-            IUserPrivilegesInfo mUserInfo = companyAssembler.toIUserPrivileges(user);
+        List<ISchemaPrivilegesInfo> userInfos = new ArrayList<>();
+        for (CallNodeDTO user : callNodeDTOS) {
+            ISchemaPrivilegesInfo mUserInfo = callNodeAssembler.toISchemaPrivilegesInfo(user);
             userInfos.add(mUserInfo);
         }
 
-        fieldInfos.add(new FieldInfo("information_schema", "user_privileges", "user_privileges", "GRANTEE", "GRANTEE", 0, 1, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
-        fieldInfos.add(new FieldInfo("information_schema", "user_privileges", "user_privileges", "TABLE_CATALOG", "TABLE_CATALOG", 0, 1, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
-        fieldInfos.add(new FieldInfo("information_schema", "user_privileges", "user_privileges", "PRIVILEGE_TYPE", "PRIVILEGE_TYPE", 0, 1, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
-        fieldInfos.add(new FieldInfo("information_schema", "user_privileges", "user_privileges", "IS_GRANTABLE", "IS_GRANTABLE", 0, 1, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
+        fieldInfos.add(new FieldInfo("information_schema", "schema_privileges", "schema_privileges", "GRANTEE", "GRANTEE", 0, 1, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
+        fieldInfos.add(new FieldInfo("information_schema", "schema_privileges", "schema_privileges", "TABLE_CATALOG", "TABLE_CATALOG", 0, 1, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
+        fieldInfos.add(new FieldInfo("information_schema", "schema_privileges", "schema_privileges", "TABLE_SCHEMA", "TABLE_SCHEMA", 0, 1, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
+        fieldInfos.add(new FieldInfo("information_schema", "schema_privileges", "schema_privileges", "PRIVILEGE_TYPE", "PRIVILEGE_TYPE", 0, 1, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
+        fieldInfos.add(new FieldInfo("information_schema", "schema_privileges", "schema_privileges", "IS_GRANTABLE", "IS_GRANTABLE", 0, 1, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
         JSONArray objects = JSON.parseArray(JSON.toJSONString(userInfos));
         List<Map<String, Object>> result = new ArrayList<>();
         for (int i = 0; i < objects.size(); i++) {

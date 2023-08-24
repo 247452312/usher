@@ -35,6 +35,9 @@ public class MysqlContent {
      */
     public static final String CATALOG_NAME = "def";
 
+    public static final String MYSQL_YES = "Y";
+
+    public static final String MYSQL_NO = "N";
     /**
      * 当前连接的mysql信息
      */

@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.annotation.Public;
+import team.opentech.usher.assembler.CallNodeAssembler;
 import team.opentech.usher.assembler.CompanyAssembler;
 import team.opentech.usher.context.UserInfoHelper;
 import team.opentech.usher.enums.InvokeTypeEnum;
@@ -20,8 +22,10 @@ import team.opentech.usher.mysql.pojo.cqe.impl.MysqlAuthCommand;
 import team.opentech.usher.mysql.pojo.response.MysqlResponse;
 import team.opentech.usher.mysql.pojo.response.impl.ErrResponse;
 import team.opentech.usher.mysql.pojo.response.impl.OkResponse;
+import team.opentech.usher.pojo.DTO.CallNodeDTO;
 import team.opentech.usher.pojo.DTO.CompanyDTO;
 import team.opentech.usher.pojo.DTO.UserDTO;
+import team.opentech.usher.pojo.cqe.CallNodeQuery;
 import team.opentech.usher.pojo.cqe.InvokeCommand;
 import team.opentech.usher.pojo.cqe.UserQuery;
 import team.opentech.usher.pojo.cqe.query.BlackQuery;
@@ -60,6 +64,9 @@ public class GatewaySdkServiceImpl implements GatewaySdkService {
     @Autowired
     private CallNodeRepository callNodeRepository;
 
+    @Resource
+    private CallNodeAssembler callNodeAssembler;
+
     @Override
     @Public
     public NodeInvokeResult invokeInterface(InvokeCommand command) {
@@ -94,6 +101,13 @@ public class GatewaySdkServiceImpl implements GatewaySdkService {
     public List<CompanyDTO> queryUser(UserQuery userQuery) {
         List<Company> result = companyRepository.queryUser(userQuery.getUsername());
         return companyAssembler.listEntityToDTO(result);
+    }
+
+    @Override
+    public List<CallNodeDTO> queryCallNode(CallNodeQuery callNodeQuery) {
+        UserDTO userDTO = UserInfoHelper.doGet();
+        List<CallNode> callNodes = callNodeRepository.query(userDTO.getId(), callNodeQuery);
+        return callNodeAssembler.listEntityToDTO(callNodes);
     }
 
     @Override
