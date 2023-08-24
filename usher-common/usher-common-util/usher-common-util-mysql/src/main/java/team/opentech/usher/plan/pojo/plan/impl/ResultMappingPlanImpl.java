@@ -28,6 +28,7 @@ import team.opentech.usher.plan.pojo.plan.BlockQuerySelectSqlPlan;
 import team.opentech.usher.plan.pojo.plan.JoinSqlPlan;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
+import team.opentech.usher.util.JSONUtil;
 import team.opentech.usher.util.SpringUtil;
 
 /**
@@ -40,12 +41,12 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
     /**
      * 是否是每行一个结果
      */
-    private final Boolean singleLine;
+    private final Boolean mergeable;
 
     /**
      * mysql系统变量
      */
-    private final Map<String, Object> mysqlSystemVariables;
+    private final JSONObject mysqlSystemVariables;
 
     /**
      * 当前映射之前最后一个查询执行计划的结果
@@ -58,10 +59,12 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
         this.mysqlSystemVariables = JSONObject.parseObject(JSON.toJSONString(bean));
         // 是否是每行一个结果
         List<MysqlMethodEnum> allMethod = selectList.stream().filter(MySQLSelectItem::isMethodItem).map(MySQLSelectItem::method).collect(Collectors.toList());
+        // 如果没有method 理论上不需要合并多行数据
         if (CollectionUtil.isEmpty(allMethod)) {
-            this.singleLine = true;
+            this.mergeable = false;
         } else {
-            this.singleLine = allMethod.stream().allMatch(MysqlMethodEnum::getSingleLine);
+            // 只要有一个方法需要合并,则需要合并
+            this.mergeable = allMethod.stream().anyMatch(MysqlMethodEnum::getMergeable);
         }
     }
 
@@ -94,8 +97,8 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
          * 2.不需要合并,则可以直接根据上一次结果来直接映射 如果有子查询,则只需要判断size和上一次查询结果的行数来匹配后一一插入即可
          */
 
-        /*如果是需要组合的情况*/
-        if (!singleLine) {
+        /*如果是需要多行合并成一行的情况*/
+        if (mergeable) {
             // 制作存在方法合并时候的结果
             return makeMethodNoSingleLine();
         }
@@ -188,7 +191,8 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
                     if (variable.startsWith("@@")) {
                         variable = variable.substring(2);
                     }
-                    newResult.put(realFieldName, mysqlSystemVariables.get(variable));
+
+                    newResult.put(realFieldName, JSONUtil.recursiveMatch(mysqlSystemVariables, variable));
                 }
             }
             return newResult;
@@ -231,6 +235,8 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
                         result.get(i).putAll(fieldResult.get(i));
                     }
                 }
+            } else if (needField.startsWith("@@")) {
+                int i = 1;
             } else {
                 Boolean allowFault = config.getAllowFault();
                 Asserts.assertTrue(allowFault, "不允许错误的sql语句, 在有合并意义的语句中不能出现实际行");

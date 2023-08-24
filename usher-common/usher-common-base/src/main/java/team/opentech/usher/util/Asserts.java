@@ -1,12 +1,12 @@
 package team.opentech.usher.util;
 
-import team.opentech.usher.exception.AssertException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 import org.slf4j.helpers.MessageFormatter;
+import team.opentech.usher.exception.AssertException;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -70,6 +70,7 @@ public class Asserts {
         if (e instanceof AssertException) {
             throw (AssertException) e;
         }
+        LogUtil.error(e);
         assertTrue(false, 3, e.getMessage());
     }
 

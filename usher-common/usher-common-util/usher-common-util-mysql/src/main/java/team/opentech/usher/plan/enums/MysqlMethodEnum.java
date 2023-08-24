@@ -27,7 +27,7 @@ public enum MysqlMethodEnum {
     /**
      * count
      */
-    COUNT("count", 1, Long.class, false, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
+    COUNT("count", 1, Long.class, true, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
         Asserts.assertTrue(arguments.size() == 1, "mysql语句中方法使用错误,count入参只能为一个");
         String countParam = arguments.get(0).toString();
         Asserts.assertTrue(StringUtil.isNotEmpty(countParam), "mysql语句中方法使用错误,count入参不能为空白");
@@ -58,7 +58,7 @@ public enum MysqlMethodEnum {
     /**
      * concat
      */
-    CONCAT("concat", -1, String.class, true, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
+    CONCAT("concat", -1, String.class, false, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
         List<StringBuilder> argList = new ArrayList<>();
         for (int i = 0; i < arguments.size(); i++) {
             SQLExpr sqlExpr = arguments.get(i);
@@ -86,7 +86,7 @@ public enum MysqlMethodEnum {
     /**
      * left
      */
-    LEFT("left", 2, String.class, true, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
+    LEFT("left", 2, String.class, false, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
         SQLExpr str = arguments.get(0);
         SQLExpr length = arguments.get(1);
         List<String> strList = MysqlUtil.parse(str, lastAllPlanResult, parentInvokeResult);
@@ -103,7 +103,7 @@ public enum MysqlMethodEnum {
     /**
      * instr
      */
-    INSTR("instr", -1, String.class, true, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
+    INSTR("instr", -1, String.class, false, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
         SQLExpr str = arguments.get(0);
         SQLExpr length = arguments.get(1);
         List<String> strList = MysqlUtil.parse(str, lastAllPlanResult, parentInvokeResult);
@@ -117,7 +117,7 @@ public enum MysqlMethodEnum {
         }
         return result;
     }),
-    SUM("sum", 1, Long.class, false, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
+    SUM("sum", 1, Long.class, true, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
         Asserts.assertTrue(arguments.size() == 1, "mysql语句中方法使用错误,sum入参只能为一个");
         String countParam = arguments.get(0).toString();
         Asserts.assertTrue(StringUtil.isNotEmpty(countParam), "mysql语句中方法使用错误,sum入参不能为空白");
@@ -185,7 +185,7 @@ public enum MysqlMethodEnum {
         }
         return maps;
     }),
-    GROUP_CONCAT("group_concat", 1, String.class, false, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
+    GROUP_CONCAT("group_concat", 1, String.class, true, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
         List<Map<String, Object>> parentResult = parentInvokeResult.getResult();
         List<Map<String, Object>> result = new ArrayList<>();
 
@@ -228,15 +228,15 @@ public enum MysqlMethodEnum {
     private final MakeResultFunction function;
 
     /**
-     * 每行都可以得到一个结果
+     * 会合并多行
      */
-    private final Boolean singleLine;
+    private final Boolean mergeable;
 
-    MysqlMethodEnum(String name, Integer paramCount, Class<?> resultType, Boolean singleLine, MakeResultFunction function) {
+    MysqlMethodEnum(String name, Integer paramCount, Class<?> resultType, Boolean mergeable, MakeResultFunction function) {
         this.name = name;
         this.paramCount = paramCount;
         this.resultType = resultType;
-        this.singleLine = singleLine;
+        this.mergeable = mergeable;
         this.function = function;
     }
 
@@ -259,8 +259,8 @@ public enum MysqlMethodEnum {
         return null;
     }
 
-    public Boolean getSingleLine() {
-        return singleLine;
+    public Boolean getMergeable() {
+        return mergeable;
     }
 
     /**
