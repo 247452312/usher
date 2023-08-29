@@ -1,0 +1,38 @@
+name: 项目规划
+description: 你对项目未来的规划
+title: "[plan]: "
+labels: ["plan"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢对项目的支持与关注。在提出规划之前，请确保你已查看相关开发或使用文档：
+        - https://gitee.com/opentech_usher/usher/blob/master/README.md
+  - type: checkboxes
+    attributes:
+      label: 这个规划是否已经存在？
+      options:
+        - label: 我已经搜索过现有的规划 (https://gitee.com/opentech_usher/usher/issues)
+          required: true
+  - type: textarea
+    attributes:
+      label: 规划内容
+      description: 请详细告诉我们您对项目新功能,新模块或者您对项目的展望，如涉及代码，可提供一个最小代码示例，并使用反引号```附上它
+      placeholder: |
+        1. ...
+        2. ...
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 预期结果
+      description: 请告诉我们你预期会发生什么。
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 截图或视频
+      description: 如果可以的话，上传任何关于新规划的实现概览图
+      value: |
+        [在这里上传图片]
