@@ -503,12 +503,39 @@ public class MysqlGlobalVariables {
          */
         private Integer autoIncrementIncrement = 1;
 
+        /**
+         * 事务隔离
+         */
+        private String transactionIsolation = "REPEATABLE-READ";
+
+
+        /**
+         * 是否只读
+         */
+        private Integer transactionReadOnly = 0;
+
         public Integer getAutoIncrementIncrement() {
             return autoIncrementIncrement;
         }
 
         public void setAutoIncrementIncrement(Integer autoIncrementIncrement) {
             this.autoIncrementIncrement = autoIncrementIncrement;
+        }
+
+        public String getTransactionIsolation() {
+            return transactionIsolation;
+        }
+
+        public void setTransactionIsolation(String transactionIsolation) {
+            this.transactionIsolation = transactionIsolation;
+        }
+
+        public Integer getTransactionReadOnly() {
+            return transactionReadOnly;
+        }
+
+        public void setTransactionReadOnly(Integer transactionReadOnly) {
+            this.transactionReadOnly = transactionReadOnly;
         }
     }
 }

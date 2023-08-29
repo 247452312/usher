@@ -97,4 +97,11 @@ public interface PlanFactory {
      */
     MysqlPlan buildBinarySqlPlan(Map<String, String> headers, SQLExpr leftExpr, SQLBinaryOperator operator, SQLExpr rightExpr);
 
+    /**
+     * 创建一个use执行计划
+     *
+     * @return
+     */
+    MysqlPlan buildUsePlan(String database, Map<String, String> headers);
+
 }

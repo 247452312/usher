@@ -5,6 +5,7 @@ import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLMethodInvokeExpr;
 import com.alibaba.druid.sql.ast.statement.SQLSelectItem;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,7 @@ import team.opentech.usher.plan.pojo.plan.impl.MethodInvokePlanImpl;
 import team.opentech.usher.plan.pojo.plan.impl.ResultMappingPlanImpl;
 import team.opentech.usher.plan.pojo.plan.impl.RightJoinSqlPlanImpl;
 import team.opentech.usher.plan.pojo.plan.impl.UnionSqlPlanImpl;
+import team.opentech.usher.plan.pojo.plan.impl.UseSqlPlanImpl;
 import team.opentech.usher.protocol.mysql.plan.BlockQuerySelectSqlPlanImpl;
 
 /**
@@ -79,6 +81,11 @@ public class PlanFactoryImpl implements PlanFactory {
     @Override
     public MysqlPlan buildBinarySqlPlan(Map<String, String> headers, SQLExpr leftExpr, SQLBinaryOperator operator, SQLExpr rightExpr) {
         return new BinarySqlPlanImpl(headers, leftExpr, operator, rightExpr);
+    }
+
+    @Override
+    public MysqlPlan buildUsePlan(String database, Map<String, String> headers) {
+        return new UseSqlPlanImpl(database, headers, new HashMap<>());
     }
 
 
