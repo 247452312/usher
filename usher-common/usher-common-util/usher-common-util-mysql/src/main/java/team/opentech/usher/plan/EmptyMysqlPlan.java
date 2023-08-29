@@ -18,6 +18,10 @@ public class EmptyMysqlPlan extends AbstractMysqlSqlPlan {
     }
 
     @Override
+    public void complete(Map<Long, NodeInvokeResult> planArgs) {
+    }
+
+    @Override
     public NodeInvokeResult invoke() {
         NodeInvokeResult nodeInvokeResult = new NodeInvokeResult(this);
         nodeInvokeResult.setFieldInfos(new ArrayList<>());

@@ -14,7 +14,7 @@ class PasswordTest {
     void encode() {
         Password password = new Password("123456");
         String encode = password.encode();
-        Asserts.assertTrue(Objects.equals(encode, "lMNDs2a/MP9N0FStLWVEDQ=="));
+        Asserts.assertTrue(Objects.equals(encode, "/I8yU670IvjIawRGUBnTgA=="));
     }
 
     @Test

@@ -1,5 +1,9 @@
 package team.opentech.usher.mysql.pojo.cqe.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 import team.opentech.usher.exception.AssertException;
 import team.opentech.usher.mysql.decode.Proto;
 import team.opentech.usher.mysql.enums.MysqlCommandTypeEnum;
@@ -16,9 +20,6 @@ import team.opentech.usher.plan.PlanInvoker;
 import team.opentech.usher.util.CollectionUtil;
 import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.StringUtil;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 
 /**
@@ -72,6 +73,8 @@ public class ComQueryCommand extends MysqlSqlCommand {
             }
             result.add(new ResultSetResponse(execute.getFieldInfos(), execute.getResult()));
         }
+
+        LogUtil.info("mysql协议sql回应:" + result.stream().map(MysqlResponse::toResponseStr).collect(Collectors.joining()));
         return result;
     }
 

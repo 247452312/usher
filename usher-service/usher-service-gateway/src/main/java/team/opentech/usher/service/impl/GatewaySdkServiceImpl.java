@@ -1,7 +1,16 @@
 package team.opentech.usher.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.annotation.Public;
+import team.opentech.usher.assembler.CallNodeAssembler;
+import team.opentech.usher.assembler.CompanyAssembler;
 import team.opentech.usher.context.UserInfoHelper;
 import team.opentech.usher.enums.InvokeTypeEnum;
 import team.opentech.usher.mysql.content.MysqlContent;
@@ -13,8 +22,12 @@ import team.opentech.usher.mysql.pojo.cqe.impl.MysqlAuthCommand;
 import team.opentech.usher.mysql.pojo.response.MysqlResponse;
 import team.opentech.usher.mysql.pojo.response.impl.ErrResponse;
 import team.opentech.usher.mysql.pojo.response.impl.OkResponse;
+import team.opentech.usher.pojo.DTO.CallNodeDTO;
+import team.opentech.usher.pojo.DTO.CompanyDTO;
 import team.opentech.usher.pojo.DTO.UserDTO;
+import team.opentech.usher.pojo.cqe.CallNodeQuery;
 import team.opentech.usher.pojo.cqe.InvokeCommand;
+import team.opentech.usher.pojo.cqe.UserQuery;
 import team.opentech.usher.pojo.cqe.query.BlackQuery;
 import team.opentech.usher.pojo.entity.CallNode;
 import team.opentech.usher.pojo.entity.Company;
@@ -28,12 +41,6 @@ import team.opentech.usher.service.GatewaySdkService;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.GatewayUtil;
 import team.opentech.usher.util.Pair;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -46,6 +53,9 @@ public class GatewaySdkServiceImpl implements GatewaySdkService {
     private CompanyRepository companyRepository;
 
     @Autowired
+    private CompanyAssembler companyAssembler;
+
+    @Autowired
     private ProviderInterfaceRepository providerInterfaceRepository;
 
     @Autowired
@@ -53,6 +63,9 @@ public class GatewaySdkServiceImpl implements GatewaySdkService {
 
     @Autowired
     private CallNodeRepository callNodeRepository;
+
+    @Resource
+    private CallNodeAssembler callNodeAssembler;
 
     @Override
     @Public
@@ -85,6 +98,19 @@ public class GatewaySdkServiceImpl implements GatewaySdkService {
     }
 
     @Override
+    public List<CompanyDTO> queryUser(UserQuery userQuery) {
+        List<Company> result = companyRepository.queryUser(userQuery.getUsername());
+        return companyAssembler.listEntityToDTO(result);
+    }
+
+    @Override
+    public List<CallNodeDTO> queryCallNode(CallNodeQuery callNodeQuery) {
+        UserDTO userDTO = UserInfoHelper.doGet();
+        List<CallNode> callNodes = callNodeRepository.query(userDTO.getId(), callNodeQuery);
+        return callNodeAssembler.listEntityToDTO(callNodes);
+    }
+
+    @Override
     public MysqlResponse mysqlLogin(MysqlAuthCommand command) {
         MysqlTcpInfo mysqlTcpInfo = MysqlContent.MYSQL_TCP_INFO.get();
         Company company = new Company(command);
@@ -94,9 +120,7 @@ public class GatewaySdkServiceImpl implements GatewaySdkService {
 
         // 1.判断密码是否正确
         if (company.checkSkByMysqlChallenge(mysqlTcpInfo.getRandomByte(), command.getChallenge())) {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setIp(UserInfoHelper.getUserIp().orElse(null));
-            userDTO.setId(company.unique.getId());
+            UserDTO userDTO = company.mysqlLogin();
             mysqlTcpInfo.setUserDTO(userDTO);
             return new OkResponse(SqlTypeEnum.NULL);
         }

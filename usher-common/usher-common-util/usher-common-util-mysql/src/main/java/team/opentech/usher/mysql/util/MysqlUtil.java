@@ -1,25 +1,33 @@
 package team.opentech.usher.mysql.util;
 
+import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLStatement;
+import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
+import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
+import com.alibaba.druid.sql.ast.expr.SQLNumericLiteralExpr;
 import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
-import team.opentech.usher.annotation.NotNull;
-import team.opentech.usher.mysql.decode.Proto;
-import team.opentech.usher.plan.MysqlPlan;
-import team.opentech.usher.plan.parser.SqlParser;
-import team.opentech.usher.util.Asserts;
-import team.opentech.usher.util.LogUtil;
-import team.opentech.usher.util.SpringUtil;
-import team.opentech.usher.util.StringUtil;
 import io.netty.buffer.ByteBuf;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.apache.commons.io.HexDump;
+import team.opentech.usher.annotation.NotNull;
+import team.opentech.usher.mysql.decode.Proto;
+import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
+import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
+import team.opentech.usher.plan.MysqlPlan;
+import team.opentech.usher.plan.parser.SqlParser;
+import team.opentech.usher.util.Asserts;
+import team.opentech.usher.util.LogUtil;
+import team.opentech.usher.util.SpringUtil;
+import team.opentech.usher.util.StringUtil;
 
 /**
  * mysql协议解析方法
@@ -434,8 +442,7 @@ public final class MysqlUtil {
      * @return
      */
     public static String sha1(String password) {
-        char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-            'a', 'b', 'c', 'd', 'e', 'f'};
+        char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
         try {
             MessageDigest mdTemp = MessageDigest.getInstance("SHA1");
             mdTemp.update(password.getBytes(StandardCharsets.UTF_8));
@@ -481,6 +488,38 @@ public final class MysqlUtil {
         return needField.stream().anyMatch(t -> StringUtil.equalsIgnoreCase(removeQuotes(t), rKey));
     }
 
+    /**
+     * 解析str
+     *
+     * @param arg
+     * @param allResult
+     * @param parentInvokeResult
+     *
+     * @return
+     */
+    public static <T> List<T> parse(SQLExpr arg, Map<Long, NodeInvokeResult> allResult, NodeInvokeResult parentInvokeResult) {
+        if (arg instanceof SQLCharExpr && team.opentech.usher.mysql.util.StringUtil.cleanQuotation(((SQLCharExpr) arg).getText()).startsWith("&")) {
+            String planId = ((SQLCharExpr) arg).getText().substring(1);
+            NodeInvokeResult nodeInvokeResult = allResult.get(Long.parseLong(planId));
+            Asserts.assertTrue(nodeInvokeResult != null, "未找到临时变量对应的执行计划");
+            Asserts.assertTrue(nodeInvokeResult.getFieldInfos().size() == 1, "方法入参不能是多列");
+            FieldInfo fieldInfo = nodeInvokeResult.getFieldInfos().get(0);
+            List<Map<String, Object>> result = nodeInvokeResult.getResult();
+            return result.stream().map(t -> (T) t.get(fieldInfo.getFieldName())).collect(Collectors.toList());
+        } else if (arg instanceof SQLCharExpr) {
+            String text = ((SQLCharExpr) arg).getText();
+            return Collections.singletonList((T) text);
+        } else if (arg instanceof SQLNumericLiteralExpr) {
+            Number value = ((SQLNumericLiteralExpr) arg).getNumber();
+            return Collections.singletonList((T) value);
+        } else if (arg instanceof SQLIdentifierExpr) {
+            String name = ((SQLIdentifierExpr) arg).getName();
+            return parentInvokeResult.getResult().stream().map(t -> (T) t.get(name)).collect(Collectors.toList());
+        }
+        Asserts.throwException("未找到解析方法入参的类型");
+        return null;
+    }
+
     private static byte[] toBytes(double value) {
         long longValue = Double.doubleToRawLongBits(value);
         byte[] byteRet = new byte[8];
@@ -503,4 +542,5 @@ public final class MysqlUtil {
         }
         return table;
     }
+
 }

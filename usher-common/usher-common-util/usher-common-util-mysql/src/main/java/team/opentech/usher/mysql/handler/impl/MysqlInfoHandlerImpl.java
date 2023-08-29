@@ -273,7 +273,6 @@ public class MysqlInfoHandlerImpl extends ChannelInboundHandlerAdapter implement
         try {
             invokes = invoke(mysqlThisRequestInfo, load);
         } catch (Exception e) {
-            LogUtil.error(this, e);
             Asserts.throwException(e);
         }
         sendResponse(invokes);

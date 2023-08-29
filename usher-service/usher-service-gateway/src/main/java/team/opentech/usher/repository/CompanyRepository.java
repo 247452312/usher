@@ -1,5 +1,6 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.CompanyDO;
 import team.opentech.usher.pojo.entity.Company;
 import team.opentech.usher.repository.base.BaseEntityRepository;
@@ -21,4 +22,11 @@ public interface CompanyRepository extends BaseEntityRepository<CompanyDO, Compa
      * @return
      */
     Company findByAk(String ak);
+
+    /**
+     * @param username
+     *
+     * @return
+     */
+    List<Company> queryUser(String username);
 }

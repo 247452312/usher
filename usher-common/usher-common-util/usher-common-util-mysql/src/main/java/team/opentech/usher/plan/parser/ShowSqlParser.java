@@ -29,9 +29,11 @@ import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlShowTableStatusSta
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlShowTriggersStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlShowVariantsStatement;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlShowWarningsStatement;
+import java.util.Arrays;
 import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.handler.MysqlTcpInfo;
 import team.opentech.usher.mysql.util.MysqlUtil;
+import team.opentech.usher.plan.EmptyMysqlPlan;
 import team.opentech.usher.plan.MysqlPlan;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.LogUtil;
@@ -83,79 +85,79 @@ public class ShowSqlParser implements SqlParser {
     }
 
     private List<MysqlPlan> doParse(MySqlShowEventsStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowFunctionCodeStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowFunctionStatusStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowGrantsStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowIndexesStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowKeysStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowMasterLogsStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowMasterStatusStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowOpenTablesStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowPluginsStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowPrivilegesStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowProcedureCodeStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowProcedureStatusStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowProcessListStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowProfileStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowProfilesStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowRelayLogEventsStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowSlaveHostsStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowSlaveStatusStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowStatusStatement sql, Map<String, String> headers) {
@@ -208,7 +210,7 @@ public class ShowSqlParser implements SqlParser {
     }
 
     private List<MysqlPlan> doParse(MySqlShowTriggersStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(MySqlShowVariantsStatement sql, Map<String, String> headers) {
@@ -223,7 +225,7 @@ public class ShowSqlParser implements SqlParser {
     }
 
     private List<MysqlPlan> doParse(MySqlShowWarningsStatement sql, Map<String, String> headers) {
-        return null;
+        return Arrays.asList(new EmptyMysqlPlan(headers));
     }
 
     private List<MysqlPlan> doParse(SQLShowTablesStatement sql, Map<String, String> headers) {

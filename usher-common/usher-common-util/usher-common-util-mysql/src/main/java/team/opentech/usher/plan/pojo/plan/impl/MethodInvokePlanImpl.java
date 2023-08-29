@@ -1,15 +1,15 @@
 package team.opentech.usher.plan.pojo.plan.impl;
 
 import com.alibaba.druid.sql.ast.SQLExpr;
-import team.opentech.usher.mysql.content.MysqlContent;
-import team.opentech.usher.mysql.handler.MysqlTcpInfo;
-import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
-import team.opentech.usher.plan.pojo.plan.MethodInvokePlan;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.slf4j.helpers.MessageFormatter;
+import team.opentech.usher.mysql.content.MysqlContent;
+import team.opentech.usher.mysql.handler.MysqlTcpInfo;
+import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
+import team.opentech.usher.plan.pojo.plan.MethodInvokePlan;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -28,7 +28,8 @@ public class MethodInvokePlanImpl extends MethodInvokePlan {
         NodeInvokeResult nodeInvokeResult = new NodeInvokeResult(this);
         String fieldName = toFieldName();
         nodeInvokeResult.setFieldInfos(Collections.singletonList(methodEnum.makeFieldInfo(mysqlTcpInfo.getDatabase(), MysqlContent.DEFAULT_METHOD_CALL_TABLE, MysqlContent.DEFAULT_METHOD_CALL_TABLE, this.index, fieldName)));
-        nodeInvokeResult.setResult(methodEnum.makeResult(lastNodeInvokeResult, arguments, fieldName));
+
+        nodeInvokeResult.setResult(methodEnum.makeResult(lastAllPlanResult, lastNodeInvokeResult, arguments, fieldName));
         return nodeInvokeResult;
     }
 

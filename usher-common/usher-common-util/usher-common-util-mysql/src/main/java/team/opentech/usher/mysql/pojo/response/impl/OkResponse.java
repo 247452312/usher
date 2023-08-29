@@ -1,14 +1,14 @@
 package team.opentech.usher.mysql.pojo.response.impl;
 
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import team.opentech.usher.mysql.enums.MysqlServerStatusEnum;
 import team.opentech.usher.mysql.enums.SqlTypeEnum;
 import team.opentech.usher.mysql.pojo.response.AbstractMysqlResponse;
 import team.opentech.usher.mysql.util.MysqlUtil;
 import team.opentech.usher.util.Asserts;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**
@@ -49,6 +49,11 @@ public class OkResponse extends AbstractMysqlResponse {
     private String msg;
 
     /**
+     * 固定标识是不是00 默认是00
+     */
+    private Boolean startWithZero = Boolean.TRUE;
+
+    /**
      * @param sqlTypeEnum  sql类型
      * @param rowLength    受影响行数
      * @param indexIdValue 索引id值
@@ -72,8 +77,18 @@ public class OkResponse extends AbstractMysqlResponse {
         this.sqlTypeEnum = sqlTypeEnum;
     }
 
+    public OkResponse(SqlTypeEnum sqlTypeEnum, Boolean startWithZero) {
+        this.sqlTypeEnum = sqlTypeEnum;
+        this.startWithZero = startWithZero;
+    }
+
     public OkResponse() {
         super();
+    }
+
+    @Override
+    public String toResponseStr() {
+        return "服务器处理成功";
     }
 
     @Override
@@ -85,7 +100,7 @@ public class OkResponse extends AbstractMysqlResponse {
     @Override
     public List<byte[]> toByteNoMarkIndex() {
         Asserts.assertTrue(sqlTypeEnum != null);
-        Asserts.assertTrue(sqlTypeEnum == null || sqlTypeEnum != SqlTypeEnum.QUERY, "查询不能返回OK消息");
+        //        Asserts.assertTrue(sqlTypeEnum == null || sqlTypeEnum != SqlTypeEnum.QUERY, "查询不能返回OK消息");
         return Arrays.asList(mergeOk());
     }
 
@@ -95,6 +110,8 @@ public class OkResponse extends AbstractMysqlResponse {
 
     private byte[] mergeOk() {
         List<byte[]> listResult = new ArrayList<>();
+        // 默认需要FE 或者 00
+        listResult.add(Boolean.TRUE.equals(startWithZero) ? new byte[]{0x00} : new byte[]{(byte) 0xFE});
         // 添加影响行数报文
         byte[] e = MysqlUtil.mergeLengthCodedBinary(rowLength);
         listResult.add(e);

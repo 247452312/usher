@@ -1,6 +1,7 @@
+hosts: prod
 spring:
   profiles:
-    active: cloud
+    active: dev
   output:
     ansi:
       enabled: ALWAYS
@@ -47,9 +48,9 @@ spring:
 
 rpc:
   metadata-report:
-    address: nacos://prod:8848
+    address: nacos://${hosts}:8848
   registry:
-    host: prod
+    host: ${hosts}
     port: 8848
   consumer:
     timeout: 30000
@@ -82,17 +83,17 @@ log-out:
   path: D:/usher/logs
 redis:
   normal:
-    ip: prod
+    ip: ${hosts}
     port: 6379
     password: uhyils
   hotspot:
-    hosts: prod:26380;prod:26381;prod:26382
+    hosts: ${hosts}:26380;${hosts}:26381;${hosts}:26382
     password: uhyils
     sentinels: mymaster
 
 
 rabbit:
-  host: prod
+  host: ${hosts}
   port: 5672
   username: admin
   password: admin
