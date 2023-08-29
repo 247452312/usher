@@ -118,6 +118,63 @@ public class MysqlGlobalVariables {
      */
     private Integer maxUserConnections = 0;
 
+    /**
+     * 版本
+     */
+    private String versionComment = "MySQL Community Server - GPL";
+
+
+    /**
+     * 查询缓存大小
+     */
+    private Long queryCacheSize = maxAllowedPacket;
+
+    /**
+     * 0：以实际指定大小写存储，以区分大小比较，就是大小写敏感，Linux默认值
+     * 1：以小写存储，以不区分大小比较，就是大小写不敏感
+     * 2：以实际指定大小写存储，以小写比较，也算大小写不敏感
+     */
+    private Integer lowerCaseTableNames = 2;
+
+
+    private VariablesSession session = new VariablesSession();
+
+    private String characterSetClient = "utf8mb4";
+
+    private String characterSetConnection = "utf8mb4";
+
+    private String characterSetResults = "utf8mb4";
+
+    private String characterSetServer = "utf8mb4";
+
+    private String collationServer = "utf8mb4_general_ci";
+
+    private String collationConnection = "utf8mb4_general_ci";
+
+    private String initConnect = "";
+
+    private Integer interactiveTimeout = 7200;
+
+    private String license = "GPL";
+
+    private Integer netBufferLength = 16384;
+
+    private Integer netWriteTimeout = 60;
+
+    private Integer performanceSchema = 0;
+
+    private String queryCacheType = "OFF";
+
+    private String sqlMode = "";
+
+    private String systemTimeZone = "CST";
+
+    private String timeZone = "+08:00";
+
+    private String transactionIsolation = "READ-COMMITTED";
+
+    private Integer waitTimeout = 7200;
+
     public Integer getBackLog() {
         return backLog;
     }
@@ -260,5 +317,225 @@ public class MysqlGlobalVariables {
 
     public void setMaxUserConnections(Integer maxUserConnections) {
         this.maxUserConnections = maxUserConnections;
+    }
+
+    public String getVersionComment() {
+        return versionComment;
+    }
+
+    public void setVersionComment(String versionComment) {
+        this.versionComment = versionComment;
+    }
+
+    public Long getQueryCacheSize() {
+        return queryCacheSize;
+    }
+
+    public void setQueryCacheSize(Long queryCacheSize) {
+        this.queryCacheSize = queryCacheSize;
+    }
+
+    public Integer getLowerCaseTableNames() {
+        return lowerCaseTableNames;
+    }
+
+    public void setLowerCaseTableNames(Integer lowerCaseTableNames) {
+        this.lowerCaseTableNames = lowerCaseTableNames;
+    }
+
+
+    public String getCharacterSetClient() {
+        return characterSetClient;
+    }
+
+    public void setCharacterSetClient(String characterSetClient) {
+        this.characterSetClient = characterSetClient;
+    }
+
+    public String getCharacterSetConnection() {
+        return characterSetConnection;
+    }
+
+    public void setCharacterSetConnection(String characterSetConnection) {
+        this.characterSetConnection = characterSetConnection;
+    }
+
+    public String getCharacterSetResults() {
+        return characterSetResults;
+    }
+
+    public void setCharacterSetResults(String characterSetResults) {
+        this.characterSetResults = characterSetResults;
+    }
+
+    public String getCharacterSetServer() {
+        return characterSetServer;
+    }
+
+    public void setCharacterSetServer(String characterSetServer) {
+        this.characterSetServer = characterSetServer;
+    }
+
+    public String getCollationServer() {
+        return collationServer;
+    }
+
+    public void setCollationServer(String collationServer) {
+        this.collationServer = collationServer;
+    }
+
+    public String getCollationConnection() {
+        return collationConnection;
+    }
+
+    public void setCollationConnection(String collationConnection) {
+        this.collationConnection = collationConnection;
+    }
+
+    public String getInitConnect() {
+        return initConnect;
+    }
+
+    public void setInitConnect(String initConnect) {
+        this.initConnect = initConnect;
+    }
+
+    public Integer getInteractiveTimeout() {
+        return interactiveTimeout;
+    }
+
+    public void setInteractiveTimeout(Integer interactiveTimeout) {
+        this.interactiveTimeout = interactiveTimeout;
+    }
+
+    public String getLicense() {
+        return license;
+    }
+
+    public void setLicense(String license) {
+        this.license = license;
+    }
+
+    public Integer getNetBufferLength() {
+        return netBufferLength;
+    }
+
+    public void setNetBufferLength(Integer netBufferLength) {
+        this.netBufferLength = netBufferLength;
+    }
+
+    public Integer getNetWriteTimeout() {
+        return netWriteTimeout;
+    }
+
+    public void setNetWriteTimeout(Integer netWriteTimeout) {
+        this.netWriteTimeout = netWriteTimeout;
+    }
+
+    public Integer getPerformanceSchema() {
+        return performanceSchema;
+    }
+
+    public void setPerformanceSchema(Integer performanceSchema) {
+        this.performanceSchema = performanceSchema;
+    }
+
+    public String getQueryCacheType() {
+        return queryCacheType;
+    }
+
+    public void setQueryCacheType(String queryCacheType) {
+        this.queryCacheType = queryCacheType;
+    }
+
+    public String getSqlMode() {
+        return sqlMode;
+    }
+
+    public void setSqlMode(String sqlMode) {
+        this.sqlMode = sqlMode;
+    }
+
+    public String getSystemTimeZone() {
+        return systemTimeZone;
+    }
+
+    public void setSystemTimeZone(String systemTimeZone) {
+        this.systemTimeZone = systemTimeZone;
+    }
+
+    public String getTimeZone() {
+        return timeZone;
+    }
+
+    public void setTimeZone(String timeZone) {
+        this.timeZone = timeZone;
+    }
+
+    public String getTransactionIsolation() {
+        return transactionIsolation;
+    }
+
+    public void setTransactionIsolation(String transactionIsolation) {
+        this.transactionIsolation = transactionIsolation;
+    }
+
+    public Integer getWaitTimeout() {
+        return waitTimeout;
+    }
+
+    public void setWaitTimeout(Integer waitTimeout) {
+        this.waitTimeout = waitTimeout;
+    }
+
+    public VariablesSession getSession() {
+        return session;
+    }
+
+    public void setSession(VariablesSession session) {
+        this.session = session;
+    }
+
+    public static class VariablesSession {
+
+        /**
+         *
+         */
+        private Integer autoIncrementIncrement = 1;
+
+        /**
+         * 事务隔离
+         */
+        private String transactionIsolation = "REPEATABLE-READ";
+
+
+        /**
+         * 是否只读
+         */
+        private Integer transactionReadOnly = 0;
+
+        public Integer getAutoIncrementIncrement() {
+            return autoIncrementIncrement;
+        }
+
+        public void setAutoIncrementIncrement(Integer autoIncrementIncrement) {
+            this.autoIncrementIncrement = autoIncrementIncrement;
+        }
+
+        public String getTransactionIsolation() {
+            return transactionIsolation;
+        }
+
+        public void setTransactionIsolation(String transactionIsolation) {
+            this.transactionIsolation = transactionIsolation;
+        }
+
+        public Integer getTransactionReadOnly() {
+            return transactionReadOnly;
+        }
+
+        public void setTransactionReadOnly(Integer transactionReadOnly) {
+            this.transactionReadOnly = transactionReadOnly;
+        }
     }
 }

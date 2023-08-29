@@ -1,8 +1,5 @@
 package team.opentech.usher.protocol.mysql.netty.impl.other;
 
-import team.opentech.usher.mysql.decode.impl.MysqlDecoderImpl;
-import team.opentech.usher.mysql.handler.MysqlInfoHandler;
-import team.opentech.usher.util.LogUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -10,6 +7,9 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandler;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import java.net.InetSocketAddress;
+import team.opentech.usher.mysql.decode.impl.MysqlDecoderImpl;
+import team.opentech.usher.mysql.handler.MysqlInfoHandler;
+import team.opentech.usher.util.LogUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -17,6 +17,10 @@ import java.net.InetSocketAddress;
  */
 public class MysqlInfoHandlerTest extends ChannelInboundHandlerAdapter implements MysqlInfoHandler, ChannelInboundHandler {
 
+
+    private final String mysqlHost;
+
+    private final Integer mysqlPort;
 
     private MysqlNettyClientTest mysqlNettyClientTest;
 
@@ -26,7 +30,9 @@ public class MysqlInfoHandlerTest extends ChannelInboundHandlerAdapter implement
     private Channel mysqlChannel;
 
 
-    public MysqlInfoHandlerTest() {
+    public MysqlInfoHandlerTest(String mysqlHost, Integer mysqlPort) {
+        this.mysqlHost = mysqlHost;
+        this.mysqlPort = mysqlPort;
     }
 
     /**
@@ -40,7 +46,7 @@ public class MysqlInfoHandlerTest extends ChannelInboundHandlerAdapter implement
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
         this.mysqlChannel = ctx.channel();
-        mysqlNettyClientTest = new MysqlNettyClientTest(this);
+        mysqlNettyClientTest = new MysqlNettyClientTest(this, mysqlHost, mysqlPort);
         //入口连接
         InetSocketAddress inetSocketAddress = (InetSocketAddress) mysqlChannel.localAddress();
         LogUtil.info("mysql 连接!" + inetSocketAddress);

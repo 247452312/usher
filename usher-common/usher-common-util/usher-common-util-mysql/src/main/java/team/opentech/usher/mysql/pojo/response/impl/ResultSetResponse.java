@@ -1,17 +1,19 @@
 package team.opentech.usher.mysql.pojo.response.impl;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.enums.MysqlServerStatusEnum;
+import team.opentech.usher.mysql.enums.SqlTypeEnum;
 import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
 import team.opentech.usher.mysql.pojo.response.AbstractMysqlResponse;
 import team.opentech.usher.mysql.util.MysqlUtil;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.MapUtil;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -63,22 +65,43 @@ public class ResultSetResponse extends AbstractMysqlResponse {
     }
 
     @Override
+    public String toResponseStr() {
+        StringBuilder sb = new StringBuilder("返回表格:\n");
+        for (FieldInfo field : fields) {
+            sb.append("|");
+            sb.append(field.getFieldName());
+            sb.append("\t");
+        }
+        sb.append("\n");
+        for (Map<String, Object> entry : jsonInfo) {
+            for (FieldInfo field : fields) {
+                Object o = entry.get(field.getFieldName());
+                sb.append("|");
+                sb.append(o);
+                sb.append("\t");
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    @Override
     public List<byte[]> toByteNoMarkIndex() {
         List<byte[]> results = new ArrayList<>(5);
         List<byte[]> fields = toFields();
         byte[] eof = toEof();
         List<byte[]> rowDatas = toRowData();
-        // todo 这里不正确, 正确的resultSet应该返回多个数组, 1.col条数 2.col信息们 3.eof 4.result们 5.eof
+        // todo 这里不正确, 正确的resultSet应该返回多个数组, 1.col条数 2.col信息们 3.eof 4.result们 5.ok
         /*1.col条数*/
         results.add(makeColSizeByteArray(fields.size()));
         /*2.col信息*/
         results.addAll(fields);
         /*3.eof*/
-        results.add(eof);
+        //        results.add(eof);
         /*4.result*/
         results.addAll(rowDatas);
-        /*5.eof*/
-        results.add(eof);
+        /*5.ok*/
+        results.addAll(new OkResponse(SqlTypeEnum.QUERY, Boolean.FALSE).toByteNoMarkIndex());
         return results;
     }
 
@@ -155,30 +178,31 @@ public class ResultSetResponse extends AbstractMysqlResponse {
      */
     private byte[] transObjToByte(Object obj) {
         if (obj == null) {
-            return new byte[]{(byte) 0xfb};
+            return new byte[]{(byte) 0x01, (byte) 0xfb};
         }
         if (obj instanceof Date) {
             Date dateValue = (Date) obj;
-            return MysqlUtil.mergeLengthCodedBinary(dateValue.getTime());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            return MysqlUtil.mergeLengthCodedBinary(simpleDateFormat.format(dateValue));
         }
         if (obj instanceof String) {
             return MysqlUtil.varString((String) obj);
         }
         if (obj instanceof Long) {
-            return MysqlUtil.mergeLengthCodedBinary((Long) obj);
+            return MysqlUtil.varString(Long.toString((Long) obj));
         }
         if (obj instanceof Double) {
-            return MysqlUtil.mergeLengthCodedBinary((double) obj);
+            return MysqlUtil.varString(Double.toString((double) obj));
         }
         if (obj instanceof BigDecimal) {
             BigDecimal bigDecimal = (BigDecimal) obj;
-            return MysqlUtil.mergeLengthCodedBinary(bigDecimal.floatValue());
+            return MysqlUtil.varString(bigDecimal.toString());
         }
         if (obj instanceof Integer) {
-            return MysqlUtil.mergeLengthCodedBinary((int) obj);
+            return MysqlUtil.varString(Integer.toString((int) obj));
         }
         if (obj instanceof Boolean) {
-            return MysqlUtil.mergeLengthCodedBinary((Boolean) obj ? 1 : 0);
+            return MysqlUtil.varString(Integer.toString((Boolean) obj ? 1 : 0));
         }
         Asserts.assertTrue(false, "mysql 数据暂未支持类型:" + obj.getClass().getName());
         return null;

@@ -1,12 +1,13 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.enums.InvokeTypeEnum;
 import team.opentech.usher.pojo.DO.CallNodeDO;
 import team.opentech.usher.pojo.DTO.UserDTO;
+import team.opentech.usher.pojo.cqe.CallNodeQuery;
 import team.opentech.usher.pojo.entity.CallNode;
 import team.opentech.usher.repository.base.BaseEntityRepository;
-import java.util.List;
 
 /**
  * 调用节点表, 真正调用的节点(CallNode)表 数据仓库层
@@ -46,4 +47,13 @@ public interface CallNodeRepository extends BaseEntityRepository<CallNodeDO, Cal
     Boolean judgeSysTable(String path);
 
 
+    /**
+     * 查询调用节点
+     *
+     * @param userId
+     * @param callNodeQuery
+     *
+     * @return
+     */
+    List<CallNode> query(Long userId, CallNodeQuery callNodeQuery);
 }

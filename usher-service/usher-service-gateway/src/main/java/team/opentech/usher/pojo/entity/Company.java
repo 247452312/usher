@@ -1,9 +1,13 @@
 package team.opentech.usher.pojo.entity;
 
 import team.opentech.usher.annotation.Default;
+import team.opentech.usher.context.UserInfoHelper;
+import team.opentech.usher.mysql.content.MysqlContent;
+import team.opentech.usher.mysql.handler.MysqlTcpInfo;
 import team.opentech.usher.mysql.pojo.cqe.impl.MysqlAuthCommand;
 import team.opentech.usher.mysql.util.MysqlUtil;
 import team.opentech.usher.pojo.DO.CompanyDO;
+import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
 import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.Password;
@@ -79,5 +83,22 @@ public class Company extends AbstractDoEntity<CompanyDO> {
         byte[] bytes = MysqlUtil.encodePassword(decodePassword.getBytes(StandardCharsets.UTF_8), seed);
         String userPassword = Base64.encodeBase64String(bytes);
         return Objects.equals(userPassword, challenge);
+    }
+
+    public UserDTO mysqlLogin() {
+        MysqlTcpInfo mysqlTcpInfo = MysqlContent.MYSQL_TCP_INFO.get();
+        String ip = mysqlTcpInfo.getLocalAddress().getAddress().getHostName();
+        UserInfoHelper.setIp(ip);
+        CompanyDO dataAndValidate = toDataAndValidate();
+        UserDTO userDTO = new UserDTO();
+        userDTO.setNickName(dataAndValidate.getPersonName());
+        userDTO.setUsername(dataAndValidate.getName());
+        userDTO.setPhone(dataAndValidate.getPersonPhone());
+        userDTO.setStatus(1);
+        userDTO.setIp(ip);
+        userDTO.setId(getUnique().get().getId());
+        UserInfoHelper.setUser(userDTO);
+        return userDTO;
+
     }
 }

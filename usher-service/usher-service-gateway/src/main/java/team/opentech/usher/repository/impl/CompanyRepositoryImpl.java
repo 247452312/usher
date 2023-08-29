@@ -2,6 +2,7 @@ package team.opentech.usher.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import java.util.List;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.CompanyAssembler;
 import team.opentech.usher.dao.CompanyDao;
@@ -36,5 +37,13 @@ public class CompanyRepositoryImpl extends AbstractRepository<Company, CompanyDO
         queryWrapper.eq(CompanyDO::getAk, ak);
         CompanyDO companyDO = dao.selectOne(queryWrapper);
         return assembler.toEntity(companyDO);
+    }
+
+    @Override
+    public List<Company> queryUser(String username) {
+        LambdaQueryWrapper<CompanyDO> queryWrapper = Wrappers.lambdaQuery();
+        queryWrapper.like(StringUtil.isNotEmpty(username), CompanyDO::getName, username);
+        List<CompanyDO> companyDOS = dao.selectList(queryWrapper);
+        return assembler.listToEntity(companyDOS);
     }
 }

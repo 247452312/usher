@@ -3,6 +3,15 @@ package team.opentech.usher.plan.pojo.plan.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Objects;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.content.MysqlGlobalVariables;
@@ -19,16 +28,8 @@ import team.opentech.usher.plan.pojo.plan.BlockQuerySelectSqlPlan;
 import team.opentech.usher.plan.pojo.plan.JoinSqlPlan;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
+import team.opentech.usher.util.JSONUtil;
 import team.opentech.usher.util.SpringUtil;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -40,12 +41,12 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
     /**
      * 是否是每行一个结果
      */
-    private final Boolean singleLine;
+    private final Boolean mergeable;
 
     /**
      * mysql系统变量
      */
-    private final Map<String, Object> mysqlSystemVariables;
+    private final JSONObject mysqlSystemVariables;
 
     /**
      * 当前映射之前最后一个查询执行计划的结果
@@ -58,10 +59,12 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
         this.mysqlSystemVariables = JSONObject.parseObject(JSON.toJSONString(bean));
         // 是否是每行一个结果
         List<MysqlMethodEnum> allMethod = selectList.stream().filter(MySQLSelectItem::isMethodItem).map(MySQLSelectItem::method).collect(Collectors.toList());
+        // 如果没有method 理论上不需要合并多行数据
         if (CollectionUtil.isEmpty(allMethod)) {
-            this.singleLine = true;
+            this.mergeable = false;
         } else {
-            this.singleLine = allMethod.stream().allMatch(MysqlMethodEnum::getSingleLine);
+            // 只要有一个方法需要合并,则需要合并
+            this.mergeable = allMethod.stream().anyMatch(MysqlMethodEnum::getMergeable);
         }
     }
 
@@ -94,8 +97,8 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
          * 2.不需要合并,则可以直接根据上一次结果来直接映射 如果有子查询,则只需要判断size和上一次查询结果的行数来匹配后一一插入即可
          */
 
-        /*如果是需要组合的情况*/
-        if (!singleLine) {
+        /*如果是需要多行合并成一行的情况*/
+        if (mergeable) {
             // 制作存在方法合并时候的结果
             return makeMethodNoSingleLine();
         }
@@ -123,8 +126,11 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
         }
         List<FieldInfo> newFieldInfo = new ArrayList<>();
         Set<String> newFieldNameSet = new HashSet<>();
-        Map<String, FieldInfo> fieldInfoMap = lastFieldInfos.stream().collect(Collectors.toMap(FieldInfo::getTableNameDotFieldName, t -> t));
-        for (String needFieldName : needFields) {
+        Map<String, FieldInfo> fieldInfoMap = lastFieldInfos.stream().collect(Collectors.toMap(FieldInfo::getFieldName, t -> t));
+
+        for (MySQLSelectItem needField : selectList) {
+            String needFieldName = needField.getExpr().toString();
+            String finalName = team.opentech.usher.util.StringUtil.isNotEmpty(needField.getAlias()) ? needField.getAlias() : needFieldName;
             /*2.如果结果列存在A.* 或者B.* 则通过tableName回溯寻找表来源,进行一个列表的拼*/
             if (needFieldName.endsWith("*")) {
                 String needTableName = needFieldName.substring(0, needFieldName.indexOf('.') + 1);
@@ -141,18 +147,22 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
                 NodeInvokeResult nodeInvokeResult = lastAllPlanResult.get(Long.parseLong(needFieldName.substring(1)));
                 List<FieldInfo> specialLastFieldInfos = nodeInvokeResult.getFieldInfos();
                 Asserts.assertTrue(specialLastFieldInfos != null && specialLastFieldInfos.size() == 1, "映射时需要有且仅有一个字段来映射");
-                FieldInfo fieldInfo = specialLastFieldInfos.get(0);
+                FieldInfo fieldInfo = dealLastFieldInfo(newFieldNameSet, specialLastFieldInfos.get(0));
                 newFieldInfo.add(fieldInfo);
                 newFieldNameSet.add(fieldInfo.getFieldName());
                 continue;
             }
             /*4.如果列是查询系统配置的,则返回*/
-            if (needFieldName.startsWith("@@")) {
-                newFieldInfo.add(new FieldInfo(MysqlContent.DUAL_DATABASES, "dual", "dual", needFieldName, needFieldName, 0, 0, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
-                newFieldNameSet.add(needFieldName);
+            if (needFieldName.startsWith("@@") || needField.isGlobal()) {
+                newFieldInfo.add(new FieldInfo(MysqlContent.DUAL_DATABASES, "dual", "dual", finalName, needFieldName, 0, 0, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
+                newFieldNameSet.add(finalName);
                 continue;
             }
-
+            if (needFieldName.startsWith("'") && needFieldName.endsWith("'")) {
+                newFieldInfo.add(new FieldInfo(MysqlContent.DUAL_DATABASES, "dual", "dual", finalName, needFieldName, 0, 0, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
+                newFieldNameSet.add(finalName);
+                continue;
+            }
             /*4.如果结果列为 A.name 则通过tableName回溯寻找表来源,拼装*/
 
             String key = StringUtil.cleanQuotation(needFieldName);
@@ -160,22 +170,29 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
             if (fieldInfo == null) {
                 Asserts.throwException("未找到字段:" + key);
             }
+            fieldInfo = fieldInfo.copyWithNewFieldName(finalName);
             fieldInfo = dealLastFieldInfo(newFieldNameSet, fieldInfo);
             newFieldInfo.add(fieldInfo);
-            newFieldNameSet.add(fieldInfo.getFieldName());
+            newFieldNameSet.add(finalName);
         }
-        List<Map<String, Object>> newResultList = lastResult.stream().map(t -> {
+
+        Map<String, String> lastResultAliasMap = selectList.stream().collect(Collectors.toMap(t -> t.getExpr().toString(), t -> team.opentech.usher.util.StringUtil.isEmpty(t.getAlias()) ? t.getExpr().toString() : t.getAlias()));
+        List<Map<String, Object>> newResultList = lastResult.stream().map(lineData -> {
             Map<String, Object> newResult = new HashMap<>(selectList.size());
-            for (Entry<String, Object> entry : t.entrySet()) {
+            for (Entry<String, Object> entry : lineData.entrySet()) {
                 if (MysqlUtil.ignoreCaseAndQuotesContains(needFields, entry.getKey()) || needFields.contains("*")) {
-                    newResult.put(entry.getKey(), entry.getValue());
+                    newResult.put(lastResultAliasMap.get(entry.getKey()), entry.getValue());
                 }
             }
             for (MySQLSelectItem mySQLSelectItem : selectList) {
-                String variable = mySQLSelectItem.toString();
-                if (variable.startsWith("@@")) {
-                    String variableCleanName = variable.substring(2);
-                    newResult.put(variable, mysqlSystemVariables.get(variableCleanName));
+                String variable = mySQLSelectItem.getExpr().toString();
+                if (variable.startsWith("@@") || mySQLSelectItem.isGlobal()) {
+                    String realFieldName = team.opentech.usher.util.StringUtil.isNotEmpty(mySQLSelectItem.getAlias()) ? mySQLSelectItem.getAlias() : variable;
+                    if (variable.startsWith("@@")) {
+                        variable = variable.substring(2);
+                    }
+
+                    newResult.put(realFieldName, JSONUtil.recursiveMatch(mysqlSystemVariables, variable));
                 }
             }
             return newResult;
@@ -218,6 +235,8 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
                         result.get(i).putAll(fieldResult.get(i));
                     }
                 }
+            } else if (needField.startsWith("@@")) {
+                int i = 1;
             } else {
                 Boolean allowFault = config.getAllowFault();
                 Asserts.assertTrue(allowFault, "不允许错误的sql语句, 在有合并意义的语句中不能出现实际行");
@@ -263,10 +282,7 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
         Set<String> keys = fieldInfoMap.keySet();
         String targetKey = null;
         for (String key : keys) {
-            String[] split = key.split("\\.");
-            Asserts.assertTrue(split.length == 2, "查询语句中字段名称:{},有问题", key);
-            String fieldName = split[1];
-            if (team.opentech.usher.util.StringUtil.equalsIgnoreCase(fieldName, sourceFieldName)) {
+            if (team.opentech.usher.util.StringUtil.equalsIgnoreCase(key, sourceFieldName)) {
                 Asserts.assertTrue(targetKey == null, "查询语句中字段名称:{},重复,多个子表都存在此字段", key);
                 targetKey = key;
             }
@@ -276,7 +292,7 @@ public class ResultMappingPlanImpl extends AbstractResultMappingPlan {
     }
 
     /**
-     * 处理新字段
+     * 处理新字段 如果有两个相同名称的字段, 则第二个自动变成 xxx(1)
      *
      * @param newFieldNameSet
      * @param lastFieldInfo

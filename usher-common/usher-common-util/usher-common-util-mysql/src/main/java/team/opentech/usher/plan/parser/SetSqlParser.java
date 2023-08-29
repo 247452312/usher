@@ -3,6 +3,7 @@ package team.opentech.usher.plan.parser;
 import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.ast.statement.SQLAssignItem;
 import com.alibaba.druid.sql.ast.statement.SQLSetStatement;
+import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlSetTransactionStatement;
 import team.opentech.usher.plan.MysqlPlan;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ public class SetSqlParser implements SqlParser {
     @Override
     public boolean canParse(SQLStatement sql) {
         // 检查sql是不是set语句
-        if (sql instanceof SQLSetStatement) {
+        if (sql instanceof SQLSetStatement || sql instanceof MySqlSetTransactionStatement) {
             return true;
         }
         return false;
@@ -27,16 +28,24 @@ public class SetSqlParser implements SqlParser {
 
     @Override
     public List<MysqlPlan> parse(SQLStatement sql, Map<String, String> headers) {
-        // 解析set语句
-        SQLSetStatement setSql = (SQLSetStatement) sql;
-        List<SQLAssignItem> items = setSql.getItems();
-        for (SQLAssignItem sqlAssignItem : items) {
-            // 要被改的变量名称
-            String target = sqlAssignItem.getTarget().toString();
-            // 改成什么
-            String value = sqlAssignItem.getValue().toString();
-        }
+
         // todo 暂时忽略set语句
+        if (sql instanceof SQLSetStatement) {
+            // 解析set语句
+            SQLSetStatement setSql = (SQLSetStatement) sql;
+            List<SQLAssignItem> items = setSql.getItems();
+            for (SQLAssignItem sqlAssignItem : items) {
+                // 要被改的变量名称
+                String target = sqlAssignItem.getTarget().toString();
+                // 改成什么
+                String value = sqlAssignItem.getValue().toString();
+            }
+            return new ArrayList<>();
+        } else if (sql instanceof MySqlSetTransactionStatement) {
+            MySqlSetTransactionStatement setSql = (MySqlSetTransactionStatement) sql;
+            return new ArrayList<>();
+        }
         return new ArrayList<>();
+
     }
 }

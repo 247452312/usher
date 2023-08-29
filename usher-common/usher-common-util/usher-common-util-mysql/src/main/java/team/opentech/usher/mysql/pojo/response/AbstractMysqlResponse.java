@@ -1,13 +1,13 @@
 package team.opentech.usher.mysql.pojo.response;
 
+import java.util.ArrayList;
+import java.util.List;
 import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.enums.MysqlHandlerStatusEnum;
 import team.opentech.usher.mysql.handler.MysqlTcpInfo;
 import team.opentech.usher.mysql.handler.MysqlTcpInfoObserver;
 import team.opentech.usher.mysql.handler.MysqlThisRequestInfo;
 import team.opentech.usher.mysql.util.MysqlUtil;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -59,6 +59,7 @@ public abstract class AbstractMysqlResponse implements MysqlResponse, MysqlTcpIn
     public MysqlThisRequestInfo getMysqlThisRequestInfo() {
         return mysqlThisRequestInfo;
     }
+
 
     /**
      * 返回没有前面长度位或标志位的字节组

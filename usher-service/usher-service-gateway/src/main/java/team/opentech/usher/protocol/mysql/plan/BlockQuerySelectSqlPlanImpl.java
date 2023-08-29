@@ -3,8 +3,14 @@ package team.opentech.usher.protocol.mysql.plan;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
 import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
+import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.ast.statement.SQLExprTableSource;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import team.opentech.usher.enums.InvokeTypeEnum;
 import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
@@ -16,9 +22,6 @@ import team.opentech.usher.service.GatewaySdkService;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.SpringUtil;
 import team.opentech.usher.util.StringUtil;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 简单sql执行计划
@@ -56,10 +59,19 @@ public class BlockQuerySelectSqlPlanImpl extends BlockQuerySelectSqlPlan {
         }
         List<SQLBinaryOpExpr> where = froms.getWhere();
         Map<String, Object> whereParams = new HashMap<>();
+        Boolean haveResult = true;
         if (where != null) {
             for (SQLBinaryOpExpr sqlBinaryOpExpr : where) {
                 SQLExpr left = sqlBinaryOpExpr.getLeft();
                 SQLExpr right = sqlBinaryOpExpr.getRight();
+                // where两边都不是属性的时候直接忽略
+                if (!(left instanceof SQLIdentifierExpr) && !(right instanceof SQLIdentifierExpr)) {
+                    // 如果两边不一致,则无结果
+                    if (!Objects.equals(left.toString(), right.toString())) {
+                        haveResult = false;
+                    }
+                    continue;
+                }
                 String rightStr = right.toString();
                 if (right instanceof SQLCharExpr) {
                     rightStr = ((SQLCharExpr) right).getText();
@@ -84,6 +96,9 @@ public class BlockQuerySelectSqlPlanImpl extends BlockQuerySelectSqlPlan {
         InvokeCommand build = invokeCommandBuilder.build();
         NodeInvokeResult nodeInvokeResult = gatewaySdkService.invokeCallNode(build);
         nodeInvokeResult.setSourcePlan(this);
+        if (!haveResult) {
+            nodeInvokeResult.setResult(new ArrayList<>());
+        }
         return nodeInvokeResult;
     }
 }

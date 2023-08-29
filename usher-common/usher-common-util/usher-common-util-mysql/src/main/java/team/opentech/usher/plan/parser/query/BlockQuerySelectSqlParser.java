@@ -4,6 +4,7 @@ import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.expr.SQLAllColumnExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOpExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
+import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLInListExpr;
 import com.alibaba.druid.sql.ast.expr.SQLInSubQueryExpr;
@@ -22,6 +23,16 @@ import com.alibaba.druid.sql.ast.statement.SQLSelectStatement;
 import com.alibaba.druid.sql.ast.statement.SQLTableSource;
 import com.alibaba.druid.sql.dialect.mysql.ast.expr.MySqlCharExpr;
 import com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlSelectQueryBlock;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.handler.MysqlTcpInfo;
@@ -32,17 +43,9 @@ import team.opentech.usher.plan.pojo.MySqlListExpr;
 import team.opentech.usher.plan.pojo.SqlTableSourceBinaryTree;
 import team.opentech.usher.plan.pojo.plan.AbstractResultMappingPlan;
 import team.opentech.usher.plan.pojo.plan.MethodInvokePlan;
+import team.opentech.usher.plan.pojo.plan.impl.BinarySqlPlanImpl;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 
 /**
@@ -116,6 +119,16 @@ public class BlockQuerySelectSqlParser extends AbstractSelectSqlParser {
             result.add(newPlan);
             return new MySQLSelectItem(new SQLIdentifierExpr("&" + newPlan.getId()), selectItem.getAlias(), selectItem, newPlan.getMethodEnum());
         }
+        if (expr instanceof SQLBinaryOpExpr) {
+            SQLBinaryOpExpr binaryOpExpr = (SQLBinaryOpExpr) expr;
+            List<SQLExpr> sqlExprs = parseMethodArgument(result, headers, Arrays.asList(binaryOpExpr.getLeft(), binaryOpExpr.getRight()));
+            BinarySqlPlanImpl newPlan = new BinarySqlPlanImpl(headers, sqlExprs.get(0), binaryOpExpr.getOperator(), sqlExprs.get(1));
+            result.add(newPlan);
+            return new MySQLSelectItem(new SQLIdentifierExpr("&" + newPlan.getId()), selectItem.getAlias(), selectItem);
+        }
+        if (expr instanceof SQLCharExpr) {
+            return new MySQLSelectItem(expr, selectItem.getAlias(), selectItem);
+        }
         Asserts.throwException("查询报错,子查询类型找不到:{},内容为:{}", expr.getClass().getName(), selectItem.toString());
         return null;
     }
@@ -136,6 +149,16 @@ public class BlockQuerySelectSqlParser extends AbstractSelectSqlParser {
                 List<SQLExpr> argumentsItem = sqlMethodInvokeExpr.getArguments();
                 List<SQLExpr> newArgumentsItem = parseMethodArgument(plans, headers, argumentsItem);
                 MysqlPlan newPlan = planFactory.buildMethodInvokePlan(headers, i, methodName, newArgumentsItem, sqlMethodInvokeExpr);
+                plans.add(newPlan);
+                result.add(new MySqlCharExpr("&" + newPlan.getId()));
+            } else if (argument instanceof SQLBinaryOpExpr) {
+                SQLBinaryOpExpr binaryOpExpr = (SQLBinaryOpExpr) argument;
+                SQLExpr left = binaryOpExpr.getLeft();
+                SQLBinaryOperator operator = binaryOpExpr.getOperator();
+                SQLExpr right = binaryOpExpr.getRight();
+                List<SQLExpr> leftSqlExpr = parseMethodArgument(plans, headers, Arrays.asList(left));
+                List<SQLExpr> rightSqlExpr = parseMethodArgument(plans, headers, Arrays.asList(right));
+                MysqlPlan newPlan = planFactory.buildBinarySqlPlan(headers, leftSqlExpr.get(leftSqlExpr.size() - 1), operator, rightSqlExpr.get(rightSqlExpr.size() - 1));
                 plans.add(newPlan);
                 result.add(new MySqlCharExpr("&" + newPlan.getId()));
             } else {

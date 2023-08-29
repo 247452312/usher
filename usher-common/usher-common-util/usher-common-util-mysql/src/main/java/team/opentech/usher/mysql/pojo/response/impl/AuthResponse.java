@@ -1,13 +1,14 @@
 package team.opentech.usher.mysql.pojo.response.impl;
 
-import team.opentech.usher.mysql.enums.MysqlServerStatusEnum;
-import team.opentech.usher.mysql.pojo.response.AbstractMysqlResponse;
-import team.opentech.usher.mysql.util.MysqlUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.RandomUtils;
+import team.opentech.usher.mysql.content.MysqlContent;
+import team.opentech.usher.mysql.enums.MysqlServerStatusEnum;
+import team.opentech.usher.mysql.pojo.response.AbstractMysqlResponse;
+import team.opentech.usher.mysql.util.MysqlUtil;
 
 
 /**
@@ -19,19 +20,14 @@ import org.apache.commons.lang3.RandomUtils;
  */
 public class AuthResponse extends AbstractMysqlResponse {
 
-    /**
-     * mysql版本
-     */
-    private static final String VERSION = "5.7.36";
-
-    /**
-     * 协议结尾
-     */
-    private static final String END_OF_PROTO = "mysql_native_password";
-
 
     public AuthResponse() {
         super();
+    }
+
+    @Override
+    public String toResponseStr() {
+        return "认证成功," + mysqlTcpInfo.getUserDTO().getUsername();
     }
 
     /**
@@ -40,7 +36,6 @@ public class AuthResponse extends AbstractMysqlResponse {
      * @return
      */
     @Override
-
     public byte getFirstByte() {
         return 0x0A;
     }
@@ -77,7 +72,7 @@ public class AuthResponse extends AbstractMysqlResponse {
         byte[] randomLow = new byte[e.length - 8];
         System.arraycopy(e, 8, randomLow, 0, e.length - 8);
         results.add(randomLow);
-        results.add(END_OF_PROTO.getBytes(StandardCharsets.UTF_8));
+        results.add(MysqlContent.END_OF_PROTO.getBytes(StandardCharsets.UTF_8));
         results.add(new byte[1]);
         return Collections.singletonList(MysqlUtil.mergeListBytes(results));
     }
@@ -89,7 +84,7 @@ public class AuthResponse extends AbstractMysqlResponse {
      * @return
      */
     private byte[] toServerVersionInfo() {
-        byte[] bytes = VERSION.getBytes(StandardCharsets.UTF_8);
+        byte[] bytes = MysqlContent.VERSION.getBytes(StandardCharsets.UTF_8);
         byte[] result = new byte[bytes.length + 1];
         System.arraycopy(bytes, 0, result, 0, bytes.length);
         result[bytes.length] = 0x00;

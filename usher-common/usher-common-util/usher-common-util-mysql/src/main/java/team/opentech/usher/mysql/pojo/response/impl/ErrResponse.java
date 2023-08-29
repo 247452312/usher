@@ -1,13 +1,13 @@
 package team.opentech.usher.mysql.pojo.response.impl;
 
-import team.opentech.usher.mysql.enums.MysqlErrCodeEnum;
-import team.opentech.usher.mysql.enums.MysqlServerStatusEnum;
-import team.opentech.usher.mysql.pojo.response.AbstractMysqlResponse;
-import team.opentech.usher.mysql.util.MysqlUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import team.opentech.usher.mysql.enums.MysqlErrCodeEnum;
+import team.opentech.usher.mysql.enums.MysqlServerStatusEnum;
+import team.opentech.usher.mysql.pojo.response.AbstractMysqlResponse;
+import team.opentech.usher.mysql.util.MysqlUtil;
 
 
 /**
@@ -58,6 +58,11 @@ public class ErrResponse extends AbstractMysqlResponse {
     @Override
     public byte getFirstByte() {
         return (byte) 0xFF;
+    }
+
+    @Override
+    public String toResponseStr() {
+        return "服务器报错:" + msg;
     }
 
     @Override

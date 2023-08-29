@@ -1,7 +1,10 @@
 package team.opentech.usher.plan;
 
 import com.alibaba.druid.sql.ast.SQLExpr;
+import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import com.alibaba.druid.sql.ast.expr.SQLMethodInvokeExpr;
+import java.util.List;
+import java.util.Map;
 import team.opentech.usher.plan.pojo.MySQLSelectItem;
 import team.opentech.usher.plan.pojo.SqlTableSourceBinaryTree;
 import team.opentech.usher.plan.pojo.plan.AbstractResultMappingPlan;
@@ -10,8 +13,6 @@ import team.opentech.usher.plan.pojo.plan.InnerJoinSqlPlan;
 import team.opentech.usher.plan.pojo.plan.LeftJoinSqlPlan;
 import team.opentech.usher.plan.pojo.plan.MethodInvokePlan;
 import team.opentech.usher.plan.pojo.plan.RightJoinSqlPlan;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 执行计划工厂(集成spring,使用方应该实现此工厂,并使用bean的形式结合到spring中)
@@ -84,4 +85,23 @@ public interface PlanFactory {
      * @return
      */
     MysqlPlan buildUnionSelectSqlPlan(Map<String, String> headers, List<Long> planIds);
+
+    /**
+     * 创建一个表达式执行计划
+     *
+     * @param leftExpr  表达式左边
+     * @param operator  表达式符号
+     * @param rightExpr 表达式右边
+     *
+     * @return
+     */
+    MysqlPlan buildBinarySqlPlan(Map<String, String> headers, SQLExpr leftExpr, SQLBinaryOperator operator, SQLExpr rightExpr);
+
+    /**
+     * 创建一个use执行计划
+     *
+     * @return
+     */
+    MysqlPlan buildUsePlan(String database, Map<String, String> headers);
+
 }

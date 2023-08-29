@@ -1,7 +1,5 @@
 package team.opentech.usher.protocol.mysql.netty.impl.other;
 
-import team.opentech.usher.mysql.util.MysqlUtil;
-import team.opentech.usher.util.LogUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -15,6 +13,8 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import team.opentech.usher.mysql.util.MysqlUtil;
+import team.opentech.usher.util.LogUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -24,14 +24,17 @@ public class MysqlNettyClientTest {
 
     private final MysqlInfoHandlerTest mysqlInfoHandlerTest;
 
-    private EventLoopGroup group;
+    private final String mysqlHost;
 
-    private Bootstrap bootstrap;
+    private final Integer mysqlPort;
 
     private ChannelFuture connect;
 
-    public MysqlNettyClientTest(MysqlInfoHandlerTest mysqlInfoHandlerTest) {
+
+    public MysqlNettyClientTest(MysqlInfoHandlerTest mysqlInfoHandlerTest, String mysqlHost, Integer mysqlPort) {
         this.mysqlInfoHandlerTest = mysqlInfoHandlerTest;
+        this.mysqlHost = mysqlHost;
+        this.mysqlPort = mysqlPort;
     }
 
 
@@ -42,13 +45,9 @@ public class MysqlNettyClientTest {
      */
     public void channelActive() {
         LogUtil.info("-------------连接初始化!!!!!!!!!!!");
-        String host = "prod";
-        Integer port = 3306;
 
         Bootstrap client = new Bootstrap();
         EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
-        this.group = eventLoopGroup;
-        this.bootstrap = client;
         client.group(eventLoopGroup)
               .channel(NioSocketChannel.class)
               .handler(new LoggingHandler(LogLevel.DEBUG))
@@ -62,7 +61,7 @@ public class MysqlNettyClientTest {
               });
 
         //连接服务器
-        this.connect = client.connect(host, port);
+        this.connect = client.connect(mysqlHost, mysqlPort);
     }
 
     /**
@@ -73,8 +72,7 @@ public class MysqlNettyClientTest {
      * @return
      */
     public void send(byte[] requestMysqlBytes) {
-        LogUtil.info("client向mysql发送信息:");
-        LogUtil.info("\n" + MysqlUtil.dump(requestMysqlBytes));
+        LogUtil.info("client向mysql发送信息:\n" + MysqlUtil.dump(requestMysqlBytes));
         ByteBuf buf = Unpooled.buffer();
         buf.writeBytes(requestMysqlBytes);
         connect.channel().writeAndFlush(buf);
@@ -88,8 +86,7 @@ public class MysqlNettyClientTest {
 
             byte[] bytes = new byte[msg.readableBytes()];
             msg.readBytes(bytes);
-            LogUtil.info("mysql向client发送信息:");
-            LogUtil.info("\n" + MysqlUtil.dump(bytes));
+            LogUtil.info("mysql向client发送信息:\n" + MysqlUtil.dump(bytes));
             mysqlInfoHandlerTest.send(bytes);
         }
     }
