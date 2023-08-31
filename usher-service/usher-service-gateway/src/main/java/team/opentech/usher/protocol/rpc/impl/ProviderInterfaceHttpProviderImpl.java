@@ -1,12 +1,12 @@
 package team.opentech.usher.protocol.rpc.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import team.opentech.usher.pojo.DTO.ProviderInterfaceHttpDTO;
 import team.opentech.usher.protocol.rpc.ProviderInterfaceHttpProvider;
 import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.ProviderInterfaceHttpService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * http接口子表(ProviderInterfaceHttp)表 RPC对外访问实现

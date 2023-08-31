@@ -1,12 +1,12 @@
 package team.opentech.usher.protocol.rpc.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import team.opentech.usher.pojo.DTO.CompanyPowerDTO;
 import team.opentech.usher.protocol.rpc.CompanyPowerProvider;
 import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.CompanyPowerService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 厂商接口调用权限表(CompanyPower)表 RPC对外访问实现

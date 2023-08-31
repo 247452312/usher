@@ -1,8 +1,8 @@
 package team.opentech.usher.dao;
 
+import org.apache.ibatis.annotations.Mapper;
 import team.opentech.usher.dao.base.DefaultDao;
 import team.opentech.usher.pojo.DO.ProviderInterfaceParamDO;
-import org.apache.ibatis.annotations.Mapper;
 
 
 /**

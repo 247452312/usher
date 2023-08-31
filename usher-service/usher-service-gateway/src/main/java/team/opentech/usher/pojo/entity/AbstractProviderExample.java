@@ -1,12 +1,12 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import team.opentech.usher.pojo.DO.base.BaseDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
 import team.opentech.usher.pojo.entity.type.Identifier;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author uhyils <247452312@qq.com>

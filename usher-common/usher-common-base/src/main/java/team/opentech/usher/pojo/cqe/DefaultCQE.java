@@ -64,4 +64,10 @@ public class DefaultCQE implements BaseCQE {
         this.unique = unique;
     }
 
+    public void copyOf(DefaultCQE defaultCQE) {
+        this.setUser(defaultCQE.user);
+        this.setToken(defaultCQE.token);
+        this.setUnique(defaultCQE.unique);
+    }
+
 }

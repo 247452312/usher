@@ -1,8 +1,8 @@
 package team.opentech.usher.enums;
 
+import java.util.Objects;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.exception.AssertException;
-import java.util.Objects;
 
 /**
  * @author uhyils <247452312@qq.com>

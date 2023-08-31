@@ -1,5 +1,6 @@
 package team.opentech.usher.service.impl;
 
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.ProviderInterfaceMysqlAssembler;
 import team.opentech.usher.pojo.DO.ProviderInterfaceMysqlDO;
@@ -7,7 +8,6 @@ import team.opentech.usher.pojo.DTO.ProviderInterfaceMysqlDTO;
 import team.opentech.usher.pojo.entity.ProviderInterfaceMysql;
 import team.opentech.usher.repository.ProviderInterfaceMysqlRepository;
 import team.opentech.usher.service.ProviderInterfaceMysqlService;
-import org.springframework.stereotype.Service;
 
 /**
  * mysql接口子表(ProviderInterfaceMysql)表 内部服务实现类

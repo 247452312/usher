@@ -1,14 +1,11 @@
 package team.opentech.usher.pojo.entity.sys;
 
-import team.opentech.usher.mysql.enums.TableTypeEnum;
-import team.opentech.usher.mysql.pojo.DTO.ISchemaPrivilegesInfo;
-import team.opentech.usher.mysql.pojo.DTO.IUserPrivilegesInfo;
-import team.opentech.usher.mysql.pojo.DTO.MUserInfo;
-import team.opentech.usher.mysql.pojo.DTO.ProfilingInfo;
-import team.opentech.usher.util.StringUtil;
 import java.lang.reflect.Field;
 import java.util.Date;
 import org.junit.jupiter.api.Test;
+import team.opentech.usher.mysql.enums.TableTypeEnum;
+import team.opentech.usher.mysql.pojo.DTO.ISchemaPrivilegesInfo;
+import team.opentech.usher.util.StringUtil;
 
 /**
  * @author uhyils <247452312@qq.com>

@@ -1,10 +1,10 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.ProviderInterfaceParamDO;
 import team.opentech.usher.pojo.entity.ProviderInterfaceParam;
 import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
-import java.util.List;
 
 /**
  * 接口参数表(ProviderInterfaceParam)表 数据仓库层

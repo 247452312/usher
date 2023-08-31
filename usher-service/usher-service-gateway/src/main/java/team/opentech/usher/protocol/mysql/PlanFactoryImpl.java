@@ -9,24 +9,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Component;
-import team.opentech.usher.plan.MysqlPlan;
-import team.opentech.usher.plan.PlanFactory;
-import team.opentech.usher.plan.pojo.MySQLSelectItem;
-import team.opentech.usher.plan.pojo.SqlTableSourceBinaryTree;
-import team.opentech.usher.plan.pojo.plan.AbstractResultMappingPlan;
-import team.opentech.usher.plan.pojo.plan.BlockQuerySelectSqlPlan;
-import team.opentech.usher.plan.pojo.plan.InnerJoinSqlPlan;
-import team.opentech.usher.plan.pojo.plan.LeftJoinSqlPlan;
-import team.opentech.usher.plan.pojo.plan.MethodInvokePlan;
-import team.opentech.usher.plan.pojo.plan.RightJoinSqlPlan;
-import team.opentech.usher.plan.pojo.plan.impl.BinarySqlPlanImpl;
-import team.opentech.usher.plan.pojo.plan.impl.InnerJoinSqlPlanImpl;
-import team.opentech.usher.plan.pojo.plan.impl.LeftJoinSqlPlanImpl;
-import team.opentech.usher.plan.pojo.plan.impl.MethodInvokePlanImpl;
-import team.opentech.usher.plan.pojo.plan.impl.ResultMappingPlanImpl;
-import team.opentech.usher.plan.pojo.plan.impl.RightJoinSqlPlanImpl;
-import team.opentech.usher.plan.pojo.plan.impl.UnionSqlPlanImpl;
-import team.opentech.usher.plan.pojo.plan.impl.UseSqlPlanImpl;
+import team.opentech.usher.mysql.plan.MysqlPlan;
+import team.opentech.usher.mysql.plan.PlanFactory;
+import team.opentech.usher.mysql.pojo.SqlTableSourceBinaryTreeInfo;
+import team.opentech.usher.mysql.pojo.plan.AbstractResultMappingPlan;
+import team.opentech.usher.mysql.pojo.plan.BlockQuerySelectSqlPlan;
+import team.opentech.usher.mysql.pojo.plan.InnerJoinSqlPlan;
+import team.opentech.usher.mysql.pojo.plan.LeftJoinSqlPlan;
+import team.opentech.usher.mysql.pojo.plan.MethodInvokePlan;
+import team.opentech.usher.mysql.pojo.plan.RightJoinSqlPlan;
+import team.opentech.usher.mysql.pojo.plan.impl.BinarySqlPlanImpl;
+import team.opentech.usher.mysql.pojo.plan.impl.InnerJoinSqlPlanImpl;
+import team.opentech.usher.mysql.pojo.plan.impl.LeftJoinSqlPlanImpl;
+import team.opentech.usher.mysql.pojo.plan.impl.MethodInvokePlanImpl;
+import team.opentech.usher.mysql.pojo.plan.impl.ResultMappingPlanImpl;
+import team.opentech.usher.mysql.pojo.plan.impl.RightJoinSqlPlanImpl;
+import team.opentech.usher.mysql.pojo.plan.impl.UnionSqlPlanImpl;
+import team.opentech.usher.mysql.pojo.plan.impl.UseSqlPlanImpl;
+import team.opentech.usher.mysql.pojo.sql.MySQLSelectItem;
 import team.opentech.usher.protocol.mysql.plan.BlockQuerySelectSqlPlanImpl;
 
 /**
@@ -37,17 +37,17 @@ import team.opentech.usher.protocol.mysql.plan.BlockQuerySelectSqlPlanImpl;
 public class PlanFactoryImpl implements PlanFactory {
 
     @Override
-    public BlockQuerySelectSqlPlan buildBlockQuerySelectSqlPlan(SqlTableSourceBinaryTree froms, Map<String, String> headers, Map<String, Object> params) {
+    public BlockQuerySelectSqlPlan buildBlockQuerySelectSqlPlan(SqlTableSourceBinaryTreeInfo froms, Map<String, String> headers, Map<String, Object> params) {
         return new BlockQuerySelectSqlPlanImpl(froms, headers, params);
     }
 
     @Override
-    public InnerJoinSqlPlan buildInnerJoinSqlPlan(Map<String, String> headers, SqlTableSourceBinaryTree tree, Long leftPlanId, Long rightPlanId) {
+    public InnerJoinSqlPlan buildInnerJoinSqlPlan(Map<String, String> headers, SqlTableSourceBinaryTreeInfo tree, Long leftPlanId, Long rightPlanId) {
         return new InnerJoinSqlPlanImpl(headers, tree, leftPlanId, rightPlanId);
     }
 
     @Override
-    public LeftJoinSqlPlan buildLeftJoinSqlPlan(Map<String, String> headers, SqlTableSourceBinaryTree tree, Long leftPlanId, Long rightPlanId) {
+    public LeftJoinSqlPlan buildLeftJoinSqlPlan(Map<String, String> headers, SqlTableSourceBinaryTreeInfo tree, Long leftPlanId, Long rightPlanId) {
         return new LeftJoinSqlPlanImpl(headers, tree, leftPlanId, rightPlanId);
     }
 
@@ -69,7 +69,7 @@ public class PlanFactoryImpl implements PlanFactory {
     }
 
     @Override
-    public RightJoinSqlPlan buildRightJoinSqlPlan(Map<String, String> headers, SqlTableSourceBinaryTree tree, Long leftPlanId, Long rightPlanId) {
+    public RightJoinSqlPlan buildRightJoinSqlPlan(Map<String, String> headers, SqlTableSourceBinaryTreeInfo tree, Long leftPlanId, Long rightPlanId) {
         return new RightJoinSqlPlanImpl(headers, tree, leftPlanId, rightPlanId);
     }
 

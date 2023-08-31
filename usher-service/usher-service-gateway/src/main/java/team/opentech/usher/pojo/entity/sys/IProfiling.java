@@ -1,11 +1,11 @@
 package team.opentech.usher.pojo.entity.sys;
 
-import team.opentech.usher.mysql.enums.FieldTypeEnum;
-import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
-import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import team.opentech.usher.mysql.enums.FieldTypeEnum;
+import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
+import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 
 /**
  * 可以用来分析每一条SQL在它执行的各个阶段的用时，注意这个表是session 级的，也就是说如果session1 开启了它；session2没有开启

@@ -1,10 +1,13 @@
 package team.opentech.usher.pojo.entity;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+import org.apache.commons.codec.binary.Base64;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.context.UserInfoHelper;
 import team.opentech.usher.mysql.content.MysqlContent;
-import team.opentech.usher.mysql.handler.MysqlTcpInfo;
 import team.opentech.usher.mysql.pojo.cqe.impl.MysqlAuthCommand;
+import team.opentech.usher.mysql.pojo.entity.MysqlTcpLink;
 import team.opentech.usher.mysql.util.MysqlUtil;
 import team.opentech.usher.pojo.DO.CompanyDO;
 import team.opentech.usher.pojo.DTO.UserDTO;
@@ -13,9 +16,6 @@ import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.Password;
 import team.opentech.usher.repository.CompanyRepository;
 import team.opentech.usher.util.Asserts;
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  * 厂商表(Company)表 数据库实体类
@@ -86,8 +86,8 @@ public class Company extends AbstractDoEntity<CompanyDO> {
     }
 
     public UserDTO mysqlLogin() {
-        MysqlTcpInfo mysqlTcpInfo = MysqlContent.MYSQL_TCP_INFO.get();
-        String ip = mysqlTcpInfo.getLocalAddress().getAddress().getHostName();
+        MysqlTcpLink mysqlTcpLink = MysqlContent.MYSQL_TCP_INFO.get();
+        String ip = mysqlTcpLink.getLocalAddress().getAddress().getHostName();
         UserInfoHelper.setIp(ip);
         CompanyDO dataAndValidate = toDataAndValidate();
         UserDTO userDTO = new UserDTO();

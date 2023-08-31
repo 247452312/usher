@@ -2,8 +2,8 @@ package team.opentech.usher.pojo.DO;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import team.opentech.usher.pojo.DO.base.BaseDO;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import team.opentech.usher.pojo.DO.base.BaseDO;
 
 /**
  * 接口参数表(ProviderInterfaceParam)表 数据库实体类

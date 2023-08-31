@@ -6,11 +6,11 @@
     <parent>
         <groupId>team.opentech.usher</groupId>
         <artifactId>usher</artifactId>
-        <version>2.0.0.0.usher-SNAPSHOT</version>
+        <version>2.1.0.0.usher-SNAPSHOT</version>
     </parent>
     <artifactId>usher-service</artifactId>
 
-    <version>2.0.0.0.usher-SNAPSHOT</version>
+    <version>2.1.0.0.usher-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>usher-service-user</module>

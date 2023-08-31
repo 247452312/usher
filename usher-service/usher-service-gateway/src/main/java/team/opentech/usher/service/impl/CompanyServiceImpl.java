@@ -1,5 +1,6 @@
 package team.opentech.usher.service.impl;
 
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.CompanyAssembler;
 import team.opentech.usher.pojo.DO.CompanyDO;
@@ -7,7 +8,6 @@ import team.opentech.usher.pojo.DTO.CompanyDTO;
 import team.opentech.usher.pojo.entity.Company;
 import team.opentech.usher.repository.CompanyRepository;
 import team.opentech.usher.service.CompanyService;
-import org.springframework.stereotype.Service;
 
 /**
  * 厂商表(Company)表 内部服务实现类

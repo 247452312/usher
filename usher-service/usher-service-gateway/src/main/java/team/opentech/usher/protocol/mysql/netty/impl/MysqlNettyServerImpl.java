@@ -1,9 +1,5 @@
 package team.opentech.usher.protocol.mysql.netty.impl;
 
-import team.opentech.usher.mysql.decode.impl.MysqlDecoderImpl;
-import team.opentech.usher.mysql.handler.impl.MysqlInfoHandlerImpl;
-import team.opentech.usher.protocol.mysql.netty.MysqlNettyServer;
-import team.opentech.usher.util.LogUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -14,11 +10,17 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import team.opentech.usher.mysql.decode.MysqlDecoder;
+import team.opentech.usher.mysql.netty.MysqlInfoHandler;
+import team.opentech.usher.protocol.mysql.netty.MysqlNettyServer;
+import team.opentech.usher.util.LogUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年03月22日 09时18分
  */
+@Component
 public class MysqlNettyServerImpl extends ChannelInitializer<SocketChannel> implements MysqlNettyServer {
 
 
@@ -52,7 +54,7 @@ public class MysqlNettyServerImpl extends ChannelInitializer<SocketChannel> impl
     @Override
     protected void initChannel(SocketChannel ch) {
         // 由decoder解析 再交由handler处理
-        ch.pipeline().addLast(new MysqlDecoderImpl(), new MysqlInfoHandlerImpl());
+        ch.pipeline().addLast(new MysqlDecoder(), new MysqlInfoHandler());
     }
 
 }

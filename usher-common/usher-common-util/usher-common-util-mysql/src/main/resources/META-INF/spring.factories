@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=team.opentech.usher.plan.config.MysqlPlanConfiguration,\
-  team.opentech.usher.mysql.config.MysqlConfig

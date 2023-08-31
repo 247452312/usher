@@ -1,13 +1,13 @@
 package team.opentech.usher.protocol.rpc.impl;
 
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import team.opentech.usher.pojo.cqe.InvokeCommand;
 import team.opentech.usher.protocol.rpc.GatewaySdkProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.GatewaySdkService;
-import java.util.List;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 对外 rpc协议
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RpcService
 public class GatewaySdkProviderImpl implements GatewaySdkProvider {
 
-    @Autowired
+    @Resource
     private GatewaySdkService service;
 
     @Override

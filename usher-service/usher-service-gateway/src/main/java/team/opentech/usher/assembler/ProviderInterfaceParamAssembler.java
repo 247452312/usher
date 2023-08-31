@@ -1,10 +1,10 @@
 package team.opentech.usher.assembler;
 
 
+import org.mapstruct.Mapper;
 import team.opentech.usher.pojo.DO.ProviderInterfaceParamDO;
 import team.opentech.usher.pojo.DTO.ProviderInterfaceParamDTO;
 import team.opentech.usher.pojo.entity.ProviderInterfaceParam;
-import org.mapstruct.Mapper;
 
 /**
  * 接口参数表(ProviderInterfaceParam)表 entity,DO,DTO转换工具

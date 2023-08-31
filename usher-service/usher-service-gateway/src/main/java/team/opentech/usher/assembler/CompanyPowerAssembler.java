@@ -1,10 +1,10 @@
 package team.opentech.usher.assembler;
 
 
+import org.mapstruct.Mapper;
 import team.opentech.usher.pojo.DO.CompanyPowerDO;
 import team.opentech.usher.pojo.DTO.CompanyPowerDTO;
 import team.opentech.usher.pojo.entity.CompanyPower;
-import org.mapstruct.Mapper;
 
 /**
  * 厂商接口调用权限表(CompanyPower)表 entity,DO,DTO转换工具

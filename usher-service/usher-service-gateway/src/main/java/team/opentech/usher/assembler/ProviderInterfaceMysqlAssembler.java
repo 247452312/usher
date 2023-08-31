@@ -1,10 +1,10 @@
 package team.opentech.usher.assembler;
 
 
+import org.mapstruct.Mapper;
 import team.opentech.usher.pojo.DO.ProviderInterfaceMysqlDO;
 import team.opentech.usher.pojo.DTO.ProviderInterfaceMysqlDTO;
 import team.opentech.usher.pojo.entity.ProviderInterfaceMysql;
-import org.mapstruct.Mapper;
 
 /**
  * mysql接口子表(ProviderInterfaceMysql)表 entity,DO,DTO转换工具

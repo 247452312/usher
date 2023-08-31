@@ -5,10 +5,10 @@
     <parent>
         <artifactId>usher-service</artifactId>
         <groupId>team.opentech.usher</groupId>
-        <version>2.0.0.0.usher-SNAPSHOT</version>
+        <version>2.1.0.0.usher-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <version>2.0.0.0.usher-SNAPSHOT</version>
+    <version>2.1.0.0.usher-SNAPSHOT</version>
     <artifactId>usher-service-distribute</artifactId>
     <packaging>jar</packaging>
 

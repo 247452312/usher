@@ -14,8 +14,8 @@ import java.util.Objects;
 import team.opentech.usher.enums.InvokeTypeEnum;
 import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
-import team.opentech.usher.plan.pojo.SqlTableSourceBinaryTree;
-import team.opentech.usher.plan.pojo.plan.BlockQuerySelectSqlPlan;
+import team.opentech.usher.mysql.pojo.SqlTableSourceBinaryTreeInfo;
+import team.opentech.usher.mysql.pojo.plan.BlockQuerySelectSqlPlan;
 import team.opentech.usher.pojo.cqe.InvokeCommand;
 import team.opentech.usher.pojo.cqe.InvokeCommandBuilder;
 import team.opentech.usher.service.GatewaySdkService;
@@ -37,7 +37,7 @@ public class BlockQuerySelectSqlPlanImpl extends BlockQuerySelectSqlPlan {
     private final GatewaySdkService gatewaySdkService;
 
 
-    public BlockQuerySelectSqlPlanImpl(SqlTableSourceBinaryTree froms, Map<String, String> headers, Map<String, Object> params) {
+    public BlockQuerySelectSqlPlanImpl(SqlTableSourceBinaryTreeInfo froms, Map<String, String> headers, Map<String, Object> params) {
         super(froms, headers, params);
         this.gatewaySdkService = SpringUtil.getBean(GatewaySdkService.class);
     }
