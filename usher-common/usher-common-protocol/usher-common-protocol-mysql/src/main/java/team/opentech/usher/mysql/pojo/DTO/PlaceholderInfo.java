@@ -1,4 +1,4 @@
-package team.opentech.usher.mysql.pojo;
+package team.opentech.usher.mysql.pojo.DTO;
 
 /**
  * 执行计划入参占位符

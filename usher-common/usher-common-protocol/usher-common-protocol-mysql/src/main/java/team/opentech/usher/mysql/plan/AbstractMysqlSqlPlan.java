@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import team.opentech.usher.mysql.config.MysqlPlanConfig;
 import team.opentech.usher.mysql.enums.MysqlPlanTypeEnum;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
-import team.opentech.usher.mysql.pojo.PlaceholderInfo;
+import team.opentech.usher.mysql.pojo.DTO.PlaceholderInfo;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.IdUtil;
 import team.opentech.usher.util.SpringUtil;

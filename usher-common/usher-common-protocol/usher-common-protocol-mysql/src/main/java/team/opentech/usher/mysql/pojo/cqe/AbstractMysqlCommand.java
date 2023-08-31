@@ -20,9 +20,9 @@ public abstract class AbstractMysqlCommand extends AbstractCommand implements My
 
     protected AbstractMysqlCommand(byte[] mysqlBytes) {
         MysqlTcpLink mysqlTcpLink = MysqlContent.MYSQL_TCP_INFO.get();
-        UserDTO userInfo = mysqlTcpLink.getUserDTO();
+        UserDTO userInfo = mysqlTcpLink.findUserDTO();
         if (userInfo != null) {
-            String token = userInfo.getToken();
+            String token = userInfo.findToken();
             UserInfoHelper.setToken(token);
             UserInfoHelper.setUser(userInfo);
         }

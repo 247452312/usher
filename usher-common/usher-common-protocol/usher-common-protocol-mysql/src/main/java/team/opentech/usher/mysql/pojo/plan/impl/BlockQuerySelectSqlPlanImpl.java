@@ -50,14 +50,14 @@ public class BlockQuerySelectSqlPlanImpl extends BlockQuerySelectSqlPlan {
         invokeCommandBuilder.addAlias(tableSource.getAlias());
         SQLPropertyExpr expr = (SQLPropertyExpr) tableSource.getExpr();
         String owner = expr.getOwnernName();
-        String name = expr.getName();
-        if (name.startsWith("&")) {
-            Long resultIndex = Long.parseLong(name.substring(1));
+        String tableName = expr.getName();
+        if (tableName.startsWith("&")) {
+            Long resultIndex = Long.parseLong(tableName.substring(1));
             return lastAllPlanResult.get(resultIndex);
         }
         List<SQLBinaryOpExpr> where = froms.getWhere();
         Map<String, Object> whereParams = new HashMap<>();
-        Boolean haveResult = true;
+        boolean haveResult = true;
         if (where != null) {
             for (SQLBinaryOpExpr sqlBinaryOpExpr : where) {
                 SQLExpr left = sqlBinaryOpExpr.getLeft();
@@ -78,19 +78,15 @@ public class BlockQuerySelectSqlPlanImpl extends BlockQuerySelectSqlPlan {
             }
         }
         invokeCommandBuilder.addArgs(whereParams);
-        StringBuilder path = new StringBuilder();
         String database = MysqlContent.MYSQL_TCP_INFO.get().getDatabase();
         if (owner != null) {
-            path.append(owner);
-            path.append(MysqlContent.PATH_SEPARATOR);
+            invokeCommandBuilder.fillDatabase(owner);
         } else if (StringUtil.isNotEmpty(database)) {
-            path.append(database);
-            path.append(MysqlContent.PATH_SEPARATOR);
+            invokeCommandBuilder.fillDatabase(database);
         } else {
             Asserts.throwException("No database selected");
         }
-        path.append(name);
-        invokeCommandBuilder.addPath(path.toString());
+        invokeCommandBuilder.fillTable(tableName);
         MysqlInvokeCommand build = invokeCommandBuilder.build();
         NodeInvokeResult nodeInvokeResult = mysqlSdkService.invokeSingleQuerySql(build);
         nodeInvokeResult.setSourcePlan(this);

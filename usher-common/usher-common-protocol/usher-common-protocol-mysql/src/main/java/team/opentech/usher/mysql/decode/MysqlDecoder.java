@@ -19,8 +19,7 @@ public class MysqlDecoder extends ByteToMessageDecoder {
         if (packet == null) {
             return;
         }
-        String dump = MysqlUtil.dump(packet);
-        LogUtil.debug("客户端发来请求:\n" + dump);
+        LogUtil.debug(() -> "客户端发来请求:\n" + MysqlUtil.dump(packet));
         out.add(packet);
     }
 }

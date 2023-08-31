@@ -69,19 +69,10 @@ public class MysqlInfoHandler extends ChannelInboundHandlerAdapter implements Ch
 
 
     /**
-     * mysql此次连接所缓存的信息
-     */
-    private MysqlTcpLink mysqlTcpLink;
-
-    /**
      * 连接
      */
     private Channel mysqlChannel;
 
-    public MysqlInfoHandler() {
-        mysqlTcpLink = new MysqlTcpLink();
-        MysqlContent.MYSQL_TCP_INFO.set(mysqlTcpLink);
-    }
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
@@ -91,10 +82,6 @@ public class MysqlInfoHandler extends ChannelInboundHandlerAdapter implements Ch
 
     /**
      * 初始化连接
-     *
-     * @param ctx
-     *
-     * @throws Exception
      */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -103,17 +90,18 @@ public class MysqlInfoHandler extends ChannelInboundHandlerAdapter implements Ch
         this.mysqlChannel = ctx.channel();
         //入口连接
         InetSocketAddress inetSocketAddress = (InetSocketAddress) mysqlChannel.localAddress();
-        mysqlTcpLink.setLocalAddress(inetSocketAddress);
-        LogUtil.info("mysql 连接!" + inetSocketAddress);
-        AuthResponse authResponse = new AuthResponse();
+
+        MysqlTcpLink value = MysqlTcpLink.build(mysqlChannel.id(), inetSocketAddress);
+        value.addToLocalCache();
+
+        LogUtil.info("mysql 连接! ip:{}", inetSocketAddress.toString());
+        AuthResponse authResponse = AuthResponse.build();
         List<byte[]> msgs = authResponse.toByte();
-        mysqlTcpLink.getAndIncrementStatus();
-        mysqlTcpLink.addIndex();
-        // 缓存TCP信息到系统
-        MysqlContent.putMysqlTcpInfo(mysqlChannel.id(), mysqlTcpLink);
+        value.getAndIncrementStatus();
+        value.addIndex();
 
         for (byte[] msg : msgs) {
-            LogUtil.debug("mysql服务端初始发送握手信息:\n" + MysqlUtil.dump(msg));
+            LogUtil.debug(() -> "mysql服务端初始发送握手信息:\n" + MysqlUtil.dump(msg));
             send(msg);
         }
     }
@@ -144,12 +132,13 @@ public class MysqlInfoHandler extends ChannelInboundHandlerAdapter implements Ch
          */
         byte[] mysqlBytes = (byte[]) msg;
 
+        MysqlTcpLink mysqlTcpLink = MysqlTcpLink.findByCache();
         // mysql 此次请求携带的信息
         //初始化index为客户端发过来的index
-        initIndex(mysqlBytes);
+        mysqlTcpLink.changeIndex(findIndex(mysqlBytes));
         try {
             // 1.判断请求登录情况
-            MysqlCommand mysqlCommand = findCommandByStatus(mysqlBytes);
+            MysqlCommand mysqlCommand = findCommandByStatus(mysqlTcpLink, mysqlBytes);
             sendResponse(mysqlCommand.invoke());
             mysqlTcpLink.getAndIncrementStatus();
 
@@ -171,9 +160,22 @@ public class MysqlInfoHandler extends ChannelInboundHandlerAdapter implements Ch
         }
     }
 
+    /**
+     * 获取初始化index为客户端发过来的index
+     *
+     * @param mysqlBytes
+     *
+     * @return
+     */
+    private long findIndex(byte[] mysqlBytes) {
+        Proto proto = new Proto(mysqlBytes);
+        proto.getFixedInt(3);
+        return proto.getFixedInt(1);
+    }
+
     @Nullable
-    private MysqlCommand findCommandByStatus(byte[] mysqlBytes) {
-        MysqlHandlerStatusEnum status = mysqlTcpLink.getStatus();
+    private MysqlCommand findCommandByStatus(MysqlTcpLink mysqlTcpLink, byte[] mysqlBytes) {
+        MysqlHandlerStatusEnum status = mysqlTcpLink.status();
         MysqlCommand mysqlCommand = null;
         switch (status) {
             case FIRST_SIGHT:
@@ -182,8 +184,8 @@ public class MysqlInfoHandler extends ChannelInboundHandlerAdapter implements Ch
                 break;
             case PASSED:
                 // 其他状态,正确接收请求
-                UserInfoHelper.setUser(mysqlTcpLink.getUserDTO());
-                UserInfoHelper.setIp(mysqlTcpLink.getLocalAddress().getAddress().getHostAddress());
+                UserInfoHelper.setUser(mysqlTcpLink.findUserDTO());
+                UserInfoHelper.setIp(mysqlTcpLink.findLocalAddress().getAddress().getHostAddress());
                 mysqlCommand = parseForCommand(mysqlBytes);
                 break;
             case OVER:
@@ -203,18 +205,6 @@ public class MysqlInfoHandler extends ChannelInboundHandlerAdapter implements Ch
         ByteBuf buf = Unpooled.buffer();
         buf.writeBytes(msg);
         this.mysqlChannel.writeAndFlush(buf);
-    }
-
-    /**
-     * 初始化index为客户端发过来的index
-     *
-     * @param mysqlBytes
-     */
-    private void initIndex(byte[] mysqlBytes) {
-        Proto proto = new Proto(mysqlBytes);
-        proto.getFixedInt(3);
-        long index = proto.getFixedInt(1);
-        this.mysqlTcpLink.changeIndexToClientIndex(index);
     }
 
     /**
@@ -254,10 +244,6 @@ public class MysqlInfoHandler extends ChannelInboundHandlerAdapter implements Ch
 
     /**
      * 处理请求
-     *
-     * @param mysqlBytes
-     *
-     * @throws Exception
      */
     private MysqlCommand parseForCommand(byte[] mysqlBytes) {
         // 2.判断为已登录,加载并解析请求
@@ -268,11 +254,6 @@ public class MysqlInfoHandler extends ChannelInboundHandlerAdapter implements Ch
 
     /**
      * 根据不同请求获取结果
-     *
-     * @param mysqlBytes
-     * @param parse
-     *
-     * @return
      */
     private MysqlCommand doFindCommand(byte[] mysqlBytes, MysqlCommandTypeEnum parse) {
         switch (parse) {

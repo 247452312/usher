@@ -14,7 +14,7 @@ public class MySQLSelectItem extends SQLSelectItem {
     /**
      * 原始selectItem
      */
-    private SQLSelectItem selectItem;
+    private final SQLSelectItem selectItem;
 
     /**
      * 对应方法名称
@@ -38,6 +38,10 @@ public class MySQLSelectItem extends SQLSelectItem {
      */
     public Boolean isMethodItem() {
         return methodEnum != null;
+    }
+
+    public SQLSelectItem originalSelectItem() {
+        return selectItem;
     }
 
     /**

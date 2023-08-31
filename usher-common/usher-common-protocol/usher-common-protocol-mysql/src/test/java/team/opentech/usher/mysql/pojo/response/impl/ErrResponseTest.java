@@ -15,7 +15,7 @@ public class ErrResponseTest {
 
     @Test
     public void errResponseToByteTest() {
-        MysqlTcpLink value = new MysqlTcpLink();
+        MysqlTcpLink value = MysqlTcpLink.build(null, null);
         value.setStatus(MysqlHandlerStatusEnum.PASSED);
         MysqlContent.MYSQL_TCP_INFO.set(value);
         byte[] bytes = MysqlUtil.mergeListBytes(ErrResponse.build("错误信息").toByte());

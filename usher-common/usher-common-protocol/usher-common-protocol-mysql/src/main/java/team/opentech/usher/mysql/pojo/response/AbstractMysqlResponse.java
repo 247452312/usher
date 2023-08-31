@@ -14,20 +14,10 @@ import team.opentech.usher.mysql.util.MysqlUtil;
  */
 public abstract class AbstractMysqlResponse implements MysqlResponse {
 
-    /**
-     * 此次tcp的信息
-     */
-    protected MysqlTcpLink mysqlTcpLink;
-
-
-    protected AbstractMysqlResponse() {
-        this.mysqlTcpLink = MysqlContent.MYSQL_TCP_INFO.get();
-    }
-
-
     @Override
     public List<byte[]> toByte() {
-        MysqlHandlerStatusEnum status = mysqlTcpLink.getStatus();
+        MysqlTcpLink mysqlTcpLink = MysqlContent.MYSQL_TCP_INFO.get();
+        MysqlHandlerStatusEnum status = mysqlTcpLink.status();
         boolean b = status == MysqlHandlerStatusEnum.FIRST_SIGHT || status == MysqlHandlerStatusEnum.UNKNOW;
 
         List<byte[]> bytes = toByteNoMarkIndex();

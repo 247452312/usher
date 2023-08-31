@@ -87,7 +87,7 @@ public class Company extends AbstractDoEntity<CompanyDO> {
 
     public UserDTO mysqlLogin() {
         MysqlTcpLink mysqlTcpLink = MysqlContent.MYSQL_TCP_INFO.get();
-        String ip = mysqlTcpLink.getLocalAddress().getAddress().getHostName();
+        String ip = mysqlTcpLink.findLocalAddress().getAddress().getHostName();
         UserInfoHelper.setIp(ip);
         CompanyDO dataAndValidate = toDataAndValidate();
         UserDTO userDTO = new UserDTO();

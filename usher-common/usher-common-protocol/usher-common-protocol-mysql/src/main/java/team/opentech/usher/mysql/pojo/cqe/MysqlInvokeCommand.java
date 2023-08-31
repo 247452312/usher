@@ -22,10 +22,16 @@ public class MysqlInvokeCommand extends AbstractCommand {
      */
     private Map<String, String> header;
 
+
     /**
-     * 调用路径. 此值为{库名/表名}
+     * 库名称
      */
-    private String path;
+    private String database;
+
+    /**
+     * 表名称
+     */
+    private String table;
 
 
     public Map<String, Object> getParams() {
@@ -44,12 +50,19 @@ public class MysqlInvokeCommand extends AbstractCommand {
         this.header = header;
     }
 
-    public String getPath() {
-        return path;
+    public String getDatabase() {
+        return database;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setDatabase(String database) {
+        this.database = database;
     }
 
+    public String getTable() {
+        return table;
+    }
+
+    public void setTable(String table) {
+        this.table = table;
+    }
 }

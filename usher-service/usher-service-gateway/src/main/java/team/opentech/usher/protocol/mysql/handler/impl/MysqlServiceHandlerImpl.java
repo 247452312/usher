@@ -62,9 +62,9 @@ public class MysqlServiceHandlerImpl implements MysqlServiceHandler {
         company.completionByAk(companyRepository);
 
         // 1.判断密码是否正确
-        if (company.checkSkByMysqlChallenge(mysqlTcpLink.getRandomByte(), command.getChallenge())) {
+        if (company.checkSkByMysqlChallenge(mysqlTcpLink.randomByte(), command.getChallenge())) {
             UserDTO userDTO = company.mysqlLogin();
-            mysqlTcpLink.setUserDTO(userDTO);
+            mysqlTcpLink.fillUserDTO(userDTO);
             return new OkResponse(SqlTypeEnum.NULL);
         }
         return ErrResponse.build("密码错误,密码请使用secretKey");

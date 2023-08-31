@@ -10,13 +10,13 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.io.HexDump;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.mysql.enums.MysqlCommandTypeEnum;
+import team.opentech.usher.mysql.pojo.DTO.ExprParseResultInfo;
 import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import team.opentech.usher.util.Asserts;
@@ -470,13 +470,14 @@ public final class MysqlUtil {
     /**
      * 解析str
      *
-     * @param arg
-     * @param allResult
-     * @param parentInvokeResult
+     * @param arg                局部字符串
+     * @param allResult          之前所有执行计划的结果
+     * @param parentInvokeResult 上一个执行计划的结果
      *
      * @return
      */
-    public static <T> List<T> parse(SQLExpr arg, Map<Long, NodeInvokeResult> allResult, NodeInvokeResult parentInvokeResult) {
+    @NotNull
+    public static <T> ExprParseResultInfo<T> parse(SQLExpr arg, Map<Long, NodeInvokeResult> allResult, NodeInvokeResult parentInvokeResult) {
         if (arg instanceof SQLCharExpr && StringUtil.cleanQuotation(((SQLCharExpr) arg).getText()).startsWith("&")) {
             String planId = ((SQLCharExpr) arg).getText().substring(1);
             NodeInvokeResult nodeInvokeResult = allResult.get(Long.parseLong(planId));
@@ -484,16 +485,18 @@ public final class MysqlUtil {
             Asserts.assertTrue(nodeInvokeResult.getFieldInfos().size() == 1, "方法入参不能是多列");
             FieldInfo fieldInfo = nodeInvokeResult.getFieldInfos().get(0);
             List<Map<String, Object>> result = nodeInvokeResult.getResult();
-            return result.stream().map(t -> (T) t.get(fieldInfo.getFieldName())).collect(Collectors.toList());
+            List<T> collect = result.stream().map(t -> (T) t.get(fieldInfo.getFieldName())).collect(Collectors.toList());
+            return ExprParseResultInfo.buildListConstant(collect);
         } else if (arg instanceof SQLCharExpr) {
             String text = ((SQLCharExpr) arg).getText();
-            return Collections.singletonList((T) text);
+            return ExprParseResultInfo.buildConstant((T) text);
         } else if (arg instanceof SQLNumericLiteralExpr) {
             Number value = ((SQLNumericLiteralExpr) arg).getNumber();
-            return Collections.singletonList((T) value);
+            return ExprParseResultInfo.buildConstant((T) value);
         } else if (arg instanceof SQLIdentifierExpr) {
             String name = ((SQLIdentifierExpr) arg).getName();
-            return parentInvokeResult.getResult().stream().map(t -> (T) t.get(name)).collect(Collectors.toList());
+            List<T> collect = parentInvokeResult.getResult().stream().map(t -> (T) t.get(name)).collect(Collectors.toList());
+            return ExprParseResultInfo.buildListConstant(collect);
         }
         Asserts.throwException("未找到解析方法入参的类型");
         return null;

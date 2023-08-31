@@ -19,6 +19,7 @@ import team.opentech.usher.mysql.pojo.plan.LeftJoinSqlPlan;
 import team.opentech.usher.mysql.pojo.plan.MethodInvokePlan;
 import team.opentech.usher.mysql.pojo.plan.RightJoinSqlPlan;
 import team.opentech.usher.mysql.pojo.plan.impl.BinarySqlPlanImpl;
+import team.opentech.usher.mysql.pojo.plan.impl.BlockQuerySelectSqlPlanImpl;
 import team.opentech.usher.mysql.pojo.plan.impl.InnerJoinSqlPlanImpl;
 import team.opentech.usher.mysql.pojo.plan.impl.LeftJoinSqlPlanImpl;
 import team.opentech.usher.mysql.pojo.plan.impl.MethodInvokePlanImpl;
@@ -27,7 +28,6 @@ import team.opentech.usher.mysql.pojo.plan.impl.RightJoinSqlPlanImpl;
 import team.opentech.usher.mysql.pojo.plan.impl.UnionSqlPlanImpl;
 import team.opentech.usher.mysql.pojo.plan.impl.UseSqlPlanImpl;
 import team.opentech.usher.mysql.pojo.sql.MySQLSelectItem;
-import team.opentech.usher.protocol.mysql.plan.BlockQuerySelectSqlPlanImpl;
 
 /**
  * @author uhyils <247452312@qq.com>

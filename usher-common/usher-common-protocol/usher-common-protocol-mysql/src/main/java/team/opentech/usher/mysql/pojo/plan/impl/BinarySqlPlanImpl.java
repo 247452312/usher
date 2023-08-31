@@ -3,16 +3,18 @@ package team.opentech.usher.mysql.pojo.plan.impl;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.expr.SQLBinaryOperator;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import team.opentech.usher.annotation.NotNull;
+import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.enums.FieldTypeEnum;
+import team.opentech.usher.mysql.pojo.DTO.ExprParseResultInfo;
 import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import team.opentech.usher.mysql.pojo.plan.BinarySqlPlan;
 import team.opentech.usher.mysql.util.MysqlUtil;
 import team.opentech.usher.util.Asserts;
+import team.opentech.usher.util.MapUtil;
 import team.opentech.usher.util.StringUtil;
 
 /**
@@ -31,17 +33,21 @@ public class BinarySqlPlanImpl extends BinarySqlPlan {
     public NodeInvokeResult invoke() {
         NodeInvokeResult nodeInvokeResult = new NodeInvokeResult(this);
         List<FieldInfo> fieldInfos = new ArrayList<>();
-        FieldTypeEnum fieldTypeVarchar = FieldTypeEnum.FIELD_TYPE_VARCHAR;
-
         /*left Expr 或者 right Expr 是多行的话,结果就是多行, 如果均不是指针,则指定结果*/
-        fieldInfos.add(new FieldInfo("information_schema", "tables", "tables", "result", "result", 0, 1, fieldTypeVarchar, (short) 0, (byte) 0));
+        fieldInfos.add(new FieldInfo("information_schema", "tables", "tables", MysqlContent.DEFAULT_RESULT_NAME, MysqlContent.DEFAULT_RESULT_NAME, 0, 1, FieldTypeEnum.FIELD_TYPE_VARCHAR, (short) 0, (byte) 0));
         nodeInvokeResult.setFieldInfos(fieldInfos);
+
+        /*判断结果是什么*/
         List<Map<String, Object>> result = new ArrayList<>();
-        List<Object> left = MysqlUtil.parse(leftExpr, lastAllPlanResult, lastNodeInvokeResult);
-        List<Object> right = MysqlUtil.parse(rightExpr, lastAllPlanResult, lastNodeInvokeResult);
-        for (int i = 0; i < left.size(); i++) {
-            Object leftItem = left.get(i);
-            Object rightItem = right.get(i);
+        ExprParseResultInfo<Object> left = MysqlUtil.parse(leftExpr, lastAllPlanResult, lastNodeInvokeResult);
+        ExprParseResultInfo<Object> right = MysqlUtil.parse(rightExpr, lastAllPlanResult, lastNodeInvokeResult);
+
+        // 如果两边都是常量,size为1 否则 哪边是列表size是哪边 如果两边都是,则使用左边字符串为准
+        long size = !left.isConstant() ? left.getListResult().size() : (!right.isConstant() ? right.getListResult().size() : 1);
+
+        for (int i = 0; i < size; i++) {
+            Object leftItem = left.isConstant() ? left.get() : left.get(i);
+            Object rightItem = right.isConstant() ? right.get() : right.get(i);
             Float aFloat;
             /*1.如果一方为null,则结果为null*/
             if (leftItem == null || rightItem == null) {
@@ -56,8 +62,7 @@ public class BinarySqlPlanImpl extends BinarySqlPlan {
             } else {
                 aFloat = calculate(operator, (Number) rightItem, (String) leftItem);
             }
-            Map<String, Object> e = new HashMap<>();
-            e.put("result", aFloat);
+            Map<String, Object> e = MapUtil.singletonMap(MysqlContent.DEFAULT_RESULT_NAME, aFloat);
             result.add(e);
         }
         nodeInvokeResult.setResult(result);

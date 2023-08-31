@@ -28,7 +28,6 @@ public class MethodInvokePlanImpl extends MethodInvokePlan {
         NodeInvokeResult nodeInvokeResult = new NodeInvokeResult(this);
         String fieldName = toFieldName();
         nodeInvokeResult.setFieldInfos(Collections.singletonList(methodEnum.makeFieldInfo(mysqlTcpLink.getDatabase(), MysqlContent.DEFAULT_METHOD_CALL_TABLE, MysqlContent.DEFAULT_METHOD_CALL_TABLE, this.index, fieldName)));
-
         nodeInvokeResult.setResult(methodEnum.makeResult(lastAllPlanResult, lastNodeInvokeResult, arguments, fieldName));
         return nodeInvokeResult;
     }

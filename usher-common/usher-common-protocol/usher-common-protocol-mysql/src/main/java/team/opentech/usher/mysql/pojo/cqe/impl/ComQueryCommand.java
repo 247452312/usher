@@ -48,29 +48,7 @@ public class ComQueryCommand extends MysqlSqlCommand {
         String[] split = completeSql.split(";");
         List<MysqlResponse> result = new ArrayList<>();
         for (String sql : split) {
-            // 解析sql为执行计划
-            List<MysqlPlan> mysqlPlans = PlanUtil.analysisSqlToPlan(sql);
-            // 执行计划为空, 返回执行成功,无信息
-            if (CollectionUtil.isEmpty(mysqlPlans)) {
-                List<OkResponse> okResponses = Collections.singletonList(new OkResponse(SqlTypeEnum.NULL));
-                result.addAll(okResponses);
-                continue;
-            }
-
-            NodeInvokeResult execute;
-            try {
-                execute = new PlanInvoker(mysqlPlans).execute();
-            } catch (AssertException e) {
-                LogUtil.error(this, e, "sql:" + sql + "\n");
-                throw e;
-            }
-
-            // 如果没有结果, 说明不是一个常规的查询语句,返回ok即可,如果报错,则在外部已经进行了try,catch
-            if (CollectionUtil.isEmpty(execute.getFieldInfos())) {
-                result.add(new OkResponse(SqlTypeEnum.NULL));
-                continue;
-            }
-            result.add(new ResultSetResponse(execute.getFieldInfos(), execute.getResult()));
+            invokeSql(sql, result);
         }
 
         LogUtil.info("mysql协议sql回应:" + result.stream().map(MysqlResponse::toResponseStr).collect(Collectors.joining()));
@@ -86,5 +64,38 @@ public class ComQueryCommand extends MysqlSqlCommand {
     protected void load() {
         Proto proto = new Proto(mysqlBytes, 5);
         this.completeSql = proto.get_null_str();
+    }
+
+    /**
+     * 解析并执行sql
+     *
+     * @param sql
+     * @param result
+     */
+    private void invokeSql(String sql, List<MysqlResponse> result) {
+        // 解析sql为执行计划
+        List<MysqlPlan> mysqlPlans = PlanUtil.analysisSqlToPlan(sql);
+        // 执行计划为空, 返回执行成功,无信息
+        if (CollectionUtil.isEmpty(mysqlPlans)) {
+            result.add(new OkResponse(SqlTypeEnum.NULL));
+            return;
+        }
+
+        PlanInvoker planInvoker = new PlanInvoker(mysqlPlans);
+        NodeInvokeResult execute;
+        try {
+            execute = planInvoker.execute();
+        } catch (AssertException e) {
+            LogUtil.error(this, e, "sql:" + sql + "\n");
+            throw e;
+        }
+        // 如果没有结果, 说明不是一个常规的查询语句,返回ok即可,如果报错,则在外部已经进行了try,catch
+        if (CollectionUtil.isEmpty(execute.getFieldInfos())) {
+            result.add(new OkResponse(SqlTypeEnum.NULL));
+            return;
+        }
+        result.add(new ResultSetResponse(execute.getFieldInfos(), execute.getResult()));
+
+
     }
 }

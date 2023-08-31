@@ -24,9 +24,14 @@ public class InvokeCommandBuilder {
     private final Map<String, String> header = new HashMap<>();
 
     /**
-     * 路径
+     * 库名称
      */
-    private String path;
+    private String database;
+
+    /**
+     * 表名称
+     */
+    private String table;
 
 
     /**
@@ -72,14 +77,26 @@ public class InvokeCommandBuilder {
     }
 
     /**
-     * 添加path参数
+     * 添加table
      *
-     * @param path
+     * @param tableName
      *
      * @return
      */
-    public InvokeCommandBuilder addPath(String path) {
-        this.path = path;
+    public InvokeCommandBuilder fillTable(String tableName) {
+        this.table = tableName;
+        return this;
+    }
+
+    /**
+     * 添加库
+     *
+     * @param database
+     *
+     * @return
+     */
+    public InvokeCommandBuilder fillDatabase(String database) {
+        this.database = database;
         return this;
     }
 
@@ -118,7 +135,8 @@ public class InvokeCommandBuilder {
         MysqlInvokeCommand invokeCommand = new MysqlInvokeCommand();
         invokeCommand.setHeader(this.header);
         invokeCommand.setParams(this.params);
-        invokeCommand.setPath(this.path);
+        invokeCommand.setDatabase(this.database);
+        invokeCommand.setTable(this.table);
         return invokeCommand;
     }
 

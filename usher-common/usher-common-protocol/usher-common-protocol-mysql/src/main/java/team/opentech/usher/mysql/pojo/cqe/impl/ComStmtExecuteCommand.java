@@ -61,7 +61,7 @@ public class ComStmtExecuteCommand extends MysqlSqlCommand {
         Proto proto = new Proto(mysqlBytes, 1);
         long prepareId = proto.getFixedInt(4);
         // 预处理语句
-        this.prepareSql = MysqlContent.MYSQL_TCP_INFO.get().getPrepareSql(prepareId);
+        this.prepareSql = MysqlContent.MYSQL_TCP_INFO.get().findPrepareSql(prepareId);
         long fixedInt = proto.getFixedInt(1);
         byte[] bytes = MysqlUtil.toBytes(fixedInt);
         // 预处理语句标志位

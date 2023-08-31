@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.jetbrains.annotations.NotNull;
 import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.enums.FieldTypeEnum;
 import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
@@ -13,6 +14,7 @@ import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import team.opentech.usher.mysql.pojo.entity.MysqlTcpLink;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
+import team.opentech.usher.util.MapUtil;
 
 /**
  * 执行计划者,本身带有工具意义,并不是一个完整的领域
@@ -47,12 +49,7 @@ public class PlanInvoker {
      */
     public NodeInvokeResult execute(Map<String, Object> params) {
         // 初始化参数
-        Map<Long, NodeInvokeResult> planParamMap = new HashMap<>();
-        if (params != null && params.size() != 0) {
-            List<Map<String, Object>> value = new ArrayList<>();
-            value.add(params);
-            planParamMap.put(-1L, paramsToResult(value));
-        }
+        Map<Long, NodeInvokeResult> planParamMap = makeFirstParam(params);
 
         NodeInvokeResult lastResult = null;
         // 补全并执行
@@ -63,6 +60,24 @@ public class PlanInvoker {
             planParamMap.put(mysqlPlan.getId(), invoke);
         }
         return lastResult;
+    }
+
+    /**
+     * 制作伪装为id为-1的执行计划执行结果
+     *
+     * @param params
+     *
+     * @return
+     */
+    @NotNull
+    private Map<Long, NodeInvokeResult> makeFirstParam(Map<String, Object> params) {
+        Map<Long, NodeInvokeResult> planParamMap = new HashMap<>();
+        if (MapUtil.isNotEmpty(params)) {
+            List<Map<String, Object>> value = new ArrayList<>();
+            value.add(params);
+            planParamMap.put(-1L, paramsToResult(value));
+        }
+        return planParamMap;
     }
 
     /**

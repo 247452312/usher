@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Objects;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.mysql.content.MysqlContent;
+import team.opentech.usher.mysql.pojo.DTO.ExprParseResultInfo;
 import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import team.opentech.usher.mysql.pojo.entity.MysqlTcpLink;
@@ -59,15 +60,17 @@ public enum MysqlMethodEnum {
      */
     CONCAT("concat", -1, String.class, false, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
         List<StringBuilder> argList = new ArrayList<>();
-        for (int i = 0; i < arguments.size(); i++) {
-            SQLExpr sqlExpr = arguments.get(i);
-            List<String> strList = MysqlUtil.parse(sqlExpr, lastAllPlanResult, parentInvokeResult);
-            for (int j = 0; j < strList.size(); j++) {
-                if (argList.size() <= j) {
-                    argList.add(new StringBuilder());
+        for (SQLExpr sqlExpr : arguments) {
+            ExprParseResultInfo<String> parse = MysqlUtil.parse(sqlExpr, lastAllPlanResult, parentInvokeResult);
+            if (parse.isConstant()) {
+                int lineIndex = 0;
+                String result = parse.get();
+                concatAppendString(argList, lineIndex, result);
+            } else {
+                List<String> listResult = parse.getListResult();
+                for (int lineIndex = 0; lineIndex < listResult.size(); lineIndex++) {
+                    concatAppendString(argList, lineIndex, listResult.get(lineIndex));
                 }
-                StringBuilder stringBuilder = argList.get(j);
-                stringBuilder.append(strList.get(j));
             }
         }
 
@@ -86,32 +89,38 @@ public enum MysqlMethodEnum {
      * left
      */
     LEFT("left", 2, String.class, false, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
-        SQLExpr str = arguments.get(0);
-        SQLExpr length = arguments.get(1);
-        List<String> strList = MysqlUtil.parse(str, lastAllPlanResult, parentInvokeResult);
-        List<Number> lengthList = MysqlUtil.parse(length, lastAllPlanResult, parentInvokeResult);
+
+        ExprParseResultInfo<String> leftStr = MysqlUtil.parse(arguments.get(0), lastAllPlanResult, parentInvokeResult);
+        ExprParseResultInfo<Number> rightNumber = MysqlUtil.parse(arguments.get(1), lastAllPlanResult, parentInvokeResult);
+
         List<Map<String, Object>> result = new ArrayList<>();
-        for (int i = 0; i < strList.size(); i++) {
+        // 如果两边都是常量,size为1 否则 哪边是列表size是哪边 如果两边都是,则使用左边字符串为准
+        long size = !leftStr.isConstant() ? leftStr.getListResult().size() : (!rightNumber.isConstant() ? rightNumber.getListResult().size() : 1);
+        for (int i = 0; i < size; i++) {
             Map<String, Object> item = new HashMap<>();
-            Number ch = lengthList.get(i);
-            item.put(fieldName, strList.get(i).substring(0, ch.intValue()));
+            Number ch = rightNumber.isConstant() ? rightNumber.get() : rightNumber.get(i);
+            String ls = leftStr.isConstant() ? leftStr.get() : leftStr.get(i);
+            item.put(fieldName, ls.substring(0, ch.intValue()));
             result.add(item);
         }
         return result;
     }),
     /**
-     * instr
+     * instr 返回字符串中第一次出现指定字符串的地方
      */
     INSTR("instr", -1, String.class, false, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
-        SQLExpr str = arguments.get(0);
-        SQLExpr length = arguments.get(1);
-        List<String> strList = MysqlUtil.parse(str, lastAllPlanResult, parentInvokeResult);
-        List<String> lengthList = MysqlUtil.parse(length, lastAllPlanResult, parentInvokeResult);
-        Asserts.assertTrue(strList.size() == lengthList.size(), "方法入参对应前执行计划结果数量不匹配");
+        ExprParseResultInfo<String> leftStr = MysqlUtil.parse(arguments.get(0), lastAllPlanResult, parentInvokeResult);
+        ExprParseResultInfo<String> rightStr = MysqlUtil.parse(arguments.get(1), lastAllPlanResult, parentInvokeResult);
+
+        // 如果两边都是常量,size为1 否则 哪边是列表size是哪边 如果两边都是,则使用左边字符串为准
+        long size = !leftStr.isConstant() ? leftStr.getListResult().size() : (!rightStr.isConstant() ? rightStr.getListResult().size() : 1);
+
         List<Map<String, Object>> result = new ArrayList<>();
-        for (int i = 0; i < strList.size(); i++) {
+        for (int i = 0; i < size; i++) {
+            String ls = leftStr.isConstant() ? leftStr.get() : leftStr.get(i);
+            String rs = rightStr.isConstant() ? rightStr.get() : rightStr.get(i);
             Map<String, Object> item = new HashMap<>();
-            item.put(fieldName, strList.get(i).indexOf(lengthList.get(i)));
+            item.put(fieldName, ls.indexOf(rs));
             result.add(item);
         }
         return result;
@@ -166,7 +175,7 @@ public enum MysqlMethodEnum {
     }),
     USER("user", 0, String.class, false, (lastAllPlanResult, parentInvokeResult, arguments, fieldName) -> {
         MysqlTcpLink value = MysqlContent.MYSQL_TCP_INFO.get();
-        UserDTO userDTO = value.getUserDTO();
+        UserDTO userDTO = value.findUserDTO();
 
         List<Map<String, Object>> maps = new ArrayList<>();
         Map<String, Object> item = new HashMap<>();
@@ -256,6 +265,21 @@ public enum MysqlMethodEnum {
         }
         Asserts.throwException("未知的mysql方法名称,name:{},参数个数:{}", name, paramCount.toString());
         return null;
+    }
+
+    /**
+     * concat添加字符串方法
+     *
+     * @param resultStrList 结果字符串
+     * @param lineIndex     行序号
+     * @param lineResult    此行解析的要被添加的结果
+     */
+    private static void concatAppendString(List<StringBuilder> resultStrList, int lineIndex, String lineResult) {
+        if (resultStrList.size() <= lineIndex) {
+            resultStrList.add(new StringBuilder());
+        }
+        StringBuilder stringBuilder = resultStrList.get(lineIndex);
+        stringBuilder.append(lineResult);
     }
 
     public Boolean getMergeable() {

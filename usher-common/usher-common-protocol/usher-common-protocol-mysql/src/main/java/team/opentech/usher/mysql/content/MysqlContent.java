@@ -76,6 +76,11 @@ public class MysqlContent {
     public static final String DUAL_DATABASES = "mysql";
 
     /**
+     * 通用中间字段名称
+     */
+    public static final String DEFAULT_RESULT_NAME = "result";
+
+    /**
      * 全局预处理语句id
      */
     private static final AtomicLong PREPARE_ID = new AtomicLong(0);
@@ -99,12 +104,22 @@ public class MysqlContent {
      * 提交新的tcp连接信息
      *
      * @param channelId
-     * @param mysqlTcpLink
      *
      * @return
      */
-    public static MysqlTcpLink putMysqlTcpInfo(ChannelId channelId, MysqlTcpLink mysqlTcpLink) {
-        return mysqlTcpInfoWeakHashMap.put(channelId, mysqlTcpLink);
+    public static MysqlTcpLink putMysqlTcpInfo(ChannelId channelId) {
+        return mysqlTcpInfoWeakHashMap.put(channelId, MYSQL_TCP_INFO.get());
+    }
+
+    /**
+     * 查询新的tcp连接信息
+     *
+     * @param channelId
+     *
+     * @return
+     */
+    public static MysqlTcpLink findMysqlTcpInfo(ChannelId channelId) {
+        return mysqlTcpInfoWeakHashMap.put(channelId, MYSQL_TCP_INFO.get());
     }
 
 }

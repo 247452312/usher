@@ -2,17 +2,18 @@ package team.opentech.usher.util;
 
 
 import com.alibaba.fastjson.JSON;
-import team.opentech.usher.context.MyTraceIdContext;
-import team.opentech.usher.enums.LogDetailTypeEnum;
-import team.opentech.usher.enums.LogLevelEnum;
-import team.opentech.usher.enums.LogTypeEnum;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 import org.slf4j.helpers.MessageFormatter;
+import team.opentech.usher.context.MyTraceIdContext;
+import team.opentech.usher.enums.LogDetailTypeEnum;
+import team.opentech.usher.enums.LogLevelEnum;
+import team.opentech.usher.enums.LogTypeEnum;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -116,7 +117,7 @@ public final class LogUtil {
     }
 
     public static void info(Class<?> cls, Throwable e) {
-        writeLog(cls.getName(), null, e, LogLevelEnum.INFO);
+        writeLog(cls.getName(), (String) null, e, LogLevelEnum.INFO);
     }
 
     public static void debug(Class<?> cls, String msg, Object... param) {
@@ -139,7 +140,16 @@ public final class LogUtil {
         writeLog(Thread.currentThread().getName(), msg, null, LogLevelEnum.DEBUG);
     }
 
+    public static void debug(Supplier<String> msg) {
+        writeLog(Thread.currentThread().getName(), msg, null, LogLevelEnum.DEBUG);
+    }
+
+
     public static void debug(String msg, String... params) {
+        writeLog(Thread.currentThread().getName(), msg, null, LogLevelEnum.DEBUG, params);
+    }
+
+    public static void debug(Supplier<String> msg, String... params) {
         writeLog(Thread.currentThread().getName(), msg, null, LogLevelEnum.DEBUG, params);
     }
 
@@ -160,7 +170,7 @@ public final class LogUtil {
     }
 
     public static void debug(Class<?> cls, Throwable e) {
-        writeLog(cls.getName(), null, e, LogLevelEnum.DEBUG);
+        writeLog(cls.getName(), (String) null, e, LogLevelEnum.DEBUG);
     }
 
     public static void warn(String msg) {
@@ -184,7 +194,7 @@ public final class LogUtil {
     }
 
     public static void warn(Class<?> cls, Throwable e) {
-        writeLog(cls.getName(), null, e, LogLevelEnum.WARN);
+        writeLog(cls.getName(), (String) null, e, LogLevelEnum.WARN);
     }
 
     public static void warn(String msg, String params) {
@@ -204,7 +214,7 @@ public final class LogUtil {
     }
 
     public static void error(Throwable e) {
-        writeLog(Thread.currentThread().getName(), null, e, LogLevelEnum.ERROR);
+        writeLog(Thread.currentThread().getName(), (String) null, e, LogLevelEnum.ERROR);
     }
 
     public static void error(Object cls, Throwable e, String msg) {
@@ -240,7 +250,7 @@ public final class LogUtil {
     }
 
     public static void error(Class<?> cls, Throwable e) {
-        writeLog(cls.getName(), null, e, LogLevelEnum.ERROR);
+        writeLog(cls.getName(), (String) null, e, LogLevelEnum.ERROR);
     }
 
     /**
@@ -272,8 +282,7 @@ public final class LogUtil {
      * @param queueName
      */
     public static void mq(Long traceId, String hash, long useTime, String exchangeName, String queueName) {
-        String msg = String
-            .format(LogDetailTypeEnum.DETAIL.getCode() + "%d|%d|%s|%d|%d|%s|%s", traceId, LogTypeEnum.MQ.getCode(), hash, System.currentTimeMillis(), useTime, exchangeName, queueName);
+        String msg = String.format(LogDetailTypeEnum.DETAIL.getCode() + "%d|%d|%s|%d|%d|%s|%s", traceId, LogTypeEnum.MQ.getCode(), hash, System.currentTimeMillis(), useTime, exchangeName, queueName);
         MQ_LOG.info(MQ_MARKER, msg);
     }
 
@@ -286,8 +295,7 @@ public final class LogUtil {
      * @param methodName
      */
     public static void rpc(Long traceId, String hash, long useTime, String serviceName, String methodName) {
-        String msg = String.format(LogDetailTypeEnum.DETAIL.getCode() + "%d|%d|%s|%d|%d|%s|%s", traceId, LogTypeEnum.RPC.getCode(), hash, System
-            .currentTimeMillis(), useTime, serviceName, methodName);
+        String msg = String.format(LogDetailTypeEnum.DETAIL.getCode() + "%d|%d|%s|%d|%d|%s|%s", traceId, LogTypeEnum.RPC.getCode(), hash, System.currentTimeMillis(), useTime, serviceName, methodName);
         RPC_LOG.info(RPC_MARKER, msg);
     }
 
@@ -300,8 +308,7 @@ public final class LogUtil {
      * @param methodName
      */
     public static void task(Long traceId, String hash, long useTime, String serviceName, String methodName) {
-        String msg = String.format(LogDetailTypeEnum.DETAIL.getCode() + "%d|%d|%s|%d|%d|%s|%s", traceId, LogTypeEnum.TASK.getCode(), hash, System
-            .currentTimeMillis(), useTime, serviceName, methodName);
+        String msg = String.format(LogDetailTypeEnum.DETAIL.getCode() + "%d|%d|%s|%d|%d|%s|%s", traceId, LogTypeEnum.TASK.getCode(), hash, System.currentTimeMillis(), useTime, serviceName, methodName);
         TASK_LOG.info(TASK_MARKER, msg);
     }
 
@@ -313,8 +320,7 @@ public final class LogUtil {
      * @param url
      */
     public static void controller(Long traceId, String hash, long useTime, String url, String ip) {
-        String msg = String
-            .format(LogDetailTypeEnum.DETAIL.getCode() + "%d|%d|%s|%d|%d|%s|%s", traceId, LogTypeEnum.CONTROLLER.getCode(), hash, System.currentTimeMillis(), useTime, url, ip);
+        String msg = String.format(LogDetailTypeEnum.DETAIL.getCode() + "%d|%d|%s|%d|%d|%s|%s", traceId, LogTypeEnum.CONTROLLER.getCode(), hash, System.currentTimeMillis(), useTime, url, ip);
         CONTROLLER_LOG.info(CONTROLLER_MARKER, msg);
     }
 
@@ -332,6 +338,16 @@ public final class LogUtil {
             msg = String.format(LogDetailTypeEnum.LOG.getCode() + "%s|%s|%d|%s", MyTraceIdContext.getThraceId(), MyTraceIdContext.getAndAddRpcIdStr(), System.currentTimeMillis(), msg);
         }
         choiceLogType(msg, throwable, logTypeEnum, logger);
+    }
+
+    private static void writeLog(String className, Supplier<String> msg, Throwable throwable, LogLevelEnum logTypeEnum, String... params) {
+        String message = null;
+        Logger logger = getLoggerByName(className);
+        if (msg != null && (logTypeEnum != LogLevelEnum.DEBUG || logger.isDebugEnabled())) {
+            message = MessageFormatter.arrayFormat(msg.get(), params).getMessage();
+            message = String.format(LogDetailTypeEnum.LOG.getCode() + "%s|%s|%d|%s", MyTraceIdContext.getThraceId(), MyTraceIdContext.getAndAddRpcIdStr(), System.currentTimeMillis(), message);
+        }
+        choiceLogType(message, throwable, logTypeEnum, logger);
     }
 
     /**

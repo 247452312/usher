@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang3.RandomUtils;
 import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.enums.MysqlServerStatusEnum;
+import team.opentech.usher.mysql.pojo.entity.MysqlTcpLink;
 import team.opentech.usher.mysql.pojo.response.AbstractMysqlResponse;
 import team.opentech.usher.mysql.util.MysqlUtil;
 
@@ -25,9 +26,17 @@ public class AuthResponse extends AbstractMysqlResponse {
         super();
     }
 
+    /**
+     * 快捷创建
+     */
+    public static AuthResponse build() {
+        return new AuthResponse();
+
+    }
+
     @Override
     public String toResponseStr() {
-        return "认证成功," + mysqlTcpLink.getUserDTO().getUsername();
+        return "认证成功," + MysqlTcpLink.findByCache().findUserDTO().getUsername();
     }
 
     /**
@@ -77,7 +86,6 @@ public class AuthResponse extends AbstractMysqlResponse {
         return Collections.singletonList(MysqlUtil.mergeListBytes(results));
     }
 
-
     /**
      * 服务器版本信息
      *
@@ -111,13 +119,12 @@ public class AuthResponse extends AbstractMysqlResponse {
         for (int i = 0; i < randomBytes.length; i++) {
             randomBytes[i] = (byte) RandomUtils.nextInt(1, 127);
         }
-        mysqlTcpLink.setRandomByte(randomBytes);
+        MysqlTcpLink byCache = MysqlTcpLink.findByCache();
+        byCache.fillRandomByte(randomBytes);
 
         List<byte[]> result = new ArrayList<>();
         result.add(randomBytes);
         result.add(new byte[]{0x00});
-        //        result.add(END_OF_PROTO.getBytes(StandardCharsets.UTF_8));
-        //        result.add(new byte[]{0x00});
         return MysqlUtil.mergeListBytes(result);
     }
 

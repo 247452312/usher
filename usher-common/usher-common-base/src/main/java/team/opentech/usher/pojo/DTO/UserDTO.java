@@ -130,7 +130,7 @@ public class UserDTO extends IdDTO {
     }
 
     @Nullable
-    public String getToken() {
+    public String findToken() {
         return token;
     }
 

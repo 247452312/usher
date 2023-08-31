@@ -14,11 +14,11 @@ import team.opentech.usher.mysql.util.PlanUtil;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年08月17日 14时25分
  */
-public class MysqlNettyServerImplTest extends BaseTest {
+public class MysqlNettyServerTest extends BaseTest {
 
     @Test
     void analysisSql() {
-        MysqlTcpLink value = new MysqlTcpLink();
+        MysqlTcpLink value = MysqlTcpLink.build(null, null);
         value.setStatus(MysqlHandlerStatusEnum.PASSED);
         value.setDatabase("ushergateway");
         MysqlContent.MYSQL_TCP_INFO.set(value);
@@ -30,7 +30,7 @@ public class MysqlNettyServerImplTest extends BaseTest {
 
     @Test
     void analysisSql2() {
-        MysqlTcpLink value = new MysqlTcpLink();
+        MysqlTcpLink value = MysqlTcpLink.build(null, null);
         value.setStatus(MysqlHandlerStatusEnum.PASSED);
         value.setDatabase("ushergateway");
         MysqlContent.MYSQL_TCP_INFO.set(value);

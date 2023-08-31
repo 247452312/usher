@@ -3,6 +3,7 @@ package team.opentech.usher.assembler;
 import java.util.List;
 import org.mapstruct.Mapper;
 import team.opentech.usher.enums.InvokeTypeEnum;
+import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.pojo.DTO.TableDTO;
 import team.opentech.usher.mysql.pojo.cqe.MysqlInvokeCommand;
 import team.opentech.usher.mysql.pojo.cqe.TableQuery;
@@ -26,7 +27,8 @@ public abstract class GatewayAssembler implements BaseAssembler {
         invokeCommand.copyOf(command);
         invokeCommand.setParams(command.getParams());
         invokeCommand.setHeader(command.getHeader());
-        invokeCommand.setPath(command.getPath());
+        String path = command.getDatabase() + MysqlContent.PATH_SEPARATOR + command.getTable();
+        invokeCommand.setPath(path);
         invokeCommand.setInvokeType(InvokeTypeEnum.MYSQL.getCode());
         return invokeCommand;
     }
