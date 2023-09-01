@@ -6,19 +6,27 @@ import com.alibaba.druid.sql.ast.expr.SQLCharExpr;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.ast.statement.SQLExprTableSource;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.handler.MysqlServiceHandler;
+import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import team.opentech.usher.mysql.pojo.SqlTableSourceBinaryTreeInfo;
 import team.opentech.usher.mysql.pojo.cqe.InvokeCommandBuilder;
 import team.opentech.usher.mysql.pojo.cqe.MysqlInvokeCommand;
 import team.opentech.usher.mysql.pojo.plan.BlockQuerySelectSqlPlan;
 import team.opentech.usher.util.Asserts;
+import team.opentech.usher.util.CollectionUtil;
+import team.opentech.usher.util.MapUtil;
 import team.opentech.usher.util.SpringUtil;
 import team.opentech.usher.util.StringUtil;
 
@@ -93,6 +101,81 @@ public class BlockQuerySelectSqlPlanImpl extends BlockQuerySelectSqlPlan {
         if (!haveResult) {
             nodeInvokeResult.setResult(new ArrayList<>());
         }
+
+        // 平铺/展开结果中的json
+        nodeInvokeResult = tileResultJson(nodeInvokeResult);
         return nodeInvokeResult;
     }
+
+    private NodeInvokeResult tileResultJson(NodeInvokeResult nodeInvokeResult) {
+        List<FieldInfo> fieldInfos = nodeInvokeResult.getFieldInfos();
+        List<Map<String, Object>> result = nodeInvokeResult.getResult();
+        if (CollectionUtil.isEmpty(fieldInfos) || CollectionUtil.isEmpty(result)) {
+            return nodeInvokeResult;
+        }
+        boolean change = false;
+        Map<String, FieldInfo> fieldInfoMap = fieldInfos.stream().collect(Collectors.toMap(FieldInfo::getFieldName, t -> t));
+        List<Map<String, Object>> newResult = new ArrayList<>();
+        // 遍历行
+        for (Map<String, Object> resultItem : result) {
+            Map<String, Object> newLine = new HashMap<>();
+            List<Map<String, Object>> newResultTemp = new ArrayList<>();
+            // 初始只有一行
+            newResultTemp.add(newLine);
+
+            // 遍历列
+            for (Entry<String, Object> resultCell : resultItem.entrySet()) {
+                Object value = resultCell.getValue();
+                if (value instanceof JSON) {
+                    change = true;
+                }
+                // 一行展开成多行
+                if (value instanceof JSONArray) {
+                    JSONArray jsonArrayValue = (JSONArray) value;
+                    List<Map<String, Object>> newResultTempTemp = new ArrayList<>();
+                    for (Object o : jsonArrayValue) {
+                        // 每一行都要进行自我复制成多行
+                        for (Map<String, Object> item : newResultTemp) {
+                            Map<String, Object> copy = MapUtil.copy(item);
+                            copy.put(resultCell.getKey(), o);
+                            newResultTempTemp.add(copy);
+                        }
+                    }
+                    newResultTemp = newResultTempTemp;
+                } else if (value instanceof JSONObject) {
+                    List<FieldInfo> fieldInfoTemp = new ArrayList<>(fieldInfos);
+                    FieldInfo oldField = fieldInfoMap.remove(resultCell.getKey());
+                    fieldInfoTemp.remove(oldField);
+                    JSONObject jsonObject = (JSONObject) value;
+                    for (Entry<String, Object> objectEntry : jsonObject.entrySet()) {
+                        String newFieldName = resultCell.getKey() + "." + objectEntry.getKey();
+                        if (!fieldInfoMap.containsKey(newFieldName)) {
+                            FieldInfo newFieldInfo = oldField.copyWithNewFieldName(newFieldName);
+                            fieldInfoTemp.add(newFieldInfo);
+                            fieldInfoMap.put(newFieldName, newFieldInfo);
+                        }
+                        for (Map<String, Object> stringObjectMap : newResultTemp) {
+                            stringObjectMap.remove(resultCell.getKey());
+                            stringObjectMap.put(newFieldName, objectEntry.getValue());
+                        }
+                    }
+                    fieldInfos = fieldInfoTemp;
+                } else {
+                    for (Map<String, Object> item : newResultTemp) {
+                        item.put(resultCell.getKey(), resultCell.getValue());
+                    }
+                }
+            }
+            newResult.addAll(newResultTemp);
+        }
+        if (Boolean.FALSE.equals(change)) {
+            return nodeInvokeResult;
+        }
+        NodeInvokeResult nodeInvokeResult1 = new NodeInvokeResult(this);
+        nodeInvokeResult1.setFieldInfos(fieldInfos);
+        nodeInvokeResult1.setResult(newResult);
+
+        return tileResultJson(nodeInvokeResult1);
+    }
+
 }

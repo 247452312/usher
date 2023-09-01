@@ -20,6 +20,7 @@ import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import team.opentech.usher.pojo.DO.ProviderInterfaceHttpDO;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.HttpUtil;
+import team.opentech.usher.util.StringUtil;
 
 /**
  * http接口子表(ProviderInterfaceHttp)表 数据库实体类
@@ -137,6 +138,9 @@ public class ProviderInterfaceHttp extends AbstractProviderExample<ProviderInter
             paramsStrList.add(paramStr);
         }
         String collect = String.join("&", paramsStrList);
-        return url + "?" + collect;
+        if (StringUtil.isNotEmpty(collect)) {
+            return url + "?" + collect;
+        }
+        return url;
     }
 }
