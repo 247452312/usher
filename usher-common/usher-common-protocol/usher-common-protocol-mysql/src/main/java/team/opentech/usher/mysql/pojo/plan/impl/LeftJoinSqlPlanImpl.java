@@ -25,18 +25,19 @@ public class LeftJoinSqlPlanImpl extends LeftJoinSqlPlan {
         nodeInvokeResult.setFieldInfos(allFieldInfo());
         /*此处两个不同行列数的table 需要融合在一起 on中的条件是融合前需要遵守的,也是合并表的依据 where 是合并后进行筛选*/
         // on里的条件
-        List<SQLBinaryOpExpr> on = splitCondition();
+        List<List<SQLBinaryOpExpr>> lists = splitCondition();
 
-        /*todo left join 中 以左边列表为准, 每条去遍历另一边的列表,判断on条件是否成立, 如果成立,则筛选出一条新数据*/
-        List<Map<String, Object>> leftResult = this.leftResult.getResult();
-        List<Map<String, Object>> rightResult = this.rightResult.getResult();
+        List<Map<String, Object>> leftResults = this.leftResult.getResult();
+        List<Map<String, Object>> rightResults = this.rightResult.getResult();
 
         List<Map<String, Object>> result = new ArrayList<>();
-        for (Map<String, Object> left : leftResult) {
+        String leftAlias = leftTree.getTableSource().getAlias();
+        String rightAlias = rightTree.getTableSource().getAlias();
+        for (Map<String, Object> left : leftResults) {
             boolean haveLine = false;
-            for (Map<String, Object> right : rightResult) {
+            for (Map<String, Object> right : rightResults) {
                 // 如果这是一个可以合并的行
-                if (checkMerge(left, right, on)) {
+                if (checkMerge(left, right, lists, leftAlias, rightAlias)) {
                     Map<String, Object> copy = MapUtil.copy(left);
                     copy.putAll(right);
                     haveLine = true;
