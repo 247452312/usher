@@ -15,17 +15,18 @@
     <modules>
         <module>usher-common-base</module>
         <module>usher-common-service</module>
-        <module>usher-common-mq</module>
+        <module>usher-common-jvm</module>
         <module>usher-common-inside-package</module>
         <module>usher-common-data</module>
         <module>usher-common-hot-spot</module>
-        <module>usher-common-log</module>
+        <module>usher-common-logLink</module>
         <module>usher-common-util</module>
         <module>usher-common-event-bus</module>
         <module>usher-common-elegant</module>
         <module>usher-common-swagger</module>
         <module>usher-common-rpc</module>
         <module>usher-common-protocol</module>
+        <module>usher-common-client</module>
     </modules>
 
 

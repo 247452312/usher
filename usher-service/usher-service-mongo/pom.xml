@@ -39,7 +39,7 @@
         </dependency>
         <dependency>
             <groupId>team.opentech.usher</groupId>
-            <artifactId>usher-common-mq</artifactId>
+            <artifactId>usher-common-jvm</artifactId>
         </dependency>
         <dependency>
             <groupId>team.opentech.usher</groupId>

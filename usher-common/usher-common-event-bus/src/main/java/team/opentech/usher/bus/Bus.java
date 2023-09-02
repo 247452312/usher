@@ -1,14 +1,16 @@
 package team.opentech.usher.bus;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.DefaultConsumer;
-import com.rabbitmq.client.Envelope;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import team.opentech.usher.UsherThreadLocal;
-import team.opentech.usher.mq.util.MqUtil;
+import team.opentech.usher.mq.MQMessage;
+import team.opentech.usher.mq.client.MQClient;
 import team.opentech.usher.pojo.cqe.event.base.BaseEvent;
 import team.opentech.usher.pojo.cqe.event.base.BaseParentEvent;
 import team.opentech.usher.pojo.cqe.event.base.PackageEvent;
@@ -16,21 +18,14 @@ import team.opentech.usher.protocol.register.base.Register;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
 import team.opentech.usher.util.EventUtil;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
+import team.opentech.usher.util.SpringUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
  * @version 1.0
  * @date 文件创建日期 2021年09月19日 09时20分
  */
-public class Bus extends DefaultConsumer implements BusInterface {
+public class Bus implements BusInterface {
 
     /**
      * 注册者
@@ -39,16 +34,16 @@ public class Bus extends DefaultConsumer implements BusInterface {
 
     public UsherThreadLocal<List<BaseEvent>> events = new UsherThreadLocal<>();
 
-    public Bus(Channel channel, List<Register> registers) {
-        super(channel);
+    public Bus(List<Register> registers) {
         events.set(new ArrayList<>());
         this.registers = registers;
+
     }
 
+
     @Override
-    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-        String text = new String(body, StandardCharsets.UTF_8);
-        BaseEvent event = JSONObject.parseObject(text, BaseEvent.class);
+    public void receive(MQMessage message) {
+        BaseEvent event = message.body(BaseEvent.class);
         Asserts.assertTrue(event != null);
         // 解析事件(打包,父类事件转为子类事件)
         List<BaseEvent> trans = EventUtil.trans(event);
@@ -303,6 +298,12 @@ public class Bus extends DefaultConsumer implements BusInterface {
         return result;
     }
 
+
+    @Override
+    public String topic() {
+        return BusInterface.BUS_EVENT_TOPIC;
+    }
+
     /**
      * 发布事件
      *
@@ -336,7 +337,8 @@ public class Bus extends DefaultConsumer implements BusInterface {
         while (iterator.hasNext()) {
             BaseEvent next = iterator.next();
             String msg = JSON.toJSONString(next, SerializerFeature.WriteClassName);
-            MqUtil.sendMsg(BUS_EVENT_EXCHANGE_NAME, BUS_EVENT_QUEUE_NAME, msg);
+            MQMessage mqMessage = new MQMessage(BUS_EVENT_TOPIC, BUS_EVENT_TAG, msg);
+            SpringUtil.getBean(MQClient.class).send(mqMessage);
             iterator.remove();
         }
     }

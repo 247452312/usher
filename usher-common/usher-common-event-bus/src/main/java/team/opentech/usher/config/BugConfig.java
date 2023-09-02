@@ -1,14 +1,13 @@
 package team.opentech.usher.config;
 
-import team.opentech.usher.bus.Bus;
-import team.opentech.usher.bus.BusInterface;
-import team.opentech.usher.mq.util.MqUtil;
-import team.opentech.usher.protocol.register.base.Register;
-import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
+import javax.annotation.Resource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import team.opentech.usher.bus.Bus;
+import team.opentech.usher.bus.BusInterface;
+import team.opentech.usher.mq.client.MQClient;
+import team.opentech.usher.protocol.register.base.Register;
 
 
 /**
@@ -19,9 +18,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BugConfig {
 
+    @Resource
+    private MQClient mqClient;
 
     @Bean
-    public BusInterface eventBus(List<Register> registers) throws IOException, TimeoutException {
-        return MqUtil.addConsumer(BusInterface.BUS_EVENT_EXCHANGE_NAME, BusInterface.BUS_EVENT_QUEUE_NAME, BusInterface.BUS_EVENT_QUEUE_NAME, BusInterface.class, channel -> new Bus(channel, registers));
+    public BusInterface eventBus(List<Register> registers) {
+        return mqClient.addConsumer(BusInterface.BUS_EVENT_TOPIC, () -> new Bus(registers));
     }
 }

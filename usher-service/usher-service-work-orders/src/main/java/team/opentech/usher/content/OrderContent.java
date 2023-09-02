@@ -14,5 +14,5 @@ public class OrderContent {
     /**
      * 工单MQ路由
      */
-    public static final String ORDER_EXCHANGE = "order_exchange";
+    public static final String ORDER_TOPIC = "order_exchange";
 }

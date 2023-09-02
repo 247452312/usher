@@ -43,7 +43,6 @@
         <jedis.version>3.2.0</jedis.version>
         <distrupter.version>3.4.2</distrupter.version>
         <ssh2.version>262</ssh2.version>
-        <rabbitmq-client.version>5.7.3</rabbitmq-client.version>
         <quartz.version>2.3.2</quartz.version>
         <hutool.version>5.3.8</hutool.version>
         <mail.version>1.4.7</mail.version>
@@ -64,8 +63,8 @@
         <javaparser.version>3.24.2</javaparser.version>
         <mybatis.plus.spring.version>3.4.3.3</mybatis.plus.spring.version>
         <mapStruct.version>1.4.2.Final</mapStruct.version>
+        <mqtt.version>1.2.5</mqtt.version>
         <ojdbc.version>11.2.0.3</ojdbc.version>
-        <rocketmq.version>4.3.0</rocketmq.version>
         <jython.version>2.7.2</jython.version>
         <javassist.version>3.24.0-GA</javassist.version>
         <kotlin.version>1.6.20-RC</kotlin.version>
@@ -227,13 +226,6 @@
                 <version>${javax.validation.version}</version>
             </dependency>
 
-            <!--MQ-->
-            <dependency>
-                <groupId>com.rabbitmq</groupId>
-                <artifactId>amqp-client</artifactId>
-                <version>${rabbitmq-client.version}</version>
-            </dependency>
-
             <!-- 动态定时任务 -->
             <dependency>
                 <groupId>org.quartz-scheduler</groupId>
@@ -366,17 +358,16 @@
                 <artifactId>mapstruct-processor</artifactId>
                 <version>${mapStruct.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.eclipse.paho</groupId>
+                <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+                <version>${mqtt.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.oracle</groupId>
                 <artifactId>ojdbc6</artifactId>
                 <version>${ojdbc.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.rocketmq</groupId>
-                <artifactId>rocketmq-client</artifactId>
-                <version>${rocketmq.version}</version>
             </dependency>
 
             <!-- org.python/jython -->

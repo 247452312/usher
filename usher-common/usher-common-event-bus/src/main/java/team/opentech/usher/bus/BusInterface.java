@@ -1,26 +1,26 @@
 package team.opentech.usher.bus;
 
-import com.rabbitmq.client.Consumer;
+import java.util.List;
+import team.opentech.usher.mq.consumer.MQTTConsumer;
 import team.opentech.usher.pojo.cqe.event.base.BaseEvent;
 import team.opentech.usher.pojo.cqe.event.base.BaseParentEvent;
-import java.util.List;
 
 /**
  * @author uhyils <247452312@qq.com>
  * @version 1.0
  * @date 文件创建日期 2021年09月29日 21时51分
  */
-public interface BusInterface extends Consumer {
+public interface BusInterface extends MQTTConsumer {
 
     /**
      * 事件路由名称
      */
-    String BUS_EVENT_EXCHANGE_NAME = "BUS_EVENT_EXCHANGE_NAME";
+    String BUS_EVENT_TOPIC = "BUS_EVENT_TOPIC";
 
     /**
      * 事件队列
      */
-    String BUS_EVENT_QUEUE_NAME = "BUS_EVENT_QUEUE_NAME";
+    String BUS_EVENT_TAG = "BUS_EVENT_TAG";
 
     /**
      * 提交事件

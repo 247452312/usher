@@ -62,6 +62,13 @@ rpc:
     exceptionExtensionSpi: selfExceptionExtension
     methodInvokerSpi: rpcHotSpotMethodInvoker
 
+mq:
+  mqtt:
+    serverURL: tcp://${hosts}:1883
+    username: admin
+    password: usher12345678
+    clientName: ${rpc.application.name}
+
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: team.opentech.usher.dao

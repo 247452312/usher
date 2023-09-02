@@ -75,6 +75,17 @@ public class Asserts {
     }
 
     /**
+     * 断言错误
+     */
+    public static void throwException(Throwable e) {
+        if (e instanceof AssertException) {
+            throw (AssertException) e;
+        }
+        LogUtil.error(e);
+        assertTrue(false, 3, e.getMessage());
+    }
+
+    /**
      * 断言正确
      *
      * @param condition 验证

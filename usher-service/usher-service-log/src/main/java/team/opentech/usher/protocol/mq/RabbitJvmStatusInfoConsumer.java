@@ -1,18 +1,13 @@
 package team.opentech.usher.protocol.mq;
 
-import com.alibaba.fastjson.JSONObject;
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Envelope;
-import team.opentech.usher.annotation.MyMq;
-import team.opentech.usher.mq.content.RabbitMqContent;
+import org.springframework.context.ApplicationContext;
+import team.opentech.usher.mq.MQMessage;
+import team.opentech.usher.mq.UsherMq;
+import team.opentech.usher.mq.UsherMqReceiveMethod;
+import team.opentech.usher.mq.content.JVMContent;
 import team.opentech.usher.mq.pojo.mqinfo.JvmStatusInfoCommand;
-import team.opentech.usher.protocol.mq.base.AbstractMqConsumer;
 import team.opentech.usher.service.LogMonitorJvmStatusService;
 import team.opentech.usher.util.LogUtil;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import org.springframework.context.ApplicationContext;
 
 /**
  * 监听JVM状态消息
@@ -20,34 +15,20 @@ import org.springframework.context.ApplicationContext;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2020年06月19日 11时33分
  */
-@MyMq(topic = RabbitMqContent.JVM_STATUS_QUEUE_NAME, tags = {RabbitMqContent.JVM_STATUS_QUEUE_NAME}, group = "监听JVM状态消息")
-public class RabbitJvmStatusInfoConsumer extends AbstractMqConsumer {
+@UsherMq(topic = JVMContent.JVM_STATUS_TAG, tags = {JVMContent.JVM_STATUS_TAG}, group = "监听JVM状态消息")
+public class RabbitJvmStatusInfoConsumer {
 
 
     private LogMonitorJvmStatusService service;
 
-    /**
-     * Constructs a new instance and records its association to the passed-in channel.
-     *
-     * @param channel            the channel to which this consumer is attached
-     * @param applicationContext
-     */
-    public RabbitJvmStatusInfoConsumer(Channel channel, ApplicationContext applicationContext) {
-        super(channel);
+    public RabbitJvmStatusInfoConsumer(ApplicationContext applicationContext) {
         service = applicationContext.getBean(LogMonitorJvmStatusService.class);
     }
 
-    @Override
-    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-        String text = new String(body, StandardCharsets.UTF_8);
+    @UsherMqReceiveMethod
+    public void handleDelivery(MQMessage message) {
+        JvmStatusInfoCommand jvmStatusInfo = message.body(JvmStatusInfoCommand.class);
         LogUtil.info(this, "接收到JVM状态信息");
-        LogUtil.info(this, text);
-        JvmStatusInfoCommand jvmStatusInfo = JSONObject.parseObject(text, JvmStatusInfoCommand.class);
         service.receiveJvmStatusInfo(jvmStatusInfo);
-        // 获取tag(队列中的唯一标示)
-        long deliveryTag = envelope.getDeliveryTag();
-        // 确认 false为不批量确认
-        getChannel().basicAck(deliveryTag, Boolean.FALSE);
-
     }
 }

@@ -34,12 +34,12 @@
             </dependency>
             <dependency>
                 <groupId>team.opentech.usher</groupId>
-                <artifactId>usher-common-mq</artifactId>
+                <artifactId>usher-common-jvm</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>team.opentech.usher</groupId>
-                <artifactId>usher-common-log</artifactId>
+                <artifactId>usher-common-logLink</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -85,6 +85,17 @@
             <dependency>
                 <groupId>team.opentech.usher</groupId>
                 <artifactId>usher-common-protocol-mysql</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>team.opentech.usher</groupId>
+                <artifactId>usher-c-general-mq-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>team.opentech.usher</groupId>
+                <artifactId>usher-c-mqtt-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

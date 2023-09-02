@@ -24,7 +24,7 @@
         </dependency>
         <dependency>
             <groupId>team.opentech.usher</groupId>
-            <artifactId>usher-common-log</artifactId>
+            <artifactId>usher-common-logLink</artifactId>
         </dependency>
         <dependency>
             <groupId>team.opentech.usher</groupId>
@@ -48,10 +48,6 @@
             <artifactId>usher-common-hot-spot</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>team.opentech.usher</groupId>

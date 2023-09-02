@@ -1,9 +1,9 @@
 package team.opentech.usher.pojo.entity;
 
-import team.opentech.usher.annotation.MyMq;
+import java.util.Arrays;
+import team.opentech.usher.mq.UsherMq;
 import team.opentech.usher.pojo.DTO.ClassSwaggerDTO;
 import team.opentech.usher.pojo.DTO.MqClassSwaggerDTO;
-import java.util.Arrays;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -20,7 +20,7 @@ public class MqClassSwaggerEntity extends ClassSwaggerEntity {
     protected ClassSwaggerDTO parseClass() {
         MqClassSwaggerDTO swaggerDTO = new MqClassSwaggerDTO();
 
-        MyMq myMq = targetClass.getAnnotation(MyMq.class);
+        UsherMq myMq = targetClass.getAnnotation(UsherMq.class);
         swaggerDTO.setServiceType(annotation.value());
         swaggerDTO.setName(targetClass.getName());
         swaggerDTO.setDesc(annotation.desc());

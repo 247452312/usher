@@ -1,12 +1,14 @@
 package team.opentech.usher.facade.impl;
 
 import com.alibaba.fastjson.JSON;
+import javax.annotation.Resource;
 import team.opentech.usher.annotation.Facade;
 import team.opentech.usher.content.OrderContent;
 import team.opentech.usher.enums.OrderStatusEnum;
 import team.opentech.usher.enums.PushTypeEnum;
 import team.opentech.usher.facade.PushFacade;
-import team.opentech.usher.mq.util.MqUtil;
+import team.opentech.usher.mq.MQMessage;
+import team.opentech.usher.mq.client.MQClient;
 import team.opentech.usher.pojo.DTO.OrderInfoDTO;
 import team.opentech.usher.pojo.DTO.request.PushMsgToSomeoneRequest;
 import team.opentech.usher.pojo.entity.OrderNode;
@@ -27,6 +29,10 @@ public class PushFacadeImpl implements PushFacade {
     @RpcReference
     private PushMsgProvider pushMsgProvider;
 
+
+    @Resource
+    private MQClient mqClient;
+
     @Override
     public Boolean pushMsg(OrderInfoDTO orderInfo, Long userId, OrderStatusEnum targetStatus, PushTypeEnum pushType) {
         PushMsgToSomeoneRequest request = new PushMsgToSomeoneRequest();
@@ -42,7 +48,8 @@ public class PushFacadeImpl implements PushFacade {
         InitApiRequestTemporary msg = new InitApiRequestTemporary();
         msg.setOrderNode(orderNode.toData().orElseThrow(Asserts::throwOptionalException));
         msg.setPervOrderNode(pervOrder.toData().orElseThrow(Asserts::throwOptionalException));
-        MqUtil.sendMsg(OrderContent.ORDER_EXCHANGE, OrderContent.ORDER_AUTO_NODE_SEND_QUEUE, JSON.toJSONString(msg));
+        MQMessage mqMessage = new MQMessage(OrderContent.ORDER_TOPIC, OrderContent.ORDER_AUTO_NODE_SEND_QUEUE, JSON.toJSONString(msg));
+        mqClient.send(mqMessage);
     }
 
 
