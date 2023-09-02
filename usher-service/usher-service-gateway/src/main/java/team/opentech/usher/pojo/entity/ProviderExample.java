@@ -1,8 +1,8 @@
 package team.opentech.usher.pojo.entity;
 
-import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import java.util.List;
 import java.util.Map;
+import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 
 /**
  * provider实例

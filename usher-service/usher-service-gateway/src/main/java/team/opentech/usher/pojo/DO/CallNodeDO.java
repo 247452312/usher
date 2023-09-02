@@ -2,9 +2,9 @@ package team.opentech.usher.pojo.DO;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import team.opentech.usher.enums.InvokeTypeEnum;
 import team.opentech.usher.pojo.DO.base.BaseDO;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * 调用节点表, 真正调用的节点(CallNode)表 数据库实体类

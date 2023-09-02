@@ -1,7 +1,7 @@
 package team.opentech.usher.pojo.entity;
 
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
-import team.opentech.usher.plan.pojo.plan.BlockQuerySelectSqlPlan;
+import team.opentech.usher.mysql.pojo.plan.BlockQuerySelectSqlPlan;
 
 /**
  * node执行计划

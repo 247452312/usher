@@ -1,5 +1,6 @@
 package team.opentech.usher.service.impl;
 
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.ProviderInterfaceRpcAssembler;
 import team.opentech.usher.pojo.DO.ProviderInterfaceRpcDO;
@@ -7,7 +8,6 @@ import team.opentech.usher.pojo.DTO.ProviderInterfaceRpcDTO;
 import team.opentech.usher.pojo.entity.ProviderInterfaceRpc;
 import team.opentech.usher.repository.ProviderInterfaceRpcRepository;
 import team.opentech.usher.service.ProviderInterfaceRpcService;
-import org.springframework.stereotype.Service;
 
 /**
  * http接口子表(ProviderInterfaceRpc)表 内部服务实现类

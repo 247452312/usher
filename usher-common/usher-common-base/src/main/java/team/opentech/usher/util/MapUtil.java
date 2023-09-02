@@ -1,11 +1,11 @@
 package team.opentech.usher.util;
 
 import com.google.common.collect.Maps.EntryTransformer;
-import team.opentech.usher.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Supplier;
+import team.opentech.usher.annotation.Nullable;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -115,6 +115,15 @@ public final class MapUtil {
      */
     public static <K, V> Map<K, V> copy(Map<K, V> data) {
         return copy(data, new HashMap<>());
+    }
+
+    /**
+     * 只有一个结果的map
+     */
+    public static <K, V> Map<K, V> singletonMap(K key, V value) {
+        Map<K, V> kvHashMap = new HashMap<>();
+        kvHashMap.put(key, value);
+        return kvHashMap;
     }
 
     private static <K, V> Map<K, V> copy(Map<K, V> data, HashMap<K, V> kvHashMap) {

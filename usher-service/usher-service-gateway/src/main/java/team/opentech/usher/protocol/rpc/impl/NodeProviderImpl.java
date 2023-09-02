@@ -1,12 +1,12 @@
 package team.opentech.usher.protocol.rpc.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import team.opentech.usher.pojo.DTO.NodeDTO;
 import team.opentech.usher.protocol.rpc.NodeProvider;
 import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.NodeService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 转换节点表(Node)表 RPC对外访问实现

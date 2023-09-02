@@ -2,6 +2,7 @@ package team.opentech.usher.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import java.util.List;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.ProviderInterfaceParamAssembler;
 import team.opentech.usher.dao.ProviderInterfaceParamDao;
@@ -11,7 +12,6 @@ import team.opentech.usher.pojo.entity.ProviderInterfaceParam;
 import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ProviderInterfaceParamRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
-import java.util.List;
 
 
 /**

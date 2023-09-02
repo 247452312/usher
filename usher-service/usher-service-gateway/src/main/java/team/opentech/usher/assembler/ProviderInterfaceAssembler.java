@@ -1,10 +1,10 @@
 package team.opentech.usher.assembler;
 
 
+import org.mapstruct.Mapper;
 import team.opentech.usher.pojo.DO.ProviderInterfaceDO;
 import team.opentech.usher.pojo.DTO.ProviderInterfaceDTO;
 import team.opentech.usher.pojo.entity.ProviderInterface;
-import org.mapstruct.Mapper;
 
 /**
  * 接口表,提供方提供的调用方式以及url(ProviderInterface)表 entity,DO,DTO转换工具

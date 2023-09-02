@@ -1,12 +1,12 @@
 package team.opentech.usher.protocol.mysql.netty.impl;
 
-import team.opentech.usher.util.Asserts;
-import team.opentech.usher.util.LogUtil;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import org.junit.jupiter.api.Test;
+import team.opentech.usher.util.Asserts;
+import team.opentech.usher.util.LogUtil;
 
 /**
  * @author uhyils <247452312@qq.com>

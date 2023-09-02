@@ -4,24 +4,24 @@ import com.alibaba.druid.sql.ast.SQLName;
 import com.alibaba.druid.sql.ast.expr.SQLIdentifierExpr;
 import com.alibaba.druid.sql.ast.expr.SQLPropertyExpr;
 import com.alibaba.druid.sql.ast.statement.SQLExprTableSource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.exception.AssertException;
 import team.opentech.usher.mysql.content.MysqlContent;
-import team.opentech.usher.mysql.handler.MysqlTcpInfo;
+import team.opentech.usher.mysql.plan.MysqlPlan;
+import team.opentech.usher.mysql.plan.PlanInvoker;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
-import team.opentech.usher.mysql.util.MysqlUtil;
-import team.opentech.usher.plan.MysqlPlan;
-import team.opentech.usher.plan.PlanInvoker;
-import team.opentech.usher.plan.pojo.SqlTableSourceBinaryTree;
-import team.opentech.usher.plan.pojo.plan.BlockQuerySelectSqlPlan;
+import team.opentech.usher.mysql.pojo.SqlTableSourceBinaryTreeInfo;
+import team.opentech.usher.mysql.pojo.entity.MysqlTcpLink;
+import team.opentech.usher.mysql.pojo.plan.BlockQuerySelectSqlPlan;
+import team.opentech.usher.mysql.util.PlanUtil;
 import team.opentech.usher.pojo.DO.NodeDO;
 import team.opentech.usher.repository.NodeRepository;
 import team.opentech.usher.repository.ProviderInterfaceRepository;
 import team.opentech.usher.util.LogUtil;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 转换节点表(Node)表 数据库实体类
@@ -59,18 +59,18 @@ public class Node extends AbstractDataNode<NodeDO> {
     @NotNull
     private static MysqlPlan makeNodePlan(NodeRepository nodeRepository, ProviderInterfaceRepository providerInterfaceRepository, BlockQuerySelectSqlPlan plan, String sql) {
         BlockQuerySelectSqlPlan selectSqlPlan = plan;
-        SqlTableSourceBinaryTree sqlTableSourceBinaryTree = selectSqlPlan.toTable();
-        SQLExprTableSource tableSource = sqlTableSourceBinaryTree.getTableSource();
+        SqlTableSourceBinaryTreeInfo sqlTableSourceBinaryTreeInfo = selectSqlPlan.toTable();
+        SQLExprTableSource tableSource = sqlTableSourceBinaryTreeInfo.getTableSource();
 
         SQLName name = tableSource.getName();
 
-        MysqlTcpInfo mysqlTcpInfo = MysqlContent.MYSQL_TCP_INFO.get();
+        MysqlTcpLink mysqlTcpLink = MysqlContent.MYSQL_TCP_INFO.get();
         String owner = null;
         if (name instanceof SQLPropertyExpr) {
             SQLPropertyExpr sqlPropertyExpr = (SQLPropertyExpr) name;
-            owner = sqlPropertyExpr.getOwner() != null ? sqlPropertyExpr.getOwnernName() : mysqlTcpInfo.getDatabase();
+            owner = sqlPropertyExpr.getOwner() != null ? sqlPropertyExpr.getOwnernName() : mysqlTcpLink.getDatabase();
         } else if (name instanceof SQLIdentifierExpr) {
-            owner = mysqlTcpInfo.getDatabase();
+            owner = mysqlTcpLink.getDatabase();
         }
 
         AbstractDataNode abstractDataNode = nodeRepository.findNodeOrProvider(owner, name.getSimpleName());
@@ -88,7 +88,7 @@ public class Node extends AbstractDataNode<NodeDO> {
     public void fill(NodeRepository nodeRepository, ProviderInterfaceRepository providerInterfaceRepository) {
         String sql = toDataAndValidate().getSql();
         // 解析sql为执行计划
-        List<MysqlPlan> mysqlPlans = MysqlUtil.analysisSqlToPlan(sql);
+        List<MysqlPlan> mysqlPlans = PlanUtil.analysisSqlToPlan(sql);
 
         List<MysqlPlan> result = new ArrayList<>();
         // 将blockSql 执行计划 转换为node执行计划

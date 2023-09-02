@@ -3,7 +3,6 @@ package team.opentech.usher.service;
 import java.util.List;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
-import team.opentech.usher.mysql.service.MysqlSdkService;
 import team.opentech.usher.pojo.DTO.CallNodeDTO;
 import team.opentech.usher.pojo.DTO.CompanyDTO;
 import team.opentech.usher.pojo.cqe.CallNodeQuery;
@@ -16,7 +15,7 @@ import team.opentech.usher.pojo.cqe.UserQuery;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年08月15日 09时52分
  */
-public interface GatewaySdkService extends BaseService, MysqlSdkService {
+public interface GatewaySdkService extends BaseService {
 
     /**
      * 执行远程请求

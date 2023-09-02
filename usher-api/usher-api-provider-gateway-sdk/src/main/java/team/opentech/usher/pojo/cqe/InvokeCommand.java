@@ -1,8 +1,8 @@
 package team.opentech.usher.pojo.cqe;
 
+import java.util.Map;
 import team.opentech.usher.enums.InvokeTypeEnum;
 import team.opentech.usher.pojo.cqe.command.base.AbstractCommand;
-import java.util.Map;
 
 /**
  * 对接中心执行方法command
@@ -37,6 +37,7 @@ public class InvokeCommand extends AbstractCommand {
      * @see InvokeTypeEnum
      */
     private Integer invokeType;
+
 
     public Map<String, Object> getParams() {
         return params;
