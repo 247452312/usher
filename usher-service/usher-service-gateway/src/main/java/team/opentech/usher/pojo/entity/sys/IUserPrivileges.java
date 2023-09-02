@@ -10,7 +10,6 @@ import team.opentech.usher.assembler.CompanyAssembler;
 import team.opentech.usher.mysql.enums.FieldTypeEnum;
 import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
 import team.opentech.usher.mysql.pojo.DTO.IUserPrivilegesInfo;
-import team.opentech.usher.mysql.pojo.DTO.MUserInfo;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import team.opentech.usher.pojo.DTO.CompanyDTO;
 import team.opentech.usher.pojo.cqe.UserQuery;

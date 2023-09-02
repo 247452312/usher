@@ -2,8 +2,8 @@ package team.opentech.usher.pojo.DO;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import team.opentech.usher.pojo.DO.base.BaseDO;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import team.opentech.usher.pojo.DO.base.BaseDO;
 
 /**
  * http接口子表(ProviderInterfaceHttp)表 数据库实体类
@@ -34,6 +34,7 @@ public class ProviderInterfaceHttpDO extends BaseDO {
      */
     @TableField
     private Long fid;
+
     @Override
     public String toString() {
         return new ToStringBuilder(this)

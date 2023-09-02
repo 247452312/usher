@@ -5,17 +5,16 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandler;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import java.net.InetSocketAddress;
-import team.opentech.usher.mysql.decode.impl.MysqlDecoderImpl;
-import team.opentech.usher.mysql.handler.MysqlInfoHandler;
+import team.opentech.usher.mysql.decode.MysqlDecoder;
+import team.opentech.usher.mysql.netty.MysqlInfoHandler;
 import team.opentech.usher.util.LogUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年08月23日 14时15分
  */
-public class MysqlInfoHandlerTest extends ChannelInboundHandlerAdapter implements MysqlInfoHandler, ChannelInboundHandler {
+public class MysqlInfoHandlerTest extends MysqlInfoHandler implements ChannelInboundHandler {
 
 
     private final String mysqlHost;
@@ -67,7 +66,7 @@ public class MysqlInfoHandlerTest extends ChannelInboundHandlerAdapter implement
         super.channelRead(ctx, msg);
 
         /**
-         * 因{@link MysqlDecoderImpl#decode} 所以这里一定为byte[]
+         * 因{@link MysqlDecoder#decode} 所以这里一定为byte[]
          */
         byte[] requestMysqlBytes = (byte[]) msg;
         mysqlNettyClientTest.send(requestMysqlBytes);

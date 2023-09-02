@@ -1,5 +1,6 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.Map;
 import team.opentech.usher.enums.SysTableEnum;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import team.opentech.usher.pojo.entity.sys.SysTable;
@@ -7,7 +8,6 @@ import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.GatewayUtil;
 import team.opentech.usher.util.Pair;
 import team.opentech.usher.util.StringUtil;
-import java.util.Map;
 
 /**
  * @author uhyils <247452312@qq.com>

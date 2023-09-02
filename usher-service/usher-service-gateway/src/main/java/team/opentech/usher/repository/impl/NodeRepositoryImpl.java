@@ -2,6 +2,7 @@ package team.opentech.usher.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import org.springframework.beans.factory.annotation.Autowired;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.NodeAssembler;
 import team.opentech.usher.dao.NodeDao;
@@ -12,7 +13,6 @@ import team.opentech.usher.pojo.entity.Node;
 import team.opentech.usher.repository.NodeRepository;
 import team.opentech.usher.repository.ProviderInterfaceRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**

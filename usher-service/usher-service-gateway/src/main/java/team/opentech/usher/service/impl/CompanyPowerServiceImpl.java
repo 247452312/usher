@@ -1,5 +1,6 @@
 package team.opentech.usher.service.impl;
 
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.CompanyPowerAssembler;
 import team.opentech.usher.pojo.DO.CompanyPowerDO;
@@ -7,7 +8,6 @@ import team.opentech.usher.pojo.DTO.CompanyPowerDTO;
 import team.opentech.usher.pojo.entity.CompanyPower;
 import team.opentech.usher.repository.CompanyPowerRepository;
 import team.opentech.usher.service.CompanyPowerService;
-import org.springframework.stereotype.Service;
 
 /**
  * 厂商接口调用权限表(CompanyPower)表 内部服务实现类

@@ -31,7 +31,7 @@ public class LogRegister implements Register {
             LogUtil.info(MessageFormat.format("事件:{0}发布", event.getClass()));
         } else {
             if (LogUtil.isDebugEnabled(this)) {
-                LogUtil.debug(MessageFormat.format("事件:{0}发布", event.getClass()));
+                LogUtil.debug(() -> MessageFormat.format("事件:{0}发布", event.getClass()));
             }
         }
     }
