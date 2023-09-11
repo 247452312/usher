@@ -1,7 +1,8 @@
 package team.opentech.usher.pojo.entity.base;
 
-import team.opentech.usher.pojo.DO.base.BaseDO;
 import java.util.Optional;
+import team.opentech.usher.pojo.DO.base.BaseDO;
+import team.opentech.usher.repository.base.BaseEntityRepository;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -25,4 +26,8 @@ public interface DoEntity<T extends BaseDO> extends IdEntity {
      */
     T toDataAndValidate();
 
+    /**
+     * 删除自身
+     */
+    <EN extends AbstractDoEntity<T>> void removeSelf(BaseEntityRepository<T, EN> en);
 }

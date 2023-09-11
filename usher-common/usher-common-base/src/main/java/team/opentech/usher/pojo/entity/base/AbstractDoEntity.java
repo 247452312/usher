@@ -1,11 +1,11 @@
 package team.opentech.usher.pojo.entity.base;
 
+import java.util.Optional;
 import team.opentech.usher.pojo.DO.base.BaseDO;
 import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.BeanUtil;
-import java.util.Optional;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -76,6 +76,15 @@ public abstract class AbstractDoEntity<T extends BaseDO> extends AbstractEntity<
     public T toDataAndValidate() {
         Asserts.assertTrue(data != null, "未初始化");
         return data;
+    }
+
+    @Override
+    public <EN extends AbstractDoEntity<T>> void removeSelf(BaseEntityRepository<T, EN> en) {
+        Asserts.assertTrue(getUnique().isPresent(), "删除失败,未知的id");
+        T dataAndValidate = toDataAndValidate();
+        dataAndValidate.changeToDelete();
+        onUpdate();
+        saveSelf(en);
     }
 
     /**
