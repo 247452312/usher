@@ -6,6 +6,7 @@ import team.opentech.usher.mysql.content.MysqlContent;
 import team.opentech.usher.mysql.enums.MysqlHandlerStatusEnum;
 import team.opentech.usher.mysql.pojo.entity.MysqlTcpLink;
 import team.opentech.usher.mysql.util.MysqlUtil;
+import team.opentech.usher.util.ByteUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -19,7 +20,7 @@ public class ErrResponseTest {
         value.setStatus(MysqlHandlerStatusEnum.PASSED);
         MysqlContent.MYSQL_TCP_INFO.set(value);
         byte[] bytes = MysqlUtil.mergeListBytes(ErrResponse.build("错误信息").toByte());
-        String dump = MysqlUtil.dump(bytes);
+        String dump = ByteUtil.dump(bytes);
         System.out.println(dump);
 
 

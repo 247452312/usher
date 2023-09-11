@@ -50,25 +50,6 @@ public final class MysqlUtil {
         return MysqlCommandTypeEnum.parse(type);
     }
 
-
-    /**
-     * 将协议解析为差不多看得懂的东西,但不能用 只能输出
-     *
-     * @param packet
-     *
-     * @return
-     */
-    public static String dump(byte[] packet) {
-        try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            HexDump.dump(packet, 0, out, 0);
-            return out.toString();
-        } catch (IOException e) {
-            LogUtil.error(e);
-            return "";
-        }
-    }
-
     public static byte[] readPacket(ByteBuf in) {
         int size;
         byte[] packet = new byte[3];

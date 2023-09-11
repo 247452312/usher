@@ -1,4 +1,4 @@
-hosts: prod
+hosts: cloud
 spring:
   profiles:
     active: dev
@@ -64,7 +64,7 @@ rpc:
 
 mq:
   mqtt:
-    serverURL: tcp://${hosts}:1883
+    serverURL: tcp://localhost:1883
     username: admin
     password: usher12345678
     clientName: ${rpc.application.name}

@@ -14,14 +14,14 @@ import team.opentech.usher.util.LogUtil;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年08月23日 14时12分
  */
-public class MysqlNettyTest extends ChannelInitializer<SocketChannel> {
+public class NettyAdapterTest extends ChannelInitializer<SocketChannel> {
 
 
     private final Integer thisPort;
 
-    private final String mysqlHost;
+    private final String remoteHost;
 
-    private final Integer mysqlPort;
+    private final Integer remotePort;
 
     /**
      * 主线程,单线程
@@ -33,17 +33,17 @@ public class MysqlNettyTest extends ChannelInitializer<SocketChannel> {
      */
     private EventLoopGroup workerGroup;
 
-    public MysqlNettyTest(Integer thisPort, String mysqlHost, Integer mysqlPort) {
+    public NettyAdapterTest(Integer thisPort, String remoteHost, Integer remotePort) {
         this.thisPort = thisPort;
-        this.mysqlHost = mysqlHost;
-        this.mysqlPort = mysqlPort;
+        this.remoteHost = remoteHost;
+        this.remotePort = remotePort;
     }
 
     public void init() throws InterruptedException {
         bossGroup = new NioEventLoopGroup(1);
         workerGroup = new NioEventLoopGroup();
 
-        LogUtil.info("mysql端口开启,端口号:{}", thisPort.toString());
+        LogUtil.info("本地端口开启,端口号:{}", thisPort.toString());
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
          .option(ChannelOption.SO_BACKLOG, 1024).childHandler(this);
@@ -57,7 +57,7 @@ public class MysqlNettyTest extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel ch) {
         // 由decoder解析 再交由handler处理
-        ch.pipeline().addLast(new MysqlTestDecoder(), new MysqlInfoHandlerTest(mysqlHost, mysqlPort));
+        ch.pipeline().addLast(new NettyHandlerTest(remoteHost, remotePort));
     }
 
 }

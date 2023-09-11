@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>usher-common-protocol-mysql</module>
+        <module>usher-common-protocol-mqtt</module>
     </modules>
 
     <properties>

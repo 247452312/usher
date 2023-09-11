@@ -13,28 +13,27 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import team.opentech.usher.mysql.util.MysqlUtil;
 import team.opentech.usher.util.LogUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年08月23日 14时14分
  */
-public class MysqlNettyClientTest {
+public class NettyClientTest {
 
-    private final MysqlInfoHandlerTest mysqlInfoHandlerTest;
+    private final NettyHandlerTest mysqlInfoHandlerTest;
 
-    private final String mysqlHost;
+    private final String remoteHost;
 
-    private final Integer mysqlPort;
+    private final Integer remotePort;
 
     private ChannelFuture connect;
 
 
-    public MysqlNettyClientTest(MysqlInfoHandlerTest mysqlInfoHandlerTest, String mysqlHost, Integer mysqlPort) {
+    public NettyClientTest(NettyHandlerTest mysqlInfoHandlerTest, String remoteHost, Integer mysqlPort) {
         this.mysqlInfoHandlerTest = mysqlInfoHandlerTest;
-        this.mysqlHost = mysqlHost;
-        this.mysqlPort = mysqlPort;
+        this.remoteHost = remoteHost;
+        this.remotePort = mysqlPort;
     }
 
 
@@ -61,7 +60,7 @@ public class MysqlNettyClientTest {
               });
 
         //连接服务器
-        this.connect = client.connect(mysqlHost, mysqlPort);
+        this.connect = client.connect(remoteHost, remotePort);
     }
 
     /**
@@ -72,7 +71,6 @@ public class MysqlNettyClientTest {
      * @return
      */
     public void send(byte[] requestMysqlBytes) {
-        LogUtil.info("client向mysql发送信息:\n" + MysqlUtil.dump(requestMysqlBytes));
         ByteBuf buf = Unpooled.buffer();
         buf.writeBytes(requestMysqlBytes);
         connect.channel().writeAndFlush(buf);
@@ -86,7 +84,6 @@ public class MysqlNettyClientTest {
 
             byte[] bytes = new byte[msg.readableBytes()];
             msg.readBytes(bytes);
-            LogUtil.info("mysql向client发送信息:\n" + MysqlUtil.dump(bytes));
             mysqlInfoHandlerTest.send(bytes);
         }
     }

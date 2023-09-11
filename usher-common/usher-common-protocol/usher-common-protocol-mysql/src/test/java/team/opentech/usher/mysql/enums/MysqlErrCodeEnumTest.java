@@ -3,6 +3,7 @@ package team.opentech.usher.mysql.enums;
 
 import org.junit.jupiter.api.Test;
 import team.opentech.usher.mysql.util.MysqlUtil;
+import team.opentech.usher.util.ByteUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -13,7 +14,7 @@ public class MysqlErrCodeEnumTest {
     @Test
     public void getByteCode() {
         byte[] byteCode = MysqlErrCodeEnum.EE_STAT.getByteCode();
-        String dump = MysqlUtil.dump(byteCode);
+        String dump = ByteUtil.dump(byteCode);
         System.out.println(dump);
 
     }

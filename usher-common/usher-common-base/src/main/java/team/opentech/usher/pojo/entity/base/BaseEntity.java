@@ -7,7 +7,7 @@ package team.opentech.usher.pojo.entity.base;
  * @version 1.0
  * @date 文件创建日期 2021年08月22日 15时38分
  */
-public interface BaseEntity<T extends Comparable<T>> extends Aggregate<T> {
+public interface BaseEntity<T> extends Aggregate<T> {
 
 
 }

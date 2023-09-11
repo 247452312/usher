@@ -9,7 +9,7 @@ import java.util.Optional;
  * @version 1.0
  * @date 文件创建日期 2021年08月22日 14时55分
  */
-public abstract class AbstractEntity<T extends Comparable<T>> implements BaseEntity<T> {
+public abstract class AbstractEntity<T> implements BaseEntity<T> {
 
     /**
      * id 是可以没有的

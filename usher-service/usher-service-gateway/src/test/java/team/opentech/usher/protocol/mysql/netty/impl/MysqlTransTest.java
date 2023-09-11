@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Test;
 import team.opentech.usher.mysql.enums.FieldTypeEnum;
 import team.opentech.usher.mysql.pojo.DTO.FieldInfo;
 import team.opentech.usher.mysql.pojo.response.impl.ResultSetResponse;
-import team.opentech.usher.mysql.util.MysqlUtil;
-import team.opentech.usher.protocol.mysql.netty.impl.other.MysqlNettyTest;
+import team.opentech.usher.protocol.mysql.netty.impl.other.NettyAdapterTest;
+import team.opentech.usher.util.ByteUtil;
 import team.opentech.usher.util.LogUtil;
 
 /**
@@ -21,7 +21,7 @@ public class MysqlTransTest {
 
     @Test
     void trans() throws InterruptedException {
-        MysqlNettyTest mysqlNettyTest = new MysqlNettyTest(3300, "mac", 3307);
+        NettyAdapterTest mysqlNettyTest = new NettyAdapterTest(1883, "cloud", 1883);
         mysqlNettyTest.init();
         Thread.sleep(100000000L);
     }
@@ -41,7 +41,7 @@ public class MysqlTransTest {
         ResultSetResponse e = new ResultSetResponse(fields, jsonInfo);
         List<byte[]> bytes = e.toByte();
         for (byte[] aByte : bytes) {
-            LogUtil.info("\n" + MysqlUtil.dump(aByte));
+            LogUtil.info("\n" + ByteUtil.dump(aByte));
         }
     }
 

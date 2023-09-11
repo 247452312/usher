@@ -56,6 +56,7 @@ import team.opentech.usher.mysql.pojo.response.impl.ErrResponse;
 import team.opentech.usher.mysql.util.MysqlUtil;
 import team.opentech.usher.mysql.util.Proto;
 import team.opentech.usher.util.Asserts;
+import team.opentech.usher.util.ByteUtil;
 import team.opentech.usher.util.CollectionUtil;
 import team.opentech.usher.util.LogUtil;
 
@@ -101,7 +102,7 @@ public class MysqlInfoHandler extends ChannelInboundHandlerAdapter implements Ch
         value.addIndex();
 
         for (byte[] msg : msgs) {
-            LogUtil.debug(() -> "mysql服务端初始发送握手信息:\n" + MysqlUtil.dump(msg));
+            LogUtil.debug(() -> "mysql服务端初始发送握手信息:\n" + ByteUtil.dump(msg));
             send(msg);
         }
     }
@@ -222,7 +223,7 @@ public class MysqlInfoHandler extends ChannelInboundHandlerAdapter implements Ch
                 finalResponse.addAll(mysqlResponse.toByte());
             }
             byte[] bytes = MysqlUtil.mergeListBytes(finalResponse);
-            String responseBytes = MysqlUtil.dump(bytes);
+            String responseBytes = ByteUtil.dump(bytes);
             LogUtil.debug("mysql回应:\n" + responseBytes);
             send(bytes);
         } catch (AssertException ae) {
