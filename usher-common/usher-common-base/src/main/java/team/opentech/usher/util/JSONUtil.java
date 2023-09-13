@@ -19,7 +19,7 @@ public final class JSONUtil {
      * @param jsonObject json
      * @param fieldName  需要获取的字符串名称
      *
-     * @return
+     * @return 匹配到的值
      */
     public static Object recursiveMatch(JSONObject jsonObject, String fieldName) {
         return recursiveMatch(jsonObject, fieldName.split("\\."));

@@ -1,15 +1,14 @@
 package team.opentech.usher.mqtt.pojo.cqe;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import java.nio.charset.StandardCharsets;
+import team.opentech.usher.mqtt.context.MqttContext;
 import team.opentech.usher.mqtt.enums.SessionPresentEnum;
 import team.opentech.usher.mqtt.handler.MqttServiceHandler;
 import team.opentech.usher.mqtt.handler.cqe.MqttLoginCommand;
 import team.opentech.usher.mqtt.handler.resp.MqttLoginResponse;
+import team.opentech.usher.mqtt.netty.MqttNettyHandler;
 import team.opentech.usher.mqtt.pojo.resp.MqttConneckResponse;
 import team.opentech.usher.mqtt.pojo.resp.MqttResponse;
-import team.opentech.usher.util.Asserts;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -62,15 +61,18 @@ public class MqttConnectCommand extends AbstractMqttCommand {
     }
 
     @Override
-    public void load() {
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeBytes(bytes);
-        // 跳过首位
-        buf.setIndex(1, bytes.length);
+    public byte[] invoke(MqttNettyHandler nettyHandler, MqttServiceHandler mqttServiceHandler) {
+        MqttLoginResponse login = mqttServiceHandler.login(MqttLoginCommand.build(username, password));
+        if (login.getSuccess()) {
+            MqttContext.add(clientIdentifier, nettyHandler);
+            nettyHandler.loginSuccess(clientIdentifier);
+        }
+        MqttResponse mqttResponse = new MqttConneckResponse(SessionPresentEnum.ACCEPTED);
+        return mqttResponse.toBytes();
+    }
 
-        // 获取长度
-        this.length = loadMqttLength(buf);
-
+    @Override
+    protected void loadVariableHeader(ByteBuf buf) {
         // 跳过协议名称
         passProtocolName(buf);
 
@@ -82,7 +84,10 @@ public class MqttConnectCommand extends AbstractMqttCommand {
 
         // 心跳间隔
         this.keepAlive = loadKeepAlive(buf);
+    }
 
+    @Override
+    protected void loadPlayLoad(ByteBuf buf) {
         // clientIdentifier
         this.clientIdentifier = loadClientIdentifier(buf);
 
@@ -100,16 +105,6 @@ public class MqttConnectCommand extends AbstractMqttCommand {
         if (((connectFlags >> 6) & 1) == 1) {
             this.password = loadPassword(buf);
         }
-    }
-
-    @Override
-    public byte[] invoke(MqttServiceHandler mqttServiceHandler) {
-        MqttLoginResponse login = mqttServiceHandler.login(MqttLoginCommand.build(username, password));
-        if (login.getSuccess()) {
-            // todo 成功了 加session
-        }
-        MqttResponse mqttResponse = new MqttConneckResponse(SessionPresentEnum.ACCEPTED);
-        return mqttResponse.toBytes();
     }
 
     private String loadPassword(ByteBuf buf) {
@@ -132,34 +127,10 @@ public class MqttConnectCommand extends AbstractMqttCommand {
         return loadLastStringItem(buf);
     }
 
-    /**
-     * 加载下一项字符串
-     *
-     * @param buf
-     *
-     * @return
-     */
-    private String loadLastStringItem(ByteBuf buf) {
-        int itemLength = loadLastItemLength(buf);
-        byte[] clientIdentifier = new byte[itemLength];
-        buf.readBytes(clientIdentifier);
-        return new String(clientIdentifier, StandardCharsets.UTF_8);
-    }
-
     private int loadKeepAlive(ByteBuf buf) {
-        return loadLastItemLength(buf);
+        return loadLastInt(buf);
     }
 
-    /**
-     * 获取下一项内容的长度
-     *
-     * @param buf
-     *
-     * @return
-     */
-    private int loadLastItemLength(ByteBuf buf) {
-        return (buf.readByte() << 8) + buf.readByte();
-    }
 
     private int loadConnectFlags(ByteBuf buf) {
         return buf.readByte();
@@ -173,31 +144,4 @@ public class MqttConnectCommand extends AbstractMqttCommand {
         buf.setIndex(buf.readerIndex() + 6, buf.writerIndex());
     }
 
-    /**
-     * 长度
-     *
-     * @return
-     */
-    private long loadMqttLength(ByteBuf in) {
-        // 前三位长度判断
-        int length = 0;
-        for (int i = 0; i < 3; i++) {
-            // 第一位
-            byte lb = in.readByte();
-            if ((lb & 0x10000000) >> 7 == 0) {
-                length += lb << (8 * i);
-                // 协议总长度 = 协议头(1+长度占位) + 可变 + 协议体
-                return length + i + 2;
-            }
-            length = lb & 0x01111111;
-        }
-
-        byte lb = in.readByte();
-        Asserts.assertTrue((lb & 0x10000000) >> 7 == 0, "长度错误");
-
-        int result = length + (lb << 24);
-        // 协议总长度 = 协议头(1+长度占位) + 可变 + 协议体
-        result += 1 + 4;
-        return result;
-    }
 }

@@ -8,11 +8,20 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandler;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import team.opentech.usher.annotation.NotNull;
+import team.opentech.usher.mqtt.context.MqttContext;
 import team.opentech.usher.mqtt.decode.MqttDecoder;
 import team.opentech.usher.mqtt.enums.MqttCommandTypeEnum;
 import team.opentech.usher.mqtt.handler.MqttServiceHandler;
 import team.opentech.usher.mqtt.pojo.cqe.AbstractMqttCommand;
 import team.opentech.usher.mqtt.pojo.cqe.MqttConnectCommand;
+import team.opentech.usher.mqtt.pojo.cqe.MqttDisConnectCommand;
+import team.opentech.usher.mqtt.pojo.cqe.MqttPingReqCommand;
+import team.opentech.usher.mqtt.pojo.cqe.MqttPubCompCommand;
+import team.opentech.usher.mqtt.pojo.cqe.MqttPubRecCommand;
+import team.opentech.usher.mqtt.pojo.cqe.MqttPubRelCommand;
+import team.opentech.usher.mqtt.pojo.cqe.MqttPublishCommand;
+import team.opentech.usher.mqtt.pojo.cqe.MqttSubscribeCommand;
+import team.opentech.usher.mqtt.pojo.cqe.MqttUnSubscribeCommand;
 import team.opentech.usher.util.Asserts;
 
 /**
@@ -31,14 +40,28 @@ public class MqttNettyHandler extends ChannelInboundHandlerAdapter implements Ch
      */
     private Channel mqttChannel;
 
+    /**
+     * 客户端id
+     */
+    private String clientIdentifier;
 
     public MqttNettyHandler(MqttServiceHandler handler) {
         this.handler = handler;
     }
 
+    /**
+     * clientId
+     *
+     * @return
+     */
+    public String clientIdentifier() {
+        return clientIdentifier;
+    }
+
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
         super.handlerRemoved(ctx);
+        MqttContext.remove(clientIdentifier);
     }
 
     /**
@@ -56,6 +79,7 @@ public class MqttNettyHandler extends ChannelInboundHandlerAdapter implements Ch
         if (channel.isActive()) {
             ctx.close();
         }
+        MqttContext.remove(clientIdentifier);
     }
 
     /**
@@ -77,7 +101,10 @@ public class MqttNettyHandler extends ChannelInboundHandlerAdapter implements Ch
         byte[] mqttBytes = (byte[]) msg;
         AbstractMqttCommand mqttCommand = loadToCommand(mqttBytes);
         mqttCommand.load();
-        byte[] invoke = mqttCommand.invoke(handler);
+        byte[] invoke = mqttCommand.invoke(this, handler);
+        if (invoke == null || invoke.length == 0) {
+            return;
+        }
         send(invoke);
     }
 
@@ -88,6 +115,33 @@ public class MqttNettyHandler extends ChannelInboundHandlerAdapter implements Ch
         if (mqttChannel != null && mqttChannel.isActive()) {
             mqttChannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
         }
+    }
+
+    /**
+     * 发送数据
+     *
+     * @param msg
+     */
+    public void send(byte[] msg) {
+        ByteBuf buf = Unpooled.buffer();
+        buf.writeBytes(msg);
+        this.mqttChannel.writeAndFlush(buf);
+    }
+
+    /**
+     * 登录成功
+     *
+     * @param clientIdentifier
+     */
+    public void loginSuccess(String clientIdentifier) {
+        this.clientIdentifier = clientIdentifier;
+    }
+
+    /**
+     * 取消连接
+     */
+    public void logout() {
+        MqttContext.remove(clientIdentifier);
     }
 
     /**
@@ -104,35 +158,32 @@ public class MqttNettyHandler extends ChannelInboundHandlerAdapter implements Ch
         switch (mqttType) {
             case CONNECT:
                 return new MqttConnectCommand(mqttBytes);
-            case PUBACK:
-            case PUBREC:
-            case PUBREL:
-            case SUBACK:
-            case PINGREQ:
-            case PUBCOMP:
+            case SUBSCRIBE:
+                return new MqttSubscribeCommand(mqttBytes);
             case PUBLISH:
+                return new MqttPublishCommand(mqttBytes);
+            case PUBREC:
+                return new MqttPubRecCommand(mqttBytes);
+            case PUBREL:
+                return new MqttPubRelCommand(mqttBytes);
+            case PINGREQ:
+                return new MqttPingReqCommand(mqttBytes);
+            case PUBCOMP:
+                return new MqttPubCompCommand(mqttBytes);
+            case UNSUBSCRIBE:
+                return new MqttUnSubscribeCommand(mqttBytes);
+            case DISCONNECT:
+                return new MqttDisConnectCommand(mqttBytes);
+            case RESERVERD:
+            case CONNACK:
+            case PUBACK:
+            case SUBACK:
             case PINGRESP:
             case UNSUBACK:
-            case RESERVERD:
-            case SUBSCRIBE:
-            case DISCONNECT:
-            case UNSUBACRIBE:
-            case CONNACK:
             default:
                 Asserts.throwException("未支持mqtt请求的指定类型");
                 return null;
         }
-    }
-
-    /**
-     * 发送数据
-     *
-     * @param msg
-     */
-    private void send(byte[] msg) {
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeBytes(msg);
-        this.mqttChannel.writeAndFlush(buf);
     }
 
 }

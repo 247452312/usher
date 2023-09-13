@@ -1,6 +1,8 @@
 package team.opentech.usher.mqtt.util;
 
 import io.netty.buffer.ByteBuf;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import team.opentech.usher.annotation.Nullable;
 import team.opentech.usher.mqtt.exception.MqttLengthException;
 import team.opentech.usher.util.Asserts;
@@ -53,6 +55,41 @@ public class MqttUtil {
         return dest;
     }
 
+    /**
+     * 字符串转带有长度的协议体
+     *
+     * @param str
+     *
+     * @return
+     */
+    public static byte[] toLengthAndStr(String str) {
+        byte[] bodyBytes = str.getBytes(StandardCharsets.UTF_8);
+        byte[] lengthBytes = lengthToByte(bodyBytes.length);
+        return mergeBytes(lengthBytes, bodyBytes);
+    }
+
+    public static byte[] toIntBytes(Integer i) {
+        byte firstByte = (byte) (i >> 8);
+        byte secondByte = (byte) (i & ((1 << 8) - 1));
+        return new byte[]{firstByte, secondByte};
+    }
+
+    /**
+     * 合并多组bytes
+     *
+     * @return
+     */
+    public static byte[] mergeBytes(byte[]... bytes) {
+        int index = 0;
+        int sum = Arrays.stream(bytes).mapToInt(t -> t.length).sum();
+        byte[] result = new byte[sum];
+        for (byte[] aByte : bytes) {
+            System.arraycopy(aByte, 0, result, index, aByte.length);
+            index += aByte.length;
+        }
+        return result;
+    }
+
     private static int getMqttLength(ByteBuf in, Integer startReadIndex) {
         in.setIndex(startReadIndex + 1, in.writerIndex());
         // 前三位长度判断
@@ -76,6 +113,5 @@ public class MqttUtil {
         result += 1 + 4;
         return result;
     }
-
 
 }

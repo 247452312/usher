@@ -59,7 +59,7 @@ public enum MqttCommandTypeEnum {
     /**
      * client->server
      */
-    UNSUBACRIBE(10, "客户端取消订阅"),
+    UNSUBSCRIBE(10, "客户端取消订阅"),
 
     /**
      * client<->server
