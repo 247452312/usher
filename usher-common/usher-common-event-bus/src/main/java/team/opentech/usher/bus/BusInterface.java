@@ -1,6 +1,7 @@
 package team.opentech.usher.bus;
 
 import java.util.List;
+import team.opentech.usher.mq.consumer.MQConsumer;
 import team.opentech.usher.mq.consumer.MQTTConsumer;
 import team.opentech.usher.pojo.cqe.event.base.BaseEvent;
 import team.opentech.usher.pojo.cqe.event.base.BaseParentEvent;
@@ -10,7 +11,7 @@ import team.opentech.usher.pojo.cqe.event.base.BaseParentEvent;
  * @version 1.0
  * @date 文件创建日期 2021年09月29日 21时51分
  */
-public interface BusInterface extends MQTTConsumer {
+public interface BusInterface extends MQConsumer {
 
     /**
      * 事件路由名称

@@ -90,6 +90,11 @@
 
             <dependency>
                 <groupId>team.opentech.usher</groupId>
+                <artifactId>usher-common-protocol-mqtt</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>team.opentech.usher</groupId>
                 <artifactId>usher-c-general-mq-client</artifactId>
                 <version>${project.version}</version>
             </dependency>

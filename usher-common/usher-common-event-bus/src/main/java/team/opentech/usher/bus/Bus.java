@@ -11,6 +11,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import team.opentech.usher.UsherThreadLocal;
 import team.opentech.usher.mq.MQMessage;
 import team.opentech.usher.mq.client.MQClient;
+import team.opentech.usher.mq.consumer.MQTTConsumer;
 import team.opentech.usher.pojo.cqe.event.base.BaseEvent;
 import team.opentech.usher.pojo.cqe.event.base.BaseParentEvent;
 import team.opentech.usher.pojo.cqe.event.base.PackageEvent;
@@ -25,7 +26,7 @@ import team.opentech.usher.util.SpringUtil;
  * @version 1.0
  * @date 文件创建日期 2021年09月19日 09时20分
  */
-public class Bus implements BusInterface {
+public class Bus implements BusInterface, MQTTConsumer {
 
     /**
      * 注册者
