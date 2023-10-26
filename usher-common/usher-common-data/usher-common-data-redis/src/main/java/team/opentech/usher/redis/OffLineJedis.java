@@ -1,6 +1,5 @@
 package team.opentech.usher.redis;
 
-import team.opentech.usher.util.LogUtil;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
+import team.opentech.usher.util.LogUtil;
 
 /**
  * 离线时使用的jedis

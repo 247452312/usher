@@ -1,5 +1,6 @@
 package team.opentech.usher.util;
 
+import javax.servlet.http.HttpServletRequest;
 import team.opentech.usher.context.UsherContext;
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -8,7 +9,6 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author uhyils <247452312@qq.com>

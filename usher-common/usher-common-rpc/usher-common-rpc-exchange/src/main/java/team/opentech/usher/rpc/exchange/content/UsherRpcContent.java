@@ -54,9 +54,9 @@ public class UsherRpcContent {
     public static final RpcData RPC_HEALTH_DATA = RpcFactoryProducer.build(RpcTypeEnum.REQUEST).getHealth();
 
     /**
-     * rpc标志(对应36位 syl)
+     * rpc标志(对应36进制 rpc)
      */
-    private static final int AGREEMENT_START_INT = 0x929d;
+    private static final int AGREEMENT_START_INT = 0x8c40;
 
     /**
      * rpc标志,两字节占用

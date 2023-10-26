@@ -27,6 +27,7 @@
         <module>usher-common-rpc</module>
         <module>usher-common-protocol</module>
         <module>usher-common-client</module>
+        <module>usher-common-decentralized</module>
     </modules>
 
 
