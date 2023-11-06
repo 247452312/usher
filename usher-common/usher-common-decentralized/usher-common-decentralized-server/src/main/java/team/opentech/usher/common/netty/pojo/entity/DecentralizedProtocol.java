@@ -8,6 +8,7 @@ import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
 import team.opentech.usher.common.util.DecentralizedProtocolUtil;
 import team.opentech.usher.pojo.entity.base.AbstractEntity;
 import team.opentech.usher.pojo.entity.type.Identifier;
+import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.ByteUtil;
 import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.Pair;
@@ -71,6 +72,31 @@ public class DecentralizedProtocol extends AbstractEntity<Identifier> {
         }
         Pair<byte[], byte[]> headerAndBodyBytes = DecentralizedProtocolUtil.subHeaderAndBody(headerAndBody);
         return new DecentralizedProtocol(ByteUtil.subByte(titleBytes, 2), headerAndBodyBytes.getKey(), headerAndBodyBytes.getValue());
+    }
+
+    /**
+     * 构建
+     *
+     * @param simpleTitle
+     * @param header
+     * @param body
+     *
+     * @return
+     */
+    public static DecentralizedProtocol build(byte[] simpleTitle, Map<String, Object> header, byte[] body) {
+        byte[] title = null;
+        // 构建时只有4字节 说明没有携带前两个字节
+        if (simpleTitle.length == 4) {
+            title = new byte[6];
+            System.arraycopy(UsherDecentralizedContent.AGREEMENT_START, 0, title, 0, UsherDecentralizedContent.AGREEMENT_START.length);
+            System.arraycopy(simpleTitle, 0, title, UsherDecentralizedContent.AGREEMENT_START.length, simpleTitle.length);
+        } else if (simpleTitle.length == 6) {
+            title = simpleTitle;
+        } else {
+            Asserts.throwException("去中心化分布式工具协议错误,title标识字节混乱");
+        }
+        return new DecentralizedProtocol(title, header, body);
+
     }
 
     public byte[] toBytes() {

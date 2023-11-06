@@ -8,6 +8,10 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.util.concurrent.Future;
+import java.util.concurrent.ExecutionException;
+import team.opentech.usher.common.netty.code.DecentralizedDecoder;
+import team.opentech.usher.common.netty.handler.DecentralizedHandler;
 import team.opentech.usher.core.DecentralizedManager;
 import team.opentech.usher.redis.Redisable;
 import team.opentech.usher.util.LogUtil;
@@ -16,7 +20,7 @@ import team.opentech.usher.util.LogUtil;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2023年10月11日 09时14分
  */
-public class DecentralizedNetty extends ChannelInitializer<SocketChannel> implements DecentralizedStarter {
+public class DecentralizedServerImpl extends ChannelInitializer<SocketChannel> implements DecentralizedServer {
 
 
     /**
@@ -46,7 +50,7 @@ public class DecentralizedNetty extends ChannelInitializer<SocketChannel> implem
      */
     private EventLoopGroup workerGroup;
 
-    public DecentralizedNetty(Integer port, String clusterTypeCode, Redisable redisable, DecentralizedManager service) {
+    public DecentralizedServerImpl(Integer port, String clusterTypeCode, Redisable redisable, DecentralizedManager service) {
         this.port = port;
         this.clusterTypeCode = clusterTypeCode;
         this.redisable = redisable;
@@ -64,6 +68,18 @@ public class DecentralizedNetty extends ChannelInitializer<SocketChannel> implem
          .option(ChannelOption.SO_BACKLOG, 1024).childHandler(this);
         ChannelFuture f = b.bind(port).sync();
         f.channel().closeFuture();
+    }
+
+    @Override
+    public Boolean shutdown() throws InterruptedException {
+        try {
+            Future<?> future = bossGroup.shutdownGracefully();
+            future.get();
+            return Boolean.TRUE;
+        } catch (ExecutionException e) {
+            LogUtil.error(this, e);
+        }
+        return Boolean.FALSE;
     }
 
     @Override

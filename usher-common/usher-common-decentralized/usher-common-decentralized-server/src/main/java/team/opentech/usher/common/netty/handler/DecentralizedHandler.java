@@ -1,4 +1,4 @@
-package team.opentech.usher.common.netty;
+package team.opentech.usher.common.netty.handler;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -73,7 +73,6 @@ public class DecentralizedHandler extends SimpleChannelInboundHandler<Decentrali
         if (byBlackCode == null) {
             //自定义请求
             manager.otherRequest(msg);
-            return;
         } else {
             switch (byBlackCode) {
                 case ACK:

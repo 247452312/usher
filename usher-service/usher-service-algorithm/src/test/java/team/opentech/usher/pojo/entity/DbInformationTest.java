@@ -17,7 +17,7 @@ class DbInformationTest {
     @Test
     void fillTableInfos() {
         DbInformationDTO dto = new DbInformationDTO();
-        List<String> tables = Arrays.asList("hcos_address");
+        List<String> tables = Arrays.asList("hcos_item_compare");
 
         dto.setTables(tables);
         String dbName = "test";

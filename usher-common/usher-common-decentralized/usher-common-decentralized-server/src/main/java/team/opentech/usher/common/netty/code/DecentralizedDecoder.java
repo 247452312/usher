@@ -1,4 +1,4 @@
-package team.opentech.usher.common.netty;
+package team.opentech.usher.common.netty.code;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
