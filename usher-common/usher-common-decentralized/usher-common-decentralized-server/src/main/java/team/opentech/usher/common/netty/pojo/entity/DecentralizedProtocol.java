@@ -2,6 +2,7 @@ package team.opentech.usher.common.netty.pojo.entity;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import java.util.HashMap;
 import java.util.Map;
 import team.opentech.usher.common.content.UsherDecentralizedContent;
 import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
@@ -11,6 +12,7 @@ import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.ByteUtil;
 import team.opentech.usher.util.LogUtil;
+import team.opentech.usher.util.MapUtil;
 import team.opentech.usher.util.Pair;
 
 /**
@@ -99,6 +101,28 @@ public class DecentralizedProtocol extends AbstractEntity<Identifier> {
 
     }
 
+    /**
+     * 构建一个协议体
+     *
+     * @param simpleTitle
+     * @param unique
+     * @param header
+     * @param body
+     *
+     * @return
+     */
+    public static DecentralizedProtocol build(byte[] simpleTitle, Long unique, Map<String, Object> header, byte[] body) {
+        if (header == null) {
+            header = new HashMap<>();
+        }
+        header.put(UsherDecentralizedContent.HEADER_UNIQUE_KEY, unique);
+        return build(simpleTitle, header, body);
+    }
+
+    public static DecentralizedProtocol build(byte[] simpleTitle, Long unique, byte[] body) {
+        return build(simpleTitle, unique, null, body);
+    }
+
     public byte[] toBytes() {
         String jsonString = JSON.toJSONString(header);
         byte[] headerBytes = jsonString.getBytes(UsherDecentralizedContent.DEFAULT_CHARSET);
@@ -115,7 +139,7 @@ public class DecentralizedProtocol extends AbstractEntity<Identifier> {
         return result;
     }
 
-    public String type() {
+    public byte[] type() {
         return type;
     }
 
@@ -126,6 +150,27 @@ public class DecentralizedProtocol extends AbstractEntity<Identifier> {
     public String headerStr() {
         return JSON.toJSONString(header);
     }
+
+    public Map<String, Object> header() {
+        return header;
+    }
+
+    public Object header(String key) {
+        if (MapUtil.isNotEmpty(header)) {
+            return header.get(key);
+        }
+        return null;
+    }
+
+    /**
+     * 唯一标识
+     *
+     * @return
+     */
+    public Long unique() {
+        return (Long) header(UsherDecentralizedContent.HEADER_UNIQUE_KEY);
+    }
+
 
     public String bodyStr() {
         return new String(body);

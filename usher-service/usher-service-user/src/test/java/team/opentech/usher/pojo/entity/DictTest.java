@@ -12,7 +12,7 @@ import team.opentech.usher.util.CollectionUtil;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -21,10 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class DictTest extends BaseTest {
 
-    @Autowired
+    @Resource
     private DictRepository dictRepository;
 
-    @Autowired
+    @Resource
     private DictItemRepository dictItemRepository;
 
     private Long dictId;

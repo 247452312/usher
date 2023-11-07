@@ -10,7 +10,7 @@ import team.opentech.usher.pojo.entity.User;
 import team.opentech.usher.pojo.entity.Visiter;
 import org.jetbrains.annotations.NotNull;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Mapper(componentModel = "spring")
 public abstract class UserAssembler extends AbstractAssembler<UserDO, User, UserDTO> {
 
-    @Autowired
+    @Resource
     private RoleAssembler roleAssembler;
 
     public User toEntity(DefaultCQE cqe) {

@@ -1,10 +1,10 @@
 package team.opentech.usher.mongo;
 
+import javax.annotation.Resource;
+import org.springframework.stereotype.Component;
 import team.opentech.usher.mongo.config.MongoConn;
 import team.opentech.usher.mongo.config.MongoConnPool;
 import team.opentech.usher.util.LogUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class MongoManager {
 
-    @Autowired
+    @Resource
     private MongoConnPool pool;
 
     public boolean addFile(String fileName, String base) {

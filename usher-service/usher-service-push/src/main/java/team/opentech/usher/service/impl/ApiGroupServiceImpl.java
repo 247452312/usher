@@ -12,7 +12,7 @@ import team.opentech.usher.repository.ApiGroupRepository;
 import team.opentech.usher.repository.ApiRepository;
 import team.opentech.usher.service.ApiGroupService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 @ReadWriteMark(tables = {"sys_api_group"})
 public class ApiGroupServiceImpl extends AbstractDoService<ApiGroupDO, ApiGroup, ApiGroupDTO, ApiGroupRepository, ApiGroupAssembler> implements ApiGroupService {
 
-    @Autowired
+    @Resource
     private ApiRepository apiRepository;
 
     public ApiGroupServiceImpl(ApiGroupAssembler assembler, ApiGroupRepository repository) {

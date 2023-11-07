@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import team.opentech.usher.mysql.plan.MysqlPlan;
 import team.opentech.usher.mysql.plan.parser.SqlParser;
 import team.opentech.usher.mysql.pojo.pool.SqlTableSourceBinaryTreePool;
@@ -24,7 +24,7 @@ import team.opentech.usher.util.SpringUtil;
  */
 public abstract class AbstractSelectSqlParser implements SqlParser {
 
-    @Autowired
+    @Resource
     protected SqlTableSourceBinaryTreePool pool;
 
     /**

@@ -3,7 +3,7 @@ package team.opentech.usher.protocol.rpc.impl;
 import team.opentech.usher.protocol.rpc.WorldOfWarcraftProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.WorldOfWarcraftService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RpcService
 public class WorldOfWarcraftProviderImpl implements WorldOfWarcraftProvider {
 
-    @Autowired
+    @Resource
     private WorldOfWarcraftService service;
 
 }

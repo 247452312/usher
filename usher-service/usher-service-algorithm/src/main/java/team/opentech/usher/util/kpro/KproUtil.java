@@ -362,10 +362,10 @@
 //        StringBuilder sb = new StringBuilder().append(
 //            "package team.opentech.usher.serviceImpl;\n\nimport team.opentech.usher.rpc.annotation.RpcService;\nimport team.opentech.usher.annotation.NoToken;\nimport team.opentech.usher.content.Content;\nimport team.opentech.usher.dao.")
 //                                              .append(className).append("Dao;\nimport team.opentech.usher.enum_.ServiceCode;\nimport team.opentech.usher.pojo.model.*;\nimport team.opentech.usher.service.").append(className)
-//                                              .append("Service;\nimport org.springframework.beans.factory.annotation.Autowired;\n\n/**\n * @author uhyils <247452312@qq.com>\n * @date 文件创建日期 ")
+//                                              .append("Service;\nimport javax.annotation.Resource;\n\n/**\n * @author uhyils <247452312@qq.com>\n * @date 文件创建日期 ")
 //                                              .append(dateFormat).append("\n */\n@RpcService\npublic class ").append(className)
 //                                              .append("ServiceImpl extends BaseDefaultServiceImpl<").append(className).append("Entity> implements ").append(className)
-//                                              .append("Service {\n\n    @Autowired\n    private ").append(className).append("Dao dao;\n\n\n    public ").append(className)
+//                                              .append("Service {\n\n    @Resource\n    private ").append(className).append("Dao dao;\n\n\n    public ").append(className)
 //                                              .append("Dao getDao() {\n        return dao;\n    }\n\n    public void setDao(").append(className)
 //                                              .append("Dao dao) {\n        this.dao = dao;\n    }\n}\n");
 //        result.put(fileAllName, sb.toString());

@@ -29,7 +29,7 @@ import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -43,13 +43,13 @@ import org.springframework.stereotype.Service;
 @ReadWriteMark(tables = {"sys_trace_info"})
 public class TraceInfoServiceImpl extends AbstractDoService<TraceInfoDO, TraceInfo, TraceInfoDTO, TraceInfoRepository, TraceInfoAssembler> implements TraceInfoService {
 
-    @Autowired
+    @Resource
     private DictFacade dictFacade;
 
-    @Autowired
+    @Resource
     private ServiceControlFacade serviceControlFacade;
 
-    @Autowired
+    @Resource
     private RelegationRepository repository;
 
     public TraceInfoServiceImpl(TraceInfoAssembler assembler, TraceInfoRepository repository) {

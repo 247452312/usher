@@ -5,7 +5,7 @@ import team.opentech.usher.pojo.DTO.response.ExecuteCodeResponse;
 import team.opentech.usher.protocol.rpc.ParsingCodeProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.ParsingCodeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 
 /**
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RpcService
 public class ParsingCodeProviderImpl implements ParsingCodeProvider {
 
-    @Autowired
+    @Resource
     private ParsingCodeService service;
 
     @Override

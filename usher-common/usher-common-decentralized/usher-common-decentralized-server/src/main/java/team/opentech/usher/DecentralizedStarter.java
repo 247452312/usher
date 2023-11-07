@@ -6,6 +6,7 @@ import team.opentech.usher.common.netty.DecentralizedServerImpl;
 import team.opentech.usher.common.netty.DecentralizedUdpConsumerImpl;
 import team.opentech.usher.core.DecentralizedManager;
 import team.opentech.usher.redis.Redisable;
+import team.opentech.usher.util.IdUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -47,16 +48,16 @@ public class DecentralizedStarter {
     }
 
     /**
-     * 创建一个consumer
+     * 创建一个udp consumer
      *
      * @return
      */
-    private DecentralizedConsumer makeOrGetConsumer() {
+    private DecentralizedConsumer makeOrGetUdpConsumer(String clusterTypeCode, IdUtil idUtil) {
         if (consumer != null) {
             return consumer;
         }
         synchronized (lock) {
-            consumer = new DecentralizedUdpConsumerImpl();
+            consumer = new DecentralizedUdpConsumerImpl(clusterTypeCode, idUtil);
             return consumer;
         }
     }

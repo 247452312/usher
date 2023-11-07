@@ -5,7 +5,7 @@ import team.opentech.usher.pojo.cqe.DefaultCQE;
 import team.opentech.usher.protocol.rpc.DistributeProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.DistributeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 
 /**
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RpcService
 public class DistributeProviderImpl implements DistributeProvider {
 
-    @Autowired
+    @Resource
     private DistributeService service;
 
 

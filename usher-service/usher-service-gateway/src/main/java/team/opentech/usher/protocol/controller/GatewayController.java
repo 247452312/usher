@@ -8,7 +8,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,7 +31,7 @@ public class GatewayController {
      */
     private static final String INVOKE = "invoke/";
 
-    @Autowired
+    @Resource
     private GatewaySdkService gatewaySdkService;
 
     /**

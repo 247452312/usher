@@ -30,7 +30,7 @@ import team.opentech.usher.util.LogUtil;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -64,16 +64,16 @@ public class DictServiceImpl extends AbstractDoService<DictDO, Dict, DictDTO, Di
      */
     private static final String QUICK_START_CODE = "quickStart";
 
-    @Autowired
+    @Resource
     private DictItemRepository dictItemRepository;
 
-    @Autowired
+    @Resource
     private DictItemAssembler dictItemAssembler;
 
-    @Autowired
+    @Resource
     private MenuRepository menuRepository;
 
-    @Autowired
+    @Resource
     private MenuAssembler menuAssembler;
 
     public DictServiceImpl(DictAssembler assembler, DictRepository repository) {

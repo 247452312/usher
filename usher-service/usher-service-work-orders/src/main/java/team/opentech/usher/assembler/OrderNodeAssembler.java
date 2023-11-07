@@ -15,7 +15,7 @@ import team.opentech.usher.pojo.entity.OrderNode;
 import team.opentech.usher.util.Asserts;
 import java.util.List;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 工单节点样例表(OrderNode)表 entity,DO,DTO转换工具
@@ -27,16 +27,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Mapper(componentModel = "spring")
 public abstract class OrderNodeAssembler extends AbstractAssembler<OrderNodeDO, OrderNode, OrderNodeDTO> {
 
-    @Autowired
+    @Resource
     private OrderNodeFieldAssembler fieldAssembler;
 
-    @Autowired
+    @Resource
     private OrderNodeRouteAssembler routeAssembler;
 
-    @Autowired
+    @Resource
     private OrderNodeResultTypeAssembler resultTypeAssembler;
 
-    @Autowired
+    @Resource
     private OrderApplyAssembler applyAssembler;
 
     @Override

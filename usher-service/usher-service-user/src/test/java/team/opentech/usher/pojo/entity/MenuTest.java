@@ -20,7 +20,7 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -29,19 +29,19 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class MenuTest extends BaseTest {
 
-    @Autowired
+    @Resource
     private MenuRepository repository;
 
     private Long m1Id;
 
     private Long m2Id;
 
-    @Autowired
+    @Resource
     private MenuAssembler assembler;
 
     private Long deptId;
 
-    @Autowired
+    @Resource
     private DeptRepository deptRepository;
 
 

@@ -8,7 +8,7 @@ import team.opentech.usher.protocol.rpc.VerificationProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.VerificationService;
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class VerificationProviderImpl implements VerificationProvider {
 
 
-    @Autowired
+    @Resource
     private VerificationService service;
 
     @Override

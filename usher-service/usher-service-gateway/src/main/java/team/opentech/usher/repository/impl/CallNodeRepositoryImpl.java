@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.CallNodeAssembler;
@@ -36,7 +36,7 @@ import team.opentech.usher.util.StringUtil;
 @Repository
 public class CallNodeRepositoryImpl extends AbstractRepository<CallNode, CallNodeDO, CallNodeDao, CallNodeDTO, CallNodeAssembler> implements CallNodeRepository {
 
-    @Autowired
+    @Resource
     private NodeRepository nodeRepository;
 
     @Resource

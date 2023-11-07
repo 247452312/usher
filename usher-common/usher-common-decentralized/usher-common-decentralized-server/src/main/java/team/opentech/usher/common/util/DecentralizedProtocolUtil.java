@@ -1,6 +1,7 @@
 package team.opentech.usher.common.util;
 
 import io.netty.buffer.ByteBuf;
+import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.Pair;
 
 /**
@@ -25,6 +26,20 @@ public final class DecentralizedProtocolUtil {
             fillByteLast(bytes, length);
             return bytes;
         }
+        if (length <= 2 << 24) {
+            byte[] bytes = new byte[3];
+            bytes[0] = (byte) 0b11111101;
+            fillByteLast(bytes, length);
+            return bytes;
+        }
+        if (length <= 2 << 64) {
+            byte[] bytes = new byte[3];
+            bytes[0] = (byte) 0b11111110;
+            fillByteLast(bytes, length);
+            return bytes;
+        }
+        Asserts.throwException("去中心化集群工具length解析错误");
+        return null;
     }
 
     /**

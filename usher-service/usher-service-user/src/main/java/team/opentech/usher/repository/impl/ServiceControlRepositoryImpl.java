@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 
 /**
@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ServiceControlRepositoryImpl implements ServiceControlRepository {
 
 
-    @Autowired
+    @Resource
     private RedisPoolHandle redisPoolHandle;
 
     @Override

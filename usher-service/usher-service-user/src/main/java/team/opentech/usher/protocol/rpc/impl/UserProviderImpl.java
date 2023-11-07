@@ -25,7 +25,7 @@ import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 
 /**
@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class UserProviderImpl extends BaseDefaultProvider<UserDTO> implements UserProvider {
 
 
-    @Autowired
+    @Resource
     private UserService service;
 
     @Override

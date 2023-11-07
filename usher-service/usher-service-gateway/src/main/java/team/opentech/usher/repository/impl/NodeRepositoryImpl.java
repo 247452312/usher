@@ -2,7 +2,7 @@ package team.opentech.usher.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.NodeAssembler;
 import team.opentech.usher.dao.NodeDao;
@@ -25,7 +25,7 @@ import team.opentech.usher.repository.base.AbstractRepository;
 @Repository
 public class NodeRepositoryImpl extends AbstractRepository<Node, NodeDO, NodeDao, NodeDTO, NodeAssembler> implements NodeRepository {
 
-    @Autowired
+    @Resource
     private ProviderInterfaceRepository providerInterfaceRepository;
 
 

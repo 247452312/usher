@@ -6,7 +6,7 @@ import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.OrderBaseNodeFieldService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 工单节点属性样例表(OrderBaseNodeField)表 RPC对外访问实现
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class OrderBaseNodeFieldProviderImpl extends BaseDefaultProvider<OrderBaseNodeFieldDTO> implements OrderBaseNodeFieldProvider {
 
 
-    @Autowired
+    @Resource
     private OrderBaseNodeFieldService service;
 
 

@@ -23,7 +23,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -53,7 +53,7 @@ public class TokenInjectAop {
     @Value("${token.enable:true}")
     private Boolean enable;
 
-    @Autowired
+    @Resource
     private RedisPoolHandle redisPoolHandle;
 
     /**

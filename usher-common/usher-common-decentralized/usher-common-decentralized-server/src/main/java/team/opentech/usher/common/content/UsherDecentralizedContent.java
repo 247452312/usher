@@ -25,6 +25,11 @@ public class UsherDecentralizedContent {
     public static final String ID_NAME = "UNIQUE";
 
     /**
+     * header唯一标示key
+     */
+    public static final String HEADER_UNIQUE_KEY = "unique";
+
+    /**
      * 请求类型名称
      */
     public static final String REQUEST_TYPE_NAME = "request_type";

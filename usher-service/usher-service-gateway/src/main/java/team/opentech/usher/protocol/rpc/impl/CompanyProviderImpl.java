@@ -1,6 +1,6 @@
 package team.opentech.usher.protocol.rpc.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import team.opentech.usher.pojo.DTO.CompanyDTO;
 import team.opentech.usher.protocol.rpc.CompanyProvider;
 import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
@@ -19,7 +19,7 @@ import team.opentech.usher.service.CompanyService;
 public class CompanyProviderImpl extends BaseDefaultProvider<CompanyDTO> implements CompanyProvider {
 
 
-    @Autowired
+    @Resource
     private CompanyService service;
 
 

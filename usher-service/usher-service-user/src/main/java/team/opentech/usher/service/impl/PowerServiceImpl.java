@@ -20,7 +20,7 @@ import team.opentech.usher.util.LogUtil;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Service;
 @ReadWriteMark(tables = {"sys_power"})
 public class PowerServiceImpl extends AbstractDoService<PowerDO, Power, PowerDTO, PowerRepository, PowerAssembler> implements PowerService {
 
-    @Autowired
+    @Resource
     private UserRepository userRepository;
 
     public PowerServiceImpl(PowerAssembler assembler, PowerRepository repository) {

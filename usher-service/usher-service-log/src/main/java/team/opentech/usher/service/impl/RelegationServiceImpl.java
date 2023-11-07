@@ -15,7 +15,7 @@ import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.RelegationRepository;
 import team.opentech.usher.service.RelegationService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
 @ReadWriteMark(tables = {"sys_relegation"})
 public class RelegationServiceImpl extends AbstractDoService<RelegationDO, Relegation, RelegationDTO, RelegationRepository, RelegationAssembler> implements RelegationService {
 
-    @Autowired
+    @Resource
     private ServiceControlFacade facade;
 
 

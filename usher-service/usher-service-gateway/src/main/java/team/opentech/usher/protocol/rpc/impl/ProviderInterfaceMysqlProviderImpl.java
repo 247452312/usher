@@ -1,6 +1,6 @@
 package team.opentech.usher.protocol.rpc.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import team.opentech.usher.pojo.DTO.ProviderInterfaceMysqlDTO;
 import team.opentech.usher.protocol.rpc.ProviderInterfaceMysqlProvider;
 import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
@@ -19,7 +19,7 @@ import team.opentech.usher.service.ProviderInterfaceMysqlService;
 public class ProviderInterfaceMysqlProviderImpl extends BaseDefaultProvider<ProviderInterfaceMysqlDTO> implements ProviderInterfaceMysqlProvider {
 
 
-    @Autowired
+    @Resource
     private ProviderInterfaceMysqlService service;
 
 

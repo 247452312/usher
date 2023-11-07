@@ -15,7 +15,7 @@ import team.opentech.usher.repository.OrderBaseNodeRouteRepository;
 import team.opentech.usher.repository.OrderInfoRepository;
 import team.opentech.usher.service.OrderBaseInfoService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,19 +29,19 @@ import org.springframework.stereotype.Service;
 @ReadWriteMark(tables = {"sys_order_base_info"})
 public class OrderBaseInfoServiceImpl extends AbstractDoService<OrderBaseInfoDO, OrderBaseInfo, OrderBaseInfoDTO, OrderBaseInfoRepository, OrderBaseInfoAssembler> implements OrderBaseInfoService {
 
-    @Autowired
+    @Resource
     private OrderBaseNodeRepository nodeRepository;
 
-    @Autowired
+    @Resource
     private OrderBaseNodeFieldRepository fieldRepository;
 
-    @Autowired
+    @Resource
     private OrderBaseNodeRouteRepository routeRepository;
 
-    @Autowired
+    @Resource
     private OrderBaseNodeResultTypeRepository resultTypeRepository;
 
-    @Autowired
+    @Resource
     private OrderInfoRepository orderInfoRepository;
 
     public OrderBaseInfoServiceImpl(OrderBaseInfoAssembler assembler, OrderBaseInfoRepository repository) {

@@ -19,7 +19,7 @@ import team.opentech.usher.util.Asserts;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,10 +33,10 @@ import org.springframework.stereotype.Service;
 @ReadWriteMark(tables = {"sys_role"})
 public class RoleServiceImpl extends AbstractDoService<RoleDO, Role, RoleDTO, RoleRepository, RoleAssembler> implements RoleService {
 
-    @Autowired
+    @Resource
     private DeptRepository deptRepository;
 
-    @Autowired
+    @Resource
     private DeptAssembler deptAssembler;
 
     public RoleServiceImpl(RoleAssembler assembler, RoleRepository repository) {

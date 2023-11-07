@@ -8,7 +8,7 @@ import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.RelegationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 接口降级策略(Relegation)表 RPC对外访问实现
@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class RelegationProviderImpl extends BaseDefaultProvider<RelegationDTO> implements RelegationProvider {
 
 
-    @Autowired
+    @Resource
     private RelegationService service;
 
     @Override

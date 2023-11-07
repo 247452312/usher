@@ -16,7 +16,7 @@ import team.opentech.usher.repository.base.AbstractRepository;
 import team.opentech.usher.util.Asserts;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 
 /**
@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Repository
 public class ParamRepositoryImpl extends AbstractRepository<Param, ParamDO, ParamDao, ParamDTO, ParamAssembler> implements ParamRepository {
 
-    @Autowired
+    @Resource
     private RedisPool redisPool;
 
     protected ParamRepositoryImpl(ParamAssembler convert, ParamDao dao) {

@@ -16,7 +16,7 @@ import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.OrderInfoService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 工单基础信息样例表(OrderInfo)表 RPC对外访问实现
@@ -29,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class OrderInfoProviderImpl extends BaseDefaultProvider<OrderInfoDTO> implements OrderInfoProvider {
 
 
-    @Autowired
+    @Resource
     private OrderInfoService service;
 
     @Override

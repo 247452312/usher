@@ -26,7 +26,7 @@ import team.opentech.usher.repository.SoftwareRepository;
 import team.opentech.usher.service.SoftwareService;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -40,7 +40,7 @@ import org.springframework.stereotype.Service;
 @ReadWriteMark(tables = {"sys_software"})
 public class SoftwareServiceImpl extends AbstractDoService<SoftwareDO, Software, SoftwareDTO, SoftwareRepository, SoftwareAssembler> implements SoftwareService {
 
-    @Autowired
+    @Resource
     private ServerRepository serverRepository;
 
     public SoftwareServiceImpl(SoftwareAssembler assembler, SoftwareRepository repository) {

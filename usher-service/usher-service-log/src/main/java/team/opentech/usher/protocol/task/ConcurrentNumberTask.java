@@ -2,7 +2,7 @@ package team.opentech.usher.protocol.task;
 
 import team.opentech.usher.pojo.cqe.command.BlankCommand;
 import team.opentech.usher.service.TraceInfoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 public class ConcurrentNumberTask implements BaseTask<Object, Object> {
 
 
-    @Autowired
+    @Resource
     private TraceInfoService service;
 
 

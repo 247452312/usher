@@ -14,7 +14,7 @@ import team.opentech.usher.repository.BlackListRepository;
 import team.opentech.usher.repository.TraceDetailRepository;
 import team.opentech.usher.service.BlackListService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +42,7 @@ public class BlackListServiceImpl extends AbstractDoService<BlackListDO, BlackLi
     @Value("${black-list.spider.frequency}")
     private Integer frequency;
 
-    @Autowired
+    @Resource
     private TraceDetailRepository traceDetailRepository;
 
     public BlackListServiceImpl(BlackListAssembler assembler, BlackListRepository repository) {

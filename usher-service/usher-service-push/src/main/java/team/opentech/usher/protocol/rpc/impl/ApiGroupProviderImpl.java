@@ -9,7 +9,7 @@ import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.ApiGroupService;
 import team.opentech.usher.service.BaseDoService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * api组表(ApiGroup)表 RPC对外访问实现
@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ApiGroupProviderImpl extends BaseDefaultProvider<ApiGroupDTO> implements ApiGroupProvider {
 
 
-    @Autowired
+    @Resource
     private ApiGroupService service;
 
     @Override

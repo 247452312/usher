@@ -27,7 +27,7 @@ import team.opentech.usher.repository.OrderNodeRouteRepository;
 import team.opentech.usher.service.OrderNodeService;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -41,28 +41,28 @@ import org.springframework.stereotype.Service;
 @ReadWriteMark(tables = {"sys_order_node"})
 public class OrderNodeServiceImpl extends AbstractDoService<OrderNodeDO, OrderNode, OrderNodeDTO, OrderNodeRepository, OrderNodeAssembler> implements OrderNodeService {
 
-    @Autowired
+    @Resource
     private OrderNodeFieldRepository fieldRepository;
 
-    @Autowired
+    @Resource
     private OrderNodeRouteRepository routeRepository;
 
-    @Autowired
+    @Resource
     private OrderNodeResultTypeRepository resultTypeRepository;
 
-    @Autowired
+    @Resource
     private OrderNodeFieldValueRepository fieldValueRepository;
 
-    @Autowired
+    @Resource
     private PushFacade pushFacade;
 
-    @Autowired
+    @Resource
     private OrderInfoRepository infoRepository;
 
-    @Autowired
+    @Resource
     private OrderApplyRepository applyRepository;
 
-    @Autowired
+    @Resource
     private OrderInfoAssembler orderInfoAssembler;
 
     public OrderNodeServiceImpl(OrderNodeAssembler assembler, OrderNodeRepository repository) {

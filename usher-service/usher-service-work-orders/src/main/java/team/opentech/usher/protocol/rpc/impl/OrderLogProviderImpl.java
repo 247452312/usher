@@ -6,7 +6,7 @@ import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.OrderLogService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 日志表(OrderLog)表 RPC对外访问实现
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class OrderLogProviderImpl extends BaseDefaultProvider<OrderLogDTO> implements OrderLogProvider {
 
 
-    @Autowired
+    @Resource
     private OrderLogService service;
 
 

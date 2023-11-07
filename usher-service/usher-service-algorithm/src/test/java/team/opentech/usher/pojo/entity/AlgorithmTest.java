@@ -10,7 +10,7 @@ import team.opentech.usher.util.Asserts;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -24,7 +24,7 @@ public class AlgorithmTest extends BaseTest {
                                     "    }\n" +
                                     "}";
 
-    @Autowired
+    @Resource
     private AlgorithmService service;
 
     @Test

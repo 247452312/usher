@@ -1,6 +1,6 @@
 package team.opentech.usher.protocol.rpc.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import team.opentech.usher.pojo.DTO.ProviderInterfaceRpcDTO;
 import team.opentech.usher.protocol.rpc.ProviderInterfaceRpcProvider;
 import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
@@ -19,7 +19,7 @@ import team.opentech.usher.service.ProviderInterfaceRpcService;
 public class ProviderInterfaceRpcProviderImpl extends BaseDefaultProvider<ProviderInterfaceRpcDTO> implements ProviderInterfaceRpcProvider {
 
 
-    @Autowired
+    @Resource
     private ProviderInterfaceRpcService service;
 
 

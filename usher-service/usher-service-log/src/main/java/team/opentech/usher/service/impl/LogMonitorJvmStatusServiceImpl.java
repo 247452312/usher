@@ -9,7 +9,7 @@ import team.opentech.usher.pojo.entity.LogMonitorJvmStatus;
 import team.opentech.usher.repository.LogMonitorJvmStatusRepository;
 import team.opentech.usher.repository.LogMonitorRepository;
 import team.opentech.usher.service.LogMonitorJvmStatusService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 public class LogMonitorJvmStatusServiceImpl extends AbstractDoService<LogMonitorJvmStatusDO, LogMonitorJvmStatus, LogMonitorJvmStatusDTO, LogMonitorJvmStatusRepository, LogMonitorJvmStatusAssembler> implements LogMonitorJvmStatusService {
 
 
-    @Autowired
+    @Resource
     private LogMonitorRepository repository;
 
 

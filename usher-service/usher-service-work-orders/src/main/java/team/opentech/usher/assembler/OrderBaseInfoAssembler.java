@@ -9,7 +9,7 @@ import team.opentech.usher.pojo.entity.OrderBaseNode;
 import team.opentech.usher.util.Asserts;
 import java.util.List;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 工单基础信息样例表(OrderBaseInfo)表 entity,DO,DTO转换工具
@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Mapper(componentModel = "spring")
 public abstract class OrderBaseInfoAssembler extends AbstractAssembler<OrderBaseInfoDO, OrderBaseInfo, OrderBaseInfoDTO> {
 
-    @Autowired
+    @Resource
     private OrderBaseNodeAssembler nodeAssembler;
 
     @Override

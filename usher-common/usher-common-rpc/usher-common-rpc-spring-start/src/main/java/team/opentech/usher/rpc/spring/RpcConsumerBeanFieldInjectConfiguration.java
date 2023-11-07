@@ -1,5 +1,6 @@
 package team.opentech.usher.rpc.spring;
 
+import javax.annotation.Resource;
 import team.opentech.usher.rpc.annotation.RpcReference;
 import team.opentech.usher.rpc.config.RpcConfig;
 import team.opentech.usher.rpc.proxy.RpcProxyFactory;
@@ -12,7 +13,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessor;
 
 /**
@@ -28,7 +29,7 @@ public class RpcConsumerBeanFieldInjectConfiguration implements InstantiationAwa
      */
     private volatile static Map<String, Object> consumerRegistryCache = new ConcurrentHashMap<>();
 
-    @Autowired
+    @Resource
     private RpcConfig config;
 
     public Object getRegistryOnCache(Class<?> clazz) throws RegistryException {

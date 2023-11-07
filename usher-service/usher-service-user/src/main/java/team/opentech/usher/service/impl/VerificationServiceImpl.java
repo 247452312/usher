@@ -7,7 +7,7 @@ import team.opentech.usher.pojo.entity.Verification;
 import team.opentech.usher.repository.VerificationRepository;
 import team.opentech.usher.service.VerificationService;
 import java.io.IOException;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class VerificationServiceImpl implements VerificationService {
 
 
-    @Autowired
+    @Resource
     private VerificationRepository rep;
 
     @Override

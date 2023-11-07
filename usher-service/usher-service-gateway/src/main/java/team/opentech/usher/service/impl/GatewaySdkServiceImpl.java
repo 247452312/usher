@@ -2,7 +2,7 @@ package team.opentech.usher.service.impl;
 
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.annotation.Public;
@@ -36,19 +36,19 @@ import team.opentech.usher.util.Pair;
 @Service
 public class GatewaySdkServiceImpl implements GatewaySdkService {
 
-    @Autowired
+    @Resource
     private CompanyRepository companyRepository;
 
-    @Autowired
+    @Resource
     private CompanyAssembler companyAssembler;
 
-    @Autowired
+    @Resource
     private ProviderInterfaceRepository providerInterfaceRepository;
 
-    @Autowired
+    @Resource
     private NodeRepository nodeRepository;
 
-    @Autowired
+    @Resource
     private CallNodeRepository callNodeRepository;
 
     @Resource

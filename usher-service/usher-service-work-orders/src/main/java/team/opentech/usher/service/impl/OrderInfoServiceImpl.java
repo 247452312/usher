@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -60,40 +60,40 @@ import org.springframework.stereotype.Service;
 public class OrderInfoServiceImpl extends AbstractDoService<OrderInfoDO, OrderInfo, OrderInfoDTO, OrderInfoRepository, OrderInfoAssembler> implements OrderInfoService {
 
 
-    @Autowired
+    @Resource
     private OrderBaseInfoService baseInfoService;
 
-    @Autowired
+    @Resource
     private OrderNodeRepository nodeRepository;
 
-    @Autowired
+    @Resource
     private OrderNodeFieldRepository fieldRepository;
 
-    @Autowired
+    @Resource
     private OrderNodeRouteRepository routeRepository;
 
-    @Autowired
+    @Resource
     private OrderNodeResultTypeRepository resultTypeRepository;
 
-    @Autowired
+    @Resource
     private OrderNodeFieldValueRepository fieldValueRepository;
 
-    @Autowired
+    @Resource
     private OrderNodeFieldValueAssembler fieldValueAssembler;
 
-    @Autowired
+    @Resource
     private PushFacade pushFacade;
 
-    @Autowired
+    @Resource
     private OrderApplyRepository orderApplyRepository;
 
-    @Autowired
+    @Resource
     private OrderNodeRepository orderNodeRepository;
 
-    @Autowired
+    @Resource
     private OrderNodeResultTypeAssembler typeAssembler;
 
-    @Autowired
+    @Resource
     private OrderNodeRouteAssembler routeAssembler;
 
     public OrderInfoServiceImpl(OrderInfoAssembler assembler, OrderInfoRepository repository) {

@@ -8,7 +8,7 @@ import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.TraceDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * (TraceDetail)表 RPC对外访问实现
@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class TraceDetailProviderImpl extends BaseDefaultProvider<TraceDetailDTO> implements TraceDetailProvider {
 
 
-    @Autowired
+    @Resource
     private TraceDetailService service;
 
     @Override

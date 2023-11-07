@@ -9,7 +9,7 @@ import team.opentech.usher.pojo.cqe.FlushAllSysEvent;
 import team.opentech.usher.pojo.entity.Param;
 import team.opentech.usher.repository.ParamRepository;
 import team.opentech.usher.service.ParamService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @ReadWriteMark(tables = {"sys_param"})
 public class ParamServiceImpl extends AbstractDoService<ParamDO, Param, ParamDTO, ParamRepository, ParamAssembler> implements ParamService {
 
-    @Autowired
+    @Resource
     private BusInterface bus;
 
     public ParamServiceImpl(ParamAssembler assembler, ParamRepository repository) {

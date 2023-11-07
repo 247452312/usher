@@ -11,7 +11,7 @@ import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.OrderNodeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 工单节点样例表(OrderNode)表 RPC对外访问实现
@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class OrderNodeProviderImpl extends BaseDefaultProvider<OrderNodeDTO> implements OrderNodeProvider {
 
 
-    @Autowired
+    @Resource
     private OrderNodeService service;
 
     @Override

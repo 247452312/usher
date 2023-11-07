@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 import team.opentech.usher.mysql.plan.MysqlPlan;
 import team.opentech.usher.mysql.plan.PlanFactory;
@@ -23,7 +23,7 @@ import team.opentech.usher.mysql.plan.PlanFactory;
 @Component
 public class UnionSelectSqlParser extends AbstractSelectSqlParser {
 
-    @Autowired
+    @Resource
     private PlanFactory planFactory;
 
     @Override

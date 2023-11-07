@@ -6,7 +6,7 @@ import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.ContentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 公共参数(Content)表 RPC对外访问实现
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ContentProviderImpl extends BaseDefaultProvider<ContentDTO> implements ContentProvider {
 
 
-    @Autowired
+    @Resource
     private ContentService service;
 
 

@@ -7,7 +7,7 @@ import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.KproService;
 import java.util.List;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 
 /**
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RpcService
 public class KproProviderImpl implements KproProvider {
 
-    @Autowired
+    @Resource
     private KproService service;
 
     @Override

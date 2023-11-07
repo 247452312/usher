@@ -2,10 +2,10 @@ package team.opentech.usher.es.dao.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import team.opentech.usher.es.dao.EsDao;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Resource;
 import org.elasticsearch.action.DocWriteResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
@@ -21,8 +21,8 @@ import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.rest.RestStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import team.opentech.usher.es.dao.EsDao;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EsDaoImpl implements EsDao {
 
-    @Autowired
+    @Resource
     private RestHighLevelClient client;
 
     @Override

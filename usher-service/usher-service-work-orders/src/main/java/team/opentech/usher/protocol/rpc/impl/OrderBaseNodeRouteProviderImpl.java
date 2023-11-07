@@ -6,7 +6,7 @@ import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.OrderBaseNodeRouteService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 节点间关联路由样例表(OrderBaseNodeRoute)表 RPC对外访问实现
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class OrderBaseNodeRouteProviderImpl extends BaseDefaultProvider<OrderBaseNodeRouteDTO> implements OrderBaseNodeRouteProvider {
 
 
-    @Autowired
+    @Resource
     private OrderBaseNodeRouteService service;
 
 

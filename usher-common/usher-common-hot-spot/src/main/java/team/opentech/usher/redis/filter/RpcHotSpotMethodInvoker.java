@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import redis.clients.jedis.Jedis;
 
 /**
@@ -77,7 +77,7 @@ public class RpcHotSpotMethodInvoker implements MethodInvoker {
      */
     private final UsherThreadLocal<CacheTypeEnum> markThreadLocal = new UsherThreadLocal<>();
 
-    @Autowired
+    @Resource
     private HotSpotRedisPool hotSpotRedisPool;
 
     /**

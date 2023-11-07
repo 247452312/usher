@@ -7,7 +7,7 @@ import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.JobService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 定时任务表(Job)表 RPC对外访问实现
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class JobProviderImpl extends BaseDefaultProvider<JobDTO> implements JobProvider {
 
 
-    @Autowired
+    @Resource
     private JobService service;
 
     @Override

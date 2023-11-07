@@ -11,7 +11,7 @@ import team.opentech.usher.pojo.DTO.response.VersionInfoDTO;
 import team.opentech.usher.pojo.DTO.response.welcome.WelcomeResponse;
 import team.opentech.usher.service.DistributeService;
 import java.util.ArrayList;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 
@@ -24,10 +24,10 @@ import org.springframework.stereotype.Service;
 public class DistributeServiceImpl implements DistributeService {
 
 
-    @Autowired
+    @Resource
     private JvmFacade jvmFacade;
 
-    @Autowired
+    @Resource
     private DictFacade dictFacade;
 
     @Override

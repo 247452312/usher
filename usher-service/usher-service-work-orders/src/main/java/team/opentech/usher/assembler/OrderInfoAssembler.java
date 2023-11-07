@@ -16,7 +16,7 @@ import team.opentech.usher.util.Asserts;
 import java.util.HashMap;
 import java.util.List;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 工单基础信息样例表(OrderInfo)表 entity,DO,DTO转换工具
@@ -28,10 +28,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Mapper(componentModel = "spring")
 public abstract class OrderInfoAssembler extends AbstractAssembler<OrderInfoDO, OrderInfo, OrderInfoDTO> {
 
-    @Autowired
+    @Resource
     private OrderNodeAssembler nodeAssembler;
 
-    @Autowired
+    @Resource
     private OrderNodeFieldAssembler nodeFieldAssembler;
 
 

@@ -12,10 +12,10 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.Future;
-import java.util.HashMap;
 import team.opentech.usher.common.content.UsherDecentralizedContent;
 import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
 import team.opentech.usher.util.ByteUtil;
+import team.opentech.usher.util.IdUtil;
 import team.opentech.usher.util.LogUtil;
 
 /**
@@ -41,8 +41,11 @@ public class DecentralizedTcpConsumerImpl implements DecentralizedConsumer {
 
     private String clusterTypeCode;
 
-    public DecentralizedTcpConsumerImpl(String clusterTypeCode, String host, Integer port) {
+    private IdUtil idUtil;
+
+    public DecentralizedTcpConsumerImpl(String clusterTypeCode, String host, Integer port, IdUtil idUtil) {
         this.clusterTypeCode = clusterTypeCode;
+        this.idUtil = idUtil;
         connectConsumer(host, port);
 
     }
@@ -63,7 +66,12 @@ public class DecentralizedTcpConsumerImpl implements DecentralizedConsumer {
 
     @Override
     public Boolean send(byte[] body) throws InterruptedException {
-        DecentralizedProtocol decentralizedProtocol = DecentralizedProtocol.build(ByteUtil.subByte(clusterTypeCode.getBytes(UsherDecentralizedContent.DEFAULT_CHARSET), 4), new HashMap<>(), body);
+        DecentralizedProtocol decentralizedProtocol = DecentralizedProtocol.build(ByteUtil.subByte(clusterTypeCode.getBytes(UsherDecentralizedContent.DEFAULT_CHARSET), 4), idUtil.newId(), body);
+        return send(decentralizedProtocol);
+    }
+
+    @Override
+    public Boolean send(DecentralizedProtocol decentralizedProtocol) throws InterruptedException {
         ByteBuf buf = Unpooled.buffer();
         buf.writeBytes(decentralizedProtocol.toBytes());
         channelFuture.channel().writeAndFlush(buf);

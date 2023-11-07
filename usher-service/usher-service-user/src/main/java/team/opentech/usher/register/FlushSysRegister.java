@@ -6,7 +6,7 @@ import team.opentech.usher.protocol.register.base.Register;
 import team.opentech.usher.service.ParamService;
 import java.util.Arrays;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.context.annotation.Lazy;
 
 /**
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Lazy;
 @team.opentech.usher.annotation.Register
 public class FlushSysRegister implements Register {
 
-    @Autowired
+    @Resource
     @Lazy
     private ParamService service;
 

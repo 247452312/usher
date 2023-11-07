@@ -9,7 +9,7 @@ import team.opentech.usher.service.RelegationService;
 import team.opentech.usher.util.Asserts;
 import java.util.Arrays;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 
 /**
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @team.opentech.usher.annotation.Register
 public class RelegationRegisterImpl implements RelegationRegister {
 
-    @Autowired
+    @Resource
     private RelegationService service;
 
     @Override

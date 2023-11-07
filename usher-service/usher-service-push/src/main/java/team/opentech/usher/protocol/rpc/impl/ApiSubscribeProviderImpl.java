@@ -7,7 +7,7 @@ import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.ApiSubscribeService;
 import team.opentech.usher.service.BaseDoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * api订阅表(ApiSubscribe)表 RPC对外访问实现
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ApiSubscribeProviderImpl extends BaseDefaultProvider<ApiSubscribeDTO> implements ApiSubscribeProvider {
 
 
-    @Autowired
+    @Resource
     private ApiSubscribeService service;
 
     @Override

@@ -9,7 +9,7 @@ import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.LogMonitorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * JVM日志表(LogMonitor)表 RPC对外访问实现
@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class LogMonitorProviderImpl extends BaseDefaultProvider<LogMonitorDTO> implements LogMonitorProvider {
 
 
-    @Autowired
+    @Resource
     private LogMonitorService service;
 
     @Override

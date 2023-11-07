@@ -1,6 +1,6 @@
 package team.opentech.usher.runner;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
@@ -18,10 +18,10 @@ import team.opentech.usher.mq.client.MQClient;
 @Component
 public class AuthDealRunner implements ApplicationRunner {
 
-    @Autowired
+    @Resource
     private ApplicationContext applicationContext;
 
-    @Autowired
+    @Resource
     private MQClient mqClient;
 
 

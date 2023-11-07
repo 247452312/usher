@@ -25,7 +25,7 @@ import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.DictService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -35,7 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class DictProviderImpl extends BaseDefaultProvider<DictDTO> implements DictProvider {
 
 
-    @Autowired
+    @Resource
     private DictService service;
 
     @Override

@@ -11,7 +11,7 @@ import team.opentech.usher.pojo.DTO.LogMonitorDTO;
 import team.opentech.usher.pojo.entity.LogMonitor;
 import java.util.List;
 import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * JVM日志表(LogMonitor)表 entity,DO,DTO转换工具
@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Mapper(componentModel = "spring")
 public abstract class LogMonitorAssembler extends AbstractAssembler<LogMonitorDO, LogMonitor, LogMonitorDTO> {
 
-    @Autowired
+    @Resource
     private LogMonitorJvmStatusAssembler logMonitorJvmStatusAssembler;
 
 

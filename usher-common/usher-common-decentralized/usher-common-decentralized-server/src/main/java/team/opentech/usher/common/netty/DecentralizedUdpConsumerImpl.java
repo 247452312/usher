@@ -11,6 +11,10 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.util.concurrent.Future;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutionException;
+import team.opentech.usher.common.content.UsherDecentralizedContent;
+import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
+import team.opentech.usher.util.ByteUtil;
+import team.opentech.usher.util.IdUtil;
 import team.opentech.usher.util.LogUtil;
 
 /**
@@ -23,7 +27,19 @@ public class DecentralizedUdpConsumerImpl implements DecentralizedConsumer {
 
     private Bootstrap bootstrap;
 
-    public DecentralizedUdpConsumerImpl() {
+    /**
+     * 服务集群唯一标示
+     */
+    private String clusterTypeCode;
+
+    /**
+     * id工具
+     */
+    private IdUtil idUtil;
+
+    public DecentralizedUdpConsumerImpl(String clusterTypeCode, IdUtil idUtil) {
+        this.clusterTypeCode = clusterTypeCode;
+        this.idUtil = idUtil;
         group = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
         bootstrap.group(group).channel(NioDatagramChannel.class).option(ChannelOption.SO_BROADCAST, true);
@@ -43,10 +59,15 @@ public class DecentralizedUdpConsumerImpl implements DecentralizedConsumer {
 
     @Override
     public Boolean send(byte[] body) throws InterruptedException {
-        Channel channel = bootstrap.bind(0).sync().channel();
+        DecentralizedProtocol decentralizedProtocol = DecentralizedProtocol.build(ByteUtil.subByte(clusterTypeCode.getBytes(UsherDecentralizedContent.DEFAULT_CHARSET), 4), idUtil.newId(), body);
+        return send(decentralizedProtocol);
+    }
 
+    @Override
+    public Boolean send(DecentralizedProtocol decentralizedProtocol) throws InterruptedException {
+        Channel channel = bootstrap.bind(0).sync().channel();
         // 像网段内的所有广播机广播UDP消息
-        channel.writeAndFlush(new DatagramPacket(Unpooled.copiedBuffer(body), new InetSocketAddress("255.255.255.255", 8080)));
+        channel.writeAndFlush(new DatagramPacket(Unpooled.copiedBuffer(decentralizedProtocol.toBytes()), new InetSocketAddress("255.255.255.255", 8080)));
         channel.close();
         return Boolean.TRUE;
     }

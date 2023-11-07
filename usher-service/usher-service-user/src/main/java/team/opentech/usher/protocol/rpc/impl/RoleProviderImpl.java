@@ -17,7 +17,7 @@ import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.RoleService;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class RoleProviderImpl extends BaseDefaultProvider<RoleDTO> implements RoleProvider {
 
 
-    @Autowired
+    @Resource
     private RoleService service;
 
 

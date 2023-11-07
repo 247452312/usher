@@ -2,6 +2,11 @@ package team.opentech.usher;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import java.util.ArrayList;
+import java.util.List;
+import javax.annotation.Resource;
+import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Transactional;
 import team.opentech.usher.bus.BusInterface;
 import team.opentech.usher.bus.model.AEvent;
 import team.opentech.usher.bus.model.BEvent;
@@ -15,20 +20,15 @@ import team.opentech.usher.protocol.register.TestEventRegister;
 import team.opentech.usher.protocol.register.TestParentEvent;
 import team.opentech.usher.protocol.register.TestParentEventBlank;
 import team.opentech.usher.util.Asserts;
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author uhyils <247452312@qq.com>
  * @version 1.0
  * @date 文件创建日期 2021年09月19日 10时19分
  */
-public class BusTest extends BaseTest {
+public class BusTest extends team.opentech.usher.BaseTest {
 
-    @Autowired
+    @Resource
     public BusInterface bus;
 
     @Override

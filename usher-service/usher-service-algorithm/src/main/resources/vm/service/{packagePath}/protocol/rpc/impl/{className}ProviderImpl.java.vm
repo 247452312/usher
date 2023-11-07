@@ -6,7 +6,7 @@ import ${package}.protocol.rpc.base.BaseDefaultProvider;
 import ${package}.rpc.annotation.RpcService;
 import ${package}.service.BaseDoService;
 import ${package}.service.${className}Service;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
 * ${tableComment}(${className})表 RPC对外访问实现
@@ -19,10 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ${className}ProviderImpl extends BaseDefaultProvider<${className}DTO> implements ${className}Provider {
 
 
-    @Autowired
+    @Resource
     private ${className}Service service;
-    
-    
+
+
     @Override
     protected BaseDoService<${className}DTO> getService() {
         return service;

@@ -6,7 +6,7 @@ import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.service.RelegationService;
 import team.opentech.usher.util.Asserts;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class RelegationServiceImplTest extends BaseTest {
 
-    @Autowired
+    @Resource
     private RelegationService service;
 
     @Test

@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 
 /**
@@ -33,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MenuRepositoryImpl extends AbstractRepository<Menu, MenuDO, MenuDao, MenuDTO, MenuAssembler> implements MenuRepository {
 
 
-    @Autowired
+    @Resource
     private DeptDao deptDao;
 
     protected MenuRepositoryImpl(MenuAssembler assembler, MenuDao dao) {

@@ -6,7 +6,7 @@ import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.OrderBaseNodeResultTypeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 工单节点处理结果样例表(OrderBaseNodeResultType)表 RPC对外访问实现
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class OrderBaseNodeResultTypeProviderImpl extends BaseDefaultProvider<OrderBaseNodeResultTypeDTO> implements OrderBaseNodeResultTypeProvider {
 
 
-    @Autowired
+    @Resource
     private OrderBaseNodeResultTypeService service;
 
 

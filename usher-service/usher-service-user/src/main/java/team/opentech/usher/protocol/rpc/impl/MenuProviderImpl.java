@@ -19,7 +19,7 @@ import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.MenuService;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 菜单接口实现类
@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RpcService
 public class MenuProviderImpl extends BaseDefaultProvider<MenuDTO> implements MenuProvider {
 
-    @Autowired
+    @Resource
     private MenuService service;
 
     @Override

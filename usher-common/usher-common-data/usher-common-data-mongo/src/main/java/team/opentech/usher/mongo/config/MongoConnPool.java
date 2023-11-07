@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ public class MongoConnPool {
      */
     private volatile List<MongoConn> list = Collections.synchronizedList(new ArrayList<>());
 
-    @Autowired
+    @Resource
     private MongoDbFactory mongoDbFactory;
 
     /**

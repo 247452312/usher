@@ -5,7 +5,7 @@ import team.opentech.usher.pojo.entity.Verification;
 import team.opentech.usher.redis.RedisPoolHandle;
 import team.opentech.usher.redis.Redisable;
 import team.opentech.usher.repository.VerificationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 
 /**
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class VerificationRepositoryImpl implements VerificationRepository {
 
 
-    @Autowired
+    @Resource
     private RedisPoolHandle redis;
 
 

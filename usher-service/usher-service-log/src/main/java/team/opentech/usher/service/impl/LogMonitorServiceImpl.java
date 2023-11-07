@@ -14,7 +14,7 @@ import team.opentech.usher.repository.LogMonitorJvmStatusRepository;
 import team.opentech.usher.repository.LogMonitorRepository;
 import team.opentech.usher.repository.TraceInfoRepository;
 import team.opentech.usher.service.LogMonitorService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,10 +28,10 @@ import org.springframework.stereotype.Service;
 @ReadWriteMark(tables = {"sys_log_monitor"})
 public class LogMonitorServiceImpl extends AbstractDoService<LogMonitorDO, LogMonitor, LogMonitorDTO, LogMonitorRepository, LogMonitorAssembler> implements LogMonitorService {
 
-    @Autowired
+    @Resource
     private LogMonitorJvmStatusRepository logMonitorJvmStatusRepository;
 
-    @Autowired
+    @Resource
     private TraceInfoRepository traceInfoRepository;
 
 

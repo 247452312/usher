@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -32,16 +32,16 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class DeptTest extends BaseTest {
 
-    @Autowired
+    @Resource
     private DeptRepository deptRepository;
 
-    @Autowired
+    @Resource
     private RoleRepository roleRepository;
 
-    @Autowired
+    @Resource
     private PowerRepository powerRepository;
 
-    @Autowired
+    @Resource
     private MenuRepository menuRepository;
 
     private Long roleId;

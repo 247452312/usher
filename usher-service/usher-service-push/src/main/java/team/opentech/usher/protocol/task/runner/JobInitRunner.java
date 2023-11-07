@@ -6,7 +6,7 @@ import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.ScheduledManager;
 import java.util.List;
 import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JobInitRunner implements ApplicationRunner {
 
-    @Autowired
+    @Resource
     private ScheduledManager scheduledManager;
 
     @Resource

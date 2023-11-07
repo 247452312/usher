@@ -14,7 +14,7 @@ import team.opentech.usher.repository.RelegationRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 import team.opentech.usher.util.Asserts;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 
 /**
@@ -32,7 +32,7 @@ public class RelegationRepositoryImpl extends AbstractRepository<Relegation, Rel
      */
     private static final String OPTION_INTERVAL_TIME_KEY = "OPTION_INTERVAL_TIME_KEY";
 
-    @Autowired
+    @Resource
     private RedisPoolHandle redisPool;
 
     protected RelegationRepositoryImpl(RelegationAssembler convert, RelegationDao dao) {

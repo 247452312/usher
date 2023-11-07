@@ -11,7 +11,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 public class ServiceTemporarilyDisabledAop {
 
 
-    @Autowired
+    @Resource
     private RedisPoolHandle redisPoolHandle;
 
     /**

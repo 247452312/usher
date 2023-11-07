@@ -10,7 +10,7 @@ import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.MD5Util;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @RpcService
 public class MongoProviderImpl implements MongoProvider {
 
-    @Autowired
+    @Resource
     private MongoManager mongoManager;
 
     @Override

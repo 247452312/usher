@@ -7,7 +7,7 @@ import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.ParamService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 系统参数表(Param)表 RPC对外访问实现
@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ParamProviderImpl extends BaseDefaultProvider<ParamDTO> implements ParamProvider {
 
 
-    @Autowired
+    @Resource
     private ParamService service;
 
     @Override

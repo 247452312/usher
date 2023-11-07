@@ -2,7 +2,7 @@ package team.opentech.usher.protocol.task;
 
 import org.quartz.Scheduler;
 import org.quartz.spi.TriggerFiredBundle;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,7 +46,7 @@ public class JobConfig {
     @Component("quartzJobFactory")
     public static class QuartzJobFactory extends AdaptableJobFactory {
 
-        @Autowired
+        @Resource
         private AutowireCapableBeanFactory capableBeanFactory;
 
         @Override

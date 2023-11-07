@@ -12,7 +12,7 @@ import team.opentech.usher.pojo.DTO.response.GetTraceDetailByHashCodeResponse;
 import team.opentech.usher.pojo.entity.TraceDetail;
 import team.opentech.usher.repository.TraceDetailRepository;
 import team.opentech.usher.service.TraceDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 @ReadWriteMark(tables = {"sys_trace_detail"})
 public class TraceDetailServiceImpl extends AbstractDoService<TraceDetailDO, TraceDetail, TraceDetailDTO, TraceDetailRepository, TraceDetailAssembler> implements TraceDetailService {
 
-    @Autowired
+    @Resource
     private TraceDetailDao dao;
 
 

@@ -13,7 +13,7 @@ import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.ServiceControlService;
 import team.opentech.usher.util.Asserts;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 接口禁用服务
@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ServiceControlProviderImpl implements ServiceControlProvider {
 
 
-    @Autowired
+    @Resource
     private ServiceControlService service;
 
     @Override

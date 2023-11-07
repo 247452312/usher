@@ -30,8 +30,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import javax.annotation.Resource;
 import org.jetbrains.annotations.Nullable;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.mysql.content.MysqlContent;
@@ -58,7 +59,7 @@ import team.opentech.usher.util.CollectionUtil;
 @Component
 public class BlockQuerySelectSqlParser extends AbstractSelectSqlParser {
 
-    @Autowired
+    @Resource
     private PlanFactory planFactory;
 
     @Override

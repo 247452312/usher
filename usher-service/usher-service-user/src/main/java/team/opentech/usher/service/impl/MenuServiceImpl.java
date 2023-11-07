@@ -31,7 +31,7 @@ import team.opentech.usher.repository.RoleRepository;
 import team.opentech.usher.service.MenuService;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -53,26 +53,26 @@ public class MenuServiceImpl extends AbstractDoService<MenuDO, Menu, MenuDTO, Me
      */
     private static final Integer INDEX_IFRAME = 1;
 
-    @Autowired
+    @Resource
     private UserAssembler userAssembler;
 
-    @Autowired
+    @Resource
     private RoleRepository roleRepository;
 
-    @Autowired
+    @Resource
     private DeptRepository deptRepository;
 
 
-    @Autowired
+    @Resource
     private PowerRepository powerRepository;
 
-    @Autowired
+    @Resource
     private MenuRepository menuRepository;
 
-    @Autowired
+    @Resource
     private ContentRepository contentRepository;
 
-    @Autowired
+    @Resource
     private ContentAssembler contentAssembler;
 
 

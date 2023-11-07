@@ -22,7 +22,7 @@ import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.StringUtil;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 
 /**
@@ -40,7 +40,7 @@ public class TraceInfoRepositoryImpl extends AbstractRepository<TraceInfo, Trace
      */
     private static final String DEGRADATION_LEVEL = "degradation_level";
 
-    @Autowired
+    @Resource
     private RedisPoolHandle redis;
 
     protected TraceInfoRepositoryImpl(TraceInfoAssembler convert, TraceInfoDao dao) {

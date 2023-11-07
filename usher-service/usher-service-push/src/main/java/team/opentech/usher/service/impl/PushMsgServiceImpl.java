@@ -20,7 +20,7 @@ import team.opentech.usher.repository.PushMsgRepository;
 import team.opentech.usher.service.PushMsgService;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.LogUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -34,22 +34,22 @@ import org.springframework.stereotype.Service;
 @ReadWriteMark(tables = {"sys_push_msg"})
 public class PushMsgServiceImpl extends AbstractDoService<PushMsgDO, PushMsg, PushMsgDTO, PushMsgRepository, PushMsgAssembler> implements PushMsgService {
 
-    @Autowired
+    @Resource
     private ApiGroupRepository apiGroupRepository;
 
-    @Autowired
+    @Resource
     private ApiRepository apiRepository;
 
-    @Autowired
+    @Resource
     private ApiSubscribeRepository subscribeRepository;
 
-    @Autowired
+    @Resource
     private UserFacade userFacade;
 
-    @Autowired
+    @Resource
     private PushMsgRepository msgRepository;
 
-    @Autowired
+    @Resource
     private PushMsgAssembler msgAssembler;
 
     public PushMsgServiceImpl(PushMsgAssembler assembler, PushMsgRepository repository) {

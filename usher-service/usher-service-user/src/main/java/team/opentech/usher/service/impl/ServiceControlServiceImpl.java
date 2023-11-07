@@ -10,7 +10,7 @@ import team.opentech.usher.pojo.entity.type.MethodName;
 import team.opentech.usher.repository.ServiceControlRepository;
 import team.opentech.usher.service.ServiceControlService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 @ReadWriteMark
 public class ServiceControlServiceImpl implements ServiceControlService {
 
-    @Autowired
+    @Resource
     private ServiceControlRepository repository;
 
     @Override

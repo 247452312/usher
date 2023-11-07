@@ -8,7 +8,7 @@ import team.opentech.usher.pojo.DTO.request.DelMethodDisableCommand;
 import team.opentech.usher.repository.ServiceControlRepository;
 import team.opentech.usher.util.Asserts;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -17,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class MethodDisableTest extends BaseTest {
 
-    @Autowired
+    @Resource
     private ServiceControlRepository serviceControlRepository;
 
     @Test

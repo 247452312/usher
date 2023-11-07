@@ -17,7 +17,7 @@ import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.SoftwareService;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 /**
  * 中间件表(Software)表 RPC对外访问实现
@@ -30,7 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class SoftwareProviderImpl extends BaseDefaultProvider<SoftwareDTO> implements SoftwareProvider {
 
 
-    @Autowired
+    @Resource
     private SoftwareService service;
 
     @Override
