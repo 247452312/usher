@@ -32,7 +32,7 @@ public class UsherDecentralizedContent {
     /**
      * 请求类型名称
      */
-    public static final String REQUEST_TYPE_NAME = "request_type";
+    public static final String HEADER_REQUEST_TYPE_NAME = "request_type";
 
 
     /*header中name end*/

@@ -1,11 +1,16 @@
 package team.opentech.usher;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import team.opentech.usher.common.netty.DecentralizedConsumer;
 import team.opentech.usher.common.netty.DecentralizedServer;
 import team.opentech.usher.common.netty.DecentralizedServerImpl;
+import team.opentech.usher.common.netty.DecentralizedTcpConsumerImpl;
+import team.opentech.usher.common.netty.DecentralizedUdpConsumer;
 import team.opentech.usher.common.netty.DecentralizedUdpConsumerImpl;
+import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
 import team.opentech.usher.core.DecentralizedManager;
-import team.opentech.usher.redis.Redisable;
 import team.opentech.usher.util.IdUtil;
 
 /**
@@ -16,21 +21,36 @@ public class DecentralizedStarter {
 
     private final Object lock = new Object();
 
-    private Integer port;
-
-    private String clusterTypeCode;
-
-    private Redisable redisable;
-
+    /**
+     * 各个业务处理工具
+     */
     private DecentralizedManager manager;
 
-    private DecentralizedConsumer consumer;
+    /**
+     * udpConsumer为单例
+     */
+    private volatile DecentralizedUdpConsumer udpSingleConsumer;
 
-    public DecentralizedStarter(Integer port, String clusterTypeCode, Redisable redisable, DecentralizedManager manager) {
-        this.port = port;
-        this.clusterTypeCode = clusterTypeCode;
-        this.redisable = redisable;
+    /**
+     * tcpConsumer key-> ip:port
+     */
+    private volatile Map<String, DecentralizedConsumer> tcpConsumers;
+
+    /**
+     * 服务端
+     */
+    private volatile DecentralizedServer decentralizedServer;
+
+    /**
+     * id生成器
+     */
+    private IdUtil idUtil;
+
+
+    public DecentralizedStarter(DecentralizedManager manager, IdUtil idUtil) {
+        this.idUtil = idUtil;
         this.manager = manager;
+        this.tcpConsumers = new HashMap<>();
     }
 
     /**
@@ -39,12 +59,52 @@ public class DecentralizedStarter {
      * @throws InterruptedException
      */
     public void startServer() throws InterruptedException {
-        DecentralizedServer decentralizedServer = new DecentralizedServerImpl(port, clusterTypeCode, redisable, manager);
+        if (decentralizedServer == null) {
+            decentralizedServer = new DecentralizedServerImpl(manager);
+        }
         decentralizedServer.start();
     }
 
-    public void sendUdp(byte[] body) throws InterruptedException {
-        consumer.send(body);
+    public void sendUdp(byte[] body, DecentralizedRequestTypeEnum decentralizedRequestType) throws InterruptedException {
+        udpSingleConsumer.send(body, decentralizedRequestType);
+    }
+
+    /**
+     * 是否在线
+     *
+     * @return
+     */
+    public Boolean isOnline() {
+        return decentralizedServer.isOnline();
+    }
+
+    /**
+     * 强制关闭
+     */
+    public void close() {
+        if (decentralizedServer != null) {
+            decentralizedServer.close();
+        }
+        if (udpSingleConsumer != null) {
+            udpSingleConsumer.close();
+        }
+
+        for (Entry<String, DecentralizedConsumer> consumerEntry : tcpConsumers.entrySet()) {
+            consumerEntry.getValue().close();
+        }
+    }
+
+    public void shutdown() throws InterruptedException {
+        if (decentralizedServer != null) {
+            decentralizedServer.shutdown();
+        }
+        if (udpSingleConsumer != null) {
+            udpSingleConsumer.shutdown();
+        }
+
+        for (Entry<String, DecentralizedConsumer> consumerEntry : tcpConsumers.entrySet()) {
+            consumerEntry.getValue().shutdown();
+        }
     }
 
     /**
@@ -52,13 +112,37 @@ public class DecentralizedStarter {
      *
      * @return
      */
-    private DecentralizedConsumer makeOrGetUdpConsumer(String clusterTypeCode, IdUtil idUtil) {
-        if (consumer != null) {
-            return consumer;
+    public DecentralizedUdpConsumer makeOrGetUdpConsumer() {
+        if (udpSingleConsumer != null) {
+            return udpSingleConsumer;
         }
         synchronized (lock) {
-            consumer = new DecentralizedUdpConsumerImpl(clusterTypeCode, idUtil);
-            return consumer;
+            udpSingleConsumer = new DecentralizedUdpConsumerImpl(decentralizedServer, idUtil);
+            return udpSingleConsumer;
         }
+    }
+
+    /**
+     * 创建一个tcp consumer
+     *
+     * @return
+     */
+    public DecentralizedConsumer makeOrGetTcpConsumer(String host, Integer port) {
+        String key = makeKey(host, port);
+        if (tcpConsumers.containsKey(key)) {
+            return tcpConsumers.get(key);
+        }
+        synchronized (key) {
+            if (tcpConsumers.containsKey(key)) {
+                return tcpConsumers.get(key);
+            }
+            DecentralizedTcpConsumerImpl decentralizedTcpConsumer = new DecentralizedTcpConsumerImpl(host, port, idUtil);
+            tcpConsumers.put(key, decentralizedTcpConsumer);
+            return decentralizedTcpConsumer;
+        }
+    }
+
+    private String makeKey(String host, Integer port) {
+        return String.format("Decentralized_%s:%d", host, port);
     }
 }

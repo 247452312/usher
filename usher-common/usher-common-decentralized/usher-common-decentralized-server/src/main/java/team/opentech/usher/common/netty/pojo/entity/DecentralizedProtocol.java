@@ -51,7 +51,7 @@ public class DecentralizedProtocol extends AbstractEntity<Identifier> {
         this.header = header;
         this.body = body;
         setUnique(Identifier.build((Long) header.get(UsherDecentralizedContent.ID_NAME)));
-        this.requestType = (int) header.get(UsherDecentralizedContent.REQUEST_TYPE_NAME);
+        this.requestType = (int) header.get(UsherDecentralizedContent.HEADER_REQUEST_TYPE_NAME);
     }
 
 
@@ -111,16 +111,17 @@ public class DecentralizedProtocol extends AbstractEntity<Identifier> {
      *
      * @return
      */
-    public static DecentralizedProtocol build(byte[] simpleTitle, Long unique, Map<String, Object> header, byte[] body) {
+    public static DecentralizedProtocol build(byte[] simpleTitle, Long unique, DecentralizedRequestTypeEnum decentralizedRequestType, Map<String, Object> header, byte[] body) {
         if (header == null) {
             header = new HashMap<>();
         }
         header.put(UsherDecentralizedContent.HEADER_UNIQUE_KEY, unique);
+        header.put(UsherDecentralizedContent.HEADER_REQUEST_TYPE_NAME, decentralizedRequestType.getCode());
         return build(simpleTitle, header, body);
     }
 
-    public static DecentralizedProtocol build(byte[] simpleTitle, Long unique, byte[] body) {
-        return build(simpleTitle, unique, null, body);
+    public static DecentralizedProtocol build(byte[] simpleTitle, Long unique, DecentralizedRequestTypeEnum decentralizedRequestType, byte[] body) {
+        return build(simpleTitle, unique, decentralizedRequestType, null, body);
     }
 
     public byte[] toBytes() {

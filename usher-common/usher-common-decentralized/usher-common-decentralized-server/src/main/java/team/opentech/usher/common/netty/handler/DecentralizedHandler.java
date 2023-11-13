@@ -3,8 +3,9 @@ package team.opentech.usher.common.netty.handler;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
+import team.opentech.usher.common.context.UsherDecentralizedContext;
 import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
+import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
 import team.opentech.usher.core.DecentralizedManager;
 import team.opentech.usher.redis.Redisable;
 import team.opentech.usher.util.Asserts;
@@ -17,13 +18,9 @@ import team.opentech.usher.util.Asserts;
  */
 public class DecentralizedHandler extends SimpleChannelInboundHandler<DecentralizedProtocol> {
 
-
-    private final Redisable redis;
-
     private final DecentralizedManager manager;
 
-    public DecentralizedHandler(Redisable redis, DecentralizedManager manager) {
-        this.redis = redis;
+    public DecentralizedHandler(DecentralizedManager manager) {
         this.manager = manager;
     }
 
@@ -59,6 +56,8 @@ public class DecentralizedHandler extends SimpleChannelInboundHandler<Decentrali
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, DecentralizedProtocol msg) throws Exception {
+        UsherDecentralizedContext instance = UsherDecentralizedContext.getInstance();
+        Redisable redis = instance.cache();
         super.channelRead(ctx, msg);
         String cacheKey = msg.cacheKey();
         Boolean exists = redis.exists(cacheKey);

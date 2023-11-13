@@ -19,4 +19,17 @@ public interface DecentralizedServer {
      * @throws InterruptedException
      */
     Boolean shutdown() throws InterruptedException;
+
+    /**
+     * 是否在线
+     *
+     * @return
+     */
+    Boolean isOnline();
+
+    /**
+     * 强制关闭
+     */
+    void close();
+
 }

@@ -11,34 +11,39 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.util.concurrent.Future;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import team.opentech.usher.common.content.UsherDecentralizedContent;
+import team.opentech.usher.common.context.UsherDecentralizedContext;
+import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
 import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
 import team.opentech.usher.util.ByteUtil;
 import team.opentech.usher.util.IdUtil;
 import team.opentech.usher.util.LogUtil;
+import team.opentech.usher.util.RunnableUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2023年10月26日 09时09分
  */
-public class DecentralizedUdpConsumerImpl implements DecentralizedConsumer {
+public class DecentralizedUdpConsumerImpl implements DecentralizedUdpConsumer {
 
     private EventLoopGroup group;
 
     private Bootstrap bootstrap;
 
-    /**
-     * 服务集群唯一标示
-     */
-    private String clusterTypeCode;
 
     /**
      * id工具
      */
     private IdUtil idUtil;
 
-    public DecentralizedUdpConsumerImpl(String clusterTypeCode, IdUtil idUtil) {
-        this.clusterTypeCode = clusterTypeCode;
+    /**
+     * udp consumer中需要识别server信息
+     */
+    private DecentralizedServer server;
+
+    public DecentralizedUdpConsumerImpl(DecentralizedServer server, IdUtil idUtil) {
+        this.server = server;
         this.idUtil = idUtil;
         group = new NioEventLoopGroup();
         bootstrap = new Bootstrap();
@@ -58,10 +63,17 @@ public class DecentralizedUdpConsumerImpl implements DecentralizedConsumer {
     }
 
     @Override
-    public Boolean send(byte[] body) throws InterruptedException {
-        DecentralizedProtocol decentralizedProtocol = DecentralizedProtocol.build(ByteUtil.subByte(clusterTypeCode.getBytes(UsherDecentralizedContent.DEFAULT_CHARSET), 4), idUtil.newId(), body);
+    public void close() {
+        group.shutdownGracefully(0, 0, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public Boolean send(byte[] body, DecentralizedRequestTypeEnum decentralizedRequestTypeEnum) throws InterruptedException {
+        UsherDecentralizedContext instance = UsherDecentralizedContext.getInstance();
+        DecentralizedProtocol decentralizedProtocol = DecentralizedProtocol.build(ByteUtil.subByte(instance.clusterTypeCode().getBytes(UsherDecentralizedContent.DEFAULT_CHARSET), 4), idUtil.newId(), decentralizedRequestTypeEnum, body);
         return send(decentralizedProtocol);
     }
+
 
     @Override
     public Boolean send(DecentralizedProtocol decentralizedProtocol) throws InterruptedException {
@@ -72,4 +84,22 @@ public class DecentralizedUdpConsumerImpl implements DecentralizedConsumer {
         return Boolean.TRUE;
     }
 
+    @Override
+    public Long sendOnline() {
+        UsherDecentralizedContext instance = UsherDecentralizedContext.getInstance();
+        String host = instance.host();
+        Integer port = instance.serverPort();
+        String onlineMsg = String.format("%s:%d", host, port);
+        DecentralizedProtocol decentralizedProtocol = DecentralizedProtocol.build(ByteUtil.subByte(instance.clusterTypeCode().getBytes(UsherDecentralizedContent.DEFAULT_CHARSET), 4), idUtil.newId(), DecentralizedRequestTypeEnum.ONLINE_BROADCAST, onlineMsg.getBytes(UsherDecentralizedContent.DEFAULT_CHARSET));
+        long unique = RunnableUtil.run(() -> {
+            try {
+                return send(decentralizedProtocol);
+            } catch (InterruptedException e) {
+                LogUtil.error(this, e);
+            }
+            return false;
+        }, 3, 30L);
+        instance.putUnique(DecentralizedRequestTypeEnum.ONLINE_BROADCAST, unique);
+        return unique;
+    }
 }

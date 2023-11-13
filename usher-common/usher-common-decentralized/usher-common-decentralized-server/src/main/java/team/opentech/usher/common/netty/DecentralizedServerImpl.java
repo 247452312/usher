@@ -10,10 +10,11 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.util.concurrent.Future;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import team.opentech.usher.common.context.UsherDecentralizedContext;
 import team.opentech.usher.common.netty.code.DecentralizedDecoder;
 import team.opentech.usher.common.netty.handler.DecentralizedHandler;
 import team.opentech.usher.core.DecentralizedManager;
-import team.opentech.usher.redis.Redisable;
 import team.opentech.usher.util.LogUtil;
 
 /**
@@ -22,21 +23,6 @@ import team.opentech.usher.util.LogUtil;
  */
 public class DecentralizedServerImpl extends ChannelInitializer<SocketChannel> implements DecentralizedServer {
 
-
-    /**
-     * 本地端口
-     */
-    private final Integer port;
-
-    /**
-     * 集群业务类型唯一标识
-     */
-    private final String clusterTypeCode;
-
-    /**
-     * 缓存
-     */
-    private final Redisable redisable;
 
     private final DecentralizedManager service;
 
@@ -50,18 +36,18 @@ public class DecentralizedServerImpl extends ChannelInitializer<SocketChannel> i
      */
     private EventLoopGroup workerGroup;
 
-    public DecentralizedServerImpl(Integer port, String clusterTypeCode, Redisable redisable, DecentralizedManager service) {
-        this.port = port;
-        this.clusterTypeCode = clusterTypeCode;
-        this.redisable = redisable;
+
+    public DecentralizedServerImpl(DecentralizedManager service) {
         this.service = service;
     }
 
     @Override
     public void start() throws InterruptedException {
+        UsherDecentralizedContext instance = UsherDecentralizedContext.getInstance();
         bossGroup = new NioEventLoopGroup(1);
         workerGroup = new NioEventLoopGroup();
 
+        Integer port = instance.serverPort();
         LogUtil.info("去中心化集群端口开启,端口号:{}", port.toString());
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
@@ -83,9 +69,21 @@ public class DecentralizedServerImpl extends ChannelInitializer<SocketChannel> i
     }
 
     @Override
+    public Boolean isOnline() {
+        return !bossGroup.isShutdown();
+    }
+
+    @Override
+    public void close() {
+        bossGroup.shutdownGracefully(0, 0, TimeUnit.SECONDS);
+    }
+
+
+    @Override
     protected void initChannel(SocketChannel ch) {
+        UsherDecentralizedContext instance = UsherDecentralizedContext.getInstance();
         // 由decoder解析 再交由handler处理
-        ch.pipeline().addLast(new DecentralizedDecoder(clusterTypeCode), new DecentralizedHandler(redisable, service));
+        ch.pipeline().addLast(new DecentralizedDecoder(instance.clusterTypeCode()), new DecentralizedHandler(service));
 
     }
 }

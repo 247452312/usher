@@ -23,5 +23,9 @@
             <artifactId>usher-common-decentralized-server</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-common-elegant</artifactId>
+        </dependency>
     </dependencies>
 </project>

@@ -1,5 +1,6 @@
 package team.opentech.usher.common.netty;
 
+import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
 import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
 
 /**
@@ -13,7 +14,8 @@ public interface DecentralizedConsumer {
      *
      * @param body
      */
-    Boolean send(byte[] body) throws InterruptedException;
+    Boolean send(byte[] body, DecentralizedRequestTypeEnum decentralizedRequestTypeEnum) throws InterruptedException;
+
     /**
      * 发送信息
      *
@@ -28,4 +30,8 @@ public interface DecentralizedConsumer {
      */
     Boolean shutdown();
 
+    /**
+     * 强制关闭
+     */
+    void close();
 }

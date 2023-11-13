@@ -12,7 +12,10 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import team.opentech.usher.common.content.UsherDecentralizedContent;
+import team.opentech.usher.common.context.UsherDecentralizedContext;
+import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
 import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
 import team.opentech.usher.util.ByteUtil;
 import team.opentech.usher.util.IdUtil;
@@ -39,14 +42,12 @@ public class DecentralizedTcpConsumerImpl implements DecentralizedConsumer {
      */
     private ChannelFuture channelFuture;
 
-    private String clusterTypeCode;
 
     private IdUtil idUtil;
 
-    public DecentralizedTcpConsumerImpl(String clusterTypeCode, String host, Integer port, IdUtil idUtil) {
-        this.clusterTypeCode = clusterTypeCode;
+    public DecentralizedTcpConsumerImpl(String targetHost, Integer targetPort, IdUtil idUtil) {
         this.idUtil = idUtil;
-        connectConsumer(host, port);
+        connectConsumer(targetHost, targetPort);
 
     }
 
@@ -65,8 +66,13 @@ public class DecentralizedTcpConsumerImpl implements DecentralizedConsumer {
     }
 
     @Override
-    public Boolean send(byte[] body) throws InterruptedException {
-        DecentralizedProtocol decentralizedProtocol = DecentralizedProtocol.build(ByteUtil.subByte(clusterTypeCode.getBytes(UsherDecentralizedContent.DEFAULT_CHARSET), 4), idUtil.newId(), body);
+    public void close() {
+        group.shutdownGracefully(0, 0, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public Boolean send(byte[] body, DecentralizedRequestTypeEnum decentralizedRequestTypeEnum) throws InterruptedException {
+        DecentralizedProtocol decentralizedProtocol = DecentralizedProtocol.build(ByteUtil.subByte(UsherDecentralizedContext.getInstance().clusterTypeCode().getBytes(UsherDecentralizedContent.DEFAULT_CHARSET), 4), idUtil.newId(), decentralizedRequestTypeEnum, body);
         return send(decentralizedProtocol);
     }
 
