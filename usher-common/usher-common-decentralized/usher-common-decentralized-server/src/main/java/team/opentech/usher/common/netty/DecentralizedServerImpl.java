@@ -51,7 +51,10 @@ public class DecentralizedServerImpl extends ChannelInitializer<SocketChannel> i
         LogUtil.info("去中心化集群端口开启,端口号:{}", port.toString());
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-         .option(ChannelOption.SO_BACKLOG, 1024).childHandler(this);
+         .option(ChannelOption.SO_BACKLOG, 1024)
+         // 开启接收udp信息
+         .option(ChannelOption.SO_BROADCAST, true)
+         .childHandler(this);
         ChannelFuture f = b.bind(port).sync();
         f.channel().closeFuture();
     }

@@ -15,6 +15,7 @@ import io.netty.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import team.opentech.usher.common.content.UsherDecentralizedContent;
 import team.opentech.usher.common.context.UsherDecentralizedContext;
+import team.opentech.usher.common.netty.DecentralizedConsumer;
 import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
 import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
 import team.opentech.usher.util.ByteUtil;

@@ -1,5 +1,6 @@
 package team.opentech.usher.core;
 
+import java.io.UnsupportedEncodingException;
 import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
 import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
 
@@ -18,7 +19,7 @@ public interface DecentralizedManager {
     /**
      * 处理回应请求
      */
-    void dealAck(DecentralizedProtocol msg);
+    void dealAck(DecentralizedProtocol msg) throws UnsupportedEncodingException;
 
     /**
      * 发送心跳的节点识别到目标节点不存在,向模主发出节点下线通知,如果目标节点就是模主节点,则直接发送到leader

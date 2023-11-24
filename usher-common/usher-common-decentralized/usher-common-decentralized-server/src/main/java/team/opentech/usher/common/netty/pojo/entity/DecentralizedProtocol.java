@@ -2,8 +2,10 @@ package team.opentech.usher.common.netty.pojo.entity;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import team.opentech.usher.common.content.UsherDecentralizedContent;
 import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
 import team.opentech.usher.common.util.DecentralizedProtocolUtil;
@@ -177,7 +179,10 @@ public class DecentralizedProtocol extends AbstractEntity<Identifier> {
         return new String(body);
     }
 
-    public <T> T body(Class<T> clazz) {
+    public <T> T body(Class<T> clazz) throws UnsupportedEncodingException {
+        if (Objects.equals(clazz, String.class)) {
+            return (T) new String(body, UsherDecentralizedContent.HEADER_UNIQUE_KEY);
+        }
         return JSONObject.parseObject(body, clazz);
     }
 

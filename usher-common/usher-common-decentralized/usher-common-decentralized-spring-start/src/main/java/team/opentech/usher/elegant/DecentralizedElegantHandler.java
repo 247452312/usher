@@ -2,9 +2,18 @@ package team.opentech.usher.elegant;
 
 import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
-import team.opentech.usher.DecentralizedStarter;
-import team.opentech.usher.common.netty.DecentralizedUdpConsumer;
+import team.opentech.usher.common.content.UsherDecentralizedContent;
+import team.opentech.usher.common.context.UsherDecentralizedContext;
+import team.opentech.usher.common.netty.DecentralizedConsumer;
+import team.opentech.usher.common.netty.DecentralizedServerImpl;
+import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
+import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
+import team.opentech.usher.core.DecentralizedManager;
+import team.opentech.usher.util.ByteUtil;
+import team.opentech.usher.util.IdUtil;
 import team.opentech.usher.util.LogUtil;
+import team.opentech.usher.util.RunnableUtil;
+import team.opentech.usher.util.SpringUtil;
 
 /**
  * 去中心化集群工具接入优雅上下线
@@ -15,17 +24,19 @@ import team.opentech.usher.util.LogUtil;
 @Component
 public class DecentralizedElegantHandler extends AbstractElegantHandler {
 
+
     @Resource
-    private DecentralizedStarter starter;
+    private DecentralizedManager service;
 
     @Override
     public Boolean isOnline() {
-        return starter.isOnline();
+        UsherDecentralizedContext instance = UsherDecentralizedContext.getInstance();
+        return instance.getServer().isOnline();
     }
 
     @Override
     public void close() {
-        starter.close();
+        UsherDecentralizedContext.getInstance().close();
     }
 
     @Override
@@ -37,12 +48,29 @@ public class DecentralizedElegantHandler extends AbstractElegantHandler {
     public void allowToPublish() {
         super.allowToPublish();
         try {
+            IdUtil idUtil = SpringUtil.getBean(IdUtil.class);
             /*1.启动server,监听请求*/
-            starter.startServer();
+            UsherDecentralizedContext instance = UsherDecentralizedContext.getInstance();
+            if (instance.getServer() == null) {
+                instance.setServer(new DecentralizedServerImpl(service));
+            }
+            instance.getServer().start();
             /*2.启动请求发送器*/
-            DecentralizedUdpConsumer decentralizedConsumer = starter.makeOrGetUdpConsumer();
+            DecentralizedConsumer decentralizedConsumer = instance.makeOrGetUdpConsumer();
             /*3.发送上线广播*/
-            decentralizedConsumer.sendOnline();
+            String host = instance.host();
+            Integer port = instance.serverPort();
+            String onlineMsg = String.format("%s:%d", host, port);
+            DecentralizedProtocol decentralizedProtocol = DecentralizedProtocol.build(ByteUtil.subByte(instance.clusterTypeCode().getBytes(UsherDecentralizedContent.DEFAULT_CHARSET), 4), idUtil.newId(), DecentralizedRequestTypeEnum.ONLINE_BROADCAST, onlineMsg.getBytes(UsherDecentralizedContent.DEFAULT_CHARSET));
+            long unique = RunnableUtil.run(() -> {
+                try {
+                    return decentralizedConsumer.send(decentralizedProtocol);
+                } catch (InterruptedException e) {
+                    LogUtil.error(this, e);
+                }
+                return false;
+            }, 3, 30L);
+            instance.putUnique(DecentralizedRequestTypeEnum.ONLINE_BROADCAST, unique);
         } catch (InterruptedException e) {
             LogUtil.error(this, e);
         }
@@ -56,7 +84,7 @@ public class DecentralizedElegantHandler extends AbstractElegantHandler {
     @Override
     protected void doShutdown() {
         try {
-            starter.shutdown();
+            UsherDecentralizedContext.getInstance().shutdown();
         } catch (InterruptedException e) {
             LogUtil.error(this, e);
         }

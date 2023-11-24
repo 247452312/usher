@@ -37,6 +37,14 @@ public final class RunnableUtil {
         return new AsyncFuture<>(submit, asyncRunnable.getUnique());
     }
 
+
+    public static AsyncFuture<?> runDelay(Runnable runnable, long seconds) {
+        long unique = SpringUtil.getBean(IdUtil.class).newId();
+        AsyncRunnable asyncRunnable = new AsyncRunnable(runnable, unique);
+        ScheduledFuture<?> schedule = scheduled.schedule(asyncRunnable, seconds, TimeUnit.SECONDS);
+        return new AsyncFuture<>(schedule, asyncRunnable.getUnique());
+    }
+
     public static <T> AsyncFuture<T> run(Callable<T> callable) {
         long unique = SpringUtil.getBean(IdUtil.class).newId();
         AsyncCallable<T> asyncRunnable = new AsyncCallable<>(callable, unique);

@@ -14,6 +14,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import team.opentech.usher.common.content.UsherDecentralizedContent;
 import team.opentech.usher.common.context.UsherDecentralizedContext;
+import team.opentech.usher.common.netty.DecentralizedConsumer;
+import team.opentech.usher.common.netty.DecentralizedServer;
 import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
 import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
 import team.opentech.usher.util.ByteUtil;
@@ -25,7 +27,7 @@ import team.opentech.usher.util.RunnableUtil;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2023年10月26日 09时09分
  */
-public class DecentralizedUdpConsumerImpl implements DecentralizedUdpConsumer {
+public class DecentralizedUdpConsumerImpl implements DecentralizedConsumer {
 
     private EventLoopGroup group;
 
@@ -84,22 +86,4 @@ public class DecentralizedUdpConsumerImpl implements DecentralizedUdpConsumer {
         return Boolean.TRUE;
     }
 
-    @Override
-    public Long sendOnline() {
-        UsherDecentralizedContext instance = UsherDecentralizedContext.getInstance();
-        String host = instance.host();
-        Integer port = instance.serverPort();
-        String onlineMsg = String.format("%s:%d", host, port);
-        DecentralizedProtocol decentralizedProtocol = DecentralizedProtocol.build(ByteUtil.subByte(instance.clusterTypeCode().getBytes(UsherDecentralizedContent.DEFAULT_CHARSET), 4), idUtil.newId(), DecentralizedRequestTypeEnum.ONLINE_BROADCAST, onlineMsg.getBytes(UsherDecentralizedContent.DEFAULT_CHARSET));
-        long unique = RunnableUtil.run(() -> {
-            try {
-                return send(decentralizedProtocol);
-            } catch (InterruptedException e) {
-                LogUtil.error(this, e);
-            }
-            return false;
-        }, 3, 30L);
-        instance.putUnique(DecentralizedRequestTypeEnum.ONLINE_BROADCAST, unique);
-        return unique;
-    }
 }
