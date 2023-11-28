@@ -1,7 +1,7 @@
 package team.opentech.usher.common.netty;
 
-import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
 import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
+import team.opentech.usher.enums.DecentralizedRequestTypeEnum;
 
 /**
  * @author uhyils <247452312@qq.com>

@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 import team.opentech.usher.common.context.UsherDecentralizedContext;
 import team.opentech.usher.common.netty.code.DecentralizedDecoder;
 import team.opentech.usher.common.netty.handler.DecentralizedHandler;
-import team.opentech.usher.core.DecentralizedManager;
+import team.opentech.usher.DecentralizedManager;
 import team.opentech.usher.util.LogUtil;
 
 /**

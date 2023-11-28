@@ -1,8 +1,8 @@
-package team.opentech.usher.core;
+package team.opentech.usher;
 
 import java.io.UnsupportedEncodingException;
 import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
-import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
+import team.opentech.usher.enums.DecentralizedRequestTypeEnum;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -75,7 +75,7 @@ public interface DecentralizedManager {
     /**
      * 提议组建集群,udp类型通知
      */
-    void dealProposeFormingCluster(DecentralizedProtocol msg);
+    void dealProposeFormingCluster(DecentralizedProtocol msg) throws UnsupportedEncodingException;
 
     /**
      * 模主晋升通知,leader发向指定节点

@@ -11,9 +11,9 @@ import team.opentech.usher.common.netty.DecentralizedConsumer;
 import team.opentech.usher.common.netty.DecentralizedServer;
 import team.opentech.usher.common.netty.DecentralizedTcpConsumerImpl;
 import team.opentech.usher.common.netty.DecentralizedUdpConsumerImpl;
-import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
-import team.opentech.usher.enums.ClusterStatusEnum;
-import team.opentech.usher.enums.RoleEnum;
+import team.opentech.usher.enums.DecentralizedClusterStatusEnum;
+import team.opentech.usher.enums.DecentralizedNodeRoleEnum;
+import team.opentech.usher.enums.DecentralizedRequestTypeEnum;
 import team.opentech.usher.redis.Redisable;
 import team.opentech.usher.util.IdUtil;
 import team.opentech.usher.util.IpUtil;
@@ -54,7 +54,7 @@ public class UsherDecentralizedContext {
     /**
      * 当前节点的状态
      */
-    private ClusterStatusEnum status = ClusterStatusEnum.INIT;
+    private DecentralizedClusterStatusEnum status = DecentralizedClusterStatusEnum.INIT;
 
     /**
      * 本机ip
@@ -64,7 +64,7 @@ public class UsherDecentralizedContext {
     /**
      * 当前用户角色
      */
-    private RoleEnum role;
+    private DecentralizedNodeRoleEnum role;
 
     /**
      * 刚上线等待链接的node
@@ -91,16 +91,71 @@ public class UsherDecentralizedContext {
      */
     private volatile DecentralizedServer decentralizedServer;
 
+    /**
+     * 提议选举的节点ip
+     */
+    private volatile String proposeLeaderNodeHost;
+
+    /**
+     * 提议选举的节点端口
+     */
+    private volatile Integer proposeLeaderNodePort;
+
+
+    /**
+     * leader_ip
+     */
+    private volatile String leaderNodeHost;
+
+    /**
+     * leader_port
+     */
+    private volatile Integer leaderNodePort;
+
+    private List<DecentralizedNode> ackNodes = new ArrayList<>();
+
     public UsherDecentralizedContext(Redisable redisable, Integer serverPort, String clusterTypeCode) {
         this.redisable = redisable;
         this.serverPort = serverPort;
         this.clusterTypeCode = clusterTypeCode;
-        this.role = RoleEnum.NO_ELECTIONS;
+        this.role = DecentralizedNodeRoleEnum.NO_ELECTIONS;
         this.tcpConsumers = new HashMap<>();
     }
 
     public static UsherDecentralizedContext getInstance() {
         return SpringUtil.getBean(UsherDecentralizedContext.class);
+    }
+
+    public String getLeaderNodeHost() {
+        return leaderNodeHost;
+    }
+
+    public void setLeaderNodeHost(String leaderNodeHost) {
+        this.leaderNodeHost = leaderNodeHost;
+    }
+
+    public Integer getLeaderNodePort() {
+        return leaderNodePort;
+    }
+
+    public void setLeaderNodePort(Integer leaderNodePort) {
+        this.leaderNodePort = leaderNodePort;
+    }
+
+    public String getProposeLeaderNodeHost() {
+        return proposeLeaderNodeHost;
+    }
+
+    public void setProposeLeaderNodeHost(String proposeLeaderNodeHost) {
+        this.proposeLeaderNodeHost = proposeLeaderNodeHost;
+    }
+
+    public Integer getProposeLeaderNodePort() {
+        return proposeLeaderNodePort;
+    }
+
+    public void setProposeLeaderNodePort(Integer proposeLeaderNodePort) {
+        this.proposeLeaderNodePort = proposeLeaderNodePort;
     }
 
     public DecentralizedServer getServer() {
@@ -153,7 +208,7 @@ public class UsherDecentralizedContext {
      *
      * @return
      */
-    public RoleEnum role() {
+    public DecentralizedNodeRoleEnum role() {
         return role;
     }
 
@@ -184,7 +239,7 @@ public class UsherDecentralizedContext {
      *
      * @return
      */
-    public ClusterStatusEnum status() {
+    public DecentralizedClusterStatusEnum status() {
         return status;
     }
 
@@ -261,6 +316,22 @@ public class UsherDecentralizedContext {
         for (Entry<String, DecentralizedConsumer> consumerEntry : tcpConsumers.entrySet()) {
             consumerEntry.getValue().shutdown();
         }
+    }
+
+    /**
+     * 添加ack节点
+     *
+     * @param ip   响应节点ip
+     * @param port 响应节点端口
+     *
+     * @return ack节点数量
+     */
+    public Integer putAckNode(String ip, Integer port) {
+        DecentralizedNode decentralizedNode = new DecentralizedNode(ip, port);
+        if (!ackNodes.contains(decentralizedNode)) {
+            ackNodes.add(decentralizedNode);
+        }
+        return ackNodes.size();
     }
 
     private String makeKey(String host, Integer port) {

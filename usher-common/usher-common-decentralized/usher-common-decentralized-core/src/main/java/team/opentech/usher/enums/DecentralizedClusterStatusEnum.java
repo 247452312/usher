@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2023年10月10日 09时29分
  */
-public enum ClusterStatusEnum {
+public enum DecentralizedClusterStatusEnum {
     /**
      * 刚上线默认状态,这时通过网络UDP扫描进行与其他节点的交互
      */
@@ -32,13 +32,13 @@ public enum ClusterStatusEnum {
 
     private final String name;
 
-    ClusterStatusEnum(Integer code, String name) {
+    DecentralizedClusterStatusEnum(Integer code, String name) {
         this.code = code;
         this.name = name;
     }
 
-    public static ClusterStatusEnum getByCode(Integer code) {
-        for (ClusterStatusEnum value : values()) {
+    public static DecentralizedClusterStatusEnum getByCode(Integer code) {
+        for (DecentralizedClusterStatusEnum value : values()) {
             if (Objects.equals(value.getCode(), code)) {
                 return value;
             }

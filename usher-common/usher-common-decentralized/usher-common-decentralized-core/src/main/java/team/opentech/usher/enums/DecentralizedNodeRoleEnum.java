@@ -9,7 +9,7 @@ import java.util.Objects;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2023年10月10日 09时32分
  */
-public enum RoleEnum {
+public enum DecentralizedNodeRoleEnum {
     /**
      * 管理全部节点,主要和模主通讯
      */
@@ -32,13 +32,13 @@ public enum RoleEnum {
 
     private final String name;
 
-    RoleEnum(Integer code, String name) {
+    DecentralizedNodeRoleEnum(Integer code, String name) {
         this.code = code;
         this.name = name;
     }
 
-    public static RoleEnum getByCode(Integer code) {
-        for (RoleEnum value : values()) {
+    public static DecentralizedNodeRoleEnum getByCode(Integer code) {
+        for (DecentralizedNodeRoleEnum value : values()) {
             if (Objects.equals(value.getCode(), code)) {
                 return value;
             }

@@ -4,9 +4,9 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import team.opentech.usher.common.context.UsherDecentralizedContext;
-import team.opentech.usher.common.netty.enums.DecentralizedRequestTypeEnum;
 import team.opentech.usher.common.netty.pojo.entity.DecentralizedProtocol;
-import team.opentech.usher.core.DecentralizedManager;
+import team.opentech.usher.DecentralizedManager;
+import team.opentech.usher.enums.DecentralizedRequestTypeEnum;
 import team.opentech.usher.redis.Redisable;
 import team.opentech.usher.util.Asserts;
 
