@@ -459,6 +459,7 @@
         <module>usher-service</module>
         <module>usher-common</module>
         <module>usher-out</module>
+        <module>usher-common/usher-common-util/usher-common-util-scenario</module>
     </modules>
 
     <profiles>
