@@ -61,7 +61,7 @@ public class MainTest {
     void scenarioHistoryDataTest() {
         Map<Float, Float> testData = new HashMap<>();
         for (int i = 0; i < 512; i++) {
-            float v = i + random.nextFloat();
+            float v = i / 20F + random.nextFloat();
             testData.put(v, 8 * v * v + 6);
         }
         FitnessHandler<Float, Float> fitnessHandler = new TestHistoryDataFunctionFitnessHandler(testData);
