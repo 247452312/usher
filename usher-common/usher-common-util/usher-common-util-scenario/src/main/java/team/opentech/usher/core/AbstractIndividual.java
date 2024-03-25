@@ -73,6 +73,10 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
         return secondDna;
     }
 
+    @Override
+    public String toString() {
+        return firstDna() + ":" + secondDna();
+    }
     /**
      * 创建一个真正的个体
      *

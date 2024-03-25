@@ -11,7 +11,7 @@ import java.util.List;
 public interface FitnessHandler<T, E> {
 
     /**
-     * 计算适应度
+     * 计算适应度 适应度越趋近1则适应度越高
      *
      * @param individual 种群中的个体
      *
@@ -20,22 +20,23 @@ public interface FitnessHandler<T, E> {
     Float fitness(Individual<T, E> individual);
 
     /**
-     * 计算适应度
+     * 计算适应度 适应度越趋近1则适应度越高
      *
      * @param individual 种群中的个体
      *
      * @return 适应度 范围为 0-1
      */
-    Float fitness(Individual<T, E> individual, float x);
+    Float fitness(Individual<T, E> individual, T x);
 
     /**
-     * 计算适应度
+     * 计算适应度 适应度越趋近1则适应度越高
      *
      * @param individual 种群中的个体
      *
      * @return 适应度 范围为 0-1
      */
-    Float fitness(Individual<T, E> individual, float[] x);
+    Float fitness(Individual<T, E> individual, T[] x);
+
 
     /**
      * 获取适应度为前一定百分比的个体
@@ -45,4 +46,32 @@ public interface FitnessHandler<T, E> {
      * @param min         最少获取个数
      */
     List<Individual<T, E>> findTopPercentage(List<Individual<T, E>> individuals, Float percentage, Integer min);
+
+    /**
+     * 计算平均适应度
+     *
+     * @param topPercentage 个体
+     * @param params        随机入参
+     *
+     * @return
+     */
+    Float fitnessByMean(List<Individual<T, E>> topPercentage, T[] params);
+
+    /**
+     * 计算结果
+     *
+     * @param params 入参
+     *
+     * @return
+     */
+    E[] calculateResult(T[] params);
+
+    /**
+     * 计算结果
+     *
+     * @param param 入参
+     *
+     * @return
+     */
+    E calculateResult(T param);
 }

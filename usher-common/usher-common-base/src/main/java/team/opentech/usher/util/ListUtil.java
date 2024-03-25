@@ -24,4 +24,12 @@ public final class ListUtil {
         results.sort(Comparator.comparingDouble(Number::floatValue));
         return results.get(results.size() / 2);
     }
+
+    public static <T extends Number> float mean(List<T> results) {
+        float sum = 0F;
+        for (T result : results) {
+            sum += result.floatValue();
+        }
+        return sum / results.size();
+    }
 }

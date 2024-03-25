@@ -32,7 +32,11 @@ class LongByteTest {
 
         longByte = new LongByte("1110"); // 14
         System.out.println(longByte.intValue());
-
-
+    }
+    @Test
+    void testGet() {
+        LongByte longByte = new LongByte("11100000001");
+        LongByte longByte1 = longByte.get(3, 3);
+        int i = 1;
     }
 }
