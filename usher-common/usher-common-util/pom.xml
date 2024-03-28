@@ -8,6 +8,7 @@
         <module>usher-common-util-obj-pool</module>
         <module>usher-common-util-ast</module>
         <module>usher-common-util-trace-executor</module>
+        <module>usher-common-util-scenario</module>
     </modules>
     <parent>
         <groupId>team.opentech.usher</groupId>

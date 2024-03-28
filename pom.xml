@@ -69,6 +69,7 @@
         <jython.version>2.7.2</jython.version>
         <javassist.version>3.24.0-GA</javassist.version>
         <kotlin.version>1.6.20-RC</kotlin.version>
+        <ejml.version>0.34</ejml.version>
         <commons-io.version>2.11.0</commons-io.version>
     </properties>
 
@@ -412,6 +413,13 @@
                 <scope>test</scope>
             </dependency>
 
+
+            <dependency>
+                <groupId>org.ejml</groupId>
+                <artifactId>ejml-simple</artifactId>
+                <version>${ejml.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -459,7 +467,6 @@
         <module>usher-service</module>
         <module>usher-common</module>
         <module>usher-out</module>
-        <module>usher-common/usher-common-util/usher-common-util-scenario</module>
     </modules>
 
     <profiles>
