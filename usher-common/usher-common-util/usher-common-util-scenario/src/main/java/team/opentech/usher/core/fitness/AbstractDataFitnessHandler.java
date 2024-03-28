@@ -1,7 +1,7 @@
-package team.opentech.usher.fitness;
+package team.opentech.usher.core.fitness;
 
 import java.util.Map;
-import team.opentech.usher.Individual;
+import team.opentech.usher.core.data.AbstractHistoryData;
 
 /**
  * 可以直接计算出结果的适应度函数
@@ -15,7 +15,7 @@ public abstract class AbstractDataFitnessHandler<T, E> extends AbstractFitnessHa
     /**
      * 历史数据的入参和结果
      */
-    private final Map<T, E> testData;
+    protected final Map<T, E> testData;
 
     /**
      * 根据历史入参和结果拟合的规则曲线?

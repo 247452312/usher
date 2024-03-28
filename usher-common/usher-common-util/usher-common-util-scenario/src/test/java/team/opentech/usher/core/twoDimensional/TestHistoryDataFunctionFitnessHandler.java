@@ -1,12 +1,12 @@
-package team.opentech.usher.core;
+package team.opentech.usher.core.twoDimensional;
 
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 import team.opentech.usher.annotation.NotNull;
-import team.opentech.usher.fitness.AbstractDataFitnessHandler;
-import team.opentech.usher.fitness.AbstractHistoryData;
-import team.opentech.usher.fitness.AbstractHistoryMeanData;
+import team.opentech.usher.core.fitness.AbstractDataFitnessHandler;
+import team.opentech.usher.core.data.AbstractHistoryData;
+import team.opentech.usher.core.data.AbstractHistoryMeanData;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -19,7 +19,7 @@ public class TestHistoryDataFunctionFitnessHandler extends AbstractDataFitnessHa
     private Float[] dataKeys;
 
 
-    protected TestHistoryDataFunctionFitnessHandler(Map<Float, Float> testData) {
+    public TestHistoryDataFunctionFitnessHandler(Map<Float, Float> testData) {
         super(testData);
         this.dataKeys = testData.keySet().toArray(new Float[0]);
         Arrays.sort(dataKeys);

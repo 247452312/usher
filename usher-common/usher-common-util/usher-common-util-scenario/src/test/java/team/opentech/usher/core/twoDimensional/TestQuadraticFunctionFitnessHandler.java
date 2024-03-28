@@ -1,8 +1,8 @@
-package team.opentech.usher.core;
+package team.opentech.usher.core.twoDimensional;
 
 import java.util.Random;
 import team.opentech.usher.annotation.NotNull;
-import team.opentech.usher.fitness.AbstractCalculateFitnessHandler;
+import team.opentech.usher.core.fitness.AbstractCalculateFitnessHandler;
 
 /**
  * @author uhyils <247452312@qq.com>

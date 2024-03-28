@@ -1,4 +1,4 @@
-package team.opentech.usher.core;
+package team.opentech.usher.core.twoDimensional;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ public class MainTest {
     @Test
     void scenarioCalculateTest() {
         FitnessHandler<Float, Float> fitnessHandler = new TestQuadraticFunctionFitnessHandler(8, 6);
-        TestFunctionPopulation testPopulation = new TestFunctionPopulation(new Properties(), fitnessHandler);
+        TestFloatFunctionPopulation testPopulation = new TestFloatFunctionPopulation(new Properties(), fitnessHandler);
         testPopulation.init();
         int lCount = 0;
         NumberFormat instance = NumberFormat.getInstance();
@@ -66,7 +66,7 @@ public class MainTest {
         }
         FitnessHandler<Float, Float> fitnessHandler = new TestHistoryDataFunctionFitnessHandler(testData);
 
-        TestFunctionPopulation testPopulation = new TestFunctionPopulation(new Properties(), fitnessHandler);
+        TestFloatFunctionPopulation testPopulation = new TestFloatFunctionPopulation(new Properties(), fitnessHandler);
         testPopulation.init();
         int lCount = 0;
         float minAbs = 0.0005F;

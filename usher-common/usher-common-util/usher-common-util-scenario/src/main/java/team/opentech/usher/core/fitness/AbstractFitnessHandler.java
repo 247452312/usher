@@ -1,4 +1,4 @@
-package team.opentech.usher.fitness;
+package team.opentech.usher.core.fitness;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,7 +24,6 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
 
     @Override
     public List<Individual<T, E>> findTopPercentage(List<Individual<T, E>> individuals, Float percentage, Integer min) {
-
         int targetSize = (int) (individuals.size() * percentage);
         // 选给定的最小值和实际百分比的大小中较大的
         int realTargetSize = Math.max(targetSize, min);
@@ -42,7 +41,7 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
 
     @Override
     public Float fitnessByMean(List<Individual<T, E>> topPercentage, T[] params) {
-        return (float) topPercentage.stream().mapToDouble(t -> fitness(t, params)).average().getAsDouble();
+        return (float) topPercentage.stream().mapToDouble(t -> fitness(t, makeTestParams())).average().getAsDouble();
     }
 
 

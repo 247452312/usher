@@ -1,4 +1,4 @@
-package team.opentech.usher.fitness;
+package team.opentech.usher.core.fitness;
 
 /**
  * 可以直接计算出结果的适应度函数

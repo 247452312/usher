@@ -1,8 +1,9 @@
-package team.opentech.usher.core;
+package team.opentech.usher.core.twoDimensional;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import team.opentech.usher.core.AbstractIndividual;
 import team.opentech.usher.lang.LongByte;
 
 /**

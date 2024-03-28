@@ -1,4 +1,4 @@
-package team.opentech.usher.fitness;
+package team.opentech.usher.core.data;
 
 import java.util.Map;
 import team.opentech.usher.Individual;
