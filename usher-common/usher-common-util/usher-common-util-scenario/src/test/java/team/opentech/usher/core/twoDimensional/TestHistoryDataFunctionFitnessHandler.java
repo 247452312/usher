@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 import team.opentech.usher.annotation.NotNull;
-import team.opentech.usher.core.fitness.AbstractDataFitnessHandler;
 import team.opentech.usher.core.data.AbstractHistoryData;
 import team.opentech.usher.core.data.AbstractHistoryMeanData;
+import team.opentech.usher.core.fitness.AbstractDataFitnessHandler;
 
 /**
  * @author uhyils <247452312@qq.com>

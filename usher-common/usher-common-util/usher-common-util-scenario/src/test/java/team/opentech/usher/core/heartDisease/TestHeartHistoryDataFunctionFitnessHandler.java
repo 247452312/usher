@@ -1,5 +1,6 @@
 package team.opentech.usher.core.heartDisease;
 
+import java.util.Arrays;
 import java.util.Map;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.core.data.AbstractHistoryData;
@@ -38,7 +39,7 @@ public class TestHeartHistoryDataFunctionFitnessHandler extends AbstractDataFitn
 
             @Override
             protected Double meanResult(Double[] param1, Double result1, Double[] param2, Double result2, Double[] param) {
-                float sum = 0;
+                double sum = 0;
                 for (int i = 0; i < 14; i++) {
                     double v = (param[i] - param1[i]) / (param2[i] - param1[i]);
                     sum += v;
@@ -48,13 +49,9 @@ public class TestHeartHistoryDataFunctionFitnessHandler extends AbstractDataFitn
 
             @Override
             protected int compare(Double[] o1, Double[] o2) {
-                float o1sum = 0;
-                float o2sum = 0;
-                for (int i = 0; i < 14; i++) {
-                    o1sum += o1[i] * o1[i];
-                    o2sum += o2[i] * o2[i];
-                }
-                return Float.compare(o1sum, o2sum);
+                double o1sum = Arrays.stream(o1).mapToDouble(t -> t).sum();
+                double o2sum = Arrays.stream(o2).mapToDouble(t -> t).sum();
+                return Double.compare(o1sum, o2sum);
             }
         };
     }

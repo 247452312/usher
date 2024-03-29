@@ -97,7 +97,9 @@ public class TestMain {
         double[][] fileData = getFileData("C:\\Users\\Lenovo\\Downloads\\heart+disease\\new.data");
         // 数据清洗
         fileData = clean(fileData);
+        long startTime = System.currentTimeMillis();
         fileData = feature(fileData);
+        System.out.println("根据互信息量求特征矩阵所用时间:" + (System.currentTimeMillis() - startTime) + "ms, 数据量:" + fileData.length + " * " + fileData[0].length);
         Map<Double[], Double> transDataMap = new HashMap<>();
         for (double[] fileDatum : fileData) {
             Double[] array = Arrays.stream(fileDatum).boxed().toArray(Double[]::new);
@@ -117,7 +119,7 @@ public class TestMain {
             testPopulation.iteration();
 
             List<Individual<Double[], Double>> topPercentage = fitnessHandler.findTopPercentage(testPopulation.allIndividuals(), 0.1, 10);
-            double result = 1 - fitnessHandler.fitnessByMean(topPercentage, testData);
+            double result = fitnessHandler.fitnessByMean(topPercentage, testData);
             System.out.printf("第%d次迭代,   \t适应度为:%s", i, instance.format(result));
             System.out.println();
             if (minAbs > result) {
@@ -265,10 +267,10 @@ public class TestMain {
             for (int j = 0; j < dimensionLength; j++) {
                 // 维度i 和维度j 的所有概率
                 double[][] pij = pxy[i][j];
-                for (int i1 = 0; i1 < pij.length; i1++) {
-                    for (int j1 = 0; j1 < pij[i1].length; j1++) {
-                        if (pij[i1][j1] != 0) {
-                            hxy[i][j] += -pij[i1][j1] * Math.log(pij[i1][j1]);
+                for (double[] doubles : pij) {
+                    for (double aDouble : doubles) {
+                        if (aDouble != 0) {
+                            hxy[i][j] += -aDouble * Math.log(aDouble);
                         }
                     }
                 }
@@ -305,14 +307,17 @@ public class TestMain {
                 doubles[j] = eigenvector.getEntry(j);
             }
         }
-        sum /= 100;
+        // 过滤掉不足特征值平均值1/10的特征
+        sum /= 10 * dimensionLength;
         double finalSum = sum;
-        double[][] array = eigList.stream().filter(t -> t.getKey() > finalSum).map(Pair::getValue).toArray(double[][]::new);
-        RealMatrix transMatrix = MatrixUtils.createRealMatrix(array);
+        double[][] transArray = eigList.stream().filter(t -> t.getKey() > finalSum).map(Pair::getValue).toArray(double[][]::new);
+        RealMatrix transMatrix = MatrixUtils.createRealMatrix(transArray);
+        // 转置为转换矩阵
         transMatrix = transMatrix.transpose();
-
+        // 目标矩阵 = 原始数据矩阵 * 转换矩阵  完成降维与标准化操作
+        RealMatrix multiply = MatrixUtils.createRealMatrix(fileData).multiply(transMatrix);
         // 特征组合
-        return fileData;
+        return multiply.getData();
     }
 
     @NotNull

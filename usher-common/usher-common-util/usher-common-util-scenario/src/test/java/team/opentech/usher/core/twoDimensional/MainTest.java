@@ -41,7 +41,7 @@ public class MainTest {
             testPopulation.iteration();
             Double[] params = makeTestParams();
             List<Individual<Double, Double>> topPercentage = fitnessHandler.findTopPercentage(testPopulation.allIndividuals(), 0.1, 10);
-            double result = 1 - fitnessHandler.fitnessByMean(topPercentage, params);
+            double result = fitnessHandler.fitnessByMean(topPercentage, params);
 
             System.out.printf("第%d次迭代,   \t适应度为:%s", i, instance.format(result));
             System.out.println();
@@ -69,18 +69,18 @@ public class MainTest {
         TestDoubleFunctionPopulation testPopulation = new TestDoubleFunctionPopulation(new Properties(), fitnessHandler);
         testPopulation.init();
         int lCount = 0;
-        float minAbs = 0.0005F;
+        double minAbs = .98;
         NumberFormat instance = NumberFormat.getInstance();
         instance.setMaximumFractionDigits(8);
         for (int i = 0; i < 1000; i++) {
             testPopulation.iteration();
             Double[] params = makeTestParams();
             List<Individual<Double, Double>> topPercentage = fitnessHandler.findTopPercentage(testPopulation.allIndividuals(), 0.1, 10);
-            double result = 1 - fitnessHandler.fitnessByMean(topPercentage, params);
+            double result = fitnessHandler.fitnessByMean(topPercentage, params);
 
             System.out.printf("第%d次迭代,   \t适应度为:%s", i, instance.format(result));
             System.out.println();
-            if (minAbs > result) {
+            if (result > minAbs) {
                 lCount++;
             } else {
                 lCount = 0;
