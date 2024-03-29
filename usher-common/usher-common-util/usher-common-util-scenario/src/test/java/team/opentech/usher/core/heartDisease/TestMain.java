@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
+import org.ejml.simple.SimpleEVD;
 import org.ejml.simple.SimpleMatrix;
 import org.junit.jupiter.api.Test;
 import team.opentech.usher.FitnessHandler;
@@ -180,7 +181,7 @@ public class TestMain {
         }
         for (int i = 0; i < p.length; i++) {
             for (int j = 0; j < p[i].length; j++) {
-                p[i][j] = p[i][j] / 100;
+                p[i][j] = p[i][j] / fileData.size();
             }
         }
 
@@ -190,7 +191,9 @@ public class TestMain {
             // 第i个维度的每个标准长度概率
             float[] pi = p[i];
             for (float v : pi) {
-                h[i] += -v * Math.log(v);
+                if (v != 0) {
+                    h[i] += -v * Math.log(v);
+                }
             }
         }
 
@@ -219,7 +222,7 @@ public class TestMain {
             for (float[][] item2 : item1) {
                 for (float[] item3 : item2) {
                     for (int i = 0; i < item3.length; i++) {
-                        item3[i] = item3[i] / 10000;
+                        item3[i] = item3[i] / fileData.size();
                     }
                 }
             }
@@ -232,7 +235,9 @@ public class TestMain {
                 float[][] pij = pxy[i][j];
                 for (int i1 = 0; i1 < pij.length; i1++) {
                     for (int j1 = 0; j1 < pij[i1].length; j1++) {
-                        hxy[i][j] += -pij[i1][j1] * Math.log(pij[i1][j1]);
+                        if (pij[i1][j1] != 0) {
+                            hxy[i][j] += -pij[i1][j1] * Math.log(pij[i1][j1]);
+                        }
                     }
                 }
             }
@@ -241,13 +246,13 @@ public class TestMain {
         // 求最终的香农互信息矩阵 可以替代相关系数矩阵
         double[][] result = new double[dimensionLength][dimensionLength];
         for (int i = 0; i < dimensionLength; i++) {
-            for (int j = 0; j < i; j++) {
+            for (int j = 0; j < dimensionLength; j++) {
                 float ixy = h[i] + h[j] - hxy[i][j];
                 result[i][j] = ixy * 2 / (h[i] + h[j]);
             }
         }
         SimpleMatrix matrix = new SimpleMatrix(result);
-        matrix.eig();
+        SimpleEVD<SimpleMatrix> eig = matrix.eig();
         // 特征组合
         return fileData;
     }
