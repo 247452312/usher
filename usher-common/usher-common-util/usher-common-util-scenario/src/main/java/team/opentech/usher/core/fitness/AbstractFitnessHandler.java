@@ -17,13 +17,13 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
 
 
     @Override
-    public Float fitness(Individual<T, E> individual) {
+    public Double fitness(Individual<T, E> individual) {
         T[] randomParam = makeTestParams();
         return fitness(individual, randomParam);
     }
 
     @Override
-    public List<Individual<T, E>> findTopPercentage(List<Individual<T, E>> individuals, Float percentage, Integer min) {
+    public List<Individual<T, E>> findTopPercentage(List<Individual<T, E>> individuals, Double percentage, Integer min) {
         int targetSize = (int) (individuals.size() * percentage);
         // 选给定的最小值和实际百分比的大小中较大的
         int realTargetSize = Math.max(targetSize, min);
@@ -40,13 +40,13 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
     }
 
     @Override
-    public Float fitnessByMean(List<Individual<T, E>> topPercentage, T[] params) {
-        return (float) topPercentage.stream().mapToDouble(t -> fitness(t, makeTestParams())).average().getAsDouble();
+    public Double fitnessByMean(List<Individual<T, E>> topPercentage, T[] params) {
+        return topPercentage.stream().mapToDouble(t -> fitness(t, makeTestParams())).average().getAsDouble();
     }
 
 
     @Override
-    public Float fitness(Individual<T, E> individual, T param) {
+    public Double fitness(Individual<T, E> individual, T param) {
         // 计算模型结果
         E calculationResult = individual.findResult(param);
         // 把模型结果和入参放入已知的函数中计算,得到结果并计算最终适应度
@@ -62,8 +62,8 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
      * @return
      */
     @Override
-    public Float fitness(Individual<T, E> individual, T[] params) {
-        float sum = 0;
+    public Double fitness(Individual<T, E> individual, T[] params) {
+        double sum = 0;
         for (T param : params) {
             sum += fitness(individual, param);
         }
@@ -79,7 +79,7 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
      *
      * @return 差距量化后的值
      */
-    protected abstract Float quantifyGap(E calculationResult, T param);
+    protected abstract Double quantifyGap(E calculationResult, T param);
 
     /**
      * 生成测试用入参

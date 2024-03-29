@@ -37,7 +37,7 @@ public abstract class AbstractDataFitnessHandler<T, E> extends AbstractFitnessHa
     protected abstract AbstractHistoryData<T, E> makeFittingIndividual(Map<T, E> testData);
 
     @Override
-    protected Float quantifyGap(E calculationResult, T param) {
+    protected Double quantifyGap(E calculationResult, T param) {
         //  我知道的东西:
         // 1.模型计算入参
         // 2.模型计算结果
@@ -50,7 +50,7 @@ public abstract class AbstractDataFitnessHandler<T, E> extends AbstractFitnessHa
         }
 
         // 那么我们可以根据模型计算入参根据历史数据找到结果之后 计算结果和模型计算入参的结果
-        Float gap = doQuantifyGap(historicalResult, calculationResult);
+        Double gap = doQuantifyGap(historicalResult, calculationResult);
         // todo 如果结果是从testData中来,并且结果不是完全匹配,那么说明并不正常,要不就是缺少了计算维度,需要通知并找到缺失的维度,要不就是计算概率问题
         return gap;
     }
@@ -64,5 +64,5 @@ public abstract class AbstractDataFitnessHandler<T, E> extends AbstractFitnessHa
      *
      * @return 差距量化后的值
      */
-    protected abstract Float doQuantifyGap(E historicalResult, E calculationResult);
+    protected abstract Double doQuantifyGap(E historicalResult, E calculationResult);
 }

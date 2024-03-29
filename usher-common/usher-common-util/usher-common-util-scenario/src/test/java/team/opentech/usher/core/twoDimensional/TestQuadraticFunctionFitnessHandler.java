@@ -8,7 +8,7 @@ import team.opentech.usher.core.fitness.AbstractCalculateFitnessHandler;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年03月20日 11时21分
  */
-public class TestQuadraticFunctionFitnessHandler extends AbstractCalculateFitnessHandler<Float, Float> {
+public class TestQuadraticFunctionFitnessHandler extends AbstractCalculateFitnessHandler<Double, Double> {
 
     private final static Random RANDOM = new Random();
 
@@ -23,8 +23,8 @@ public class TestQuadraticFunctionFitnessHandler extends AbstractCalculateFitnes
 
 
     @Override
-    public Float[] calculateResult(Float[] params) {
-        Float[] results = new Float[params.length];
+    public Double[] calculateResult(Double[] params) {
+        Double[] results = new Double[params.length];
         for (int i = 0; i < params.length; i++) {
             results[i] = calculateResult(params[i]);
         }
@@ -32,23 +32,23 @@ public class TestQuadraticFunctionFitnessHandler extends AbstractCalculateFitnes
     }
 
     @Override
-    public Float calculateResult(Float param) {
+    public Double calculateResult(Double param) {
         return a * param * param + b;
     }
 
     @Override
-    protected Float doQuantifyGap(Float standardResult, Float calculationResult) {
-        float abs = Math.abs(standardResult - calculationResult);
+    protected Double doQuantifyGap(Double standardResult, Double calculationResult) {
+        double abs = Math.abs(standardResult - calculationResult);
         return 1 / (1 + abs);
     }
 
     @NotNull
     @Override
-    protected Float[] makeTestParams() {
+    protected Double[] makeTestParams() {
         int size = 100;
-        Float[] randomX = new Float[size];
+        Double[] randomX = new Double[size];
         for (int i = 0; i < size; i++) {
-            float x = RANDOM.nextInt(20) + RANDOM.nextFloat();
+            double x = RANDOM.nextInt(20) + RANDOM.nextDouble();
             randomX[i] = x;
         }
         return randomX;

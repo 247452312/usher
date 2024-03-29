@@ -10,15 +10,15 @@ import team.opentech.usher.core.fitness.AbstractDataFitnessHandler;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年03月27日 14时52分
  */
-public class TestHeartHistoryDataFunctionFitnessHandler extends AbstractDataFitnessHandler<Float[], Float> {
+public class TestHeartHistoryDataFunctionFitnessHandler extends AbstractDataFitnessHandler<Double[], Double> {
 
-    public TestHeartHistoryDataFunctionFitnessHandler(Map<Float[], Float> testData) {
+    public TestHeartHistoryDataFunctionFitnessHandler(Map<Double[], Double> testData) {
         super(testData);
     }
 
     @Override
-    public Float[] calculateResult(Float[][] params) {
-        Float[] integers = new Float[params.length];
+    public Double[] calculateResult(Double[][] params) {
+        Double[] integers = new Double[params.length];
         for (int i = 0; i < params.length; i++) {
             integers[i] = calculateResult(params[i]);
         }
@@ -26,28 +26,28 @@ public class TestHeartHistoryDataFunctionFitnessHandler extends AbstractDataFitn
     }
 
     @Override
-    public Float calculateResult(Float[] param) {
+    public Double calculateResult(Double[] param) {
         //        return asd;
         // todo 如何计算结果
         return null;
     }
 
     @Override
-    protected AbstractHistoryData<Float[], Float> makeFittingIndividual(Map<Float[], Float> testData) {
-        return new AbstractHistoryMeanData<Float[], Float>(testData, new Float[0][]) {
+    protected AbstractHistoryData<Double[], Double> makeFittingIndividual(Map<Double[], Double> testData) {
+        return new AbstractHistoryMeanData<Double[], Double>(testData, new Double[0][]) {
 
             @Override
-            protected Float meanResult(Float[] param1, Float result1, Float[] param2, Float result2, Float[] param) {
+            protected Double meanResult(Double[] param1, Double result1, Double[] param2, Double result2, Double[] param) {
                 float sum = 0;
                 for (int i = 0; i < 14; i++) {
-                    float v = (param[i] - param1[i]) / (param2[i] - param1[i]);
+                    double v = (param[i] - param1[i]) / (param2[i] - param1[i]);
                     sum += v;
                 }
                 return sum / 14 * (result2 - result1) + result1;
             }
 
             @Override
-            protected int compare(Float[] o1, Float[] o2) {
+            protected int compare(Double[] o1, Double[] o2) {
                 float o1sum = 0;
                 float o2sum = 0;
                 for (int i = 0; i < 14; i++) {
@@ -60,13 +60,13 @@ public class TestHeartHistoryDataFunctionFitnessHandler extends AbstractDataFitn
     }
 
     @Override
-    protected Float doQuantifyGap(Float historicalResult, Float calculationResult) {
+    protected Double doQuantifyGap(Double historicalResult, Double calculationResult) {
         return 1 / (1 + Math.abs(historicalResult - calculationResult));
     }
 
     @NotNull
     @Override
-    protected Float[][] makeTestParams() {
-        return testData.keySet().toArray(new Float[0][]);
+    protected Double[][] makeTestParams() {
+        return testData.keySet().toArray(new Double[0][]);
     }
 }

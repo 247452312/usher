@@ -9,7 +9,7 @@ package team.opentech.usher.core.fitness;
 public abstract class AbstractCalculateFitnessHandler<T, E> extends AbstractFitnessHandler<T, E> {
 
     @Override
-    public Float quantifyGap(E calculationResult, T param) {
+    public Double quantifyGap(E calculationResult, T param) {
         E standardResult = calculateResult(param);
         return doQuantifyGap(standardResult, calculationResult);
     }
@@ -23,6 +23,6 @@ public abstract class AbstractCalculateFitnessHandler<T, E> extends AbstractFitn
      *
      * @return 差距量化后的值
      */
-    protected abstract Float doQuantifyGap(E standardResult, E calculationResult);
+    protected abstract Double doQuantifyGap(E standardResult, E calculationResult);
 
 }

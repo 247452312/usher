@@ -10,9 +10,9 @@ import team.opentech.usher.util.ListUtil;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年03月19日 14时54分
  */
-public class TestFloatFunctionPopulation extends AbstractPopulation<Float, Float> {
+public class TestDoubleFunctionPopulation extends AbstractPopulation<Double, Double> {
 
-    public TestFloatFunctionPopulation(Properties config, FitnessHandler<Float, Float> fitnessHandler) {
+    public TestDoubleFunctionPopulation(Properties config, FitnessHandler<Double, Double> fitnessHandler) {
         super(config, fitnessHandler);
     }
 
@@ -22,7 +22,7 @@ public class TestFloatFunctionPopulation extends AbstractPopulation<Float, Float
     }
 
     @Override
-    protected Float dealResults(List<Float> results) {
+    protected Double dealResults(List<Double> results) {
         return ListUtil.mean(results);
     }
 }

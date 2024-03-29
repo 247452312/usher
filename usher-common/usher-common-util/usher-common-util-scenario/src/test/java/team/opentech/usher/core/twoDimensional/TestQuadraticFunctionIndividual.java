@@ -10,10 +10,10 @@ import team.opentech.usher.lang.LongByte;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年03月19日 14时56分
  */
-public class TestQuadraticFunctionIndividual extends AbstractIndividual<Float, Float> {
+public class TestQuadraticFunctionIndividual extends AbstractIndividual<Double, Double> {
 
 
-    private Map<Float, Float> cacheResult = new HashMap<>();
+    private Map<Double, Double> cacheResult = new HashMap<>();
 
     protected TestQuadraticFunctionIndividual() {
         this(new Random());
@@ -39,7 +39,7 @@ public class TestQuadraticFunctionIndividual extends AbstractIndividual<Float, F
     }
 
     @Override
-    public Float findResult(Float param) {
+    public Double findResult(Double param) {
         if (cacheResult.containsKey(param)) {
             return cacheResult.get(param);
         }
@@ -54,7 +54,7 @@ public class TestQuadraticFunctionIndividual extends AbstractIndividual<Float, F
         secondPower = secondDna.get(11, 3);
         LongByte b = firstPower.compareTo(secondPower) >= 0 ? firstDna.get(14, 8) : secondDna.get(14, 8);
 
-        float v = a.intValue() * param * param + b.intValue();
+        double v = a.intValue() * param * param + b.intValue();
         cacheResult.put(param, v);
         return v;
     }

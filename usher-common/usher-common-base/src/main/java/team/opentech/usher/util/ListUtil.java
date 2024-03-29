@@ -25,10 +25,10 @@ public final class ListUtil {
         return results.get(results.size() / 2);
     }
 
-    public static <T extends Number> float mean(List<T> results) {
-        float sum = 0F;
+    public static <T extends Number> double mean(List<T> results) {
+        double sum = 0F;
         for (T result : results) {
-            sum += result.floatValue();
+            sum += result.doubleValue();
         }
         return sum / results.size();
     }

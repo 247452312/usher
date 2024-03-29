@@ -18,11 +18,11 @@ public class MainTest {
 
     private static Random random = new Random();
 
-    protected Float[] makeTestParams() {
+    protected Double[] makeTestParams() {
         int size = 100;
-        Float[] randomX = new Float[size];
+        Double[] randomX = new Double[size];
         for (int i = 0; i < size; i++) {
-            float x = random.nextInt(20) + random.nextFloat();
+            double x = random.nextInt(20) + random.nextDouble();
             randomX[i] = x;
         }
         return randomX;
@@ -30,8 +30,8 @@ public class MainTest {
 
     @Test
     void scenarioCalculateTest() {
-        FitnessHandler<Float, Float> fitnessHandler = new TestQuadraticFunctionFitnessHandler(8, 6);
-        TestFloatFunctionPopulation testPopulation = new TestFloatFunctionPopulation(new Properties(), fitnessHandler);
+        FitnessHandler<Double, Double> fitnessHandler = new TestQuadraticFunctionFitnessHandler(8, 6);
+        TestDoubleFunctionPopulation testPopulation = new TestDoubleFunctionPopulation(new Properties(), fitnessHandler);
         testPopulation.init();
         int lCount = 0;
         NumberFormat instance = NumberFormat.getInstance();
@@ -39,9 +39,9 @@ public class MainTest {
         float minAbs = 0.00005F;
         for (int i = 0; i < 1000; i++) {
             testPopulation.iteration();
-            Float[] params = makeTestParams();
-            List<Individual<Float, Float>> topPercentage = fitnessHandler.findTopPercentage(testPopulation.allIndividuals(), 0.1F, 10);
-            float result = 1 - fitnessHandler.fitnessByMean(topPercentage, params);
+            Double[] params = makeTestParams();
+            List<Individual<Double, Double>> topPercentage = fitnessHandler.findTopPercentage(testPopulation.allIndividuals(), 0.1, 10);
+            double result = 1 - fitnessHandler.fitnessByMean(topPercentage, params);
 
             System.out.printf("第%d次迭代,   \t适应度为:%s", i, instance.format(result));
             System.out.println();
@@ -59,14 +59,14 @@ public class MainTest {
 
     @Test
     void scenarioHistoryDataTest() {
-        Map<Float, Float> testData = new HashMap<>();
+        Map<Double, Double> testData = new HashMap<>();
         for (int i = 0; i < 512; i++) {
-            float v = i / 20F + random.nextFloat();
+            double v = i / 20F + random.nextFloat();
             testData.put(v, 8 * v * v + 6);
         }
-        FitnessHandler<Float, Float> fitnessHandler = new TestHistoryDataFunctionFitnessHandler(testData);
+        FitnessHandler<Double, Double> fitnessHandler = new TestHistoryDataFunctionFitnessHandler(testData);
 
-        TestFloatFunctionPopulation testPopulation = new TestFloatFunctionPopulation(new Properties(), fitnessHandler);
+        TestDoubleFunctionPopulation testPopulation = new TestDoubleFunctionPopulation(new Properties(), fitnessHandler);
         testPopulation.init();
         int lCount = 0;
         float minAbs = 0.0005F;
@@ -74,9 +74,9 @@ public class MainTest {
         instance.setMaximumFractionDigits(8);
         for (int i = 0; i < 1000; i++) {
             testPopulation.iteration();
-            Float[] params = makeTestParams();
-            List<Individual<Float, Float>> topPercentage = fitnessHandler.findTopPercentage(testPopulation.allIndividuals(), 0.1F, 10);
-            float result = 1 - fitnessHandler.fitnessByMean(topPercentage, params);
+            Double[] params = makeTestParams();
+            List<Individual<Double, Double>> topPercentage = fitnessHandler.findTopPercentage(testPopulation.allIndividuals(), 0.1, 10);
+            double result = 1 - fitnessHandler.fitnessByMean(topPercentage, params);
 
             System.out.printf("第%d次迭代,   \t适应度为:%s", i, instance.format(result));
             System.out.println();

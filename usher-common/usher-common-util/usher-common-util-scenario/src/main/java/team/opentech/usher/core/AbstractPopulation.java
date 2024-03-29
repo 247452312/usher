@@ -24,7 +24,7 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
     /**
      * 种群中有表决权的百分比
      */
-    private static final Float VOTE_PERCENTAGE = 10F / 100;
+    private static final Double VOTE_PERCENTAGE = 10d / 100;
 
     /**
      * 适应度函数
@@ -39,17 +39,17 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
     /**
      * 初始化百分比
      */
-    protected final Float initPercentage;
+    protected final Double initPercentage;
 
     /**
      * 出生率
      */
-    protected final Float crossPercentage;
+    protected final Double crossPercentage;
 
     /**
      * 变异率
      */
-    protected final Float variationPercentage;
+    protected final Double variationPercentage;
 
     /**
      * 种群中的个体集合
@@ -58,13 +58,13 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
 
     public AbstractPopulation(Properties config, FitnessHandler<T, E> fitnessHandler) {
         this(Integer.parseInt(config.getProperty("scenario.population.K", "1000")),
-             Float.parseFloat(config.getProperty("scenario.population.init-percentage", "0.2")),
-             Float.parseFloat(config.getProperty("scenario.population.init-cross-percentage", "0.4")),
-             Float.parseFloat(config.getProperty("scenario.population.init-variation-percentage", "0.1")),
+             Double.parseDouble(config.getProperty("scenario.population.init-percentage", "0.2")),
+             Double.parseDouble(config.getProperty("scenario.population.init-cross-percentage", "0.4")),
+             Double.parseDouble(config.getProperty("scenario.population.init-variation-percentage", "0.1")),
              fitnessHandler);
     }
 
-    public AbstractPopulation(Integer k, Float initPercentage, Float crossPercentage, Float variationPercentage, FitnessHandler<T, E> fitnessHandler) {
+    public AbstractPopulation(Integer k, Double initPercentage, Double crossPercentage, Double variationPercentage, FitnessHandler<T, E> fitnessHandler) {
         this.fitnessHandler = fitnessHandler;
         this.K = k;
         this.initPercentage = initPercentage;

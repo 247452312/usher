@@ -69,7 +69,7 @@
         <jython.version>2.7.2</jython.version>
         <javassist.version>3.24.0-GA</javassist.version>
         <kotlin.version>1.6.20-RC</kotlin.version>
-        <ejml.version>0.34</ejml.version>
+        <math3.version>3.6.1</math3.version>
         <commons-io.version>2.11.0</commons-io.version>
     </properties>
 
@@ -413,13 +413,11 @@
                 <scope>test</scope>
             </dependency>
 
-
             <dependency>
-                <groupId>org.ejml</groupId>
-                <artifactId>ejml-simple</artifactId>
-                <version>${ejml.version}</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>${math3.version}</version>
             </dependency>
-
         </dependencies>
     </dependencyManagement>
 
