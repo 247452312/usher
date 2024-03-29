@@ -21,6 +21,7 @@ public abstract class AbstractHistoryMeanData<T, E> extends AbstractHistoryData<
         if (testData.containsKey(param)) {
             return testData.get(param);
         }
+        // 二分法查找
         int left = 0;
         int right = sortT.length - 1;
         while (left < right) {
@@ -34,12 +35,6 @@ public abstract class AbstractHistoryMeanData<T, E> extends AbstractHistoryData<
             }
 
         }
-        // todo 这里应该改成二分法
-//        for (int i = 0; i < sortT.length - 1; i++) {
-//            if (compare(sortT[i], param) < 0 && compare(sortT[i + 1], param) > 0) {
-//                return meanResult(sortT[i], testData.get(sortT[i]), sortT[i + 1], testData.get(sortT[i + 1]), param);
-//            }
-//        }
         return testData.get(sortT[sortT.length - 1]);
     }
 
