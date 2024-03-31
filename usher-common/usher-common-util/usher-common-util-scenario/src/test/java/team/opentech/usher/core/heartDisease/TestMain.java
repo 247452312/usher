@@ -15,6 +15,7 @@ import org.apache.commons.math3.linear.RealVector;
 import org.junit.jupiter.api.Test;
 import team.opentech.usher.FitnessHandler;
 import team.opentech.usher.Individual;
+import team.opentech.usher.Population;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.util.CollectionUtil;
 import team.opentech.usher.util.Pair;
@@ -100,17 +101,19 @@ public class TestMain {
         long startTime = System.currentTimeMillis();
         fileData = feature(fileData);
         System.out.println("根据互信息量求特征矩阵所用时间:" + (System.currentTimeMillis() - startTime) + "ms, 数据量:" + fileData.length + " * " + fileData[0].length);
-        Map<Double[], Double> transDataMap = new HashMap<>();
+
+        Map<Double[], Double> transDataMap = new HashMap<>(fileData.length);
         for (double[] fileDatum : fileData) {
-            Double[] array = Arrays.stream(fileDatum).boxed().toArray(Double[]::new);
-            transDataMap.put(array, fileDatum[fileDatum.length - 1]);
+            int size = fileDatum.length - 1;
+            double[] dest = new double[size];
+            System.arraycopy(fileDatum, 0, dest, 0, size);
+            transDataMap.put(Arrays.stream(dest).boxed().toArray(Double[]::new), fileDatum[fileDatum.length - 1]);
         }
         Double[][] testData = transDataMap.keySet().toArray(new Double[0][]);
 
         FitnessHandler<Double[], Double> fitnessHandler = new TestHeartHistoryDataFunctionFitnessHandler(transDataMap);
 
-        TestHeartFunctionPopulation testPopulation = new TestHeartFunctionPopulation(new Properties(), fitnessHandler);
-        testPopulation.init();
+        Population<Double[], Double> testPopulation = new TestHeartFunctionPopulation(new Properties(), fitnessHandler).init();
         int lCount = 0;
         float minAbs = 0.0005F;
         NumberFormat instance = NumberFormat.getInstance();
@@ -137,14 +140,21 @@ public class TestMain {
     }
 
     /**
-     * 特征工程
+     * 特征工程,注意,这里fileData中最后一列一般都是标签列,不参与特征工程
      *
-     * @param fileData
+     * @param rawData 数据,每行一个数据
      *
      * @return
      */
-    private double[][] feature(double[][] fileData) {
-        double[] floats = fileData[0];
+    private double[][] feature(double[][] rawData) {
+        // 取出最后一列
+        double[] resultLine = Arrays.stream(rawData).mapToDouble(t -> t[t.length - 1]).toArray();
+        // 将最后一列去除
+        double[][] fileData = Arrays.stream(rawData).map(t -> {
+            double[] dest = new double[t.length - 1];
+            System.arraycopy(t, 0, dest, 0, t.length - 1);
+            return dest;
+        }).toArray(double[][]::new);
         // 降维&正交化
         // 1.计算相关系数矩阵时这里使用香农信息论中的互信息理论
         // 互信息理论中 相关系数公式为 相关系数=2I(x,y)/(H(x),H(y))  其中 I(x,y) = H(x) + H(y) - H(x,y)
@@ -153,7 +163,7 @@ public class TestMain {
         // 其中p(x) 代表概率 高维中某一维的概率计算方式应该遵循 将[最小值, 最大值] 平均分为100份, 落在同一份中的值属于同一区域的概率,计算方式也变成了计算当前区域的概率
 
         // 编程计算 获取各个维度的最大值最小值 并求 方块值 = 差值/100
-        int dimensionLength = floats.length;
+        int dimensionLength = fileData[0].length;
         double[] max = new double[dimensionLength];
         double[] min = new double[dimensionLength];
         for (double[] fileDatum : fileData) {
@@ -249,15 +259,15 @@ public class TestMain {
         }
 
         // 求最终的香农互信息矩阵 可以替代相关系数矩阵
-        double[][] result = new double[dimensionLength][dimensionLength];
+        double[][] mutualInformationCorrelationCoefficientMatrix = new double[dimensionLength][dimensionLength];
         for (int i = 0; i < dimensionLength; i++) {
             for (int j = 0; j < dimensionLength; j++) {
                 double ixy = h[i] + h[j] - hxy[i][j];
-                result[i][j] = ixy * 2 / (h[i] + h[j]);
+                mutualInformationCorrelationCoefficientMatrix[i][j] = ixy * 2 / (h[i] + h[j]);
             }
         }
 
-        RealMatrix matrix = MatrixUtils.createRealMatrix(result);
+        RealMatrix matrix = MatrixUtils.createRealMatrix(mutualInformationCorrelationCoefficientMatrix);
 
         // 计算矩阵的特征值
         List<Pair<Double, double[]>> eigList = new ArrayList<>();
@@ -288,7 +298,14 @@ public class TestMain {
         // 目标矩阵 = 原始数据矩阵 * 转换矩阵  完成降维与标准化操作
         RealMatrix multiply = MatrixUtils.createRealMatrix(fileData).multiply(transMatrix);
         // 特征组合
-        return multiply.getData();
+        double[][] data = multiply.getData();
+
+        double[][] result = new double[rawData.length][dimensionLength + 1];
+        for (int i = 0; i < resultLine.length; i++) {
+            System.arraycopy(data[i], 0, result[i], 0, dimensionLength);
+            result[i][dimensionLength] = resultLine[i];
+        }
+        return result;
     }
 
     @NotNull

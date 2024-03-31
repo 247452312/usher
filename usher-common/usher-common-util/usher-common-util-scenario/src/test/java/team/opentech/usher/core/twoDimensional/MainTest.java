@@ -10,6 +10,7 @@ import java.util.Random;
 import org.junit.jupiter.api.Test;
 import team.opentech.usher.FitnessHandler;
 import team.opentech.usher.Individual;
+import team.opentech.usher.Population;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -32,8 +33,7 @@ public class MainTest {
     @Test
     void scenarioCalculateTest() {
         FitnessHandler<Double, Double> fitnessHandler = new TestQuadraticFunctionFitnessHandler(8, 6);
-        TestDoubleFunctionPopulation testPopulation = new TestDoubleFunctionPopulation(new Properties(), fitnessHandler);
-        testPopulation.init();
+        Population<Double, Double> testPopulation = new TestDoubleFunctionPopulation(new Properties(), fitnessHandler).init();
         int lCount = 0;
         NumberFormat instance = NumberFormat.getInstance();
         instance.setMaximumFractionDigits(8);
@@ -70,8 +70,7 @@ public class MainTest {
         }
         FitnessHandler<Double, Double> fitnessHandler = new TestHistoryDataFunctionFitnessHandler(testData);
 
-        TestDoubleFunctionPopulation testPopulation = new TestDoubleFunctionPopulation(new Properties(), fitnessHandler);
-        testPopulation.init();
+        Population<Double, Double> testPopulation = new TestDoubleFunctionPopulation(new Properties(), fitnessHandler).init();
         int lCount = 0;
         double minAbs = .98;
         NumberFormat instance = NumberFormat.getInstance();

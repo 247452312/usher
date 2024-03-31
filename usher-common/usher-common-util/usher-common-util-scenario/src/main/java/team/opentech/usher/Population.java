@@ -43,5 +43,5 @@ public interface Population<T, E> extends Serializable {
     /**
      * 初始化种群
      */
-    void init();
+    Population<T, E> init();
 }

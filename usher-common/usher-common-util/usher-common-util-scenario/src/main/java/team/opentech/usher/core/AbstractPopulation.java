@@ -100,13 +100,14 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
     }
 
     @Override
-    public void init() {
+    public Population<T, E> init() {
         individuals.clear();
         int initSize = initSize();
         for (int i = 0; i < initSize; i++) {
             Individual<T, E> individual = makeNewIndividual();
             individuals.add(individual);
         }
+        return this;
     }
 
 
