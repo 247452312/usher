@@ -99,7 +99,10 @@ public class TestMain {
         // 数据清洗
         fileData = clean(fileData);
         long startTime = System.currentTimeMillis();
-        fileData = feature(fileData);
+        Pair<double[][], double[][]> feature = feature(fileData);
+        // 降维转换矩阵
+        double[][] transMatrix = feature.getKey();
+        fileData = feature.getValue();
         System.out.println("根据互信息量求特征矩阵所用时间:" + (System.currentTimeMillis() - startTime) + "ms, 数据量:" + fileData.length + " * " + fileData[0].length);
 
         Map<Double[], Double> transDataMap = new HashMap<>(fileData.length);
@@ -144,9 +147,9 @@ public class TestMain {
      *
      * @param rawData 数据,每行一个数据
      *
-     * @return
+     * @return key->特征值矩阵 value 修改后的结果
      */
-    private double[][] feature(double[][] rawData) {
+    private Pair<double[][], double[][]> feature(double[][] rawData) {
         // 取出最后一列
         double[] resultLine = Arrays.stream(rawData).mapToDouble(t -> t[t.length - 1]).toArray();
         // 将最后一列去除
@@ -305,7 +308,7 @@ public class TestMain {
             System.arraycopy(data[i], 0, result[i], 0, dimensionLength);
             result[i][dimensionLength] = resultLine[i];
         }
-        return result;
+        return new Pair<>(transMatrix.getData(), result);
     }
 
     @NotNull
