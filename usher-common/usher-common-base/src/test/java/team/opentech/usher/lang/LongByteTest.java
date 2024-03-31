@@ -1,6 +1,9 @@
 package team.opentech.usher.lang;
 
+import java.util.BitSet;
 import org.junit.jupiter.api.Test;
+import team.opentech.usher.util.Asserts;
+import team.opentech.usher.util.BitSetUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -8,12 +11,15 @@ import org.junit.jupiter.api.Test;
  */
 class LongByteTest {
 
+
     @Test
     void set() {
-        LongByte longByte = new LongByte("11100101");
-        longByte.set(4, new LongByte("1000"));
-        System.out.println(longByte);
-        //        11111101
+        BitSet longByte = BitSetUtil.valueOf("11");
+        BitSetUtil.set(longByte, 4, BitSetUtil.valueOf("1000"));
+        BitSet bitSet = BitSetUtil.valueOf("10000011");
+        for (int i = 0; i < bitSet.length(); i++) {
+            Asserts.assertTrue(bitSet.get(i) == longByte.get(i));
+        }
     }
 
     @Test
@@ -26,17 +32,46 @@ class LongByteTest {
     }
 
     @Test
-    void testIntValue() {
-        LongByte longByte = new LongByte("111"); // 7
-        System.out.println(longByte.intValue());
-
-        longByte = new LongByte("1110"); // 14
-        System.out.println(longByte.intValue());
-    }
-    @Test
     void testGet() {
-        LongByte longByte = new LongByte("11100000001");
-        LongByte longByte1 = longByte.get(3, 3);
-        int i = 1;
+        BitSet longByte = BitSetUtil.valueOf("11010000001");
+        BitSet longByte1 = longByte.get(6, 10);
+        BitSet temp = BitSetUtil.valueOf("1010");
+        for (int i = 0; i < temp.length(); i++) {
+            Asserts.assertTrue(temp.get(i) == longByte1.get(i));
+        }
+    }
+
+    @Test
+    void testCompare() {
+        BitSet longByte1 = BitSetUtil.valueOf("11011000011110110000111101100001111011000011110110000111101100001111011000011110110000111101100001111011000011110110000111101100001111011000011");
+        BitSet longByte2 = BitSetUtil.valueOf("11010101001110101010011101010100111010101001110101010011101010100111010101001110101010011101010100111010101001110101010011101010100111010101001");
+        int i = BitSetUtil.compareTo(longByte1, longByte2);
+        Asserts.assertTrue(i == 1);
+
+        longByte1 = BitSetUtil.valueOf("1100");
+        longByte2 = BitSetUtil.valueOf("1010");
+        i = BitSetUtil.compareTo(longByte1, longByte2);
+        Asserts.assertTrue(i == 1);
+
+        longByte1 = BitSetUtil.valueOf("1010");
+        longByte2 = BitSetUtil.valueOf("1100");
+        i = BitSetUtil.compareTo(longByte1, longByte2);
+        Asserts.assertTrue(i == -1);
+    }
+
+    @Test
+    void testValueOf() {
+        BitSet longByte = BitSetUtil.valueOf(0b11011000011);
+        BitSet longByte1 = BitSetUtil.valueOf("11011000011");
+        for (int i = 0; i < longByte.length(); i++) {
+            Asserts.assertTrue(longByte.get(i) == longByte1.get(i));
+        }
+    }
+
+    @Test
+    void testToInt() {
+        BitSet longByte = BitSetUtil.valueOf(45);
+        int anInt = BitSetUtil.toInt(longByte);
+        Asserts.assertTrue(anInt == 45);
     }
 }

@@ -16,6 +16,7 @@ public class TestDoubleFunctionPopulation extends AbstractPopulation<Double, Dou
         super(config, fitnessHandler);
     }
 
+
     @Override
     protected TestQuadraticFunctionIndividual makeNewIndividual() {
         return new TestQuadraticFunctionIndividual();

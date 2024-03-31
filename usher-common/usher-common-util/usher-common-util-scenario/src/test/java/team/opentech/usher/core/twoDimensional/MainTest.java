@@ -1,6 +1,7 @@
 package team.opentech.usher.core.twoDimensional;
 
 import java.text.NumberFormat;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class MainTest {
         int lCount = 0;
         NumberFormat instance = NumberFormat.getInstance();
         instance.setMaximumFractionDigits(8);
-        float minAbs = 0.00005F;
+        double minAbs = .98;
         for (int i = 0; i < 1000; i++) {
             testPopulation.iteration();
             Double[] params = makeTestParams();
@@ -45,7 +46,7 @@ public class MainTest {
 
             System.out.printf("第%d次迭代,   \t适应度为:%s", i, instance.format(result));
             System.out.println();
-            if (minAbs > result) {
+            if (result > minAbs) {
                 lCount++;
             } else {
                 lCount = 0;
@@ -54,7 +55,10 @@ public class MainTest {
                 break;
             }
         }
-        int i = 1;
+        List<Individual<Double, Double>> topPercentage = fitnessHandler.findTopPercentage(testPopulation.allIndividuals(), 0.1, 1);
+        Individual<Double, Double> doubleDoubleIndividual = topPercentage.get(0);
+        String string = doubleDoubleIndividual.toString();
+        System.out.println(string);
     }
 
     @Test
@@ -89,6 +93,12 @@ public class MainTest {
                 break;
             }
         }
-        int i = 1;
+
+        List<Individual<Double, Double>> topPercentage = fitnessHandler.findTopPercentage(testPopulation.allIndividuals(), 0.1, 1);
+        Individual<Double, Double> doubleDoubleIndividual = topPercentage.get(0);
+        String string = doubleDoubleIndividual.toString();
+        System.out.println(string);
+
     }
+
 }

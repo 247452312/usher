@@ -1,8 +1,8 @@
 package team.opentech.usher.core.data;
 
+import java.util.BitSet;
 import java.util.Map;
 import team.opentech.usher.Individual;
-import team.opentech.usher.lang.LongByte;
 
 /**
  * 可以拟合历史数据的个体
@@ -32,13 +32,13 @@ public abstract class AbstractHistoryData<T, E> implements Individual<T, E> {
 
 
     @Override
-    public LongByte firstDna() {
+    public BitSet firstDna() {
         // 历史数据没有dna
         return null;
     }
 
     @Override
-    public LongByte secondDna() {
+    public BitSet secondDna() {
         // 历史数据没有dna
         return null;
     }

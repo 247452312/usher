@@ -1,10 +1,11 @@
 package team.opentech.usher.core.twoDimensional;
 
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import team.opentech.usher.core.AbstractIndividual;
-import team.opentech.usher.lang.LongByte;
+import team.opentech.usher.util.BitSetUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -24,12 +25,16 @@ public class TestQuadraticFunctionIndividual extends AbstractIndividual<Double, 
         super(findDna(random), findDna(random));
     }
 
-    public TestQuadraticFunctionIndividual(LongByte firstDna, LongByte secondDna) {
+    public TestQuadraticFunctionIndividual(BitSet firstDna, BitSet secondDna) {
         super(firstDna, secondDna);
     }
 
-    private static LongByte findDna(Random random) {
-        return new LongByte(new int[]{random.nextInt(Integer.MAX_VALUE)});
+    public TestQuadraticFunctionIndividual(BitSet firstDna, BitSet secondDna, int size) {
+        super(firstDna, secondDna, size);
+    }
+
+    private static BitSet findDna(Random random) {
+        return BitSetUtil.valueOf(random.nextInt(Integer.MAX_VALUE));
     }
 
     @Override
@@ -43,39 +48,39 @@ public class TestQuadraticFunctionIndividual extends AbstractIndividual<Double, 
         if (cacheResult.containsKey(param)) {
             return cacheResult.get(param);
         }
-        LongByte firstDna = firstDna();
-        LongByte secondDna = secondDna();
-        LongByte firstPower = firstDna.get(0, 3);
-        LongByte secondPower = secondDna.get(0, 3);
+        BitSet firstDna = firstDna();
+        BitSet secondDna = secondDna();
+        BitSet firstPower = firstDna.get(0, 3);
+        BitSet secondPower = secondDna.get(0, 3);
 
-        LongByte a = firstPower.compareTo(secondPower) >= 0 ? firstDna.get(3, 8) : secondDna.get(3, 8);
+        BitSet a = BitSetUtil.compareTo(firstPower, secondPower) >= 0 ? firstDna.get(3, 11) : secondDna.get(3, 11);
 
-        firstPower = firstDna.get(11, 3);
-        secondPower = secondDna.get(11, 3);
-        LongByte b = firstPower.compareTo(secondPower) >= 0 ? firstDna.get(14, 8) : secondDna.get(14, 8);
+        firstPower = firstDna.get(11, 14);
+        secondPower = secondDna.get(11, 14);
+        BitSet b = BitSetUtil.compareTo(firstPower, secondPower) >= 0 ? firstDna.get(14, 22) : secondDna.get(14, 22);
 
-        double v = a.intValue() * param * param + b.intValue();
+        double v = BitSetUtil.toInt(a) * param * param + BitSetUtil.toInt(b);
         cacheResult.put(param, v);
         return v;
     }
 
     @Override
     public String toString() {
-        LongByte firstDna = firstDna();
-        LongByte secondDna = secondDna();
-        LongByte firstPower = firstDna.get(0, 3);
-        LongByte secondPower = secondDna.get(0, 3);
+        BitSet firstDna = firstDna();
+        BitSet secondDna = secondDna();
+        BitSet firstPower = firstDna.get(0, 3);
+        BitSet secondPower = secondDna.get(0, 3);
 
-        LongByte a = firstPower.compareTo(secondPower) >= 0 ? firstDna.get(3, 8) : secondDna.get(3, 8);
+        BitSet a = BitSetUtil.compareTo(firstPower, secondPower) >= 0 ? firstDna.get(3, 11) : secondDna.get(3, 11);
 
-        firstPower = firstDna.get(11, 3);
-        secondPower = secondDna.get(11, 3);
-        LongByte b = firstPower.compareTo(secondPower) >= 0 ? firstDna.get(14, 8) : secondDna.get(14, 8);
-        return a.intValue() + " * x^2 + " + b.intValue();
+        firstPower = firstDna.get(11, 14);
+        secondPower = secondDna.get(11, 14);
+        BitSet b = BitSetUtil.compareTo(firstPower, secondPower) >= 0 ? firstDna.get(14, 22) : secondDna.get(14, 22);
+        return BitSetUtil.toInt(a) + " * x^2 + " + BitSetUtil.toInt(b);
     }
 
     @Override
-    protected TestQuadraticFunctionIndividual makeNewIndividual(LongByte firstDna, LongByte secondDna) {
-        return new TestQuadraticFunctionIndividual(firstDna, secondDna);
+    protected TestQuadraticFunctionIndividual makeNewIndividual(BitSet firstDna, BitSet secondDna, int size) {
+        return new TestQuadraticFunctionIndividual(firstDna, secondDna, size);
     }
 }

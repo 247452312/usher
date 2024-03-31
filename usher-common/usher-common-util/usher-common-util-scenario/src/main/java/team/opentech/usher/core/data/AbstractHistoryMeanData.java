@@ -69,4 +69,10 @@ public abstract class AbstractHistoryMeanData<T, E> extends AbstractHistoryData<
         Arrays.sort(array, this::compare);
         return array;
     }
+
+    @Override
+    public int size() {
+        // 历史数据评价类 不需要size
+        return 0;
+    }
 }

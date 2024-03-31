@@ -53,6 +53,7 @@ public class TestHistoryDataFunctionFitnessHandler extends AbstractDataFitnessHa
             protected int compare(Double o1, Double o2) {
                 return o1.compareTo(o2);
             }
+
         };
     }
 

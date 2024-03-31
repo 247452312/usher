@@ -56,6 +56,7 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
      */
     private final List<Individual<T, E>> individuals = new ArrayList<>();
 
+
     public AbstractPopulation(Properties config, FitnessHandler<T, E> fitnessHandler) {
         this(Integer.parseInt(config.getProperty("scenario.population.K", "1000")),
              Double.parseDouble(config.getProperty("scenario.population.init-percentage", "0.2")),
@@ -107,6 +108,7 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
             individuals.add(individual);
         }
     }
+
 
     /**
      * 变异

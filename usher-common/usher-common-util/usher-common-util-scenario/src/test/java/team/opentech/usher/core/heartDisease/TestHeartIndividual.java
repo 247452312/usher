@@ -1,8 +1,8 @@
 package team.opentech.usher.core.heartDisease;
 
+import java.util.BitSet;
 import team.opentech.usher.Individual;
 import team.opentech.usher.core.AbstractIndividual;
-import team.opentech.usher.lang.LongByte;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -14,8 +14,8 @@ public class TestHeartIndividual extends AbstractIndividual<Float[], Float> {
         super(size);
     }
 
-    public TestHeartIndividual(LongByte firstDna, LongByte secondDna) {
-        super(firstDna, secondDna);
+    public TestHeartIndividual(BitSet firstDna, BitSet secondDna, int size) {
+        super(firstDna, secondDna, size);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class TestHeartIndividual extends AbstractIndividual<Float[], Float> {
     }
 
     @Override
-    protected Individual<Float[], Float> makeNewIndividual(LongByte firstDna, LongByte secondDna) {
-        return new TestHeartIndividual(firstDna, secondDna);
+    protected Individual<Float[], Float> makeNewIndividual(BitSet firstDna, BitSet secondDna, int size) {
+        return new TestHeartIndividual(firstDna, secondDna, size);
     }
 }

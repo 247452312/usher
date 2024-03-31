@@ -1,11 +1,10 @@
 package team.opentech.usher.core;
 
+import java.util.BitSet;
 import java.util.Objects;
 import java.util.Random;
 import team.opentech.usher.Individual;
-import team.opentech.usher.lang.LongByte;
-import team.opentech.usher.util.BytesUtil;
-import team.opentech.usher.util.LongByteUtil;
+import team.opentech.usher.util.BitSetUtil;
 
 /**
  * 个体模板
@@ -17,23 +16,40 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
 
     private static Random RANDOM = new Random();
 
-    protected final LongByte firstDna;
+    /**
+     * 第一条dna
+     */
+    protected final BitSet firstDna;
 
-    protected final LongByte secondDna;
+    /**
+     * 第二条dna
+     */
+    protected final BitSet secondDna;
+
+    /**
+     * 初始长度
+     */
+    protected final int size;
 
     protected AbstractIndividual(int size) {
-        this.firstDna = new LongByte(size);
-        this.secondDna = new LongByte(size);
+        this.firstDna = new BitSet(size);
+        this.secondDna = new BitSet(size);
+        this.size = size;
     }
 
-    public AbstractIndividual(LongByte firstDna, LongByte secondDna) {
-        this.firstDna = new LongByte(firstDna);
-        this.secondDna = new LongByte(secondDna);
+    public AbstractIndividual(BitSet firstDna, BitSet secondDna) {
+        this(firstDna, secondDna, Math.max(firstDna.size(), secondDna.size()));
+    }
+
+    public AbstractIndividual(BitSet firstDna, BitSet secondDna, int size) {
+        this.firstDna = (BitSet) firstDna.clone();
+        this.secondDna = (BitSet) secondDna.clone();
+        this.size = size;
     }
 
     @Override
     public Individual<T, E> cross(Individual<T, E> individual) {
-        return makeNewIndividual(firstDna(), individual.secondDna());
+        return makeNewIndividual(firstDna(), individual.secondDna(), Math.max(size(), individual.size()));
     }
 
     @Override
@@ -64,12 +80,12 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
     }
 
     @Override
-    public LongByte firstDna() {
+    public BitSet firstDna() {
         return firstDna;
     }
 
     @Override
-    public LongByte secondDna() {
+    public BitSet secondDna() {
         return secondDna;
     }
 
@@ -77,70 +93,77 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
     public String toString() {
         return firstDna() + ":" + secondDna();
     }
+
     /**
      * 创建一个真正的个体
      *
      * @param firstDna  第一条dna
      * @param secondDna 第二条dna
+     * @param size      长度
      *
      * @return
      */
-    protected abstract Individual<T, E> makeNewIndividual(LongByte firstDna, LongByte secondDna);
+    protected abstract Individual<T, E> makeNewIndividual(BitSet firstDna, BitSet secondDna, int size);
 
     /**
      * 根据外来数据改变
      */
-    private void changeByVirus(LongByte firstDna, LongByte secondDna, byte[] virusDna) {
-        LongByte changeDna;
+    private void changeByVirus(BitSet firstDna, BitSet secondDna, byte[] virusDna) {
+        BitSet changeDna;
         if (Objects.equals(RANDOM.nextInt(2), 1)) {
             changeDna = firstDna;
         } else {
             changeDna = secondDna;
         }
-        int index = RANDOM.nextInt(changeDna.byteSize());
-        for (int i = 0; i < virusDna.length || index < changeDna.byteSize(); i++) {
-            changeDna.setByte(index++, virusDna[i]);
-        }
+        BitSet virusDnaBit = BitSet.valueOf(virusDna);
+
+        int index = RANDOM.nextInt(size());
+        BitSetUtil.swap(changeDna, index, virusDnaBit, 0, virusDnaBit.length());
     }
 
     /**
      * 直接改变
      */
-    private void changeDirect(LongByte firstDna, LongByte secondDna) {
-        LongByte changeDna;
+    private void changeDirect(BitSet firstDna, BitSet secondDna) {
+        BitSet changeDna;
         if (Objects.equals(RANDOM.nextInt(2), 1)) {
             changeDna = firstDna;
         } else {
             changeDna = secondDna;
         }
-        int size = RANDOM.nextInt(changeDna.byteSize());
-        int index = RANDOM.nextInt(changeDna.byteSize() - size);
-        changeDna.negation(index, size);
+        int size = RANDOM.nextInt(size());
+        int index = RANDOM.nextInt(size() - size);
+        BitSetUtil.negation(changeDna, index, size);
     }
 
     /**
      * 顺序改变
      */
-    private void changeOrder(LongByte firstDna, LongByte secondDna) {
-        int min = Math.min(firstDna.size(), secondDna.size());
-        int size = RANDOM.nextInt(min);
-        int firstIndex = RANDOM.nextInt(min - size);
-        int secondIndex = RANDOM.nextInt(min - size);
+    private void changeOrder(BitSet firstDna, BitSet secondDna) {
+        int thisSize = size();
+        int size = RANDOM.nextInt(thisSize);
+        int firstIndex = RANDOM.nextInt(thisSize - size);
+        int secondIndex = RANDOM.nextInt(thisSize - size);
 
         // 判断两个dna修改 还是同一个dna修改
         if (Objects.equals(RANDOM.nextInt(2), 1)) {
             // 两个dna修改
-            LongByteUtil.swap(firstDna, firstIndex, secondDna, secondIndex, size);
+            BitSetUtil.swap(firstDna, firstIndex, secondDna, secondIndex, size);
             return;
         }
 
         int dnaIndex = RANDOM.nextInt(2);
-        LongByte changeDna;
+        BitSet changeDna;
         if (Objects.equals(dnaIndex, 1)) {
             changeDna = firstDna;
         } else {
             changeDna = secondDna;
         }
-        LongByteUtil.swap(changeDna, firstIndex, changeDna, secondIndex, size);
+        BitSetUtil.swap(changeDna, firstIndex, changeDna, secondIndex, size);
+    }
+
+    @Override
+    public int size() {
+        return size;
     }
 }

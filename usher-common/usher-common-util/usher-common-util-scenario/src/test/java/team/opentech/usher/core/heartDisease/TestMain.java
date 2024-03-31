@@ -39,20 +39,20 @@ public class TestMain {
             if (split.length < 58) {
                 break;
             }
-            result[i][0] = Float.valueOf(split[2].trim());
-            result[i][1] = Float.valueOf(split[3].trim());
-            result[i][2] = Float.valueOf(split[8].trim());
-            result[i][3] = Float.valueOf(split[9].trim());
-            result[i][4] = Float.valueOf(split[11].trim());
-            result[i][5] = Float.valueOf(split[15].trim());
-            result[i][6] = Float.valueOf(split[18].trim());
-            result[i][7] = Float.valueOf(split[31].trim());
-            result[i][8] = Float.valueOf(split[37].trim());
-            result[i][9] = Float.valueOf(split[39].trim());
-            result[i][10] = Float.valueOf(split[40].trim());
-            result[i][11] = Float.valueOf(split[43].trim());
-            result[i][12] = Float.valueOf(split[50].trim());
-            result[i][13] = Float.valueOf(split[57].trim());
+            result[i][0] = Double.parseDouble(split[2].trim());
+            result[i][1] = Double.parseDouble(split[3].trim());
+            result[i][2] = Double.parseDouble(split[8].trim());
+            result[i][3] = Double.parseDouble(split[9].trim());
+            result[i][4] = Double.parseDouble(split[11].trim());
+            result[i][5] = Double.parseDouble(split[15].trim());
+            result[i][6] = Double.parseDouble(split[18].trim());
+            result[i][7] = Double.parseDouble(split[31].trim());
+            result[i][8] = Double.parseDouble(split[37].trim());
+            result[i][9] = Double.parseDouble(split[39].trim());
+            result[i][10] = Double.parseDouble(split[40].trim());
+            result[i][11] = Double.parseDouble(split[43].trim());
+            result[i][12] = Double.parseDouble(split[50].trim());
+            result[i][13] = Double.parseDouble(split[57].trim());
         }
         return result;
     }
@@ -134,35 +134,6 @@ public class TestMain {
         int i = 1;
 
 
-    }
-
-    @Test
-    void testEig() {
-        double[][] a = new double[3][3];
-        a[0][0] = 1;
-        a[0][1] = 2;
-        a[0][2] = 3;
-
-        a[1][0] = 3;
-        a[1][1] = 2;
-        a[1][2] = 1;
-
-        a[2][0] = 6;
-        a[2][1] = 7;
-        a[2][2] = 9;
-        RealMatrix matrix = MatrixUtils.createRealMatrix(a);
-
-        // 计算矩阵的特征值
-        EigenDecomposition ed = new EigenDecomposition(matrix);
-
-        // 打印特征值
-        double[] realEigenvalues = ed.getRealEigenvalues();
-        for (int i = 0; i < realEigenvalues.length; i++) {
-            double realEigenvalue = realEigenvalues[i];
-            RealVector eigenvector = ed.getEigenvector(i);
-            System.out.println("第" + (i + 1) + "个特征值为: " + realEigenvalue + ", 对应特征向量为: " + eigenvector);
-        }
-        int i = 1;
     }
 
     /**

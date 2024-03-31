@@ -1,7 +1,7 @@
 package team.opentech.usher;
 
 import java.io.Serializable;
-import team.opentech.usher.lang.LongByte;
+import java.util.BitSet;
 
 /**
  * 种群中的个体
@@ -36,11 +36,18 @@ public interface Individual<T, E> extends Serializable {
     /**
      * 第一条DNA
      */
-    LongByte firstDna();
+    BitSet firstDna();
 
     /**
      * 第二条DNA
      */
-    LongByte secondDna();
+    BitSet secondDna();
+
+    /**
+     * dna长度
+     *
+     * @return
+     */
+    int size();
 
 }
