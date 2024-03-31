@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 import org.apache.commons.math3.linear.EigenDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
@@ -24,19 +25,18 @@ import team.opentech.usher.util.Pair;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年03月26日 09时27分
  */
-public class TestMain {
+class TestMain {
 
 
     @NotNull
     private static double[][] getFileData(String path) throws FileNotFoundException {
         DataReader dataReader = new DataReader();
         String fileData = dataReader.read(path);
-        String[] person = fileData.split("\\n");
+        List<String[]> collect = Arrays.stream(fileData.split("name")).map(t -> t.replace("\n", " ")).map(t -> t.trim().split(" ")).collect(Collectors.toList());
 
-        double[][] result = new double[person.length][14];
-        for (int i = 0; i < person.length; i++) {
-            String s = person[i];
-            String[] split = s.trim().split(" ");
+        double[][] result = new double[collect.size()][14];
+        for (int i = 0; i < collect.size(); i++) {
+            String[] split = collect.get(i);
             if (split.length < 58) {
                 break;
             }
@@ -95,7 +95,7 @@ public class TestMain {
 
     @Test
     void testMain() throws FileNotFoundException {
-        double[][] fileData = getFileData("C:\\Users\\Lenovo\\Downloads\\heart+disease\\new.data");
+        double[][] fileData = getFileData("D:\\share\\data\\heart+disease\\new.data");
         // 数据清洗
         fileData = clean(fileData);
         long startTime = System.currentTimeMillis();
