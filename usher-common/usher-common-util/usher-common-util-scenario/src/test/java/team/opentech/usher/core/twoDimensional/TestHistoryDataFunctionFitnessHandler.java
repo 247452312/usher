@@ -35,11 +35,6 @@ public class TestHistoryDataFunctionFitnessHandler extends AbstractDataFitnessHa
     }
 
     @Override
-    public Double calculateResult(Double param) {
-        return fittingIndividual.findResult(param);
-    }
-
-    @Override
     protected AbstractHistoryData<Double, Double> makeFittingIndividual(Map<Double, Double> testData) {
         return new AbstractHistoryMeanData<Double, Double>(testData, new Double[0]) {
 

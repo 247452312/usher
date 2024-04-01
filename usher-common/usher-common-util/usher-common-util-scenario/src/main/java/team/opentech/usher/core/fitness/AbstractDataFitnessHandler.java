@@ -27,6 +27,11 @@ public abstract class AbstractDataFitnessHandler<T, E> extends AbstractFitnessHa
         this.fittingIndividual = makeFittingIndividual(testData);
     }
 
+    @Override
+    public E calculateResult(T param) {
+        return fittingIndividual.findResult(param);
+    }
+
     /**
      * 根据历史入参和结果拟合规则
      *

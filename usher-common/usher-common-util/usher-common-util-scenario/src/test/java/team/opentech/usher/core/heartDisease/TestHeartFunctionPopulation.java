@@ -1,9 +1,12 @@
 package team.opentech.usher.core.heartDisease;
 
+import java.util.BitSet;
 import java.util.List;
 import java.util.Properties;
+import org.apache.commons.lang3.RandomUtils;
 import team.opentech.usher.FitnessHandler;
 import team.opentech.usher.Individual;
+import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.core.AbstractPopulation;
 
 /**
@@ -22,13 +25,31 @@ public class TestHeartFunctionPopulation extends AbstractPopulation<Double[], Do
 
     @Override
     protected Individual<Double[], Double> makeNewIndividual() {
-        // todo 如何生成一个随机的新的个体
-        //        return new TestHeartIndividual(firstDna(), secondDna());
-        return null;
+        BitSet firstDna = firstDna();
+        BitSet secondDna = secondDna();
+        return new TestHeartIndividual(firstDna, secondDna, Math.max(firstDna.size(), secondDna.size()));
     }
 
     @Override
     protected Double dealResults(List<Double> results) {
         return results.stream().mapToDouble(t -> t).average().getAsDouble();
+    }
+
+    @NotNull
+    private BitSet secondDna() {
+        long[] longs = new long[140];
+        for (int i = 0; i < 140; i++) {
+            longs[i] = RandomUtils.nextLong(0, Long.MAX_VALUE);
+        }
+        return BitSet.valueOf(longs);
+    }
+
+    @NotNull
+    private BitSet firstDna() {
+        long[] longs = new long[140];
+        for (int i = 0; i < 140; i++) {
+            longs[i] = RandomUtils.nextLong(0, Long.MAX_VALUE);
+        }
+        return BitSet.valueOf(longs);
     }
 }

@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import team.opentech.usher.FitnessHandler;
 import team.opentech.usher.Individual;
 import team.opentech.usher.annotation.NotNull;
-import team.opentech.usher.util.CollectionUtil;
 import team.opentech.usher.util.Pair;
 
 /**
@@ -35,10 +34,8 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
         realTargetSize = Math.min(realTargetSize, individuals.size());
 
         T[] randomParam = makeTestParams();
-        Pair<Individual<T, E>, Double>[] array = individuals.stream().map(t -> new Pair<>(t, -fitness(t, randomParam))).toArray(Pair[]::new);
-        CollectionUtil.fastSort(array, Pair::getValue);
+        Pair<Individual<T, E>, Double>[] array = individuals.stream().map(t -> new Pair<>(t, -fitness(t, randomParam))).sorted(Comparator.comparingDouble(t -> t.getValue())).toArray(Pair[]::new);
         individuals = Arrays.stream(array).map(Pair::getKey).collect(Collectors.toList());
-        //                                 .sorted(Comparator.comparingDouble(Pair::getValue)).map(Pair::getKey).collect(Collectors.toList());
         List<Individual<T, E>> result = new ArrayList<>(realTargetSize);
         for (int i = 0; i < realTargetSize; i++) {
             result.add(individuals.get(i));

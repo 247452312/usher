@@ -1,6 +1,7 @@
 package team.opentech.usher.lang;
 
 import java.util.BitSet;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.jupiter.api.Test;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.BitSetUtil;
@@ -9,7 +10,7 @@ import team.opentech.usher.util.BitSetUtil;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年03月21日 10时45分
  */
-class LongByteTest {
+class BitSetTest {
 
 
     @Test
@@ -73,5 +74,20 @@ class LongByteTest {
         BitSet longByte = BitSetUtil.valueOf(45);
         int anInt = BitSetUtil.toInt(longByte);
         Asserts.assertTrue(anInt == 45);
+    }
+
+    @Test
+    void testSize() {
+        long[] longs = new long[140];
+        for (int i = 0; i < 140; i++) {
+            longs[i] = RandomUtils.nextLong();
+        }
+        BitSet longByte = BitSet.valueOf(longs);
+        int size = longByte.size();
+        Asserts.assertTrue(size == 140 * 64, "错误,size不正确");
+        int length = longByte.length();
+        int i1 = 140 * 64 - 1;
+        Asserts.assertTrue(length == i1, "错误,length不正确" + length + " " + i1);
+        int i = 1;
     }
 }

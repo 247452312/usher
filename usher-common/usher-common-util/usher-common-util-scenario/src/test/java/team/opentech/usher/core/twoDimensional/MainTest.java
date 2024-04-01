@@ -1,7 +1,6 @@
 package team.opentech.usher.core.twoDimensional;
 
 import java.text.NumberFormat;
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

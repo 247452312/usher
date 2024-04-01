@@ -116,27 +116,31 @@ class TestMain {
 
         FitnessHandler<Double[], Double> fitnessHandler = new TestHeartHistoryDataFunctionFitnessHandler(transDataMap);
 
-        Population<Double[], Double> testPopulation = new TestHeartFunctionPopulation(new Properties(), fitnessHandler).init();
-        int lCount = 0;
-        float minAbs = 0.0005F;
+        Properties config = new Properties();
+        //        config.put("scenario.population.K", 100);
+        Population<Double[], Double> testPopulation = new TestHeartFunctionPopulation(config, fitnessHandler).init();
         NumberFormat instance = NumberFormat.getInstance();
         instance.setMaximumFractionDigits(8);
+
+        List<Individual<Double[], Double>> maxIndividual = new ArrayList<>();
+        double maxResult = 0;
         for (int i = 0; i < 1000; i++) {
             testPopulation.iteration();
-
-            List<Individual<Double[], Double>> topPercentage = fitnessHandler.findTopPercentage(testPopulation.allIndividuals(), 0.1, 10);
-            double result = fitnessHandler.fitnessByMean(topPercentage, testData);
-            System.out.printf("第%d次迭代,   \t适应度为:%s", i, instance.format(result));
-            System.out.println();
-            if (minAbs > result) {
-                lCount++;
-            } else {
-                lCount = 0;
-            }
-            if (lCount > 10) {
-                break;
+            if (i % 15 == 0) {
+                List<Individual<Double[], Double>> topPercentage = fitnessHandler.findTopPercentage(testPopulation.allIndividuals(), 0.1, 10);
+                double result = fitnessHandler.fitnessByMean(topPercentage, testData);
+                System.out.printf("第%d次迭代,   \t适应度为:%s", i, instance.format(result));
+                if (maxResult < result) {
+                    maxResult = result;
+                    maxIndividual = topPercentage;
+                    Individual<Double[], Double> doubleIndividual1 = topPercentage.get(0);
+                    String string = doubleIndividual1.toString();
+                    System.out.printf("   新的突破!");
+                }
+                System.out.println();
             }
         }
+        Individual<Double[], Double> doubleIndividual = maxIndividual.get(0);
         int i = 1;
 
 
@@ -159,7 +163,7 @@ class TestMain {
             return dest;
         }).toArray(double[][]::new);
         // 降维&正交化
-        // 1.计算相关系数矩阵时这里使用香农信息论中的互信息理论
+        // 1.计算相关系数矩阵  这里使用香农信息论中的互信息理论
         // 互信息理论中 相关系数公式为 相关系数=2I(x,y)/(H(x),H(y))  其中 I(x,y) = H(x) + H(y) - H(x,y)
         // 里面 H(x) = E[log(1/P(x))] = ∑P(xi)log(1/P(xi))
         // H(x,y) = E[log(1/P(xy))] = ∑P(xi,yi)log(1/P(xi,yi))

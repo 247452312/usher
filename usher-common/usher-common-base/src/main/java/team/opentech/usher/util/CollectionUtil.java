@@ -30,30 +30,6 @@ public final class CollectionUtil {
     }
 
     /**
-     * 快排
-     */
-    public static <T> void fastSort(T[] array, Function<T, Double> sortMark) {
-        int randomIndex = RandomUtils.nextInt(0, array.length);
-        Double p = sortMark.apply(array[randomIndex]);
-        int leftIndex = 0;
-        int rightIndex = array.length - 1;
-
-        while (leftIndex != rightIndex) {
-            while (leftIndex < rightIndex && sortMark.apply(array[rightIndex]) > p) {
-                rightIndex--;
-            }
-            while (leftIndex < rightIndex && sortMark.apply(array[leftIndex]) <= p) {
-                leftIndex++;
-            }
-            if (leftIndex < rightIndex) {
-                T t = array[leftIndex];
-                array[leftIndex] = array[rightIndex];
-                array[rightIndex] = t;
-            }
-        }
-    }
-
-    /**
      * 是否包含
      *
      * @param collection 集合

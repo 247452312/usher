@@ -2,6 +2,7 @@ package team.opentech.usher.core.heartDisease;
 
 import java.util.Arrays;
 import java.util.Map;
+import org.apache.commons.lang3.RandomUtils;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.core.data.AbstractHistoryData;
 import team.opentech.usher.core.data.AbstractHistoryMeanData;
@@ -26,12 +27,6 @@ public class TestHeartHistoryDataFunctionFitnessHandler extends AbstractDataFitn
         return integers;
     }
 
-    @Override
-    public Double calculateResult(Double[] param) {
-        //        return asd;
-        // todo 如何计算结果
-        return null;
-    }
 
     @Override
     protected AbstractHistoryData<Double[], Double> makeFittingIndividual(Map<Double[], Double> testData) {
@@ -64,6 +59,12 @@ public class TestHeartHistoryDataFunctionFitnessHandler extends AbstractDataFitn
     @NotNull
     @Override
     protected Double[][] makeTestParams() {
-        return testData.keySet().toArray(new Double[0][]);
+        int length = testData.size() / 10;
+        Double[][] result = new Double[length][];
+        Double[][] array = testData.keySet().toArray(new Double[0][]);
+        for (int i = 0; i < length; i++) {
+            result[i] = array[RandomUtils.nextInt(0, length)];
+        }
+        return result;
     }
 }

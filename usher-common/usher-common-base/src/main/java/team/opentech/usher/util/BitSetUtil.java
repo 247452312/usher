@@ -2,7 +2,7 @@ package team.opentech.usher.util;
 
 
 import java.util.BitSet;
-import org.mapstruct.ap.shaded.freemarker.template.utility.NumberUtil;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -90,6 +90,17 @@ public final class BitSetUtil {
     }
 
     /**
+     * long转bitSet
+     *
+     * @param i
+     *
+     * @return
+     */
+    public static BitSet valueOf(long i) {
+        return BitSet.valueOf(new long[]{i});
+    }
+
+    /**
      * 比较大小
      * <p>
      * 返回值参考{@link Integer#compareTo}
@@ -141,5 +152,267 @@ public final class BitSetUtil {
             return 0;
         }
         return bitSet.toLongArray()[0];
+    }
+
+    /**
+     * 根据size获取
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     * @param size       长度
+     *
+     * @return
+     */
+    public static BitSet getBySize(BitSet bitSet, Integer startIndex, Integer size) {
+        return bitSet.get(startIndex, startIndex + size);
+    }
+
+    /**
+     * 根据指定size获取一个int
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     * @param size       长度
+     *
+     * @return
+     */
+    public static int getIntBySize(BitSet bitSet, Integer startIndex, Integer size) {
+        int result = 0;
+        for (int i = 0; i < size; i++) {
+            if (bitSet.get(startIndex + i)) {
+                result += 1 << i;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 根据一个int
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     *
+     * @return
+     */
+    public static int getInt(BitSet bitSet, Integer startIndex) {
+        return getIntBySize(bitSet, startIndex, Integer.SIZE);
+    }
+
+
+    /**
+     * 根据指定size获取一个int
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     * @param size       长度
+     *
+     * @return
+     */
+    public static int getIntBySize(BitSet bitSet, AtomicInteger startIndex, Integer size) {
+        int result = 0;
+        int startIndexNum = startIndex.get();
+        for (int i = 0; i < size; i++) {
+            if (bitSet.get(startIndexNum++)) {
+                result += 1 << i;
+            }
+        }
+        startIndex.addAndGet(size);
+        return result;
+    }
+
+    /**
+     * 根据一个int
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     *
+     * @return
+     */
+    public static int getInt(BitSet bitSet, AtomicInteger startIndex) {
+        return getIntBySize(bitSet, startIndex, Integer.SIZE);
+    }
+
+
+    /**
+     * 根据指定size获取一个long
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     * @param size       长度
+     *
+     * @return
+     */
+    public static long getLongBySize(BitSet bitSet, Integer startIndex, Integer size) {
+        long result = 0;
+        for (int i = 0; i < size; i++) {
+            if (bitSet.get(startIndex + i)) {
+                result += 1L << i;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 根据一个long
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     *
+     * @return
+     */
+    public static long getLong(BitSet bitSet, Integer startIndex) {
+        return getLongBySize(bitSet, startIndex, Long.SIZE);
+    }
+
+    /**
+     * 根据指定size获取一个long
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     * @param size       长度
+     *
+     * @return
+     */
+    public static long getLongBySize(BitSet bitSet, AtomicInteger startIndex, Integer size) {
+        long result = 0;
+        for (int i = 0; i < size; i++) {
+            if (bitSet.get(startIndex.getAndIncrement())) {
+                result += 1L << i;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 根据一个long
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     *
+     * @return
+     */
+    public static long getLong(BitSet bitSet, AtomicInteger startIndex) {
+        return getLongBySize(bitSet, startIndex, Long.SIZE);
+    }
+
+    /**
+     * 根据指定size获取一个double
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     * @param size       长度
+     *
+     * @return
+     */
+    public static double getDoubleBySize(BitSet bitSet, Integer startIndex, Integer size) {
+        long longBySize = getLongBySize(bitSet, startIndex, size);
+        return Double.longBitsToDouble(longBySize);
+    }
+
+    /**
+     * 根据指定size获取一个double
+     *
+     * @param bitSet        原始bitSet
+     * @param startIndex    开始位置
+     * @param intSize       整数部分长度
+     * @param decimalSize   小数部分在bit上的长度
+     * @param decimalLength 小数部分保留长度
+     *
+     * @return
+     */
+    public static double getDoubleBySize(BitSet bitSet, int startIndex, int intSize, int decimalSize, int decimalLength) {
+        int intNum = getIntBySize(bitSet, startIndex, intSize);
+
+        int decimalNum = getIntBySize(bitSet, startIndex, decimalSize);
+        int i = 1;
+        for (int j = 0; j < decimalLength; j++) {
+            i *= 10;
+        }
+        double v = decimalNum * 1.0 / i;
+        return intNum + v - Math.floor(v);
+    }
+
+    /**
+     * 根据指定size获取一个double
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     * @param size       整数部分长度
+     *
+     * @return
+     */
+    public static double getDoubleBySize(BitSet bitSet, int startIndex, int size) {
+        long longBySize = getLongBySize(bitSet, startIndex, size);
+        return Double.longBitsToDouble(longBySize);
+    }
+
+    /**
+     * 获取一个double
+     *
+     * @param bitSet      原始bitSet
+     * @param startIndex  开始位置
+     * @param decimalSize 小数部分长度
+     *
+     * @return
+     */
+    public static double getDouble(BitSet bitSet, Integer startIndex, int decimalSize) {
+        return getDoubleBySize(bitSet, startIndex, Double.SIZE / 2, Double.SIZE / 2, decimalSize);
+    }
+
+    /**
+     * 根据指定size获取一个double
+     *
+     * @param bitSet      原始bitSet
+     * @param startIndex  开始位置
+     * @param size        长度
+     * @param decimalSize 小数部分长度
+     *
+     * @return
+     */
+    public static double getDoubleBySize(BitSet bitSet, AtomicInteger startIndex, Integer size, int decimalSize) {
+        double doubleBySize = getDoubleBySize(bitSet, startIndex.get(), size / 2, size / 2 + size % 2, decimalSize);
+        startIndex.getAndAdd(size);
+        return doubleBySize;
+    }
+
+    /**
+     * 根据指定size获取一个double
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     * @param size       长度
+     *
+     * @return
+     */
+    public static double getDoubleBySize(BitSet bitSet, AtomicInteger startIndex, Integer size) {
+        Integer i = startIndex.get();
+        double doubleBySize = getDoubleBySize(bitSet, i, size);
+        startIndex.getAndAdd(size);
+        return doubleBySize;
+    }
+
+    /**
+     * 获取一个double
+     *
+     * @param bitSet      原始bitSet
+     * @param startIndex  开始位置
+     * @param decimalSize 小数部分长度
+     *
+     * @return
+     */
+    public static double getDouble(BitSet bitSet, AtomicInteger startIndex, int decimalSize) {
+        return getDoubleBySize(bitSet, startIndex, Double.SIZE, decimalSize);
+    }
+
+    /**
+     * 获取一个double
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     *
+     * @return
+     */
+    public static double getDouble(BitSet bitSet, AtomicInteger startIndex) {
+        return getDoubleBySize(bitSet, startIndex, Double.SIZE);
     }
 }
