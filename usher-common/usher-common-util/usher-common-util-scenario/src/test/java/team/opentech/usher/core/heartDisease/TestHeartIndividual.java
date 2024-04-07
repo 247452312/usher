@@ -1,15 +1,12 @@
 package team.opentech.usher.core.heartDisease;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.BitSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import team.opentech.usher.Individual;
 import team.opentech.usher.core.AbstractIndividual;
 import team.opentech.usher.util.BitSetUtil;
-import team.opentech.usher.util.Pair;
 import team.opentech.usher.util.StringUtil;
 
 /**
@@ -36,16 +33,20 @@ public class TestHeartIndividual extends AbstractIndividual<Double[], Double> {
         int firstPower = BitSetUtil.getIntBySize(firstBit, firstIndex, 3);
         int secondPower = BitSetUtil.getIntBySize(secondBit, secondIndex, 3);
 
-        double content = firstPower >= secondPower ? BitSetUtil.getDouble(firstBit, firstIndex) : BitSetUtil.getDouble(secondBit, secondIndex);
+        double content = firstPower >= secondPower ? findFloat(firstBit, firstIndex) : findFloat(secondBit, secondIndex);
         result += content;
 
         // 共有13个维度
         for (int i = 0; i < 13; i++) {
             firstPower = BitSetUtil.getIntBySize(firstBit, firstIndex, 3);
             secondPower = BitSetUtil.getIntBySize(secondBit, secondIndex, 3);
-            double firstResult = calcDimensionResult(firstBit, firstIndex, param[i]);
-            double secondResult = calcDimensionResult(secondBit, secondIndex, param[i]);
-            result += firstPower >= secondPower ? firstResult : secondResult;
+            if (firstPower >= secondPower) {
+                result += calcDimensionResult(firstBit, firstIndex, param[i]);
+                secondIndex.set(firstIndex.get());
+            } else {
+                result += calcDimensionResult(secondBit, secondIndex, param[i]);
+                firstIndex.set(secondIndex.get());
+            }
         }
         return result;
     }
@@ -60,18 +61,22 @@ public class TestHeartIndividual extends AbstractIndividual<Double[], Double> {
         AtomicInteger secondIndex = new AtomicInteger(0);
         int firstPower = BitSetUtil.getIntBySize(firstBit, firstIndex, 3);
         int secondPower = BitSetUtil.getIntBySize(secondBit, secondIndex, 3);
-
-        double content = firstPower >= secondPower ? BitSetUtil.getDouble(firstBit, firstIndex, 4) : BitSetUtil.getDouble(secondBit, secondIndex, 4);
-        result.append(new BigDecimal(Double.toString(content)).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue());
+        double content = firstPower >= secondPower ? findFloat(firstBit, firstIndex) : findFloat(secondBit, secondIndex);
+        result.append(content);
 
         char name = 'a';
         // 共有13个维度
         for (int i = 0; i < 13; i++) {
             firstPower = BitSetUtil.getIntBySize(firstBit, firstIndex, 3);
             secondPower = BitSetUtil.getIntBySize(secondBit, secondIndex, 3);
-            String firstResult = calcDimensionStr(firstBit, firstIndex, name);
-            String secondResult = calcDimensionStr(secondBit, secondIndex, name);
-            String s = firstPower >= secondPower ? firstResult : secondResult;
+            String s;
+            if (firstPower >= secondPower) {
+                s = calcDimensionStr(firstBit, firstIndex);
+                secondIndex.set(firstIndex.get());
+            } else {
+                s = calcDimensionStr(secondBit, secondIndex);
+                firstIndex.set(secondIndex.get());
+            }
             if (StringUtil.isNotEmpty(s)) {
                 if (!s.startsWith("-")) {
                     result.append("+");
@@ -88,12 +93,12 @@ public class TestHeartIndividual extends AbstractIndividual<Double[], Double> {
         return new TestHeartIndividual(firstDna, secondDna, size);
     }
 
-    private String calcDimensionStr(BitSet changeBit, AtomicInteger changeIndex, char name) {
+    private String calcDimensionStr(BitSet changeBit, AtomicInteger changeIndex) {
         StringBuilder result = new StringBuilder();
         int itemSize = BitSetUtil.getIntBySize(changeBit, changeIndex, 8) % 4;
         boolean init = true;
         for (int i = 0; i < itemSize; i++) {
-            String itemResult = calcItemStr(changeBit, changeIndex, name);
+            String itemResult = calcItemStr(changeBit, changeIndex);
             if (StringUtil.isEmpty(itemResult)) {
                 continue;
             }
@@ -110,34 +115,20 @@ public class TestHeartIndividual extends AbstractIndividual<Double[], Double> {
         return result.toString();
     }
 
-    private String calcItemStr(BitSet changeBit, AtomicInteger changeIndex, char name) {
+    private String calcItemStr(BitSet changeBit, AtomicInteger changeIndex) {
         StringBuilder result = new StringBuilder();
-
-        int functionCode = BitSetUtil.getIntBySize(changeBit, changeIndex, 8) % MathFunction.size();
-        double itemCoeff = BitSetUtil.getDouble(changeBit, changeIndex, 4);
-        double d = new BigDecimal(Double.toString(itemCoeff)).setScale(4, RoundingMode.HALF_UP).doubleValue();
-        if (d == 0) {
-            return "";
+        float aFloat = findFloat(changeBit, changeIndex);
+        float bFloat = findFloat(changeBit, changeIndex);
+        result.append(aFloat);
+        result.append("*x");
+        if (bFloat > 0) {
+            result.append("+");
         }
-        result.append(d);
-        result.append("*");
-        MathFunction byCode = MathFunction.getByCode(functionCode);
-        List<Pair<Integer, Class<? extends Number>>> classBitCountAndType = byCode.getClassBitCountAndType();
+        result.append(bFloat);
+        result.append("*x^2");
 
-        Number[] params = new Number[classBitCountAndType.size()];
-        for (int i = 0; i < classBitCountAndType.size(); i++) {
-            Pair<Integer, Class<? extends Number>> integerClassPair = classBitCountAndType.get(i);
-            Class<? extends Number> value = integerClassPair.getValue();
-            if (Objects.equals(value, Integer.class)) {
-                params[i] = BitSetUtil.getIntBySize(changeBit, changeIndex, integerClassPair.getKey());
-            } else if (Objects.equals(value, Long.class)) {
-                params[i] = BitSetUtil.getLongBySize(changeBit, changeIndex, integerClassPair.getKey());
-            } else if (Objects.equals(value, Double.class)) {
-                params[i] = BitSetUtil.getDoubleBySize(changeBit, changeIndex, integerClassPair.getKey(), 4);
-            }
-        }
-        result.append(byCode.makeString(name, params));
         return result.toString();
+
     }
 
     /**
@@ -171,24 +162,21 @@ public class TestHeartIndividual extends AbstractIndividual<Double[], Double> {
      * @return
      */
     private double calcItemResult(BitSet changeBit, AtomicInteger changeIndex, Double x) {
-        int functionCode = BitSetUtil.getIntBySize(changeBit, changeIndex, 8) % MathFunction.size();
-        double itemCoeff = BitSetUtil.getDouble(changeBit, changeIndex, 4);
+        float aFloat = findFloat(changeBit, changeIndex);
+        float bFloat = findFloat(changeBit, changeIndex);
+        return aFloat * x + bFloat * x * x;
+    }
 
-        MathFunction byCode = MathFunction.getByCode(functionCode);
-        List<Pair<Integer, Class<? extends Number>>> classBitCountAndType = byCode.getClassBitCountAndType();
-
-        Number[] params = new Number[classBitCountAndType.size()];
-        for (int i = 0; i < classBitCountAndType.size(); i++) {
-            Pair<Integer, Class<? extends Number>> integerClassPair = classBitCountAndType.get(i);
-            Class<? extends Number> value = integerClassPair.getValue();
-            if (Objects.equals(value, Integer.class)) {
-                params[i] = BitSetUtil.getIntBySize(changeBit, changeIndex, integerClassPair.getKey());
-            } else if (Objects.equals(value, Long.class)) {
-                params[i] = BitSetUtil.getLongBySize(changeBit, changeIndex, integerClassPair.getKey());
-            } else if (Objects.equals(value, Double.class)) {
-                params[i] = BitSetUtil.getDoubleBySize(changeBit, changeIndex, integerClassPair.getKey());
-            }
+    private float findFloat(BitSet changeBit, AtomicInteger changeIndex) {
+        boolean b = changeBit.get(changeIndex.getAndIncrement());
+        int intNum = BitSetUtil.getIntBySize(changeBit, changeIndex, 5);
+        float v = BitSetUtil.getIntBySize(changeBit, changeIndex, 5) / 100f;
+        float decimalNum = (float) (v - Math.floor(v));
+        float v1 = intNum + decimalNum;
+        if (!b) {
+            v1 = -v1;
         }
-        return itemCoeff * byCode.run(x, params);
+        return v1;
+
     }
 }

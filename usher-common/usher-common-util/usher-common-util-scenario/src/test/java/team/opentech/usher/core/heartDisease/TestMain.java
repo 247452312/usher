@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.math3.linear.EigenDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealMatrix;
@@ -58,24 +59,34 @@ class TestMain {
         return result;
     }
 
-    private static double[][] extracted(double[][] fileData) {
+    private static double[][] extracted(double[][] fileData, int[] needDimensionLength) {
         double[] floats = fileData[0];
-        // 求均值
-        double[] avg = new double[floats.length];
-        for (double[] fileDatum : fileData) {
-            for (int i = 0; i < fileDatum.length; i++) {
-                avg[i] += fileDatum[i];
+        if (needDimensionLength == null) {
+            needDimensionLength = new int[floats.length];
+            for (int i = 0; i < floats.length; i++) {
+                needDimensionLength[i] = i;
             }
         }
-        for (int i = 0; i < avg.length; i++) {
-            avg[i] = avg[i] / fileData.length;
+        // 求均值
+        double[] avg = new double[floats.length];
+
+        for (double[] fileDatum : fileData) {
+            for (int dimension : needDimensionLength) {
+                avg[dimension] += fileDatum[dimension];
+            }
+
         }
+
+        for (int dimension : needDimensionLength) {
+            avg[dimension] = avg[dimension] / fileData.length;
+        }
+
         // 求方差
         double[] variance = new double[floats.length];
         for (double[] fileDatum : fileData) {
-            for (int i = 0; i < fileDatum.length; i++) {
-                double v = fileDatum[i] - avg[i];
-                variance[i] += v * v;
+            for (int dimension : needDimensionLength) {
+                double v = fileDatum[dimension] - avg[dimension];
+                variance[dimension] += v * v;
             }
         }
         for (int i = 0; i < variance.length; i++) {
@@ -85,8 +96,8 @@ class TestMain {
 
         // 标准化处理
         for (double[] item : fileData) {
-            for (int j = 0; j < item.length; j++) {
-                item[j] = (item[j] - avg[j]) / variance[j];
+            for (int dimension : needDimensionLength) {
+                item[dimension] = (item[dimension] - avg[dimension]) / variance[dimension];
             }
         }
         return fileData;
@@ -95,7 +106,8 @@ class TestMain {
 
     @Test
     void testMain() throws FileNotFoundException {
-        double[][] fileData = getFileData("D:\\share\\data\\heart+disease\\new.data");
+        //        double[][] fileData = getFileData("D:\\share\\data\\heart+disease\\new.data");
+        double[][] fileData = makeTargetFileData();
         // 数据清洗
         fileData = clean(fileData);
         long startTime = System.currentTimeMillis();
@@ -114,11 +126,17 @@ class TestMain {
         }
         Double[][] testData = transDataMap.keySet().toArray(new Double[0][]);
 
+        // 适应度函数
         FitnessHandler<Double[], Double> fitnessHandler = new TestHeartHistoryDataFunctionFitnessHandler(transDataMap);
-
+        // 种群/初始化
         Properties config = new Properties();
-        //        config.put("scenario.population.K", 100);
+        config.setProperty("scenario.population.K", "1000");
+        config.setProperty("scenario.population.init-percentage", "0.2");
+        config.setProperty("scenario.population.init-cross-percentage", "0.4");
+        config.setProperty("scenario.population.init-variation-percentage", "0.2");
+
         Population<Double[], Double> testPopulation = new TestHeartFunctionPopulation(config, fitnessHandler).init();
+
         NumberFormat instance = NumberFormat.getInstance();
         instance.setMaximumFractionDigits(8);
 
@@ -134,8 +152,8 @@ class TestMain {
                     maxResult = result;
                     maxIndividual = topPercentage;
                     Individual<Double[], Double> doubleIndividual1 = topPercentage.get(0);
-                    String string = doubleIndividual1.toString();
                     System.out.printf("   新的突破!");
+                    System.out.println("\t " + doubleIndividual1.toString());
                 }
                 System.out.println();
             }
@@ -144,6 +162,20 @@ class TestMain {
         int i = 1;
 
 
+    }
+
+    private double[][] makeTargetFileData() {
+        double[][] doubles = new double[1000][];
+        for (int i = 0; i < 1000; i++) {
+            doubles[i] = new double[14];
+            double sum = 0;
+            for (int j = 0; j < 13; j++) {
+                doubles[i][j] = RandomUtils.nextDouble(0.0, 100);
+                sum += j * doubles[i][j] + (j + 1) * doubles[i][j] * doubles[i][j];
+            }
+            doubles[i][13] = sum + 1;
+        }
+        return doubles;
     }
 
     /**
@@ -323,7 +355,8 @@ class TestMain {
         // 过滤掉存在值为-9 的数据
         fileData = Arrays.stream(fileData).filter(this::filter).toArray(double[][]::new);
         // 数据标准化
-        return extracted(fileData);
+        return extracted(fileData, null);
+        //        return fileData;
     }
 
     private boolean filter(double[] data) {

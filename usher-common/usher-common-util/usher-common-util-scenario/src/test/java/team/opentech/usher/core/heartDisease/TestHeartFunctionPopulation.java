@@ -23,6 +23,20 @@ public class TestHeartFunctionPopulation extends AbstractPopulation<Double[], Do
         super(k, initPercentage, crossPercentage, variationPercentage, fitnessHandler);
     }
 
+    /**
+     * 随机生成一个DNA
+     *
+     * @return
+     */
+    @NotNull
+    private static BitSet randomDna() {
+        long[] longs = new long[200];
+        for (int i = 0; i < 200; i++) {
+            longs[i] = RandomUtils.nextLong(0, Long.MAX_VALUE);
+        }
+        return BitSet.valueOf(longs);
+    }
+
     @Override
     protected Individual<Double[], Double> makeNewIndividual() {
         BitSet firstDna = firstDna();
@@ -37,19 +51,11 @@ public class TestHeartFunctionPopulation extends AbstractPopulation<Double[], Do
 
     @NotNull
     private BitSet secondDna() {
-        long[] longs = new long[140];
-        for (int i = 0; i < 140; i++) {
-            longs[i] = RandomUtils.nextLong(0, Long.MAX_VALUE);
-        }
-        return BitSet.valueOf(longs);
+        return randomDna();
     }
 
     @NotNull
     private BitSet firstDna() {
-        long[] longs = new long[140];
-        for (int i = 0; i < 140; i++) {
-            longs[i] = RandomUtils.nextLong(0, Long.MAX_VALUE);
-        }
-        return BitSet.valueOf(longs);
+        return randomDna();
     }
 }
