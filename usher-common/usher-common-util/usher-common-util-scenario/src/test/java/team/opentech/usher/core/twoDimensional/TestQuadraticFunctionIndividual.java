@@ -44,10 +44,7 @@ public class TestQuadraticFunctionIndividual extends AbstractIndividual<Double, 
     }
 
     @Override
-    public Double findResult(Double param) {
-        if (cacheResult.containsKey(param)) {
-            return cacheResult.get(param);
-        }
+    public Double doFindResult(Double param) {
         BitSet firstDna = firstDna();
         BitSet secondDna = secondDna();
         BitSet firstPower = firstDna.get(0, 3);
@@ -59,9 +56,7 @@ public class TestQuadraticFunctionIndividual extends AbstractIndividual<Double, 
         secondPower = secondDna.get(11, 14);
         BitSet b = BitSetUtil.compareTo(firstPower, secondPower) >= 0 ? firstDna.get(14, 22) : secondDna.get(14, 22);
 
-        double v = BitSetUtil.toInt(a) * param * param + BitSetUtil.toInt(b);
-        cacheResult.put(param, v);
-        return v;
+        return BitSetUtil.toInt(a) * param * param + BitSetUtil.toInt(b);
     }
 
     @Override

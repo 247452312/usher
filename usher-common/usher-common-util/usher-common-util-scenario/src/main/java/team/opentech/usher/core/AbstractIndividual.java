@@ -1,6 +1,8 @@
 package team.opentech.usher.core;
 
 import java.util.BitSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import team.opentech.usher.Individual;
@@ -30,6 +32,11 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
      * 初始长度
      */
     protected final int size;
+
+    /**
+     * 在dna没有变的前提下缓存结果
+     */
+    private final Map<T, E> cacheResult = new HashMap<>();
 
     protected AbstractIndividual(int size) {
         this.firstDna = new BitSet(size);
@@ -77,6 +84,7 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
         //        changeDirect(firstDna(), secondDna());
         // 外来数据改变
         //        changeByVirus(firstDna(), secondDna(), virusDna);
+        cacheResult.clear();
     }
 
     @Override
@@ -105,6 +113,16 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
         dealDiff(result, realResult, learningRate);
     }
 
+    @Override
+    public E findResult(T param) {
+        if (cacheResult.containsKey(param)) {
+            return cacheResult.get(param);
+        }
+        E result = doFindResult(param);
+        cacheResult.put(param, result);
+        return result;
+    }
+
     /**
      * 混合遗传算法引入梯度下降思想, 处理差值(反向学习)
      *
@@ -124,6 +142,15 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
      * @return
      */
     protected abstract Individual<T, E> makeNewIndividual(BitSet firstDna, BitSet secondDna, int size);
+
+    /**
+     * 获取结果
+     *
+     * @param param
+     *
+     * @return
+     */
+    protected abstract E doFindResult(T param);
 
     /**
      * 根据外来数据改变

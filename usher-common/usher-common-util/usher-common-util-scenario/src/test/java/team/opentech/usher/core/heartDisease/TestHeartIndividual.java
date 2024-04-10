@@ -23,7 +23,7 @@ public class TestHeartIndividual extends AbstractIndividual<Double[], Double> {
     }
 
     @Override
-    public Double findResult(Double[] param) {
+    public Double doFindResult(Double[] param) {
         double result = 0;
         BitSet firstBit = firstDna();
         BitSet secondBit = secondDna();

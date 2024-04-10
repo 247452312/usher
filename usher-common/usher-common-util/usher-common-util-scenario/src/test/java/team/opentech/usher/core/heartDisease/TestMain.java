@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.RandomUtils;
@@ -106,8 +107,8 @@ class TestMain {
 
     @Test
     void testMain() throws FileNotFoundException {
-        double[][] fileData = getFileData("D:\\share\\data\\heart+disease\\new.data");
-        //        double[][] fileData = makeTargetFileData();
+        //        double[][] fileData = getFileData("D:\\share\\data\\heart+disease\\new.data");
+        double[][] fileData = makeTargetFileData();
         // 数据清洗
         fileData = clean(fileData);
         long startTime = System.currentTimeMillis();
@@ -142,8 +143,12 @@ class TestMain {
 
         List<Individual<Double[], Double>> maxIndividual = new ArrayList<>();
         double maxResult = 0;
+        List<Pair<Double[], Double>> learnParam = new ArrayList<>();
+        for (Entry<Double[], Double> doubleEntry : transDataMap.entrySet()) {
+            learnParam.add(new Pair<>(doubleEntry.getKey(), doubleEntry.getValue()));
+        }
         for (int i = 0; i < 1000; i++) {
-            testPopulation.iteration();
+            testPopulation.iteration(learnParam);
             if (i % 15 == 0) {
                 List<Individual<Double[], Double>> topPercentage = fitnessHandler.findTopPercentage(testPopulation.allIndividuals(), 0.1, 10);
                 double result = fitnessHandler.fitnessByMean(topPercentage, testData);
@@ -361,10 +366,10 @@ class TestMain {
         }
         // 数据标准化
         double[][] extracted = extracted(fileData, needDimensionLength);
-        // 对数据最后一列使用sigmod函数用来标准化
-        for (double[] fileDatum : fileData) {
-            fileDatum[length - 1] = 1 / (1 + Math.exp(-fileDatum[length - 1]));
-        }
+        //        // 对数据最后一列使用sigmod函数用来标准化
+        //        for (double[] fileDatum : fileData) {
+        //            fileDatum[length - 1] = 1 / (1 + Math.exp(-fileDatum[length - 1]));
+        //        }
         return extracted;
         //        return fileData;
     }
