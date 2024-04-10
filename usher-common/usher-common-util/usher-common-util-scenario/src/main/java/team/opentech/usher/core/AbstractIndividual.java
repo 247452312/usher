@@ -94,6 +94,26 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
         return firstDna() + ":" + secondDna();
     }
 
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @Override
+    public void directionalLearn(T param, E realResult, Double learningRate) {
+        E result = findResult(param);
+        dealDiff(result, realResult, learningRate);
+    }
+
+    /**
+     * 混合遗传算法引入梯度下降思想, 处理差值(反向学习)
+     *
+     * @param result       计算值
+     * @param targetResult 真实值
+     * @param learningRate 学习率
+     */
+    protected abstract void dealDiff(E result, E targetResult, Double learningRate);
+
     /**
      * 创建一个真正的个体
      *
@@ -160,10 +180,5 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
             changeDna = secondDna;
         }
         BitSetUtil.swap(changeDna, firstIndex, changeDna, secondIndex, size);
-    }
-
-    @Override
-    public int size() {
-        return size;
     }
 }

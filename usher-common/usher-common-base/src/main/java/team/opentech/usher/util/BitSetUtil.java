@@ -187,6 +187,22 @@ public final class BitSetUtil {
     }
 
     /**
+     * 根据指定size获取一个int
+     *
+     * @param bitSet     原始bitSet
+     * @param startIndex 开始位置
+     * @param size       长度
+     *
+     * @return
+     */
+    public static void setIntBySize(BitSet bitSet, Integer startIndex, Integer size, int value) {
+        for (int i = 0; i < size; i++) {
+            bitSet.set(startIndex + i, (value & 1) == 1);
+            value >>= 1;
+        }
+    }
+
+    /**
      * 根据一个int
      *
      * @param bitSet     原始bitSet

@@ -80,6 +80,11 @@ public class TestQuadraticFunctionIndividual extends AbstractIndividual<Double, 
     }
 
     @Override
+    protected void dealDiff(Double result, Double targetResult, Double learningRate) {
+        // 这里暂时不考虑有方向学习
+    }
+
+    @Override
     protected TestQuadraticFunctionIndividual makeNewIndividual(BitSet firstDna, BitSet secondDna, int size) {
         return new TestQuadraticFunctionIndividual(firstDna, secondDna, size);
     }

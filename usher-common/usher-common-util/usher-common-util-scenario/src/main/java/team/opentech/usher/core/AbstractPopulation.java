@@ -9,6 +9,7 @@ import team.opentech.usher.FitnessHandler;
 import team.opentech.usher.Individual;
 import team.opentech.usher.Population;
 import team.opentech.usher.util.CollectionUtil;
+import team.opentech.usher.util.Pair;
 
 /**
  * 种群模板
@@ -52,25 +53,33 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
     protected final Double variationPercentage;
 
     /**
+     * 混合式遗传算法,变异后引入有方向学习概念,此值是学习率
+     */
+    protected final Double learningRate;
+
+    /**
+     * 混合式遗传算法,变异后引入有方向学习概念,此值是梯度下降时计算学习率个体的比例
+     */
+    protected final Double learningPercentage;
+
+    /**
      * 种群中的个体集合
      */
     private final List<Individual<T, E>> individuals = new ArrayList<>();
 
 
     public AbstractPopulation(Properties config, FitnessHandler<T, E> fitnessHandler) {
-        this(Integer.parseInt(config.getProperty("scenario.population.K", "1000")),
-             Double.parseDouble(config.getProperty("scenario.population.init-percentage", "0.2")),
-             Double.parseDouble(config.getProperty("scenario.population.init-cross-percentage", "0.4")),
-             Double.parseDouble(config.getProperty("scenario.population.init-variation-percentage", "0.1")),
-             fitnessHandler);
+        this(Integer.parseInt(config.getProperty("scenario.population.K", "1000")), Double.parseDouble(config.getProperty("scenario.population.init-percentage", "0.2")), Double.parseDouble(config.getProperty("scenario.population.init-cross-percentage", "0.4")), Double.parseDouble(config.getProperty("scenario.population.init-variation-percentage", "0.1")), Double.parseDouble(config.getProperty("scenario.population.learning-percentage", VOTE_PERCENTAGE * 2 + "")), Double.parseDouble(config.getProperty("scenario.population.learning-percentage", "0.1")), fitnessHandler);
     }
 
-    public AbstractPopulation(Integer k, Double initPercentage, Double crossPercentage, Double variationPercentage, FitnessHandler<T, E> fitnessHandler) {
+    public AbstractPopulation(Integer k, Double initPercentage, Double crossPercentage, Double variationPercentage, Double learningPercentage, Double learningRate, FitnessHandler<T, E> fitnessHandler) {
         this.fitnessHandler = fitnessHandler;
         this.K = k;
         this.initPercentage = initPercentage;
         this.crossPercentage = crossPercentage;
         this.variationPercentage = variationPercentage;
+        this.learningRate = learningRate;
+        this.learningPercentage = learningPercentage;
     }
 
     @Override
@@ -80,10 +89,22 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
 
     @Override
     public void iteration(int size) {
+        iteration(size, null);
+    }
+
+    @Override
+    public void iteration(List<Pair<T, E>> learnParam) {
+        iteration(1, learnParam);
+    }
+
+    @Override
+    public void iteration(int size, List<Pair<T, E>> learnParam) {
         for (int i = 0; i < size; i++) {
             choose();
             cross();
             variation(new byte[0]);
+            // 有方向变异
+            directionalLearn(learnParam);
         }
     }
 
@@ -110,9 +131,8 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
         return this;
     }
 
-
     /**
-     * 变异
+     * 随机变异
      */
     protected void variation(byte[] virusDna) {
         int variationCount = (int) (individuals.size() * variationPercentage);
@@ -174,6 +194,28 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
      * 如何处理前百分比的数量
      */
     protected abstract E dealResults(List<E> results);
+
+
+    /**
+     * 混合遗传算法中通过神经网络的梯度下降方法进行有方向学习,当前方法的实现方式应该是通过对比入参中的结果和目标结果,求得差值或者平均差值,然后根据学习率分别对编码的各个参数进行微调
+     *
+     * @param learnParam
+     */
+    private void directionalLearn(List<Pair<T, E>> learnParam) {
+        // 没有提供学习部分,则不需要进行学习
+        if (CollectionUtil.isEmpty(learnParam)) {
+            return;
+        }
+        List<Individual<T, E>> topPercentage = fitnessHandler.findTopPercentage(individuals, learningPercentage, 1);
+
+        // 遍历所有个体,计算结果,和指定结果进行比较,求出梯度下降程度
+        for (Pair<T, E> item : learnParam) {
+            for (Individual<T, E> individual : topPercentage) {
+                individual.directionalLearn(item.getKey(), item.getValue(), this.learningRate);
+            }
+        }
+
+    }
 
     /**
      * 初始化种群大小

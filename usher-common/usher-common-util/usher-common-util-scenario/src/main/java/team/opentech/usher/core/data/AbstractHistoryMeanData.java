@@ -16,6 +16,7 @@ public abstract class AbstractHistoryMeanData<T, E> extends AbstractHistoryData<
         this.sortT = sortTestDataParam(testData, zeroParamArray);
     }
 
+
     @Override
     public E findResult(T param) {
         if (testData.containsKey(param)) {
@@ -38,6 +39,12 @@ public abstract class AbstractHistoryMeanData<T, E> extends AbstractHistoryData<
         return testData.get(sortT[sortT.length - 1]);
     }
 
+    @Override
+    public int size() {
+        // 历史数据评价类 不需要size
+        return 0;
+    }
+
     /**
      * 求两个值的均值
      *
@@ -50,7 +57,6 @@ public abstract class AbstractHistoryMeanData<T, E> extends AbstractHistoryData<
      * @return
      */
     protected abstract E meanResult(T param1, E result1, T param2, E result2, T param);
-
 
     /**
      * param 排序
@@ -68,11 +74,5 @@ public abstract class AbstractHistoryMeanData<T, E> extends AbstractHistoryData<
         T[] array = testData.keySet().toArray(zeroParamArray);
         Arrays.sort(array, this::compare);
         return array;
-    }
-
-    @Override
-    public int size() {
-        // 历史数据评价类 不需要size
-        return 0;
     }
 }

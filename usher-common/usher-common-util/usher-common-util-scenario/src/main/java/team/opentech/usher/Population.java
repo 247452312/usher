@@ -2,6 +2,7 @@ package team.opentech.usher;
 
 import java.io.Serializable;
 import java.util.List;
+import team.opentech.usher.util.Pair;
 
 /**
  * 种群
@@ -25,6 +26,18 @@ public interface Population<T, E> extends Serializable {
      * @param size 迭代次数
      */
     void iteration(int size);
+
+    /**
+     * 迭代
+     */
+    void iteration(List<Pair<T, E>> learnParam);
+
+    /**
+     * 迭代
+     *
+     * @param size 迭代次数
+     */
+    void iteration(int size, List<Pair<T, E>> learnParam);
 
     /**
      * 获取结果

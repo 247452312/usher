@@ -50,4 +50,13 @@ public interface Individual<T, E> extends Serializable {
      */
     int size();
 
+
+    /**
+     * 混合遗传算法添加梯度下降学习思想, 此方法为反向学习
+     *
+     * @param param        入参
+     * @param value        目标标签(正确结果)
+     * @param learningRate 学习率
+     */
+    void directionalLearn(T param, E value, Double learningRate);
 }

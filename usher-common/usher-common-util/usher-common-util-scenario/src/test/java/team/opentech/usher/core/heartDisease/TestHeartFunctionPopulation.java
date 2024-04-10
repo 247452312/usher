@@ -19,10 +19,6 @@ public class TestHeartFunctionPopulation extends AbstractPopulation<Double[], Do
         super(config, fitnessHandler);
     }
 
-    public TestHeartFunctionPopulation(Integer k, Double initPercentage, Double crossPercentage, Double variationPercentage, FitnessHandler<Double[], Double> fitnessHandler) {
-        super(k, initPercentage, crossPercentage, variationPercentage, fitnessHandler);
-    }
-
     /**
      * 随机生成一个DNA
      *
@@ -48,6 +44,7 @@ public class TestHeartFunctionPopulation extends AbstractPopulation<Double[], Do
     protected Double dealResults(List<Double> results) {
         return results.stream().mapToDouble(t -> t).average().getAsDouble();
     }
+
 
     @NotNull
     private BitSet secondDna() {

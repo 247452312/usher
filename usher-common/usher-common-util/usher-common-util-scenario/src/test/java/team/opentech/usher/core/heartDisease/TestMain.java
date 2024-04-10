@@ -81,7 +81,7 @@ class TestMain {
             avg[dimension] = avg[dimension] / fileData.length;
         }
 
-        // 求方差
+        // 求标准差
         double[] variance = new double[floats.length];
         for (double[] fileDatum : fileData) {
             for (int dimension : needDimensionLength) {
@@ -106,8 +106,8 @@ class TestMain {
 
     @Test
     void testMain() throws FileNotFoundException {
-        //        double[][] fileData = getFileData("D:\\share\\data\\heart+disease\\new.data");
-        double[][] fileData = makeTargetFileData();
+        double[][] fileData = getFileData("D:\\share\\data\\heart+disease\\new.data");
+        //        double[][] fileData = makeTargetFileData();
         // 数据清洗
         fileData = clean(fileData);
         long startTime = System.currentTimeMillis();
@@ -152,7 +152,7 @@ class TestMain {
                     maxResult = result;
                     maxIndividual = topPercentage;
                     Individual<Double[], Double> doubleIndividual1 = topPercentage.get(0);
-                    System.out.printf("   新的突破!");
+                    System.out.print("   新的突破!");
                     System.out.println("\t " + doubleIndividual1.toString());
                 }
                 System.out.println();
@@ -354,8 +354,18 @@ class TestMain {
         }
         // 过滤掉存在值为-9 的数据
         fileData = Arrays.stream(fileData).filter(this::filter).toArray(double[][]::new);
+        int length = fileData[0].length;
+        int[] needDimensionLength = new int[length - 1];
+        for (int i = 0; i < length - 1; i++) {
+            needDimensionLength[i] = i;
+        }
         // 数据标准化
-        return extracted(fileData, null);
+        double[][] extracted = extracted(fileData, needDimensionLength);
+        // 对数据最后一列使用sigmod函数用来标准化
+        for (double[] fileDatum : fileData) {
+            fileDatum[length - 1] = 1 / (1 + Math.exp(-fileDatum[length - 1]));
+        }
+        return extracted;
         //        return fileData;
     }
 

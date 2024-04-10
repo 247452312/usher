@@ -20,6 +20,11 @@ public abstract class AbstractHistoryData<T, E> implements Individual<T, E> {
 
 
     @Override
+    public void directionalLearn(T param, E value, Double learningRate) {
+        // 历史数据不会学习
+    }
+
+    @Override
     public Individual<T, E> cross(Individual<T, E> individual) {
         // 历史数据不需要交叉
         return null;

@@ -26,4 +26,5 @@ public class TestDoubleFunctionPopulation extends AbstractPopulation<Double, Dou
     protected Double dealResults(List<Double> results) {
         return ListUtil.mean(results);
     }
+
 }

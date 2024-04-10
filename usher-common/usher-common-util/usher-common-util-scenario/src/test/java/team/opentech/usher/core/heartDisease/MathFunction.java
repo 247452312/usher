@@ -2,7 +2,6 @@ package team.opentech.usher.core.heartDisease;
 
 
 import com.google.common.collect.Maps.EntryTransformer;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,23 +16,23 @@ import team.opentech.usher.util.Pair;
  * @date 文件创建日期 2024年04月01日 09时15分
  */
 public enum MathFunction {
-//    /**
-//     * 乘方
-//     */
-//    POWER(0, powerClass(), false, (params, depVar) -> Math.pow(depVar, params[0].doubleValue()), (numbers, s) -> {
-//
-//        NumberFormat instance = NumberFormat.getInstance();
-//        instance.setMaximumFractionDigits(4);
-//        return s + "^" + instance.format(numbers[0]);
-//    }),
-//    /**
-//     * sin
-//     */
-//    SIN(1, new ArrayList<>(), true, (params, depVar) -> Math.sin(depVar), (numbers, s) -> String.format("sin(%s)", s)),
-//    /**
-//     * log
-//     */
-//    LOG(2, new ArrayList<>(), false, (params, depVar) -> Math.log(depVar), (numbers, s) -> String.format("log(2,%s)", s)),
+    //    /**
+    //     * 乘方
+    //     */
+    //    POWER(0, powerClass(), false, (params, depVar) -> Math.pow(depVar, params[0].doubleValue()), (numbers, s) -> {
+    //
+    //        NumberFormat instance = NumberFormat.getInstance();
+    //        instance.setMaximumFractionDigits(4);
+    //        return s + "^" + instance.format(numbers[0]);
+    //    }),
+    //    /**
+    //     * sin
+    //     */
+    //    SIN(1, new ArrayList<>(), true, (params, depVar) -> Math.sin(depVar), (numbers, s) -> String.format("sin(%s)", s)),
+    //    /**
+    //     * log
+    //     */
+    //    LOG(2, new ArrayList<>(), false, (params, depVar) -> Math.log(depVar), (numbers, s) -> String.format("log(2,%s)", s)),
     /**
      * content
      */

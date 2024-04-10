@@ -32,6 +32,7 @@ public class TestHeartHistoryDataFunctionFitnessHandler extends AbstractDataFitn
     protected AbstractHistoryData<Double[], Double> makeFittingIndividual(Map<Double[], Double> testData) {
         return new AbstractHistoryMeanData<Double[], Double>(testData, new Double[0][]) {
 
+
             @Override
             protected Double meanResult(Double[] param1, Double result1, Double[] param2, Double result2, Double[] param) {
                 double sum = 0;
