@@ -95,6 +95,7 @@ public class TestHeartIndividual extends AbstractIndividual<Double[], Double> {
         BitSet secondBit = secondDna();
         AtomicInteger firstIndex = new AtomicInteger(0);
         AtomicInteger secondIndex = new AtomicInteger(0);
+        // h(x) - y
         double diff = result - targetResult;
 
         // 共13个维度
@@ -117,7 +118,8 @@ public class TestHeartIndividual extends AbstractIndividual<Double[], Double> {
             float coeff = findFloat(changeBit, changeIndex);
             otherIndex.set(changeIndex.get());
             double targetChangeNum = diff * coeff * learningRate;
-            changeFloat(changeBit, startIndex, targetChangeNum);
+            changeFloat(changeBit, startIndex, coeff + targetChangeNum);
+            int kkk = 1;
         }
     }
 

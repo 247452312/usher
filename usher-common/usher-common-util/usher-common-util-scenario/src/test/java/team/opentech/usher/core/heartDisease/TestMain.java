@@ -107,25 +107,36 @@ class TestMain {
 
     @Test
     void testMain() throws FileNotFoundException {
-        //        double[][] fileData = getFileData("D:\\share\\data\\heart+disease\\new.data");
-        double[][] fileData = makeTargetFileData();
+        //                double[][] fileData = getFileData("D:\\share\\data\\heart+disease\\new.data");
+        Pair<double[][], double[]> fileData = makeTargetFileData();
+
         // 数据清洗
         fileData = clean(fileData);
         long startTime = System.currentTimeMillis();
-        Pair<double[][], double[][]> feature = feature(fileData);
-        // 降维转换矩阵
-        double[][] transMatrix = feature.getKey();
-        fileData = feature.getValue();
-        System.out.println("根据互信息量求特征矩阵所用时间:" + (System.currentTimeMillis() - startTime) + "ms, 数据量:" + fileData.length + " * " + fileData[0].length);
 
-        Map<Double[], Double> transDataMap = new HashMap<>(fileData.length);
-        for (double[] fileDatum : fileData) {
-            int size = fileDatum.length - 1;
-            double[] dest = new double[size];
-            System.arraycopy(fileDatum, 0, dest, 0, size);
-            transDataMap.put(Arrays.stream(dest).boxed().toArray(Double[]::new), fileDatum[fileDatum.length - 1]);
+        double[][] transMatrix = feature(fileData.getKey());
+        RealMatrix realMatrix = MatrixUtils.createRealMatrix(transMatrix);
+
+        // 目标矩阵 = 原始数据矩阵 * 转换矩阵  完成降维与标准化操作
+        RealMatrix multiply = MatrixUtils.createRealMatrix(fileData.getKey()).multiply(realMatrix);
+        // 特征组合
+        fileData = new Pair<>(multiply.getData(), fileData.getValue());
+        System.out.println("根据互信息量求特征矩阵所用时间:" + (System.currentTimeMillis() - startTime) + "ms, 数据量:" + fileData.getKey().length + " * " + fileData.getKey()[0].length);
+        Map<Double[], Double> transDataMap = new HashMap<>(fileData.getKey().length);
+        for (int i = 0; i < fileData.getKey().length; i++) {
+            double[] params = fileData.getKey()[i];
+            double result = fileData.getValue()[i];
+            transDataMap.put(Arrays.stream(params).boxed().toArray(Double[]::new), result);
         }
-        Double[][] testData = transDataMap.keySet().toArray(new Double[0][]);
+
+        Pair<double[][], double[]> testFileData = makeTargetFileData();
+        testFileData = clean(testFileData);
+        // 目标矩阵 = 原始数据矩阵 * 转换矩阵  完成降维与标准化操作
+        RealMatrix testMultiply = MatrixUtils.createRealMatrix(testFileData.getKey()).multiply(realMatrix);
+        // 特征组合
+        testFileData = new Pair<>(testMultiply.getData(), testFileData.getValue());
+
+        Double[][] testData = Arrays.stream(testFileData.getKey()).map(t -> Arrays.stream(t).boxed().toArray(Double[]::new)).toArray(Double[][]::new);
 
         // 适应度函数
         FitnessHandler<Double[], Double> fitnessHandler = new TestHeartHistoryDataFunctionFitnessHandler(transDataMap);
@@ -169,18 +180,19 @@ class TestMain {
 
     }
 
-    private double[][] makeTargetFileData() {
+    private Pair<double[][], double[]> makeTargetFileData() {
         double[][] doubles = new double[1000][];
+        double[] result = new double[1000];
         for (int i = 0; i < 1000; i++) {
-            doubles[i] = new double[14];
+            doubles[i] = new double[13];
             double sum = 0;
             for (int j = 0; j < 13; j++) {
                 doubles[i][j] = RandomUtils.nextDouble(0.0, 100);
                 sum += j * doubles[i][j] + (j + 1) * doubles[i][j] * doubles[i][j];
             }
-            doubles[i][13] = sum + 1;
+            result[i] = sum + 1;
         }
-        return doubles;
+        return new Pair<>(doubles, result);
     }
 
     /**
@@ -190,15 +202,8 @@ class TestMain {
      *
      * @return key->特征值矩阵 value 修改后的结果
      */
-    private Pair<double[][], double[][]> feature(double[][] rawData) {
-        // 取出最后一列
-        double[] resultLine = Arrays.stream(rawData).mapToDouble(t -> t[t.length - 1]).toArray();
-        // 将最后一列去除
-        double[][] fileData = Arrays.stream(rawData).map(t -> {
-            double[] dest = new double[t.length - 1];
-            System.arraycopy(t, 0, dest, 0, t.length - 1);
-            return dest;
-        }).toArray(double[][]::new);
+    private double[][] feature(double[][] rawData) {
+        double[][] fileData = rawData;
         // 降维&正交化
         // 1.计算相关系数矩阵  这里使用香农信息论中的互信息理论
         // 互信息理论中 相关系数公式为 相关系数=2I(x,y)/(H(x),H(y))  其中 I(x,y) = H(x) + H(y) - H(x,y)
@@ -339,41 +344,80 @@ class TestMain {
         RealMatrix transMatrix = MatrixUtils.createRealMatrix(transArray);
         // 转置为转换矩阵
         transMatrix = transMatrix.transpose();
-        // 目标矩阵 = 原始数据矩阵 * 转换矩阵  完成降维与标准化操作
-        RealMatrix multiply = MatrixUtils.createRealMatrix(fileData).multiply(transMatrix);
-        // 特征组合
-        double[][] data = multiply.getData();
 
-        double[][] result = new double[rawData.length][dimensionLength + 1];
-        for (int i = 0; i < resultLine.length; i++) {
-            System.arraycopy(data[i], 0, result[i], 0, dimensionLength);
-            result[i][dimensionLength] = resultLine[i];
-        }
-        return new Pair<>(transMatrix.getData(), result);
+        return transMatrix.getData();
     }
 
     @NotNull
-    private double[][] clean(double[][] fileData) {
-        if (CollectionUtil.isEmpty(fileData)) {
+    private Pair<double[][], double[]> clean(Pair<double[][], double[]> fileData) {
+        if (CollectionUtil.isEmpty(fileData.getKey())) {
             return fileData;
         }
         // 过滤掉存在值为-9 的数据
-        fileData = Arrays.stream(fileData).filter(this::filter).toArray(double[][]::new);
-        int length = fileData[0].length;
-        int[] needDimensionLength = new int[length - 1];
-        for (int i = 0; i < length - 1; i++) {
-            needDimensionLength[i] = i;
+        double[][] params = fileData.getKey();
+        double[] result = fileData.getValue();
+        List<Integer> removeIndex = new ArrayList<>();
+        for (int i = 0; i < params.length; i++) {
+            if (!filter(params[i]) || !filter(result[i])) {
+                removeIndex.add(i);
+            }
         }
+        double[][] realParams = new double[params.length - removeIndex.size()][];
+        double[] realResults = new double[params.length - removeIndex.size()];
+        int realIndex = 0;
+        for (int i = 0; i < params.length; i++) {
+            if (removeIndex.contains(i)) {
+                continue;
+            }
+            realParams[realIndex] = params[i];
+            realResults[realIndex] = result[i];
+            realIndex++;
+        }
+        params = realParams;
+        result = realResults;
+
         // 数据标准化
-        double[][] extracted = extracted(fileData, needDimensionLength);
-        //        // 对数据最后一列使用sigmod函数用来标准化
-        //        for (double[] fileDatum : fileData) {
-        //            fileDatum[length - 1] = 1 / (1 + Math.exp(-fileDatum[length - 1]));
-        //        }
-        return extracted;
-        //        return fileData;
+        params = extracted(params, null);
+        result = extracted(result);
+        return new Pair<>(params, result);
     }
 
+    private double[] extracted(double[] result) {
+        // 求均值
+        double avg = 0;
+
+        for (double v : result) {
+            avg += v;
+        }
+
+        avg = avg / result.length;
+
+        // 求标准差
+        double std = 0;
+        for (double v : result) {
+            std += v * v;
+        }
+        std = std / (result.length - 1);
+        std = Math.sqrt(std);
+
+        // 标准化处理
+        for (int i = 0; i < result.length; i++) {
+            result[i] = (result[i] - avg) / std;
+        }
+        return result;
+    }
+
+    private boolean filter(double v) {
+        return v != -9;
+    }
+
+    /**
+     * 当前值中是否不存在-9
+     *
+     * @param data
+     *
+     * @return
+     */
     private boolean filter(double[] data) {
         for (double datum : data) {
             if (datum == -9) {
