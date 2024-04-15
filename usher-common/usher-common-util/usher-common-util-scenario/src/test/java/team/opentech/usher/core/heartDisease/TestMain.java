@@ -31,33 +31,35 @@ class TestMain {
 
 
     @NotNull
-    private static double[][] getFileData(String path) throws FileNotFoundException {
+    private static Pair<double[][], double[]> getFileData(String path) throws FileNotFoundException {
         DataReader dataReader = new DataReader();
         String fileData = dataReader.read(path);
         List<String[]> collect = Arrays.stream(fileData.split("name")).map(t -> t.replace("\n", " ")).map(t -> t.trim().split(" ")).collect(Collectors.toList());
 
-        double[][] result = new double[collect.size()][14];
+        double[][] datas = new double[collect.size()][13];
+        double[] results = new double[collect.size()];
         for (int i = 0; i < collect.size(); i++) {
             String[] split = collect.get(i);
             if (split.length < 58) {
                 break;
             }
-            result[i][0] = Double.parseDouble(split[2].trim());
-            result[i][1] = Double.parseDouble(split[3].trim());
-            result[i][2] = Double.parseDouble(split[8].trim());
-            result[i][3] = Double.parseDouble(split[9].trim());
-            result[i][4] = Double.parseDouble(split[11].trim());
-            result[i][5] = Double.parseDouble(split[15].trim());
-            result[i][6] = Double.parseDouble(split[18].trim());
-            result[i][7] = Double.parseDouble(split[31].trim());
-            result[i][8] = Double.parseDouble(split[37].trim());
-            result[i][9] = Double.parseDouble(split[39].trim());
-            result[i][10] = Double.parseDouble(split[40].trim());
-            result[i][11] = Double.parseDouble(split[43].trim());
-            result[i][12] = Double.parseDouble(split[50].trim());
-            result[i][13] = Double.parseDouble(split[57].trim());
+            datas[i][0] = Double.parseDouble(split[2].trim());
+            datas[i][1] = Double.parseDouble(split[3].trim());
+            datas[i][2] = Double.parseDouble(split[8].trim());
+            datas[i][3] = Double.parseDouble(split[9].trim());
+            datas[i][4] = Double.parseDouble(split[11].trim());
+            datas[i][5] = Double.parseDouble(split[15].trim());
+            datas[i][6] = Double.parseDouble(split[18].trim());
+            datas[i][7] = Double.parseDouble(split[31].trim());
+            datas[i][8] = Double.parseDouble(split[37].trim());
+            datas[i][9] = Double.parseDouble(split[39].trim());
+            datas[i][10] = Double.parseDouble(split[40].trim());
+            datas[i][11] = Double.parseDouble(split[43].trim());
+            datas[i][12] = Double.parseDouble(split[50].trim());
+            results[i] = Double.parseDouble(split[57].trim()) >= 1 ? 1 : 0;
         }
-        return result;
+
+        return new Pair<>(datas, results);
     }
 
     private static double[][] extracted(double[][] fileData, int[] needDimensionLength) {
@@ -105,11 +107,34 @@ class TestMain {
 
     }
 
+    private static double[] extracted(double[] result) {
+        // 求均值
+        double avg = 0;
+
+        for (double v : result) {
+            avg += v;
+        }
+
+        avg = avg / result.length;
+
+        // 求标准差
+        double std = 0;
+        for (double v : result) {
+            std += v * v;
+        }
+        std = std / (result.length - 1);
+        std = Math.sqrt(std);
+
+        // 标准化处理
+        for (int i = 0; i < result.length; i++) {
+            result[i] = (result[i] - avg) / std;
+        }
+        return result;
+    }
+
     @Test
     void testMain() throws FileNotFoundException {
-        //                double[][] fileData = getFileData("D:\\share\\data\\heart+disease\\new.data");
-        Pair<double[][], double[]> fileData = makeTargetFileData();
-
+        Pair<double[][], double[]> fileData = getFileData("D:\\share\\data\\heart+disease\\new.data");
         // 数据清洗
         fileData = clean(fileData);
         long startTime = System.currentTimeMillis();
@@ -122,24 +147,46 @@ class TestMain {
         // 特征组合
         fileData = new Pair<>(multiply.getData(), fileData.getValue());
         System.out.println("根据互信息量求特征矩阵所用时间:" + (System.currentTimeMillis() - startTime) + "ms, 数据量:" + fileData.getKey().length + " * " + fileData.getKey()[0].length);
-        Map<Double[], Double> transDataMap = new HashMap<>(fileData.getKey().length);
+
+        // 70% 训练集
+        // 30% 测试集
+        int length = fileData.getValue().length;
+        int transLength = (int) (length * 0.7);
+        int testLength = length - transLength;
+
+        double[][] transData = new double[transLength][];
+        double[][] testData = new double[testLength][];
+        System.arraycopy(fileData.getKey(), 0, transData, 0, transLength);
+        System.arraycopy(fileData.getKey(), transLength, testData, 0, testLength);
+
+        double[] transResult = new double[transLength];
+        double[] testResult = new double[testLength];
+        System.arraycopy(fileData.getValue(), 0, transResult, 0, transLength);
+        System.arraycopy(fileData.getValue(), transLength, testResult, 0, testLength);
+
+        // 训练集
+        fileData = new Pair<>(transData, transResult);
+        // 测试集
+        Pair<double[][], double[]> testFileData = new Pair<>(testData, testResult);
+
+        Map<Double[], Double> fileDataMap = new HashMap<>(fileData.getKey().length);
         for (int i = 0; i < fileData.getKey().length; i++) {
             double[] params = fileData.getKey()[i];
             double result = fileData.getValue()[i];
-            transDataMap.put(Arrays.stream(params).boxed().toArray(Double[]::new), result);
+            fileDataMap.put(Arrays.stream(params).boxed().toArray(Double[]::new), result);
         }
 
-        Pair<double[][], double[]> testFileData = makeTargetFileData();
-        testFileData = clean(testFileData);
-        // 目标矩阵 = 原始数据矩阵 * 转换矩阵  完成降维与标准化操作
-        RealMatrix testMultiply = MatrixUtils.createRealMatrix(testFileData.getKey()).multiply(realMatrix);
-        // 特征组合
-        testFileData = new Pair<>(testMultiply.getData(), testFileData.getValue());
+        Map<Double[], Double> testDataMap = new HashMap<>(testFileData.getKey().length);
+        for (int i = 0; i < testFileData.getKey().length; i++) {
+            double[] params = testFileData.getKey()[i];
+            double result = testFileData.getValue()[i];
+            testDataMap.put(Arrays.stream(params).boxed().toArray(Double[]::new), result);
+        }
 
-        Double[][] testData = Arrays.stream(testFileData.getKey()).map(t -> Arrays.stream(t).boxed().toArray(Double[]::new)).toArray(Double[][]::new);
+        Double[][] willTestData = Arrays.stream(testFileData.getKey()).map(t -> Arrays.stream(t).boxed().toArray(Double[]::new)).toArray(Double[][]::new);
 
         // 适应度函数
-        FitnessHandler<Double[], Double> fitnessHandler = new TestHeartHistoryDataFunctionFitnessHandler(transDataMap);
+        FitnessHandler<Double[], Double> fitnessHandler = new TestHeartHistoryDataFunctionFitnessHandler(testDataMap);
         // 种群/初始化
         Properties config = new Properties();
         config.setProperty("scenario.population.K", "1000");
@@ -154,15 +201,18 @@ class TestMain {
 
         List<Individual<Double[], Double>> maxIndividual = new ArrayList<>();
         double maxResult = 0;
+
+        //
         List<Pair<Double[], Double>> learnParam = new ArrayList<>();
-        for (Entry<Double[], Double> doubleEntry : transDataMap.entrySet()) {
+        for (Entry<Double[], Double> doubleEntry : fileDataMap.entrySet()) {
             learnParam.add(new Pair<>(doubleEntry.getKey(), doubleEntry.getValue()));
         }
+
         for (int i = 0; i < 1000; i++) {
             testPopulation.iteration(learnParam);
             if (i % 15 == 0) {
                 List<Individual<Double[], Double>> topPercentage = fitnessHandler.findTopPercentage(testPopulation.allIndividuals(), 0.1, 10);
-                double result = fitnessHandler.fitnessByMean(topPercentage, testData);
+                double result = fitnessHandler.fitnessByMean(topPercentage, willTestData);
                 System.out.printf("第%d次迭代,   \t适应度为:%s", i, instance.format(result));
                 if (maxResult < result) {
                     maxResult = result;
@@ -378,33 +428,9 @@ class TestMain {
 
         // 数据标准化
         params = extracted(params, null);
-        result = extracted(result);
+        // 二值数据不需要标准化
+        //        result = extracted(result);
         return new Pair<>(params, result);
-    }
-
-    private double[] extracted(double[] result) {
-        // 求均值
-        double avg = 0;
-
-        for (double v : result) {
-            avg += v;
-        }
-
-        avg = avg / result.length;
-
-        // 求标准差
-        double std = 0;
-        for (double v : result) {
-            std += v * v;
-        }
-        std = std / (result.length - 1);
-        std = Math.sqrt(std);
-
-        // 标准化处理
-        for (int i = 0; i < result.length; i++) {
-            result[i] = (result[i] - avg) / std;
-        }
-        return result;
     }
 
     private boolean filter(double v) {

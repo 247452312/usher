@@ -81,6 +81,7 @@ public class TestHeartIndividual extends AbstractIndividual<Double[], Double> {
                     result.append("+");
                 }
                 result.append(s);
+                result.append(" ");
             }
         }
         return result.toString();
@@ -119,7 +120,6 @@ public class TestHeartIndividual extends AbstractIndividual<Double[], Double> {
             otherIndex.set(changeIndex.get());
             double targetChangeNum = diff * coeff * learningRate;
             changeFloat(changeBit, startIndex, coeff + targetChangeNum);
-            int kkk = 1;
         }
     }
 
@@ -136,8 +136,13 @@ public class TestHeartIndividual extends AbstractIndividual<Double[], Double> {
      * @param targetChangeNum 要修改成的值
      */
     private void changeFloat(BitSet changeBit, int startIndex, double targetChangeNum) {
-        // 1.修改符号位
-        changeBit.set(startIndex++, targetChangeNum >= 0);
+        if (targetChangeNum >= 0) {
+            // 1.修改符号位
+            changeBit.set(startIndex++, true);
+        } else {
+            changeBit.set(startIndex++, false);
+            targetChangeNum = -targetChangeNum;
+        }
         // 2.修改整数位值
         BitSetUtil.setIntBySize(changeBit, startIndex, 5, (int) targetChangeNum);
         startIndex += 5;
@@ -146,25 +151,15 @@ public class TestHeartIndividual extends AbstractIndividual<Double[], Double> {
     }
 
     private String calcDimensionStr(BitSet changeBit, AtomicInteger changeIndex, String name) {
+
         StringBuilder result = new StringBuilder();
-        int itemSize = BitSetUtil.getIntBySize(changeBit, changeIndex, 8) % 4;
-        boolean init = true;
+        int itemSize = BitSetUtil.getIntBySize(changeBit, changeIndex, 8) % 3;
         for (int i = 0; i < itemSize; i++) {
             String itemResult = calcItemStr(changeBit, changeIndex, name);
-            if (StringUtil.isEmpty(itemResult)) {
-                continue;
-            }
-
-            if (init) {
-                init = false;
-            } else if (!itemResult.startsWith("-")) {
-                result.append("+");
-            }
-
             result.append(itemResult);
         }
 
-        return "1/(1+e^-" + result + ")";
+        return result.toString();
     }
 
     private String calcItemStr(BitSet changeBit, AtomicInteger changeIndex, String name) {

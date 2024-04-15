@@ -82,15 +82,19 @@ class BitSetUtilTest {
     @Test
     void setIntBySize() {
         BitSet changeBit = BitSetUtil.valueOf("10010100100101001110010101");
-        long[] longArray = changeBit.toLongArray();
-        String string = changeBit.toString();
+        long longArray = changeBit.toLongArray()[0];
+        String beforeChangeStr = Long.toBinaryString(longArray);
+
         AtomicInteger changeIndex = new AtomicInteger(1);
         int startIndex = changeIndex.get();
         float coeff = findFloat(changeBit, changeIndex);
         changeFloat(changeBit, startIndex, coeff);
-        Asserts.assertTrue(Objects.equals(changeBit.toString(),string));
-        int i = 1;
+        System.out.println("float: " + coeff);
 
+        longArray = changeBit.toLongArray()[0];
+        String afterChangeStr = Long.toBinaryString(longArray);
+
+        Asserts.assertTrue(Objects.equals(beforeChangeStr, afterChangeStr));
     }
 
     private float findFloat(BitSet changeBit, AtomicInteger changeIndex) {
@@ -114,8 +118,14 @@ class BitSetUtilTest {
      * @param targetChangeNum 要修改成的值
      */
     private void changeFloat(BitSet changeBit, int startIndex, double targetChangeNum) {
-        // 1.修改符号位
-        changeBit.set(startIndex++, targetChangeNum >= 0);
+        if (targetChangeNum >= 0) {
+            // 1.修改符号位
+            changeBit.set(startIndex++, true);
+        } else {
+            changeBit.set(startIndex++, false);
+            targetChangeNum = -targetChangeNum;
+        }
+
         // 2.修改整数位值
         BitSetUtil.setIntBySize(changeBit, startIndex, 5, (int) targetChangeNum);
         startIndex += 5;

@@ -180,7 +180,7 @@ public final class BitSetUtil {
         int result = 0;
         for (int i = 0; i < size; i++) {
             if (bitSet.get(startIndex + i)) {
-                result += 1 << i;
+                result += 1 << (size - 1 - i);
             }
         }
         return result;
@@ -197,7 +197,7 @@ public final class BitSetUtil {
      */
     public static void setIntBySize(BitSet bitSet, Integer startIndex, Integer size, int value) {
         for (int i = 0; i < size; i++) {
-            bitSet.set(startIndex + i, (value & 1) == 1);
+            bitSet.set(startIndex + size - 1 - i, (value & 1) == 1);
             value >>= 1;
         }
     }
@@ -225,13 +225,7 @@ public final class BitSetUtil {
      * @return
      */
     public static int getIntBySize(BitSet bitSet, AtomicInteger startIndex, Integer size) {
-        int result = 0;
-        int startIndexNum = startIndex.get();
-        for (int i = 0; i < size; i++) {
-            if (bitSet.get(startIndexNum++)) {
-                result += 1 << i;
-            }
-        }
+        int result = getIntBySize(bitSet, startIndex.get(), size);
         startIndex.addAndGet(size);
         return result;
     }
