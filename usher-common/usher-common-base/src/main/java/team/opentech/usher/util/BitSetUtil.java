@@ -70,7 +70,8 @@ public final class BitSetUtil {
         for (int i = 0; i < binaryString.length(); i++) {
             char bitChar = binaryString.charAt(i);
             if (bitChar == '1') {
-                bitSet.set(binaryString.length() - i - 1); // 设置第i位为true
+                // 设置第i位为true
+                bitSet.set(binaryString.length() - i - 1);
             } else if (bitChar != '0') {
                 throw new IllegalArgumentException("String contains non-binary character: " + bitChar);
             }
@@ -177,13 +178,12 @@ public final class BitSetUtil {
      * @return
      */
     public static int getIntBySize(BitSet bitSet, Integer startIndex, Integer size) {
-        int result = 0;
-        for (int i = 0; i < size; i++) {
-            if (bitSet.get(startIndex + i)) {
-                result += 1 << (size - 1 - i);
-            }
+        BitSet tempBitSet = bitSet.get(startIndex, startIndex + size);
+        long[] longArray = tempBitSet.toLongArray();
+        if (longArray.length == 0) {
+            return 0;
         }
-        return result;
+        return (int) longArray[0];
     }
 
     /**
@@ -253,13 +253,11 @@ public final class BitSetUtil {
      * @return
      */
     public static long getLongBySize(BitSet bitSet, Integer startIndex, Integer size) {
-        long result = 0;
-        for (int i = 0; i < size; i++) {
-            if (bitSet.get(startIndex + i)) {
-                result += 1L << i;
-            }
+        long[] longArray = bitSet.get(startIndex, startIndex + size).toLongArray();
+        if (longArray.length == 0) {
+            return 0;
         }
-        return result;
+        return longArray[0];
     }
 
     /**
@@ -284,12 +282,8 @@ public final class BitSetUtil {
      * @return
      */
     public static long getLongBySize(BitSet bitSet, AtomicInteger startIndex, Integer size) {
-        long result = 0;
-        for (int i = 0; i < size; i++) {
-            if (bitSet.get(startIndex.getAndIncrement())) {
-                result += 1L << i;
-            }
-        }
+        long result = getLongBySize(bitSet, startIndex.get(), size);
+        startIndex.addAndGet(size);
         return result;
     }
 

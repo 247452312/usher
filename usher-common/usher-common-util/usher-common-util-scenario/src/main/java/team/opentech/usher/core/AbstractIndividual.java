@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
+import org.apache.commons.lang3.RandomUtils;
 import team.opentech.usher.Individual;
 import team.opentech.usher.util.BitSetUtil;
 
@@ -61,29 +62,27 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
 
     @Override
     public void variation(byte[] virusDna) {
-        // 注
+        // 注 changeOrder: 顺序改变 changeDirect: 直接改变 changeByVirus: 外来数据改变 changeAll: 完全改变
         int random = RANDOM.nextInt(10);
         if (virusDna == null || virusDna.length == 0) {
-            if (random < 5) {
+            if (random < 4) {
                 changeOrder(firstDna(), secondDna());
-            } else {
+            } else if (random < 8) {
                 changeDirect(firstDna(), secondDna());
+            } else {
+                changeAll();
             }
         } else {
             if (random < 2) {
                 changeOrder(firstDna(), secondDna());
             } else if (random < 4) {
                 changeDirect(firstDna(), secondDna());
-            } else {
+            } else if (random < 8) {
                 changeByVirus(firstDna(), secondDna(), virusDna);
+            } else {
+                changeAll();
             }
         }
-        // 顺序改变
-        //        changeOrder(firstDna(), secondDna());
-        // 直接改变
-        //        changeDirect(firstDna(), secondDna());
-        // 外来数据改变
-        //        changeByVirus(firstDna(), secondDna(), virusDna);
         cacheResult.clear();
     }
 
@@ -151,6 +150,20 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
      * @return
      */
     protected abstract E doFindResult(T param);
+
+    private void changeAll() {
+        changeAll(firstDna());
+        changeAll(secondDna());
+    }
+
+    private void changeAll(BitSet bitSet) {
+        int i = RandomUtils.nextInt(0, Integer.MAX_VALUE);
+        int index = Integer.toBinaryString(i).length() - 1;
+        while (i > 0) {
+            bitSet.set(index--, (i & 1) == 1);
+            i >>= 1;
+        }
+    }
 
     /**
      * 根据外来数据改变
