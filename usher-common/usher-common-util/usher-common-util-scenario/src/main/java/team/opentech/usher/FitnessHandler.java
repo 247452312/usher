@@ -20,11 +20,11 @@ public interface FitnessHandler<T, E> {
     Double fitness(Individual<T, E> individual);
 
     /**
-     * 计算适应度 适应度越趋近1则适应度越高
+     * 计算适应度 适应度越趋近0则适应度越高
      *
      * @param individual 种群中的个体
      *
-     * @return 适应度 范围为 0-1
+     * @return 适应度
      */
     Double fitness(Individual<T, E> individual, T x);
 
@@ -48,7 +48,7 @@ public interface FitnessHandler<T, E> {
     List<Individual<T, E>> findTopPercentage(List<Individual<T, E>> individuals, Double percentage, Integer min);
 
     /**
-     * 计算平均适应度
+     * 计算多个个体平均适应度
      *
      * @param topPercentage 个体
      * @param params        随机入参

@@ -21,7 +21,7 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
 
     @Override
     public Double fitness(Individual<T, E> individual) {
-        T[] randomParam = makeTestParams();
+        T[] randomParam = testParams();
         return fitness(individual, randomParam);
     }
 
@@ -33,7 +33,7 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
         // 再选计算出来的数量和实际大小中较小的那个
         realTargetSize = Math.min(realTargetSize, individuals.size());
 
-        T[] randomParam = makeTestParams();
+        T[] randomParam = testParams();
         Pair<Individual<T, E>, Double>[] array = individuals.stream().map(t -> new Pair<>(t, -fitness(t, randomParam))).sorted(Comparator.comparingDouble(t -> t.getValue())).toArray(Pair[]::new);
         individuals = Arrays.stream(array).map(Pair::getKey).collect(Collectors.toList());
         List<Individual<T, E>> result = new ArrayList<>(realTargetSize);
@@ -45,7 +45,7 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
 
     @Override
     public Double fitnessByMean(List<Individual<T, E>> topPercentage, T[] params) {
-        return topPercentage.stream().mapToDouble(t -> fitness(t, makeTestParams())).average().getAsDouble();
+        return topPercentage.stream().mapToDouble(t -> fitness(t, testParams())).average().getAsDouble();
     }
 
 
@@ -54,7 +54,7 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
         // 计算模型结果
         E calculationResult = individual.findResult(param);
         // 把模型结果和入参放入已知的函数中计算,得到结果并计算最终适应度
-        return quantifyGap(calculationResult, param);
+        return forwardAndLoss(calculationResult, param);
     }
 
     /**
@@ -76,20 +76,20 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
 
 
     /**
-     * 量化差距
+     * 正向计算 + 损失函数计算
      *
      * @param calculationResult 模型计算的结果
      * @param param             入参
      *
      * @return 差距量化后的值
      */
-    protected abstract Double quantifyGap(E calculationResult, T param);
+    protected abstract Double forwardAndLoss(E calculationResult, T param);
 
     /**
-     * 生成测试用入参
+     * 获取测试集
      *
      * @return 生产的入参(测试集)
      */
     @NotNull
-    protected abstract T[] makeTestParams();
+    protected abstract T[] testParams();
 }

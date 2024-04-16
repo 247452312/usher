@@ -9,20 +9,20 @@ package team.opentech.usher.core.fitness;
 public abstract class AbstractCalculateFitnessHandler<T, E> extends AbstractFitnessHandler<T, E> {
 
     @Override
-    public Double quantifyGap(E calculationResult, T param) {
+    public Double forwardAndLoss(E calculationResult, T param) {
         E standardResult = calculateResult(param);
-        return doQuantifyGap(standardResult, calculationResult);
+        return loss(standardResult, calculationResult);
     }
 
 
     /**
-     * 量化差距
+     * 损失函数
      *
      * @param standardResult    标准结果
      * @param calculationResult 模型计算的结果
      *
      * @return 差距量化后的值
      */
-    protected abstract Double doQuantifyGap(E standardResult, E calculationResult);
+    protected abstract Double loss(E standardResult, E calculationResult);
 
 }

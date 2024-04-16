@@ -4,7 +4,7 @@ import java.util.Map;
 import team.opentech.usher.core.data.AbstractHistoryData;
 
 /**
- * 可以直接计算出结果的适应度函数
+ * 通过历史数据去计算结果的适用度函数
  *
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年03月25日 14时35分
@@ -42,7 +42,7 @@ public abstract class AbstractDataFitnessHandler<T, E> extends AbstractFitnessHa
     protected abstract AbstractHistoryData<T, E> makeFittingIndividual(Map<T, E> testData);
 
     @Override
-    protected Double quantifyGap(E calculationResult, T param) {
+    protected Double forwardAndLoss(E calculationResult, T param) {
         //  我知道的东西:
         // 1.模型计算入参
         // 2.模型计算结果
@@ -55,19 +55,19 @@ public abstract class AbstractDataFitnessHandler<T, E> extends AbstractFitnessHa
         }
 
         // 那么我们可以根据模型计算入参根据历史数据找到结果之后 计算结果和模型计算入参的结果
-        Double gap = doQuantifyGap(historicalResult, calculationResult);
+        Double gap = loss(historicalResult, calculationResult);
         // todo 如果结果是从testData中来,并且结果不是完全匹配,那么说明并不正常,要不就是缺少了计算维度,需要通知并找到缺失的维度,要不就是计算概率问题
         return gap;
     }
 
 
     /**
-     * 量化差距 适应度越趋近1则适应度越高
+     * 损失函数 损失函数越接近0表示越正确
      *
      * @param historicalResult  标准结果
      * @param calculationResult 模型计算的结果
      *
      * @return 差距量化后的值
      */
-    protected abstract Double doQuantifyGap(E historicalResult, E calculationResult);
+    protected abstract Double loss(E historicalResult, E calculationResult);
 }

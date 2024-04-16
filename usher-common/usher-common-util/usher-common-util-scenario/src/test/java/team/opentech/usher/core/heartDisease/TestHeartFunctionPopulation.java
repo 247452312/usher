@@ -26,8 +26,8 @@ public class TestHeartFunctionPopulation extends AbstractPopulation<Double[], Do
      */
     @NotNull
     private static BitSet randomDna() {
-        long[] longs = new long[200];
-        for (int i = 0; i < 200; i++) {
+        long[] longs = new long[16];
+        for (int i = 0; i < 16; i++) {
             longs[i] = RandomUtils.nextLong(0, Long.MAX_VALUE);
         }
         return BitSet.valueOf(longs);

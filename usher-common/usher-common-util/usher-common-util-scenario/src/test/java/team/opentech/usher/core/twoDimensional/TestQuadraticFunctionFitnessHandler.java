@@ -5,6 +5,9 @@ import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.core.fitness.AbstractCalculateFitnessHandler;
 
 /**
+ * 二维适应度函数
+ * a * x^2 + b
+ *
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年03月20日 11时21分
  */
@@ -37,14 +40,13 @@ public class TestQuadraticFunctionFitnessHandler extends AbstractCalculateFitnes
     }
 
     @Override
-    protected Double doQuantifyGap(Double standardResult, Double calculationResult) {
-        double abs = Math.abs(standardResult - calculationResult);
-        return 1 / (1 + abs);
+    protected Double loss(Double standardResult, Double calculationResult) {
+        return 0.5 * Math.pow(standardResult - calculationResult, 2);
     }
 
     @NotNull
     @Override
-    protected Double[] makeTestParams() {
+    protected Double[] testParams() {
         int size = 100;
         Double[] randomX = new Double[size];
         for (int i = 0; i < size; i++) {

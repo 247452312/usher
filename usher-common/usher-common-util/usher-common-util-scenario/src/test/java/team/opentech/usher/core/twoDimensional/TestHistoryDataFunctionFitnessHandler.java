@@ -53,14 +53,14 @@ public class TestHistoryDataFunctionFitnessHandler extends AbstractDataFitnessHa
     }
 
     @Override
-    protected Double doQuantifyGap(Double historicalResult, Double calculationResult) {
+    protected Double loss(Double historicalResult, Double calculationResult) {
         double abs = Math.abs(historicalResult - calculationResult);
         return historicalResult / (historicalResult + abs);
     }
 
     @NotNull
     @Override
-    protected Double[] makeTestParams() {
+    protected Double[] testParams() {
         int size = 100;
         Double[] randomX = new Double[size];
         int randomSize = size / 2;

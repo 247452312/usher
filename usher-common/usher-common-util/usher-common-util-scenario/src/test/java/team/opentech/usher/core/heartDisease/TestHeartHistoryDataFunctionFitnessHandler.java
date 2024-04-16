@@ -53,13 +53,13 @@ public class TestHeartHistoryDataFunctionFitnessHandler extends AbstractDataFitn
     }
 
     @Override
-    protected Double doQuantifyGap(Double historicalResult, Double calculationResult) {
+    protected Double loss(Double historicalResult, Double calculationResult) {
         return 1 / (1 + Math.abs(historicalResult - calculationResult));
     }
 
     @NotNull
     @Override
-    protected Double[][] makeTestParams() {
+    protected Double[][] testParams() {
         int length = testData.size() / 10;
         Double[][] result = new Double[length][];
         Double[][] array = testData.keySet().toArray(new Double[0][]);

@@ -191,7 +191,7 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
     protected abstract Individual<T, E> makeNewIndividual();
 
     /**
-     * 如何处理前百分比的数量
+     * 如何将多个结果合成一个结果
      */
     protected abstract E dealResults(List<E> results);
 
