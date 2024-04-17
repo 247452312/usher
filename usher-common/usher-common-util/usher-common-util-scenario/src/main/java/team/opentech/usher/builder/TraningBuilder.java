@@ -3,6 +3,7 @@ package team.opentech.usher.builder;
 import java.util.Properties;
 import team.opentech.usher.genetic.InitGenetic;
 import team.opentech.usher.genetic.LabeledDataGenetic;
+import team.opentech.usher.genetic.UsedGenetic;
 import team.opentech.usher.genetic.model.GeneticModel;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.Pair;
@@ -94,11 +95,25 @@ public class TraningBuilder {
     }
 
     /**
+     * 构造一个遗传算法
+     *
+     * @return
+     */
+    public UsedGenetic buildGenetic(GeneticModel geneticModel) {
+        Asserts.assertTrue(testData != null, "历史数据集不能为空");
+        return new LabeledDataGenetic(testData, geneticModel);
+    }
+
+    /**
      * 根据已知模型构造一个遗传算法
      *
      * @return
      */
     public InitGenetic buildGeneticByModel(GeneticModel model) {
         return new LabeledDataGenetic(testData, model);
+    }
+
+    protected Pair<double[][], double[]> getTestData() {
+        return testData;
     }
 }

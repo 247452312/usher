@@ -1,19 +1,22 @@
-package team.opentech.usher.genetic;
+package team.opentech.usher.builder;
 
 import com.alibaba.fastjson.JSON;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import team.opentech.usher.annotation.NotNull;
-import team.opentech.usher.builder.TraningBuilder;
 import team.opentech.usher.enums.DimensionalityReductionTypeEnum;
 import team.opentech.usher.enums.StandardizationTypeEnum;
+import team.opentech.usher.genetic.InitGenetic;
+import team.opentech.usher.genetic.UsedGenetic;
 import team.opentech.usher.genetic.core.heartDisease.DataReader;
 import team.opentech.usher.genetic.model.GeneticModel;
+import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
 import team.opentech.usher.util.Pair;
 
@@ -77,7 +80,15 @@ class InitGeneticTest {
         System.out.println("执行了500次之后的遗传算法适应度为:" + v);
         GeneticModel model = initGenetic.exportModel();
         System.out.println(JSON.toJSONString(model));
+        double[][] key = fileData.getKey();
+        Double[] array = Arrays.stream(key[key.length - 1]).boxed().toArray(Double[]::new);
+        Double test = initGenetic.test(array);
 
+        Pair<double[][], double[]> testData = builder.getTestData();
+        UsedGenetic usedGenetic = new TraningBuilder().testData(testData.getKey(), testData.getValue())
+                                                      .buildGenetic(model);
+        Double test2 = usedGenetic.test(array);
+        Asserts.assertTrue(Objects.equals(test, test2), "GeneticModel 导出导入行为不一致");
     }
 
     private boolean filter(double v) {
