@@ -64,7 +64,13 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
 
 
     public AbstractPopulation(Properties config) {
-        this(Integer.parseInt(config.getProperty("scenario.population.K", "1000")), Double.parseDouble(config.getProperty("scenario.population.init-percentage", "0.2")), Double.parseDouble(config.getProperty("scenario.population.init-cross-percentage", "0.4")), Double.parseDouble(config.getProperty("scenario.population.init-variation-percentage", "0.1")), Double.parseDouble(config.getProperty("scenario.population.learning-percentage", VOTE_PERCENTAGE * 2 + "")), Double.parseDouble(config.getProperty("scenario.population.learning-percentage", "0.1")));
+        this(Integer.parseInt(config.getProperty("scenario.population.K", "1000")),
+             Double.parseDouble(config.getProperty("scenario.population.init-percentage", "0.2")),
+             Double.parseDouble(config.getProperty("scenario.population.init-cross-percentage", "0.4")),
+             Double.parseDouble(config.getProperty("scenario.population.init-variation-percentage", "0.1")),
+             Double.parseDouble(config.getProperty("scenario.population.learning-percentage", VOTE_PERCENTAGE * 2 + "")),
+             Double.parseDouble(config.getProperty("scenario.population.learning-rate", "0.01"))
+        );
     }
 
     public AbstractPopulation(Properties config, List<Individual<T, E>> individuals) {

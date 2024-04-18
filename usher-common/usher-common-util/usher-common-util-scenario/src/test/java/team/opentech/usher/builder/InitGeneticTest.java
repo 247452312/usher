@@ -69,6 +69,7 @@ class InitGeneticTest {
         config.setProperty("scenario.population.init-percentage", "0.2");
         config.setProperty("scenario.population.init-cross-percentage", "0.4");
         config.setProperty("scenario.population.init-variation-percentage", "0.2");
+        config.setProperty("scenario.population.learning-rate", "0.02");
 
         TraningBuilder builder = new TraningBuilder();
         InitGenetic initGenetic = builder.allData(fileData.getKey(), fileData.getValue())

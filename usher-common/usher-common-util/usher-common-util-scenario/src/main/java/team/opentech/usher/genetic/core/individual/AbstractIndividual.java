@@ -108,7 +108,7 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
     @Override
     public void directionalLearn(T param, E realResult, Double learningRate) {
         E result = findResult(param);
-        dealDiff(result, realResult, learningRate);
+        dealDiff(param, result, realResult, learningRate);
     }
 
     @Override
@@ -124,11 +124,12 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
     /**
      * 混合遗传算法引入梯度下降思想, 处理差值(反向学习)
      *
+     * @param params       参数
      * @param result       计算值
      * @param targetResult 真实值
      * @param learningRate 学习率
      */
-    protected abstract void dealDiff(E result, E targetResult, Double learningRate);
+    protected abstract void dealDiff(T params, E result, E targetResult, Double learningRate);
 
     /**
      * 创建一个真正的个体

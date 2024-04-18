@@ -17,10 +17,6 @@ public class SigmoidIndividual extends AbstractIndividual<Double[], Double> {
      */
     private final int dimLength;
 
-    public int getDimLength() {
-        return dimLength;
-    }
-
     protected SigmoidIndividual(int size, int dimLength) {
         super(size);
         this.dimLength = dimLength;
@@ -29,6 +25,10 @@ public class SigmoidIndividual extends AbstractIndividual<Double[], Double> {
     public SigmoidIndividual(BitSet firstDna, BitSet secondDna, int size, int dimLength) {
         super(firstDna, secondDna, size);
         this.dimLength = dimLength;
+    }
+
+    public int getDimLength() {
+        return dimLength;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class SigmoidIndividual extends AbstractIndividual<Double[], Double> {
     }
 
     @Override
-    protected void dealDiff(Double result, Double targetResult, Double learningRate) {
+    protected void dealDiff(Double[] params, Double result, Double targetResult, Double learningRate) {
         // 二分神经网络损失函数为 logistic回归函数 f(x) = -y * log(h(x)) - (1-y) * log(1-h(x)) 其中 y为实际值 h(x)为计算值
         // 损失函数对每个维度求偏导,得出的偏导为 f'(x) = (h(x) - y) * g`(x)  其中 g`(x) 为sigmoid之前公式对维度求偏导得来
         // 因为我们知道 sigmoid之前公式为  f(x1,x2,...) = ax1 + bx2 + ....    所以 f 对x求偏导的结果为 a 对x2求偏导的结果为b  因此推出 f 对每一个维度求偏导均得出结果为维度对应的系数
@@ -108,13 +108,31 @@ public class SigmoidIndividual extends AbstractIndividual<Double[], Double> {
         // h(x) - y
         double diff = result - targetResult;
 
+        // 常量为: ( h(x) - y ) * 1
+        int firstPower = BitSetUtil.getIntBySize(firstBit, firstIndex, 3);
+        int secondPower = BitSetUtil.getIntBySize(secondBit, secondIndex, 3);
+
+        AtomicInteger changeIndex;
+        AtomicInteger otherIndex;
+        BitSet changeBit;
+        if (firstPower >= secondPower) {
+            changeIndex = firstIndex;
+            otherIndex = secondIndex;
+            changeBit = firstBit;
+        } else {
+            changeIndex = secondIndex;
+            otherIndex = firstIndex;
+            changeBit = secondBit;
+        }
+        int startIndex = changeIndex.get();
+        float content = findFloat(changeBit, changeIndex);
+        otherIndex.set(changeIndex.get());
+        changeFloat(changeBit, startIndex, content + diff * learningRate);
+
         // 共dimLength个维度
         for (int i = 0; i < dimLength; i++) {
-            int firstPower = BitSetUtil.getIntBySize(firstBit, firstIndex, 3);
-            int secondPower = BitSetUtil.getIntBySize(secondBit, secondIndex, 3);
-            AtomicInteger changeIndex;
-            AtomicInteger otherIndex;
-            BitSet changeBit;
+            firstPower = BitSetUtil.getIntBySize(firstBit, firstIndex, 3);
+            secondPower = BitSetUtil.getIntBySize(secondBit, secondIndex, 3);
             if (firstPower >= secondPower) {
                 changeIndex = firstIndex;
                 otherIndex = secondIndex;
@@ -124,11 +142,10 @@ public class SigmoidIndividual extends AbstractIndividual<Double[], Double> {
                 otherIndex = firstIndex;
                 changeBit = secondBit;
             }
-            int startIndex = changeIndex.get();
+            startIndex = changeIndex.get();
             float coeff = findFloat(changeBit, changeIndex);
             otherIndex.set(changeIndex.get());
-            double targetChangeNum = diff * coeff * learningRate;
-            changeFloat(changeBit, startIndex, coeff + targetChangeNum);
+            changeFloat(changeBit, startIndex, coeff + diff * params[i] * learningRate);
         }
     }
 

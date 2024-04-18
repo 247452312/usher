@@ -74,8 +74,9 @@ public class TestQuadraticFunctionIndividual extends AbstractIndividual<Double, 
         return BitSetUtil.toInt(a) + " * x^2 + " + BitSetUtil.toInt(b);
     }
 
+
     @Override
-    protected void dealDiff(Double result, Double targetResult, Double learningRate) {
+    protected void dealDiff(Double params, Double result, Double targetResult, Double learningRate) {
         // 这里暂时不考虑有方向学习
     }
 
