@@ -9,7 +9,7 @@ import java.util.Properties;
 import team.opentech.usher.enums.DimensionalityReductionTypeEnum;
 import team.opentech.usher.enums.StandardizationTypeEnum;
 import team.opentech.usher.genetic.core.fitness.FitnessHandler;
-import team.opentech.usher.genetic.core.fitness.HistoryDataFitnessHandler;
+import team.opentech.usher.genetic.core.fitness.HistoryDataLogisticFitnessHandler;
 import team.opentech.usher.genetic.core.individual.Individual;
 import team.opentech.usher.genetic.core.population.Population;
 import team.opentech.usher.genetic.core.population.RandomDnaPopulation;
@@ -101,7 +101,7 @@ public class LabeledDataGenetic implements InitGenetic, UsedGenetic {
         }
 
         // 适应度函数
-        this.fitnessHandler = new HistoryDataFitnessHandler(testDataMap);
+        this.fitnessHandler = new HistoryDataLogisticFitnessHandler(testDataMap);
         // 种群/初始化
         this.population = new RandomDnaPopulation(populationConfig, model.getIndividuals());
 
@@ -198,7 +198,23 @@ public class LabeledDataGenetic implements InitGenetic, UsedGenetic {
             double result = fitnessHandler.fitnessByMean(topPercentage);
             System.out.println("第" + (i + 1) + "次迭代");
             System.out.println("当前适应度为:" + result);
-            System.out.println("当前最优个体: " + fitnessHandler.findBestPercentage(population.allIndividuals()));
+            Individual<Double[], Double> bestPercentage = topPercentage.get(0);
+            System.out.println("当前最优个体: " + bestPercentage);
+            double[][] key = testData.getKey();
+            double[] value = testData.getValue();
+            int count = value.length * topPercentage.size();
+            int successCount = 0;
+            for (int j = 0; j < key.length; j++) {
+                Double[] doubles = Arrays.stream(key[j]).boxed().toArray(Double[]::new);
+                for (Individual<Double[], Double> doubleIndividual : topPercentage) {
+                    double clcResult = doubleIndividual.findResult(doubles);
+                    double realResult = value[j];
+                    if (Math.round(clcResult) == Math.round(realResult)) {
+                        successCount++;
+                    }
+                }
+            }
+            System.out.println("较优个体计算值正确率: " + (successCount * 100 / count) + "%");
         }
     }
 
@@ -231,7 +247,7 @@ public class LabeledDataGenetic implements InitGenetic, UsedGenetic {
         }
 
         // 适应度函数
-        this.fitnessHandler = new HistoryDataFitnessHandler(testDataMap);
+        this.fitnessHandler = new HistoryDataLogisticFitnessHandler(testDataMap);
         // 种群/初始化
         this.population = new RandomDnaPopulation(populationConfig, trainingData.getKey()[0].length);
         this.population.init();

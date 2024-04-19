@@ -1,4 +1,4 @@
-package team.opentech.usher.builder;
+package team.opentech.usher.genetic.builder;
 
 import java.util.Properties;
 import team.opentech.usher.genetic.InitGenetic;

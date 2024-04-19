@@ -1,8 +1,9 @@
 package team.opentech.usher.genetic.core.data;
 
-import java.util.BitSet;
 import java.util.Map;
+import team.opentech.usher.genetic.core.dna.Dna;
 import team.opentech.usher.genetic.core.individual.Individual;
+import team.opentech.usher.util.Pair;
 
 /**
  * 可以拟合历史数据的个体
@@ -18,6 +19,15 @@ public abstract class AbstractHistoryData<T, E> implements Individual<T, E> {
         this.testData = testData;
     }
 
+    @Override
+    public Pair<Integer, Integer> getCoeff(int index) {
+        return null;
+    }
+
+    @Override
+    public void setCoeff(int index, Integer power, Integer coeff) {
+
+    }
 
     @Override
     public void directionalLearn(T param, E value, Double learningRate) {
@@ -31,19 +41,19 @@ public abstract class AbstractHistoryData<T, E> implements Individual<T, E> {
     }
 
     @Override
-    public void variation(byte[] virusDna) {
+    public void variation(long virusDna) {
         // 历史数据不需要变异
     }
 
 
     @Override
-    public BitSet firstDna() {
+    public Dna firstDna() {
         // 历史数据没有dna
         return null;
     }
 
     @Override
-    public BitSet secondDna() {
+    public Dna secondDna() {
         // 历史数据没有dna
         return null;
     }

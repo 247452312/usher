@@ -6,6 +6,7 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.stream.Collectors;
 import team.opentech.usher.genetic.core.fitness.FitnessHandler;
+import team.opentech.usher.genetic.core.individual.AbstractIndividual;
 import team.opentech.usher.genetic.core.individual.Individual;
 import team.opentech.usher.util.CollectionUtil;
 import team.opentech.usher.util.Pair;
@@ -108,7 +109,7 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
         for (int i = 0; i < size; i++) {
             choose(fitnessHandler);
             cross();
-            variation(new byte[0]);
+            variation(0);
             // 有方向变异
             directionalLearn(fitnessHandler, learnParam);
         }
@@ -140,7 +141,7 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
     /**
      * 随机变异
      */
-    protected void variation(byte[] virusDna) {
+    protected void variation(Integer virusDna) {
         int variationCount = (int) (individuals.size() * variationPercentage);
         int voteCount = (int) (individuals.size() * VOTE_PERCENTAGE);
         Random random = new Random();
@@ -215,8 +216,11 @@ public abstract class AbstractPopulation<T, E> implements Population<T, E> {
         List<Individual<T, E>> topPercentage = fitnessHandler.findTopPercentage(individuals, learningPercentage, 1);
 
         // 遍历所有个体,计算结果,和指定结果进行比较,求出梯度下降程度
-        for (Pair<T, E> item : learnParam) {
-            for (Individual<T, E> individual : topPercentage) {
+        for (Individual<T, E> individual : topPercentage) {
+            if (individual instanceof AbstractIndividual) {
+                ((AbstractIndividual<T, E>) individual).clearCache();
+            }
+            for (Pair<T, E> item : learnParam) {
                 individual.directionalLearn(item.getKey(), item.getValue(), this.learningRate);
             }
         }

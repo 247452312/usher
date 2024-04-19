@@ -1,4 +1,4 @@
-package team.opentech.usher.builder;
+package team.opentech.usher.genetic.builder;
 
 import com.alibaba.fastjson.JSON;
 import java.io.FileNotFoundException;
@@ -77,8 +77,10 @@ class InitGeneticTest {
         initGenetic.setDimensionalityReductionConfig(DimensionalityReductionTypeEnum.PCA);
         initGenetic.setExtractedConfig(StandardizationTypeEnum.Z_SCORE, false);
 
+        //        double v = initGenetic.train(5000, true);
         double v = initGenetic.trainAndLearnByTrainData(500, true);
         System.out.println("执行了500次之后的遗传算法适应度为:" + v);
+
         GeneticModel model = initGenetic.exportModel();
         System.out.println(JSON.toJSONString(model));
         double[][] key = fileData.getKey();
@@ -89,7 +91,7 @@ class InitGeneticTest {
         UsedGenetic usedGenetic = new TraningBuilder().testData(testData.getKey(), testData.getValue())
                                                       .buildGenetic(model);
         Double test2 = usedGenetic.test(array);
-        Asserts.assertTrue(Objects.equals(test, test2), "GeneticModel 导出导入行为不一致");
+        Asserts.assertTrue(Objects.equals(test, test2), "GeneticModel 导出导入行为不一致 导出前值:" + test + " 导出后值:" + test2);
     }
 
     private boolean filter(double v) {

@@ -33,7 +33,7 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
         // 再选计算出来的数量和实际大小中较小的那个
         realTargetSize = Math.min(realTargetSize, individuals.size());
 
-        T[] randomParam = testParams();
+        T[] randomParam = testAllParams();
         Pair<Individual<T, E>, Double>[] array = individuals.stream().map(t -> new Pair<>(t, fitness(t, randomParam))).sorted(Comparator.comparingDouble(t -> t.getValue())).toArray(Pair[]::new);
         individuals = Arrays.stream(array).map(Pair::getKey).collect(Collectors.toList());
         List<Individual<T, E>> result = new ArrayList<>(realTargetSize);
@@ -45,7 +45,7 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
 
     @Override
     public Individual<T, E> findBestPercentage(List<Individual<T, E>> individuals) {
-        T[] randomParam = testParams();
+        T[] randomParam = testAllParams();
         Pair<Individual<T, E>, Double>[] array = individuals.stream().map(t -> new Pair<>(t, fitness(t, randomParam))).sorted(Comparator.comparingDouble(t -> t.getValue())).toArray(Pair[]::new);
         individuals = Arrays.stream(array).map(Pair::getKey).collect(Collectors.toList());
         if (CollectionUtil.isEmpty(individuals)) {
@@ -56,7 +56,12 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
 
     @Override
     public Double fitnessByMean(List<Individual<T, E>> topPercentage) {
-        return topPercentage.stream().mapToDouble(t -> fitness(t, testParams())).average().getAsDouble();
+        T[] params = testAllParams();
+        List<Double> allResult = new ArrayList<>(topPercentage.size());
+        for (Individual<T, E> teIndividual : topPercentage) {
+            allResult.add(fitness(teIndividual, params));
+        }
+        return allResult.stream().mapToDouble(t -> t).average().getAsDouble();
     }
 
 
@@ -104,4 +109,12 @@ public abstract class AbstractFitnessHandler<T, E> implements FitnessHandler<T, 
      */
     @NotNull
     protected abstract T[] testParams();
+
+    /**
+     * 获取测试集
+     *
+     * @return 生产的入参(测试集)
+     */
+    @NotNull
+    protected abstract T[] testAllParams();
 }

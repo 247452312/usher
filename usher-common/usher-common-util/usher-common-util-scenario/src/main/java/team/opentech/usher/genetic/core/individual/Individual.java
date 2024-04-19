@@ -1,7 +1,8 @@
 package team.opentech.usher.genetic.core.individual;
 
 import java.io.Serializable;
-import java.util.BitSet;
+import team.opentech.usher.genetic.core.dna.Dna;
+import team.opentech.usher.util.Pair;
 
 /**
  * 种群中的个体
@@ -21,11 +22,26 @@ public interface Individual<T, E> extends Serializable {
      */
     Individual<T, E> cross(Individual<T, E> individual);
 
+    /**
+     * 获取系数
+     *
+     * @param index
+     *
+     * @return
+     */
+    Pair<Integer, Integer> getCoeff(int index);
+
+    /**
+     * 设置系数
+     *
+     * @param index
+     */
+    void setCoeff(int index, Integer power, Integer coeff);
 
     /**
      * 变异
      */
-    void variation(byte[] virusDna);
+    void variation(long virusDna);
 
     /**
      * 获取结果
@@ -36,12 +52,12 @@ public interface Individual<T, E> extends Serializable {
     /**
      * 第一条DNA
      */
-    BitSet firstDna();
+    Dna firstDna();
 
     /**
      * 第二条DNA
      */
-    BitSet secondDna();
+    Dna secondDna();
 
     /**
      * dna长度

@@ -9,12 +9,16 @@ import team.opentech.usher.genetic.core.data.AbstractHistoryData;
 import team.opentech.usher.genetic.core.data.AbstractHistoryMeanData;
 
 /**
+ * 二值适应度函数 Logistic
+ *
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年03月27日 14时52分
  */
-public class HistoryDataFitnessHandler extends AbstractDataFitnessHandler<Double[], Double> {
+public class HistoryDataLogisticFitnessHandler extends AbstractDataFitnessHandler<Double[], Double> {
 
-    public HistoryDataFitnessHandler(Map<Double[], Double> testData) {
+    private static final Double MAX_LOSS = 100.0;
+
+    public HistoryDataLogisticFitnessHandler(Map<Double[], Double> testData) {
         super(testData);
     }
 
@@ -26,7 +30,6 @@ public class HistoryDataFitnessHandler extends AbstractDataFitnessHandler<Double
         }
         return integers;
     }
-
 
     @Override
     protected AbstractHistoryData<Double[], Double> makeFittingIndividual(Map<Double[], Double> testData) {
@@ -59,16 +62,14 @@ public class HistoryDataFitnessHandler extends AbstractDataFitnessHandler<Double
         }
         if (Objects.equals(historicalResult, 0.0)) {
             if (Objects.equals(calculationResult, 1.0)) {
-                // 这里应该返回一个特别大的数
-                return 1.0;
+                return MAX_LOSS;
             }
-            return -Math.log(1 - calculationResult);
+            return Math.min(-Math.log(1 - calculationResult), MAX_LOSS);
         } else {
             if (Objects.equals(calculationResult, 0.0)) {
-                // 这里应该返回一个特别大的数
-                return 1.0;
+                return MAX_LOSS;
             }
-            return -Math.log(calculationResult);
+            return Math.min(-Math.log(calculationResult), MAX_LOSS);
         }
 
         // todo 这里理论上要区分损失函数,损失函数需要传入?
@@ -88,5 +89,11 @@ public class HistoryDataFitnessHandler extends AbstractDataFitnessHandler<Double
             result[i] = array[RandomUtils.nextInt(0, length)];
         }
         return result;
+    }
+
+    @NotNull
+    @Override
+    protected Double[][] testAllParams() {
+        return testData.keySet().toArray(new Double[0][]);
     }
 }

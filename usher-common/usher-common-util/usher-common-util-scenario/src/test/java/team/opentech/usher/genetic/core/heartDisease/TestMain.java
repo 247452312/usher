@@ -18,7 +18,7 @@ import org.apache.commons.math3.linear.RealVector;
 import org.junit.jupiter.api.Test;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.genetic.core.fitness.FitnessHandler;
-import team.opentech.usher.genetic.core.fitness.HistoryDataFitnessHandler;
+import team.opentech.usher.genetic.core.fitness.HistoryDataLogisticFitnessHandler;
 import team.opentech.usher.genetic.core.individual.Individual;
 import team.opentech.usher.genetic.core.population.Population;
 import team.opentech.usher.genetic.core.population.RandomDnaPopulation;
@@ -185,16 +185,15 @@ class TestMain {
             testDataMap.put(Arrays.stream(params).boxed().toArray(Double[]::new), result);
         }
 
-        Double[][] willTestData = Arrays.stream(testFileData.getKey()).map(t -> Arrays.stream(t).boxed().toArray(Double[]::new)).toArray(Double[][]::new);
-
         // 适应度函数
-        FitnessHandler<Double[], Double> fitnessHandler = new HistoryDataFitnessHandler(testDataMap);
+        FitnessHandler<Double[], Double> fitnessHandler = new HistoryDataLogisticFitnessHandler(testDataMap);
         // 种群/初始化
         Properties config = new Properties();
         config.setProperty("scenario.population.K", "1000");
         config.setProperty("scenario.population.init-percentage", "0.2");
         config.setProperty("scenario.population.init-cross-percentage", "0.4");
         config.setProperty("scenario.population.init-variation-percentage", "0.2");
+        config.setProperty("scenario.population.learning-rate", "0.1");
 
         Population<Double[], Double> testPopulation = new RandomDnaPopulation(config, transData[0].length).init();
 

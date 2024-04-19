@@ -1,10 +1,10 @@
 package team.opentech.usher.genetic.core.population;
 
-import java.util.BitSet;
 import java.util.List;
 import java.util.Properties;
 import org.apache.commons.lang3.RandomUtils;
 import team.opentech.usher.annotation.NotNull;
+import team.opentech.usher.genetic.core.dna.Dna;
 import team.opentech.usher.genetic.core.individual.Individual;
 import team.opentech.usher.genetic.core.individual.SigmoidIndividual;
 
@@ -36,19 +36,20 @@ public class RandomDnaPopulation extends AbstractPopulation<Double[], Double> {
      * @return
      */
     @NotNull
-    private static BitSet randomDna() {
-        long[] longs = new long[16];
-        for (int i = 0; i < 16; i++) {
-            longs[i] = RandomUtils.nextLong(0, Long.MAX_VALUE);
+    private static Dna randomDna() {
+        int bigSize = 100;
+        long[] fragment = new long[bigSize];
+        for (int j = 0; j < bigSize; j++) {
+            fragment[j] = RandomUtils.nextLong(0, Long.MAX_VALUE);
         }
-        return BitSet.valueOf(longs);
+        return Dna.valueOf(fragment, 3, 11);
     }
 
     @Override
     protected Individual<Double[], Double> makeNewIndividual() {
-        BitSet firstDna = firstDna();
-        BitSet secondDna = secondDna();
-        return new SigmoidIndividual(firstDna, secondDna, Math.max(firstDna.size(), secondDna.size()), dimLength);
+        Dna firstDna = firstDna();
+        Dna secondDna = secondDna();
+        return new SigmoidIndividual(firstDna, secondDna, dimLength);
     }
 
     @Override
@@ -58,12 +59,12 @@ public class RandomDnaPopulation extends AbstractPopulation<Double[], Double> {
 
 
     @NotNull
-    private BitSet secondDna() {
+    private Dna secondDna() {
         return randomDna();
     }
 
     @NotNull
-    private BitSet firstDna() {
+    private Dna firstDna() {
         return randomDna();
     }
 }

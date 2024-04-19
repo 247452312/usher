@@ -1,12 +1,13 @@
 package team.opentech.usher.genetic.core.individual;
 
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 import org.apache.commons.lang3.RandomUtils;
-import team.opentech.usher.util.BitSetUtil;
+import team.opentech.usher.genetic.core.dna.Dna;
+import team.opentech.usher.util.DnaUtil;
+import team.opentech.usher.util.Pair;
 
 /**
  * 个体模板
@@ -17,53 +18,68 @@ import team.opentech.usher.util.BitSetUtil;
 public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
 
     private static Random RANDOM = new Random();
+    //
+    //    /**
+    //     * 第一条dna
+    //     */
+    //    protected final Dna firstDna;
+    //
+    //    /**
+    //     * 第二条dna
+    //     */
+    //    protected final Dna secondDna;
 
-    /**
-     * 第一条dna
-     */
-    protected final BitSet firstDna;
 
-    /**
-     * 第二条dna
-     */
-    protected final BitSet secondDna;
+    protected final Dna firstDna;
 
-    /**
-     * 初始长度
-     */
-    protected final int size;
+    protected final Dna secondDna;
 
     /**
      * 在dna没有变的前提下缓存结果
      */
     private final Map<T, E> cacheResult = new HashMap<>();
 
-    protected AbstractIndividual(int size) {
-        this.firstDna = new BitSet(size);
-        this.secondDna = new BitSet(size);
-        this.size = size;
+    public AbstractIndividual(Dna firstDna, Dna secondDna) {
+        this.firstDna = new Dna(firstDna);
+        this.secondDna = new Dna(secondDna);
     }
 
-    public AbstractIndividual(BitSet firstDna, BitSet secondDna) {
-        this(firstDna, secondDna, Math.max(firstDna.size(), secondDna.size()));
+    public void clearCache() {
+        cacheResult.clear();
     }
 
-    public AbstractIndividual(BitSet firstDna, BitSet secondDna, int size) {
-        this.firstDna = (BitSet) firstDna.clone();
-        this.secondDna = (BitSet) secondDna.clone();
-        this.size = size;
+    @Override
+    public Pair<Integer, Integer> getCoeff(int index) {
+        Pair<Integer, Integer> firstDnaCoeff = firstDna.getCoeff(index);
+        Pair<Integer, Integer> secondDnaCoeff = secondDna.getCoeff(index);
+        if (firstDnaCoeff.getKey() >= secondDnaCoeff.getKey()) {
+            return firstDnaCoeff;
+        } else {
+            return secondDnaCoeff;
+        }
+    }
+
+    @Override
+    public void setCoeff(int index, Integer power, Integer coeff) {
+        Pair<Integer, Integer> firstDnaCoeff = firstDna.getCoeff(index);
+        Pair<Integer, Integer> secondDnaCoeff = secondDna.getCoeff(index);
+        if (firstDnaCoeff.getKey() >= secondDnaCoeff.getKey()) {
+            firstDna.setCoeff(index, power, coeff);
+        } else {
+            secondDna.setCoeff(index, power, coeff);
+        }
     }
 
     @Override
     public Individual<T, E> cross(Individual<T, E> individual) {
-        return makeNewIndividual(firstDna(), individual.secondDna(), Math.max(size(), individual.size()));
+        return makeNewIndividual(firstDna(), individual.secondDna());
     }
 
     @Override
-    public void variation(byte[] virusDna) {
+    public void variation(long virusDna) {
         // 注 changeOrder: 顺序改变 changeDirect: 直接改变 changeByVirus: 外来数据改变 changeAll: 完全改变
         int random = RANDOM.nextInt(10);
-        if (virusDna == null || virusDna.length == 0) {
+        if (virusDna == 0) {
             if (random < 4) {
                 changeOrder(firstDna(), secondDna());
             } else if (random < 8) {
@@ -86,12 +102,12 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
     }
 
     @Override
-    public BitSet firstDna() {
+    public Dna firstDna() {
         return firstDna;
     }
 
     @Override
-    public BitSet secondDna() {
+    public Dna secondDna() {
         return secondDna;
     }
 
@@ -102,12 +118,13 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
 
     @Override
     public int size() {
-        return size;
+        return Math.max(firstDna.size(), secondDna.size());
     }
 
     @Override
     public void directionalLearn(T param, E realResult, Double learningRate) {
-        E result = findResult(param);
+        // 这里用doFindResult 不用findResult 因为需要一直改维度 类似于变异,需要清空,所以在里面不用findResult
+        E result = doFindResult(param);
         dealDiff(param, result, realResult, learningRate);
     }
 
@@ -136,11 +153,10 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
      *
      * @param firstDna  第一条dna
      * @param secondDna 第二条dna
-     * @param size      长度
      *
      * @return
      */
-    protected abstract Individual<T, E> makeNewIndividual(BitSet firstDna, BitSet secondDna, int size);
+    protected abstract Individual<T, E> makeNewIndividual(Dna firstDna, Dna secondDna);
 
     /**
      * 获取结果
@@ -156,36 +172,36 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
         changeAll(secondDna());
     }
 
-    private void changeAll(BitSet bitSet) {
-        int i = RandomUtils.nextInt(0, Integer.MAX_VALUE);
-        int index = Integer.toBinaryString(i).length() - 1;
-        while (i > 0) {
-            bitSet.set(index--, (i & 1) == 1);
-            i >>= 1;
+    private void changeAll(Dna dna) {
+        int bigSize = 100;
+        long[] fragment = new long[bigSize];
+        for (int j = 0; j < bigSize; j++) {
+            fragment[j] = RandomUtils.nextLong(0, Long.MAX_VALUE);
         }
+        dna.reSet(fragment);
     }
 
     /**
      * 根据外来数据改变
      */
-    private void changeByVirus(BitSet firstDna, BitSet secondDna, byte[] virusDna) {
-        BitSet changeDna;
+    private void changeByVirus(Dna firstDna, Dna secondDna, long virusDna) {
+        Dna changeDna;
         if (Objects.equals(RANDOM.nextInt(2), 1)) {
             changeDna = firstDna;
         } else {
             changeDna = secondDna;
         }
-        BitSet virusDnaBit = BitSet.valueOf(virusDna);
+        Dna virusDnaBit = Dna.valueOf(new long[]{virusDna}, changeDna.getPowerBitSize(), changeDna.getParamBitSize());
 
         int index = RANDOM.nextInt(size());
-        BitSetUtil.swap(changeDna, index, virusDnaBit, 0, virusDnaBit.length());
+        DnaUtil.swap(changeDna, index, virusDnaBit, 0, virusDnaBit.size());
     }
 
     /**
      * 直接改变
      */
-    private void changeDirect(BitSet firstDna, BitSet secondDna) {
-        BitSet changeDna;
+    private void changeDirect(Dna firstDna, Dna secondDna) {
+        Dna changeDna;
         if (Objects.equals(RANDOM.nextInt(2), 1)) {
             changeDna = firstDna;
         } else {
@@ -193,13 +209,13 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
         }
         int size = RANDOM.nextInt(size());
         int index = RANDOM.nextInt(size() - size);
-        BitSetUtil.negation(changeDna, index, size);
+        DnaUtil.negation(changeDna, index, size);
     }
 
     /**
      * 顺序改变
      */
-    private void changeOrder(BitSet firstDna, BitSet secondDna) {
+    private void changeOrder(Dna firstDna, Dna secondDna) {
         int thisSize = size();
         int size = RANDOM.nextInt(thisSize);
         int firstIndex = RANDOM.nextInt(thisSize - size);
@@ -208,17 +224,17 @@ public abstract class AbstractIndividual<T, E> implements Individual<T, E> {
         // 判断两个dna修改 还是同一个dna修改
         if (Objects.equals(RANDOM.nextInt(2), 1)) {
             // 两个dna修改
-            BitSetUtil.swap(firstDna, firstIndex, secondDna, secondIndex, size);
+            DnaUtil.swap(firstDna, firstIndex, secondDna, secondIndex, size);
             return;
         }
 
         int dnaIndex = RANDOM.nextInt(2);
-        BitSet changeDna;
+        Dna changeDna;
         if (Objects.equals(dnaIndex, 1)) {
             changeDna = firstDna;
         } else {
             changeDna = secondDna;
         }
-        BitSetUtil.swap(changeDna, firstIndex, changeDna, secondIndex, size);
+        DnaUtil.swap(changeDna, firstIndex, changeDna, secondIndex, size);
     }
 }
