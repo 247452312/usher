@@ -20,9 +20,9 @@ class DbInformationTest {
     @Test
     void fillTableInfos() {
         DbInformationDTO dto = new DbInformationDTO();
-        dto.setTables(Arrays.asList("user"));
+        dto.setTables(Arrays.asList("hcos_build_programme_business_domain_link","hcos_build_programme","hcos_build_param","hcos_build_file","hcos_build_data_item","hcos_build_business_domain"));
         dto.setDbName("test");
-        dto.setUrl("jdbc:mysql://localhost:3300/my?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&autoconnect=true&failOverReadOnly=false&useSSL=false");
+        dto.setUrl("jdbc:mysql://mac:3306/test?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&autoconnect=true&failOverReadOnly=false&useSSL=false");
         dto.setType(DbTypeEnum.MYSQL.getTypeCode());
         dto.setUserName("root");
         dto.setPassword("123456");
