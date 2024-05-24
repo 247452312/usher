@@ -197,8 +197,8 @@ public class User extends AbstractDoEntity<UserDO> {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddhhmmss");
         String format = localDateTime.format(dateTimeFormatter);
         sb.append(format);
-        Random random = new Random(90);
-        int randomNum = random.nextInt() + 10;
+        Random random = new Random();
+        int randomNum = random.nextInt(90) + 10;
         //两位随机数 两位
         sb.append(randomNum);
 

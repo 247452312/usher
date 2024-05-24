@@ -1,15 +1,15 @@
 package team.opentech.usher.pojo.entity;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+import java.util.Random;
 import team.opentech.usher.enums.UserTypeEnum;
 import team.opentech.usher.pojo.DO.UserDO;
 import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.UserRepository;
 import team.opentech.usher.util.AESUtil;
 import team.opentech.usher.util.Asserts;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
-import java.util.Random;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -46,8 +46,8 @@ public class Visiter extends User {
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("ddhhmmss");
         String format = localDateTime.format(dateTimeFormatter);
         sb.append(format);
-        Random random = new Random(90);
-        int randomNum = random.nextInt() + 10;
+        Random random = new Random();
+        int randomNum = random.nextInt(90) + 10;
         //两位随机数 两位
         sb.append(randomNum);
 
