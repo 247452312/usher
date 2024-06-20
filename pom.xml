@@ -69,7 +69,9 @@
         <jython.version>2.7.2</jython.version>
         <javassist.version>3.24.0-GA</javassist.version>
         <kotlin.version>1.6.20-RC</kotlin.version>
+        <math3.version>3.6.1</math3.version>
         <commons-io.version>2.11.0</commons-io.version>
+        <manifold.version>2024.1.17</manifold.version>
     </properties>
 
     <dependencyManagement>
@@ -148,6 +150,13 @@
                 <groupId>com.alibaba.boot</groupId>
                 <artifactId>velocity-spring-boot-starter</artifactId>
                 <version>0.1.0</version>
+            </dependency>
+
+            <!--编译期重载运算符 manifold-->
+            <dependency>
+                <groupId>systems.manifold</groupId>
+                <artifactId>manifold-ext</artifactId>
+                <version>${manifold.version}</version>
             </dependency>
 
             <!--asm-->
@@ -412,6 +421,11 @@
                 <scope>test</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>${math3.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -429,9 +443,21 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>${maven.compiler.plugin.version}</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>8</source>
+                        <target>8</target>
+                        <encoding>UTF-8</encoding>
+                        <compilerArgs>
+                            <arg>-Xplugin:Manifold no-bootstrap</arg>
+                        </compilerArgs>
+                        <annotationProcessorPaths>
+                            <path>
+                                <groupId>systems.manifold</groupId>
+                                <artifactId>manifold-ext</artifactId>
+                                <version>${manifold.version}</version>
+                            </path>
+                        </annotationProcessorPaths>
                     </configuration>
+
                 </plugin>
             </plugins>
         </pluginManagement>
