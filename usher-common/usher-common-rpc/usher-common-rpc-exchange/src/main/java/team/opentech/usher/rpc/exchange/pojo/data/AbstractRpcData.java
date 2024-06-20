@@ -8,7 +8,7 @@ import team.opentech.usher.rpc.exchange.content.UsherRpcContent;
 import team.opentech.usher.rpc.exchange.pojo.content.RpcContent;
 import team.opentech.usher.rpc.exchange.pojo.head.RpcHeader;
 import team.opentech.usher.rpc.exchange.pojo.head.RpcHeaderFactory;
-import team.opentech.usher.rpc.util.BytesUtil;
+import team.opentech.usher.util.BytesUtil;
 import team.opentech.usher.util.CollectionUtil;
 import team.opentech.usher.util.LogUtil;
 import java.nio.charset.StandardCharsets;
