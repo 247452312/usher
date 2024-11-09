@@ -1,6 +1,6 @@
 package team.opentech.usher.mq.pojo.mqinfo;
 
-import team.opentech.usher.mq.content.RabbitMqContent;
+import team.opentech.usher.mq.content.RocketMqContent;
 import java.io.Serializable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -33,8 +33,8 @@ public class JvmUniqueMark implements Serializable {
     private Long time;
 
     private JvmUniqueMark() {
-        this.ip = RabbitMqContent.IP;
-        this.time = RabbitMqContent.START_TIME;
+        this.ip = RocketMqContent.IP;
+        this.time = RocketMqContent.START_TIME;
     }
 
     public static JvmUniqueMark getInstance() {

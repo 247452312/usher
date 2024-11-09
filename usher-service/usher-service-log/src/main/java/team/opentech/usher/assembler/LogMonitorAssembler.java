@@ -1,7 +1,7 @@
 package team.opentech.usher.assembler;
 
 
-import team.opentech.usher.mq.content.RabbitMqContent;
+import team.opentech.usher.mq.content.RocketMqContent;
 import team.opentech.usher.mq.pojo.mqinfo.JvmStartInfoCommand;
 import team.opentech.usher.mq.pojo.mqinfo.JvmStatusInfoCommand;
 import team.opentech.usher.mq.pojo.mqinfo.JvmUniqueMark;
@@ -59,7 +59,7 @@ public abstract class LogMonitorAssembler extends AbstractAssembler<LogMonitorDO
         logMonitorEntity.setTime(time);
 
         //设置假想结束时间=JVM上次发送状态时间+ OUT_TIME*比例系数
-        double v = time + RabbitMqContent.OUT_TIME * 60 * 1000 * RabbitMqContent.OUT_TIME_PRO;
+        double v = time + RocketMqContent.OUT_TIME * 60 * 1000 * RocketMqContent.OUT_TIME_PRO;
         logMonitorEntity.setEndTime(new Double(v).longValue());
         logMonitorEntity.setJvmTotalMem(jvmStartInfo.getJvmTotalMem());
         logMonitorEntity.setHeapTotalMem(jvmStartInfo.getHeapTotalMem());

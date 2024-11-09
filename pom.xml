@@ -63,9 +63,9 @@
         <asm.version>9.2</asm.version>
         <javaparser.version>3.24.2</javaparser.version>
         <mybatis.plus.spring.version>3.4.3.3</mybatis.plus.spring.version>
-        <mapStruct.version>1.4.2.Final</mapStruct.version>
+        <mapStruct.version>1.6.2</mapStruct.version>
         <ojdbc.version>11.2.0.3</ojdbc.version>
-        <rocketmq.version>4.3.0</rocketmq.version>
+        <rocketmq.version>5.3.1</rocketmq.version>
         <jython.version>2.7.2</jython.version>
         <javassist.version>3.24.0-GA</javassist.version>
         <kotlin.version>1.6.20-RC</kotlin.version>
@@ -236,13 +236,6 @@
                 <version>${javax.validation.version}</version>
             </dependency>
 
-            <!--MQ-->
-            <dependency>
-                <groupId>com.rabbitmq</groupId>
-                <artifactId>amqp-client</artifactId>
-                <version>${rabbitmq-client.version}</version>
-            </dependency>
-
             <!-- 动态定时任务 -->
             <dependency>
                 <groupId>org.quartz-scheduler</groupId>
@@ -369,11 +362,13 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
                 <version>${mapStruct.version}</version>
+                <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct-processor</artifactId>
                 <version>${mapStruct.version}</version>
+                <scope>provided</scope>
             </dependency>
 
             <dependency>
@@ -385,6 +380,11 @@
             <dependency>
                 <groupId>org.apache.rocketmq</groupId>
                 <artifactId>rocketmq-client</artifactId>
+                <version>${rocketmq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-acl</artifactId>
                 <version>${rocketmq.version}</version>
             </dependency>
 
@@ -454,6 +454,11 @@
                                 <groupId>systems.manifold</groupId>
                                 <artifactId>manifold-ext</artifactId>
                                 <version>${manifold.version}</version>
+                            </path>
+                            <path>
+                                <groupId>org.mapstruct</groupId>
+                                <artifactId>mapstruct-processor</artifactId>
+                                <version>${mapStruct.version}</version>
                             </path>
                         </annotationProcessorPaths>
                     </configuration>

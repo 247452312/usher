@@ -1,6 +1,6 @@
 package team.opentech.usher.mq.runner;
 
-import team.opentech.usher.mq.content.RabbitMqContent;
+import team.opentech.usher.mq.content.RocketMqContent;
 import team.opentech.usher.util.LogUtil;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -19,7 +19,7 @@ public class SaveStartTimeRunner implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        RabbitMqContent.init();
+        RocketMqContent.init();
         LogUtil.info(this, "MQ日志初始化成功");
     }
 }

@@ -12,7 +12,7 @@ spring:
       freemarker:
         cache: false    #页面不加载缓存，修改即时生效
   datasource:
-    url: jdbc:mysql://prod:3306/usher_user
+    url: jdbc:mysql://${hosts}:3306/usher_user
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     # 初始化物理连接个数
@@ -50,7 +50,7 @@ rpc:
   application:
     name: provider-test
   metadata-report:
-    address: nacos://prod:8848
+    address: nacos://${hosts}:8848
   registry:
     host: prod
     port: 8848
@@ -75,20 +75,18 @@ log-out:
   path: D:/usher/logs
 redis:
   normal:
-    ip: prod
+    ip: ${hosts}
     port: 6379
     password: uhyils-single
   hotspot:
-    hosts: prod:26380;prod:26381;prod:26382
+    hosts: ${hosts}:26380;${hosts}:26381;${hosts}:26382
     password: uhyils
     sentinels: mymaster
 
 
-rabbit:
-  host: prod
-  port: 5672
-  username: uhyils
-  password: 123456
+rocketmq:
+  config:
+    producerName: user_group
 
 id:
   organization:

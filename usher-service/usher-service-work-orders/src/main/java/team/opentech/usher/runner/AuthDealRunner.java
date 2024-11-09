@@ -1,17 +1,12 @@
 package team.opentech.usher.runner;
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import team.opentech.usher.content.OrderContent;
-import team.opentech.usher.handler.rabbit.OrderAutoDealConsumer;
-import team.opentech.usher.mq.pojo.rabbit.RabbitFactory;
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import team.opentech.usher.handler.rocket.OrderAutoDealConsumer;
+import team.opentech.usher.mq.util.MqUtil;
 
 /**
  * 自动处理工单的地方
@@ -25,23 +20,10 @@ public class AuthDealRunner implements ApplicationRunner {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @Autowired
-    private RabbitFactory rabbitFactory;
-
-    private List<Channel> channels = new ArrayList<>();
-
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        Connection conn = rabbitFactory.getConn();
-        String exchangeName = OrderContent.ORDER_EXCHANGE;
+        OrderAutoDealConsumer orderAutoDealConsumer = new OrderAutoDealConsumer(applicationContext);
+        MqUtil.addConsumer(orderAutoDealConsumer);
 
-        /* 启动接收工单自动节点信息 */
-        Channel channel = conn.createChannel();
-        String queueName = OrderContent.ORDER_AUTO_NODE_SEND_QUEUE;
-        channel.exchangeDeclare(exchangeName, "direct", false, false, null);
-        channel.queueDeclare(queueName, false, false, false, null);
-        channel.queueBind(queueName, exchangeName, queueName);
-        channel.basicConsume(queueName, false, new OrderAutoDealConsumer(channel, applicationContext));
-        channels.add(channel);
     }
 }

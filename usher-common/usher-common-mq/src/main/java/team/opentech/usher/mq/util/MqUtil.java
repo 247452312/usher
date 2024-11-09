@@ -1,32 +1,28 @@
 package team.opentech.usher.mq.util;
 
 import com.alibaba.fastjson.JSON;
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.AMQP.BasicProperties;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.ConfirmListener;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.Consumer;
-import com.rabbitmq.client.Envelope;
+import org.apache.rocketmq.client.exception.MQBrokerException;
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.apache.rocketmq.client.producer.MQProducer;
+import org.apache.rocketmq.client.producer.SendCallback;
+import org.apache.rocketmq.common.message.Message;
+import org.apache.rocketmq.remoting.exception.RemotingException;
 import team.opentech.usher.context.MyTraceIdContext;
 import team.opentech.usher.enums.LogTypeEnum;
-import team.opentech.usher.mq.pojo.rabbit.RabbitFactory;
+import team.opentech.usher.mq.pojo.rocket.RocketMqFactory;
 import team.opentech.usher.pojo.other.RpcTraceInfo;
+import team.opentech.usher.protocol.mq.base.BaseMqConsumer;
 import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.SpringUtil;
 import team.opentech.usher.util.SupplierWithException;
-import java.io.IOException;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.TimeoutException;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Function;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -34,237 +30,130 @@ import java.util.function.Function;
  */
 public class MqUtil {
 
-    private static final Map<MqQueueInfo, Channel> CHANNEL_MAP = new HashMap<>();
 
     /**
      * 保存consumer
      */
-    private static final Map<String, Consumer> consumers = new HashMap<>();
+    private static final Map<String, BaseMqConsumer> consumers = new HashMap<>();
+
+    /**
+     * 保存producer
+     */
+    private static final Map<MqQueueInfo, MQProducer> PRODUCER_MAP = new HashMap<>();
 
     /**
      * 创建channel时的锁
      */
-    private static Lock newChannelLock = new ReentrantLock();
+    private static Lock NEW_CHANNEL_LOCK = new ReentrantLock();
 
     private MqUtil() {
     }
 
     /**
      * 添加消费者
-     *
-     * @param exchange         路由的名称
-     * @param queue            队列的名称
-     * @param name             消费者的名称
-     * @param consumerFunction 消费者创建逻辑
      */
-    public static <T extends Consumer> T addConsumer(String exchange, String queue, String name, Function<Channel, T> consumerFunction) throws IOException, TimeoutException {
-        RabbitFactory factory = SpringUtil.getBean(RabbitFactory.class);
-        Connection conn = factory.getConn();
-        Channel channel = conn.createChannel();
-        channel.exchangeDeclare(exchange, "direct", Boolean.FALSE, Boolean.FALSE, null);
-        channel.queueDeclare(queue, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null);
-        channel.queueBind(queue, exchange, queue);
-        T consumer = consumerFunction.apply(channel);
-        T proxyInstance = (T) Proxy.newProxyInstance(consumer.getClass().getClassLoader(), new Class[]{Consumer.class}, new MqInvocationHandler(consumer));
-        channel.basicConsume(queue, Boolean.FALSE, proxyInstance);
-        consumers.put(name, consumer);
-        return proxyInstance;
+    public static BaseMqConsumer addConsumer(BaseMqConsumer consumer) throws MQClientException {
+        RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
+        factory.initConsumer(consumer);
+        final BaseMqConsumer proxyConsumer = (BaseMqConsumer) Proxy.newProxyInstance(consumer.getClass().getClassLoader(), new Class[]{BaseMqConsumer.class}, new MqInvocationHandler(consumer));
+        String join = String.join("||", proxyConsumer.tags());
+        String name = proxyConsumer.topic() + " " + join;
+        consumers.put(name, proxyConsumer);
+        return proxyConsumer;
     }
 
     /**
      * 添加消费者
      *
-     * @param exchange         路由的名称
-     * @param queue            队列的名称
-     * @param name             消费者的名称
-     * @param consumerFunction 消费者创建逻辑
+     * @param consumer 消费者创建逻辑
      */
-    public static <T extends Consumer> T addConsumer(String exchange, String queue, String name, Class<T> interfaceClass, Function<Channel, ? extends T> consumerFunction) throws IOException, TimeoutException {
-        RabbitFactory factory = SpringUtil.getBean(RabbitFactory.class);
-        Connection conn = factory.getConn();
-        Channel channel = conn.createChannel();
-        channel.exchangeDeclare(exchange, "direct", Boolean.FALSE, Boolean.FALSE, null);
-        channel.queueDeclare(queue, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null);
-        channel.queueBind(queue, exchange, queue);
-        Consumer consumer = consumerFunction.apply(channel);
-        T proxyInstance = (T) Proxy.newProxyInstance(consumer.getClass().getClassLoader(), new Class[]{interfaceClass}, new MqInvocationHandler(consumer));
-        channel.basicConsume(queue, Boolean.TRUE, proxyInstance);
-        consumers.put(name, consumer);
-        return proxyInstance;
+    public static <T extends BaseMqConsumer> T addConsumer(Class<T> interfaceClass, BaseMqConsumer consumer) throws MQClientException {
+        RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
+        factory.initConsumer(consumer);
+        final T proxyConsumer = (T) Proxy.newProxyInstance(consumer.getClass().getClassLoader(), new Class[]{interfaceClass}, new MqInvocationHandler(consumer));
+        String join = String.join("||", proxyConsumer.tags());
+        String name = proxyConsumer.topic() + " " + join;
+        consumers.put(name, proxyConsumer);
+        return proxyConsumer;
     }
 
     /**
      * 添加消费者
      *
-     * @param exchange         路由的名称
-     * @param queue            队列的名称
-     * @param name             消费者的名称
-     * @param consumerFunction 消费者创建逻辑
+     * @param consumer 消费者创建逻辑
      */
-    public static void addNoLogConsumer(String exchange, String queue, String name, Function<Channel, Consumer> consumerFunction) throws IOException, TimeoutException {
-        RabbitFactory factory = SpringUtil.getBean(RabbitFactory.class);
-        Connection conn = factory.getConn();
-        Channel channel = conn.createChannel();
-        channel.exchangeDeclare(exchange, "direct", Boolean.FALSE, Boolean.FALSE, null);
-        channel.queueDeclare(queue, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null);
-        channel.queueBind(queue, exchange, queue);
-        Consumer consumer = consumerFunction.apply(channel);
-        channel.basicConsume(queue, Boolean.TRUE, consumer);
+    public static void addNoLogConsumer(BaseMqConsumer consumer) throws MQClientException {
+        RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
+        factory.initConsumer(consumer);
+        String join = String.join("||", consumer.tags());
+        String name = consumer.topic() + " " + join;
         consumers.put(name, consumer);
     }
 
     /**
      * 推送信息到mq
      *
-     * @param exchange 路由名称
-     * @param queue    队列名称
-     * @param msg      发送的信息的byte
-     *
+     * @param topic 队列名称
+     * @param tags  tag
+     * @param msg   发送的信息的byte
      * @return
      */
-    public static void sendMsg(String exchange, String queue, String msg) {
-        MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextRpcIds()));
+    public static void sendMsg(String topic, List<String> tags, String msg) {
+        MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextTraceIds()));
         byte[] bytes = JSON.toJSONString(build).getBytes(StandardCharsets.UTF_8);
-        sendMsg(exchange, queue, bytes);
+        sendMsg(topic, tags, bytes);
     }
 
     /**
      * 推送信息到mq
      *
-     * @param exchange 路由名称
-     * @param queue    队列名称
-     * @param listener 回应监听
-     * @param msg      发送的信息
-     *
+     * @param topic 队列名称
+     * @param tags  tag名称
+     * @param bytes 发送的信息的byte
      * @return
      */
-    public static void sendConfirmMsg(String exchange, String queue, ConfirmListener listener, String msg) {
-        try {
-            MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, () -> {
-                MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextRpcIds()));
-                byte[] bytes = JSON.toJSONString(build).getBytes(StandardCharsets.UTF_8);
-                try {
-                    sendConfirmMsg(exchange, queue, listener, bytes);
-                } catch (Exception e) {
-                    LogUtil.error(e);
-                }
-                return null;
-            }, new String[]{exchange, queue}, exchange, queue);
-        } catch (Throwable throwable) {
-            LogUtil.error(throwable);
-        }
-
-    }
-
-    /**
-     * 推送信息到mq
-     *
-     * @param exchange 路由名称
-     * @param queue    队列名称
-     * @param listener 回应监听
-     * @param obj      发送的信息
-     *
-     * @return
-     */
-    public static void sendConfirmMsg(String exchange, String queue, ConfirmListener listener, Object obj) {
-        String msg = JSON.toJSONString(obj);
-        try {
-            MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, () -> {
-                MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextRpcIds()));
-                byte[] bytes = JSON.toJSONString(build).getBytes(StandardCharsets.UTF_8);
-                try {
-                    sendConfirmMsg(exchange, queue, listener, bytes);
-                } catch (Exception e) {
-                    LogUtil.error(e);
-                }
-                return null;
-            }, new String[]{exchange, queue}, exchange, queue);
-        } catch (Throwable throwable) {
-            LogUtil.error(throwable);
-        }
-
-    }
-
-    /**
-     * 推送信息到mq
-     *
-     * @param exchange 路由名称
-     * @param queue    队列名称
-     * @param msg      发送的信息的byte
-     *
-     * @return
-     */
-    protected static void sendMsgNoLog(String exchange, String queue, String msg) {
-        doSendMsg(exchange, queue, JSON.toJSONString(msg).getBytes(StandardCharsets.UTF_8));
-    }
-
-    /**
-     * 推送信息到mq
-     *
-     * @param exchange 路由名称
-     * @param queue    队列名称
-     * @param bytes    发送的信息的byte
-     *
-     * @return
-     */
-    private static void sendMsg(String exchange, String queue, byte[] bytes) {
+    private static void sendMsg(String topic, List<String> tags, byte[] bytes) {
         SupplierWithException<?> direct = () -> {
-            doSendMsg(exchange, queue, bytes);
+            doSendMsg(topic, tags, bytes);
             return null;
         };
         try {
-            MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, direct, new String[]{exchange, queue}, exchange, queue);
+            String tagsStr = String.join("||", tags);
+            MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, direct, new String[]{topic, tagsStr}, topic, tagsStr);
         } catch (Throwable throwable) {
             LogUtil.error(MqUtil.class, throwable);
         }
-
-
     }
 
     /**
      * 发送信息
      *
-     * @param exchange
-     * @param queue
+     * @param topic
+     * @param tags
      * @param bytes
      */
-    private static void doSendMsg(String exchange, String queue, byte[] bytes) {
-
-        MqQueueInfo key = new MqQueueInfo(exchange, queue);
-        Channel channel = null;
-        if (CHANNEL_MAP.containsKey(key)) {
-            channel = CHANNEL_MAP.get(key);
+    private static void doSendMsg(String topic, List<String> tags, byte[] bytes) {
+        MqQueueInfo key = new MqQueueInfo(topic, tags);
+        MQProducer producer = null;
+        if (PRODUCER_MAP.containsKey(key)) {
+            producer = PRODUCER_MAP.get(key);
         } else {
-            newChannelLock.lock();
+            NEW_CHANNEL_LOCK.lock();
             try {
-                if (!CHANNEL_MAP.containsKey(key)) {
-                    RabbitFactory factory = null;
-                    try {
-                        factory = SpringUtil.getBean(RabbitFactory.class);
-                    } catch (Exception e) {
-                        LogUtil.error(e);
-                    }
-                    channel = factory.getConn().createChannel();
-                    //创建exchange
-                    channel.exchangeDeclare(exchange, "direct", false, false, null);
-                    //创建队列
-                    channel.queueDeclare(queue, false, false, false, null);
-                    //绑定exchange和queue
-                    channel.queueBind(queue, exchange, queue);
-                    CHANNEL_MAP.put(key, channel);
+                if (!PRODUCER_MAP.containsKey(key)) {
+                    RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
+                    producer = factory.getProducer();
+                    PRODUCER_MAP.put(key, producer);
                 } else {
-                    channel = CHANNEL_MAP.get(key);
+                    producer = PRODUCER_MAP.get(key);
                 }
-
-            } catch (TimeoutException | IOException e) {
-                LogUtil.error(e);
             } finally {
-                newChannelLock.unlock();
+                NEW_CHANNEL_LOCK.unlock();
             }
         }
         try {
-            channel.basicPublish(exchange, queue, null, bytes);
-        } catch (IOException e) {
+            producer.send(new Message(topic, String.join("||", tags), bytes));
+        } catch (MQBrokerException | RemotingException | InterruptedException | MQClientException e) {
             LogUtil.error(e);
         }
     }
@@ -272,109 +161,176 @@ public class MqUtil {
     /**
      * 推送信息到mq
      *
-     * @param exchange 路由名称
-     * @param queue    队列名称
-     * @param bytes    发送的信息的byte
-     *
+     * @param topic 队列名称
+     * @param tag   tag
+     * @param msg   发送的信息的byte
      * @return
-     *
-     * @throws IOException
-     * @throws TimeoutException
      */
-    private static void sendConfirmMsg(String exchange, String queue, ConfirmListener listener, byte[] bytes) throws IOException, TimeoutException {
+    public static void sendMsg(String topic, String tag, String msg) {
+        MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextTraceIds()));
+        byte[] bytes = JSON.toJSONString(build).getBytes(StandardCharsets.UTF_8);
+        sendMsg(topic, Collections.singletonList(tag), bytes);
+    }
+
+    /**
+     * 推送信息到mq 需要监听回应
+     *
+     * @param topic    队列名称
+     * @param tags     tags
+     * @param callback 回应监听
+     * @param msg      发送的信息
+     * @return
+     */
+    public static void sendConfirmMsg(String topic, List<String> tags, SendCallback callback, String msg) {
+        try {
+            String join = String.join("||", tags);
+            MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, () -> {
+                MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextTraceIds()));
+                byte[] bytes = JSON.toJSONString(build).getBytes(StandardCharsets.UTF_8);
+                try {
+                    sendConfirmMsg(topic, tags, callback, bytes);
+                } catch (Exception e) {
+                    LogUtil.error(e);
+                }
+                return null;
+            }, new String[]{topic, join}, topic, join);
+        } catch (Throwable throwable) {
+            LogUtil.error(throwable);
+        }
+
+    }
+
+    /**
+     * 推送信息到mq
+     *
+     * @param topic 队列名称
+     * @param tags  tags
+     * @param bytes 发送的信息的byte
+     * @return
+     */
+    private static void sendConfirmMsg(String topic, List<String> tags, SendCallback sendCallback, byte[] bytes) {
+        String join = String.join("||", tags);
 
         SupplierWithException<?> direct = () -> {
-            MqQueueInfo key = new MqQueueInfo(exchange, queue);
-            Channel channel = null;
-            if (CHANNEL_MAP.containsKey(key)) {
-                channel = CHANNEL_MAP.get(key);
+            MqQueueInfo key = new MqQueueInfo(topic, tags);
+            MQProducer producer = null;
+            if (PRODUCER_MAP.containsKey(key)) {
+                producer = PRODUCER_MAP.get(key);
             } else {
-                newChannelLock.lock();
+                NEW_CHANNEL_LOCK.lock();
                 try {
-                    if (!CHANNEL_MAP.containsKey(key)) {
-                        RabbitFactory factory = SpringUtil.getBean(RabbitFactory.class);
-                        channel = factory.getConn().createChannel();
-                        channel.confirmSelect();
-                        //创建exchange
-                        channel.exchangeDeclare(exchange, "direct", false, false, null);
-                        //创建队列
-                        channel.queueDeclare(queue, false, false, false, null);
-                        //绑定exchange和queue
-                        channel.queueBind(queue, exchange, queue);
-                        channel.addConfirmListener(listener);
-                        CHANNEL_MAP.put(key, channel);
+                    if (!PRODUCER_MAP.containsKey(key)) {
+                        RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
+                        producer = factory.getProducer();
+                        PRODUCER_MAP.put(key, producer);
                     } else {
-                        channel = CHANNEL_MAP.get(key);
+                        producer = PRODUCER_MAP.get(key);
                     }
-                } catch (TimeoutException | IOException e) {
-                    LogUtil.error(e);
                 } finally {
-                    newChannelLock.unlock();
+                    NEW_CHANNEL_LOCK.unlock();
                 }
             }
-            try {
-                channel.basicPublish(exchange, queue, null, bytes);
-            } catch (IOException e) {
-                LogUtil.error(e);
-            }
+
+            producer.send(new Message(topic, join, bytes), sendCallback);
             return null;
         };
         try {
-            MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, direct, new String[]{exchange, queue}, exchange, queue);
+            MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, direct, new String[]{topic, join}, topic, join);
         } catch (Throwable throwable) {
             LogUtil.error(throwable);
         }
     }
+
+    /**
+     * 推送信息到mq
+     *
+     * @param topic     路由名称
+     * @param tags        队列名称
+     * @param sendCallback 回应监听
+     * @param obj          发送的信息
+     * @return
+     */
+    public static void sendConfirmMsg(String topic, List<String> tags, SendCallback sendCallback, Object obj) {
+        String msg = JSON.toJSONString(obj);
+        try {
+            String join = String.join("||", tags);
+            MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, () -> {
+                MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextTraceIds()));
+                byte[] bytes = JSON.toJSONString(build).getBytes(StandardCharsets.UTF_8);
+                try {
+                    sendConfirmMsg(topic, tags, sendCallback, bytes);
+                } catch (Exception e) {
+                    LogUtil.error(e);
+                }
+                return null;
+            }, new String[]{topic, join}, topic, join);
+        } catch (Throwable throwable) {
+            LogUtil.error(throwable);
+        }
+
+    }
+
+    /**
+     * 推送信息到mq
+     *
+     * @param exchange 路由名称
+     * @param queue    队列名称
+     * @param msg      发送的信息的byte
+     * @return
+     */
+    protected static void sendMsgNoLog(String exchange, List<String> queue, String msg) {
+        doSendMsg(exchange, queue, JSON.toJSONString(msg).getBytes(StandardCharsets.UTF_8));
+    }
+
 
     static class MqQueueInfo {
 
         /**
          * 路由
          */
-        private String exchange;
+        private String topic;
 
         /**
          * 队列
          */
-        private String queue;
+        private List<String> tags;
 
-        public MqQueueInfo(String exchange, String queue) {
-            this.exchange = exchange;
-            this.queue = queue;
+        public MqQueueInfo(String topic, List<String> tags) {
+            this.topic = topic;
+            this.tags = tags;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(getTopic(), getTags());
         }
 
         @Override
         public boolean equals(Object o) {
             if (this == o) {
-                return Boolean.TRUE;
+                return true;
             }
             if (o == null || getClass() != o.getClass()) {
-                return Boolean.FALSE;
+                return false;
             }
             MqQueueInfo that = (MqQueueInfo) o;
-            return Objects.equals(exchange, that.exchange) &&
-                   Objects.equals(queue, that.queue);
+            return Objects.equals(getTopic(), that.getTopic()) && Objects.equals(getTags(), that.getTags());
         }
 
-        @Override
-        public int hashCode() {
-            return Objects.hash(exchange, queue);
+        public String getTopic() {
+            return topic;
         }
 
-        public String getExchange() {
-            return exchange;
+        public void setTopic(String topic) {
+            this.topic = topic;
         }
 
-        public void setExchange(String exchange) {
-            this.exchange = exchange;
+        public List<String> getTags() {
+            return tags;
         }
 
-        public String getQueue() {
-            return queue;
-        }
-
-        public void setQueue(String queue) {
-            this.queue = queue;
+        public void setTags(List<String> tags) {
+            this.tags = tags;
         }
     }
 
@@ -410,31 +366,25 @@ public class MqUtil {
 
     private static class MqInvocationHandler implements InvocationHandler {
 
-        private static final String RECEIVE_METHOD_NAME = "handleDelivery";
+        private static final String RECEIVE_METHOD_NAME = "onMessage";
 
-        private final Consumer consumer;
+        private final BaseMqConsumer consumer;
 
-        public MqInvocationHandler(Consumer consumer) {
+        public MqInvocationHandler(BaseMqConsumer consumer) {
             this.consumer = consumer;
         }
 
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (method.getName().equals(RECEIVE_METHOD_NAME)) {
-                String consumerTag = (String) args[0];
-                Envelope envelope = (Envelope) args[1];
-                AMQP.BasicProperties properties = (BasicProperties) args[2];
-                byte[] bytes = (byte[]) args[3];
-                String json = new String(bytes, StandardCharsets.UTF_8);
+                String json = (String) args[0];
                 MqSendInfo mqSendInfo = JSON.parseObject(json, MqSendInfo.class);
                 RpcTraceInfo rpcInfo = mqSendInfo.getRpcInfo();
 
-                String realInfo = mqSendInfo.getJson();
-                byte[] realBytes = realInfo.getBytes(StandardCharsets.UTF_8);
                 MyTraceIdContext.setThraceId(rpcInfo.getTraceId());
-                MyTraceIdContext.setRpcId(rpcInfo.getRpcIds());
+                MyTraceIdContext.setTraceId(rpcInfo.getRpcIds());
                 try {
-                    return method.invoke(consumer, consumerTag, envelope, properties, realBytes);
+                    return method.invoke(consumer, json);
                 } finally {
                     MyTraceIdContext.clean();
                 }

@@ -1,5 +1,7 @@
 package team.opentech.usher.mq.util;
 
+import java.util.Collections;
+
 /**
  * @author uhyils <247452312@qq.com>
  * @version 1.0
@@ -7,9 +9,10 @@ package team.opentech.usher.mq.util;
  */
 public class LogInfoSendMqUtil {
 
-    public static final String EXCHANGE_NAME = "log_exchange";
+    public static final String TOPIC_NAME = "log_topic";
 
-    public static final String QUEUE_NAME = "log_queue";
+    public static final String TAG_NAME = "log_tag";
+    public static final String GROUP_NAME = "log_group";
 
 
     /**
@@ -18,15 +21,15 @@ public class LogInfoSendMqUtil {
      * @return
      */
     public static void sendLogInfo(String msg) {
-        MqUtil.sendMsgNoLog(EXCHANGE_NAME, QUEUE_NAME, msg);
+        MqUtil.sendMsgNoLog(TOPIC_NAME, Collections.singletonList(TAG_NAME), msg);
     }
 
-    public static String getExchangeName() {
-        return EXCHANGE_NAME;
+    public static String getTopicName() {
+        return TOPIC_NAME;
     }
 
-    public static String getQueueName() {
-        return QUEUE_NAME;
+    public static String getTagName() {
+        return TAG_NAME;
     }
 
 }

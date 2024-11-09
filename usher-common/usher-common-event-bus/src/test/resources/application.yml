@@ -31,20 +31,14 @@ log-out:
   path: D:/usher/logs
 redis:
   normal:
-    ip: prod
+    ip: ${hosts}
     port: 6379
     password: uhyils-single
   hotspot:
-    hosts: prod:26380;prod:26381;prod:26382
+    hosts: ${hosts}:26380;${hosts}:26381;${hosts}:26382
     password: uhyils
     sentinels: mymaster
 
-
-rabbit:
-  host: prod
-  port: 5672
-  username: uhyils
-  password: 123456
 
 id:
   organization:

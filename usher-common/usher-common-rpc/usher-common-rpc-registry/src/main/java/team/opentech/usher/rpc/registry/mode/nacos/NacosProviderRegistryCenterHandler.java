@@ -6,6 +6,8 @@ import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingFactory;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import team.opentech.usher.rpc.annotation.RpcSpi;
 import team.opentech.usher.rpc.config.RegistryConfig;
 import team.opentech.usher.rpc.config.RpcConfig;
@@ -18,10 +20,11 @@ import team.opentech.usher.rpc.registry.pojo.RegistryMetadata;
 import team.opentech.usher.rpc.registry.pojo.RegistryModelInfo;
 import team.opentech.usher.rpc.registry.pojo.RegistryProviderNecessaryInfo;
 import team.opentech.usher.util.LogUtil;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.jetbrains.annotations.NotNull;
+import java.util.Properties;
 
 /**
  * 生产者注册中心句柄 的nacos默认实现 此类为实现句柄的例子可以通过spi机制修改
@@ -58,7 +61,15 @@ public class NacosProviderRegistryCenterHandler extends AbstractProviderRegistry
             RpcConfig rpcConfig = RpcConfigFactory.getInstance();
             RegistryConfig registry = rpcConfig.getRegistry();
             this.serverAddr = registry.getHost() + ":" + registry.getPort();
-            nacosNaming = NamingFactory.createNamingService(serverAddr);
+
+            Properties properties = new Properties();
+            properties.put("serverAddr", this.serverAddr);
+            if (StringUtils.isNotBlank(registry.getUsername())) {
+                properties.put("username", registry.getUsername());
+                properties.put("password", registry.getPassword());
+            }
+
+            nacosNaming = NamingFactory.createNamingService(properties);
         } catch (NacosException e) {
             throw new RpcException(e);
         }

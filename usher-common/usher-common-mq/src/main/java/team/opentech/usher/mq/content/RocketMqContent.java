@@ -11,24 +11,26 @@ import java.lang.management.RuntimeMXBean;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2020年06月19日 07时07分
  */
-public class RabbitMqContent {
+public class RocketMqContent {
 
 
     /**
      * exchange 路由名称
      */
-    public static final String EXCHANGE_NAME = "JVM_LOG";
+    public static final String TOPIC_NAME = "JVM_LOG";
 
     /**
      * JVM 开启通知管道
      */
-    public static final String JVM_START_QUEUE_NAME = "jvm_start";
+    public static final String JVM_START_TAG_NAME = "jvm_start";
+    public static final String JVM_START_GROUP_NAME = "jvm_start_group";
 
 
     /**
      * JVM状态信息
      */
-    public static final String JVM_STATUS_QUEUE_NAME = "jvm_status";
+    public static final String JVM_STATUS_TAG_NAME = "jvm_status";
+    public static final String JVM_STATUS_GROUP_NAME = "jvm_status_group";
 
     /**
      * 数据库中默认假想超时时间 设置假想结束时间=JVM上次发送状态时间+ OUT_TIME*比例系数
@@ -66,7 +68,7 @@ public class RabbitMqContent {
     }
 
     public static void setLogServiceOnLine(Boolean logServiceOnLine) {
-        RabbitMqContent.logServiceOnLine = logServiceOnLine;
+        RocketMqContent.logServiceOnLine = logServiceOnLine;
     }
 
 }

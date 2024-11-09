@@ -1,10 +1,6 @@
 package team.opentech.usher.annotation;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -13,7 +9,7 @@ import java.lang.annotation.Target;
 @Documented
 @Target(value = {ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MyMq {
+public @interface UsherMq {
 
     /**
      * 监听的topic
@@ -35,4 +31,13 @@ public @interface MyMq {
      * @return
      */
     String group();
+
+    /**
+     * 是否有序
+     *
+     * @return
+     */
+    boolean isOrder();
+
+
 }

@@ -52,6 +52,8 @@ rpc:
   registry:
     host: ${hosts}
     port: 8848
+    username: nacos
+    password: uhyils
   consumer:
     timeout: 30000
     check: false
@@ -90,13 +92,23 @@ redis:
     hosts: ${hosts}:26380;${hosts}:26381;${hosts}:26382
     password: uhyils
     sentinels: mymaster
-
-
-rabbit:
-  host: ${hosts}
-  port: 5672
-  username: admin
-  password: admin
+rocketmq:
+  config:
+    namesrvAddrs:
+      - ${hosts}:9876
+    isVIPChannel:
+    timeoutMillis:
+    dataPath: /tmp/rocketmq-console/data
+    enableDashBoardCollect: true
+    msgTrackTopicName:
+    ticketKey: ticket
+    loginRequired: false
+    useTLS: false
+    proxyAddr: 127.0.0.1:8080
+    proxyAddrs:
+      - 127.0.0.1:8080
+    accessKey: uhyils2123
+    secretKey: uhyils2123
 
 id:
   organization:

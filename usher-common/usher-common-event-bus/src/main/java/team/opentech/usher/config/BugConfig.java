@@ -1,14 +1,14 @@
 package team.opentech.usher.config;
 
+import org.apache.rocketmq.client.exception.MQClientException;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import team.opentech.usher.bus.Bus;
 import team.opentech.usher.bus.BusInterface;
 import team.opentech.usher.mq.util.MqUtil;
 import team.opentech.usher.protocol.register.base.Register;
-import java.io.IOException;
+
 import java.util.List;
-import java.util.concurrent.TimeoutException;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 
 /**
@@ -21,7 +21,7 @@ public class BugConfig {
 
 
     @Bean
-    public BusInterface eventBus(List<Register> registers) throws IOException, TimeoutException {
-        return MqUtil.addConsumer(BusInterface.BUS_EVENT_EXCHANGE_NAME, BusInterface.BUS_EVENT_QUEUE_NAME, BusInterface.BUS_EVENT_QUEUE_NAME, BusInterface.class, channel -> new Bus(channel, registers));
+    public BusInterface eventBus(List<Register> registers) throws MQClientException {
+        return MqUtil.addConsumer(BusInterface.class, new Bus(registers));
     }
 }

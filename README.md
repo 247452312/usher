@@ -7,13 +7,13 @@ usher is a Java project for many technologies.
 
 ## 项目简介
 
-* 基于docker的中间件: nacos(rpc注册中心) mysql redis MongoDB rabbitmq
+* 基于docker的中间件: nacos(rpc注册中心) mysql redis MongoDB rocketMQ
 * 基于DDD项目架构
 * [应用内事件发布框架](usher-common/usher-common-event-bus)
 * [基于usher-rpc的微服务架构](usher-common/usher-common-rpc)
 * [基于usher-rpc SPI的Filter熔断(Hystrix)](usher-service/usher-web/src/main/java/team/opentech/usher/filter/HystrixFilter.java)
 * [基于redis的分布式锁 + 热点自动发现技术](usher-common/usher-common-hot-spot)
-* 基于rabbitmq的分布式事务
+* 基于rocketMQ的分布式事务
 * [基于mq的JVM内存监控 + JVM调优](usher-common/usher-common-hot-spot)
 * 基于docker的mysql读写分离
 * [集中处理并转发请求的网关服务](usher-service/usher-web)
@@ -42,7 +42,7 @@ usher is a Java project for many technologies.
 * mysql
 * mongoDB
 * redis
-* rabbitMQ
+* rocketMq
 * 本地启动时需要加入 --spring.profiles.active=dev命令
 
 ### 依次运行下列项目
