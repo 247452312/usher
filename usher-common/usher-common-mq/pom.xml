@@ -27,12 +27,6 @@
             <artifactId>usher-common-log</artifactId>
             <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-        </dependency>
-
     </dependencies>
 
 </project>

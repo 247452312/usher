@@ -1,7 +1,7 @@
 package team.opentech.usher.pojo.entity;
 
 import team.opentech.usher.annotation.Default;
-import team.opentech.usher.mq.content.RabbitMqContent;
+import team.opentech.usher.mq.content.RocketMqContent;
 import team.opentech.usher.mq.pojo.mqinfo.JvmUniqueMark;
 import team.opentech.usher.pojo.DO.LogMonitorJvmStatusDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
@@ -36,7 +36,7 @@ public class LogMonitorJvmStatus extends AbstractDoEntity<LogMonitorJvmStatusDO>
      * @param rep
      */
     public void changeEndTimeLag(LogMonitorRepository rep) {
-        long realEndTime = (long) (data.getTime() + RabbitMqContent.OUT_TIME * 60 * 1000 * RabbitMqContent.OUT_TIME_PRO);
+        long realEndTime = (long) (data.getTime() + RocketMqContent.OUT_TIME * 60 * 1000 * RocketMqContent.OUT_TIME_PRO);
         Asserts.assertTrue(data.getFid() != null);
         rep.changeEndTimeLag(this, realEndTime);
     }

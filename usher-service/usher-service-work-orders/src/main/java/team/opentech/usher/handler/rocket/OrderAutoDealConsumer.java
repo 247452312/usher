@@ -1,9 +1,8 @@
-package team.opentech.usher.handler.rabbit;
+package team.opentech.usher.handler.rocket;
 
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.DefaultConsumer;
-import com.rabbitmq.client.Envelope;
+import org.springframework.context.ApplicationContext;
+import team.opentech.usher.annotation.UsherMq;
+import team.opentech.usher.content.OrderContent;
 import team.opentech.usher.dao.OrderApiDao;
 import team.opentech.usher.handler.InitApiHandler;
 import team.opentech.usher.handler.RunApiHandler;
@@ -15,9 +14,9 @@ import team.opentech.usher.pojo.temp.InitApiRequestTemporary;
 import team.opentech.usher.pojo.temp.InitToRunApiTemporary;
 import team.opentech.usher.pojo.temp.RunToSaveApiTemporary;
 import team.opentech.usher.pojo.temp.SaveToTransApiTemporary;
+import team.opentech.usher.protocol.mq.base.AbstractRocketMqConsumer;
+import team.opentech.usher.protocol.mq.base.RocketMqMessageResEnum;
 import team.opentech.usher.util.ObjectByteUtil;
-import java.io.IOException;
-import org.springframework.context.ApplicationContext;
 
 /**
  * 工单自动节点处理方式
@@ -25,7 +24,8 @@ import org.springframework.context.ApplicationContext;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2020年11月24日 07时27分
  */
-public class OrderAutoDealConsumer extends DefaultConsumer {
+@UsherMq(topic = OrderContent.ORDER_TOPIC, tags = {OrderContent.ORDER_AUTO_NODE_SEND_TAG}, group = OrderContent.ORDER_GROUP, isOrder = false)
+public class OrderAutoDealConsumer extends AbstractRocketMqConsumer {
 
 
     private ApplicationContext applicationContext;
@@ -35,20 +35,18 @@ public class OrderAutoDealConsumer extends DefaultConsumer {
     private OrderApiDao orderApiDao;
 
     /**
-     * Constructs a new instance and records its association to the passed-in channel.
      *
-     * @param channel the channel to which this consumer is attached
      */
-    public OrderAutoDealConsumer(Channel channel, ApplicationContext applicationContext) {
-        super(channel);
+    public OrderAutoDealConsumer(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
         orderApiDao = applicationContext.getBean(OrderApiDao.class);
 
     }
 
+
     @Override
-    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-        InitApiRequestTemporary initApiRequestTemporary = ObjectByteUtil.toObject(body);
+    public RocketMqMessageResEnum onMessage(byte[] bytes) {
+        InitApiRequestTemporary initApiRequestTemporary = ObjectByteUtil.toObject(bytes);
         OrderNodeDO orderNodeEntity = initApiRequestTemporary.getOrderNode();
 
         // 初始化方法
@@ -70,6 +68,6 @@ public class OrderAutoDealConsumer extends DefaultConsumer {
         OrderApiDO transApiEntity = orderApiDao.selectById(orderNodeEntity.getTransApiId());
         TransApiHandler transHandler = applicationContext.getBean(transApiEntity.getBeanName(), TransApiHandler.class);
         transHandler.trans(save);
-
+        return RocketMqMessageResEnum.SUCCESS;
     }
 }

@@ -335,7 +335,7 @@ public final class LogUtil {
         msg = MessageFormatter.arrayFormat(msg, params).getMessage();
         Logger logger = getLoggerByName(className);
         if (msg != null && (logTypeEnum != LogLevelEnum.DEBUG || logger.isDebugEnabled())) {
-            msg = String.format(LogDetailTypeEnum.LOG.getCode() + "%s|%s|%d|%s", MyTraceIdContext.getThraceId(), MyTraceIdContext.getAndAddRpcIdStr(), System.currentTimeMillis(), msg);
+            msg = String.format(LogDetailTypeEnum.LOG.getCode() + "%s|%s|%d|%s", MyTraceIdContext.getThraceId(), MyTraceIdContext.getAndAddTraceIdStr(), System.currentTimeMillis(), msg);
         }
         choiceLogType(msg, throwable, logTypeEnum, logger);
     }
@@ -345,7 +345,7 @@ public final class LogUtil {
         Logger logger = getLoggerByName(className);
         if (msg != null && (logTypeEnum != LogLevelEnum.DEBUG || logger.isDebugEnabled())) {
             message = MessageFormatter.arrayFormat(msg.get(), params).getMessage();
-            message = String.format(LogDetailTypeEnum.LOG.getCode() + "%s|%s|%d|%s", MyTraceIdContext.getThraceId(), MyTraceIdContext.getAndAddRpcIdStr(), System.currentTimeMillis(), message);
+            message = String.format(LogDetailTypeEnum.LOG.getCode() + "%s|%s|%d|%s", MyTraceIdContext.getThraceId(), MyTraceIdContext.getAndAddTraceIdStr(), System.currentTimeMillis(), message);
         }
         choiceLogType(message, throwable, logTypeEnum, logger);
     }

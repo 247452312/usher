@@ -49,11 +49,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.rabbitmq</groupId>
-            <artifactId>amqp-client</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>team.opentech.usher</groupId>
             <artifactId>usher-common-elegant</artifactId>
         </dependency>

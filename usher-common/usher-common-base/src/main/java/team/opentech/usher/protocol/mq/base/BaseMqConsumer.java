@@ -1,5 +1,8 @@
 package team.opentech.usher.protocol.mq.base;
 
+import org.apache.rocketmq.client.consumer.MQPushConsumer;
+import org.apache.rocketmq.client.exception.MQClientException;
+
 import java.util.List;
 
 /**
@@ -30,4 +33,30 @@ public interface BaseMqConsumer {
      * @return
      */
     String group();
+
+    /**
+     * 当前消费者是否有序消费
+     *
+     * @return
+     */
+    boolean isOrder();
+
+    /**
+     * 消费者接收到消息时的动作
+     *
+     * @param message
+     */
+    RocketMqMessageResEnum onMessage(byte[] message);
+
+    /**
+     * 设置pushConsumer
+     *
+     * @param mq
+     */
+    void setPushConsumer(MQPushConsumer mq);
+
+    /**
+     * 开启consumer
+     */
+    void start() throws MQClientException;
 }

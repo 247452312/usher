@@ -18,7 +18,7 @@ spring:
   datasource:
     url: jdbc:mysql://cloud:3306/usher_user?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
     username: root
-    password: 123456
+    password: Shang1996.
     ignore:
       tables: sys_dept_menu,sys_dept_power,sys_role_dept
 
@@ -28,16 +28,9 @@ redis:
     port: 6379
     password: uhyils
   hotspot:
-    hosts: prod:26380;prod:26381;prod:26382
+    hosts: ${hosts}:26380;${hosts}:26381;${hosts}:26382
     password: uhyils
     sentinels: mymaster
-
-
-rabbit:
-  host: cloud
-  port: 5672
-  username: admin
-  password: admin
 
 id:
   organization:
@@ -46,3 +39,6 @@ id:
 
 dynamic:
   mark: dy_user
+rocketmq:
+  config:
+    producerName: user_group

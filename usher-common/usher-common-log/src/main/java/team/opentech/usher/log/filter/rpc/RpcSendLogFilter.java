@@ -30,7 +30,7 @@ public class RpcSendLogFilter implements ConsumerFilter {
     @Override
     public RpcData invoke(RpcInvoker invoker, FilterContext invokerContext) {
         // 优先获取rpcId,防止thisRpcId提前+1
-        List<Integer> nextRpcIds = MyTraceIdContext.getNextRpcIds();
+        List<Integer> nextRpcIds = MyTraceIdContext.getNextTraceIds();
         AbstractRpcData requestData = (AbstractRpcData) invokerContext.getRequestData();
         RpcContent content = requestData.content();
         SupplierWithException<RpcData> rpcDataSupplierWithException = () -> {

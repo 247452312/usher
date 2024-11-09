@@ -1,9 +1,9 @@
 package team.opentech.usher.mq.config;
 
-import team.opentech.usher.mq.pojo.rabbit.RabbitFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import team.opentech.usher.mq.pojo.rocket.RocketMqConfig;
+import team.opentech.usher.mq.pojo.rocket.RocketMqFactory;
 
 /**
  * 初始化MqBean 配置文件中配置的东西
@@ -15,22 +15,16 @@ import org.springframework.stereotype.Component;
 public class MqConfig {
 
 
-    @Value("${rabbit.host}")
-    private String host;
+    private final RocketMqConfig rocketMqConfig;
 
-    @Value("${rabbit.port}")
-    private Integer port;
-
-    @Value("${rabbit.username}")
-    private String username;
-
-    @Value("${rabbit.password}")
-    private String password;
+    public MqConfig(RocketMqConfig rocketMqConfig) {
+        this.rocketMqConfig = rocketMqConfig;
+    }
 
 
     @Bean
-    public RabbitFactory getRabbitFactory() {
-        return RabbitFactory.getInstance(host, port, username, password);
+    public RocketMqFactory getRocketMqFactory() {
+        return RocketMqFactory.getInstance(rocketMqConfig);
     }
 
 }

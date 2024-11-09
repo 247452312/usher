@@ -14,3 +14,7 @@ id:
   organization:
     # 机构代码
     code: 12
+
+rocketmq:
+  config:
+    producerName: web_group

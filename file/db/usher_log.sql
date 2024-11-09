@@ -4,8 +4,8 @@
  Source Server         : mac
  Source Server Type    : MySQL
  Source Server Version : 80024
- Source Host           : prod:3306
- Source Schema         : usherlog
+ Source Host           : ${hosts}:3306
+ Source Schema         : usher_log
 
  Target Server Type    : MySQL
  Target Server Version : 80024

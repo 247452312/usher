@@ -9,10 +9,15 @@ public class OrderContent {
     /**
      * 工单自动消息队列名称
      */
-    public static final String ORDER_AUTO_NODE_SEND_QUEUE = "order_auto_node";
+    public static final String ORDER_AUTO_NODE_SEND_TAG = "order_auto_node";
 
     /**
      * 工单MQ路由
      */
-    public static final String ORDER_EXCHANGE = "order_exchange";
+    public static final String ORDER_TOPIC = "order_topic";
+
+    /**
+     * 工单消费组
+     */
+    public static final String ORDER_GROUP = "order_group";
 }

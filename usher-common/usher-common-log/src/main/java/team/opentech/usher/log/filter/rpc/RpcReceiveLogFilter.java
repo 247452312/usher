@@ -31,7 +31,7 @@ public class RpcReceiveLogFilter implements ProviderFilter {
         if (traceInfo != null) {
             RpcTraceInfo rpcTraceInfo = JSON.parseObject(traceInfo.getValue(), RpcTraceInfo.class);
             List<Integer> rpcIds = rpcTraceInfo.getRpcIds();
-            MyTraceIdContext.setRpcId(rpcIds);
+            MyTraceIdContext.setTraceId(rpcIds);
             MyTraceIdContext.setThraceId(rpcTraceInfo.getTraceId());
         }
         try {

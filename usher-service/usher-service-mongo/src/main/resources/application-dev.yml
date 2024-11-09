@@ -10,7 +10,7 @@ log-out:
   dir-name: mongo
 
 mongo:
-  ip: prod
+  ip: ${hosts}
   port: 27017
   username: uhyils
   password: myuhyils

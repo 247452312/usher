@@ -42,7 +42,7 @@ public class PushFacadeImpl implements PushFacade {
         InitApiRequestTemporary msg = new InitApiRequestTemporary();
         msg.setOrderNode(orderNode.toData().orElseThrow(Asserts::throwOptionalException));
         msg.setPervOrderNode(pervOrder.toData().orElseThrow(Asserts::throwOptionalException));
-        MqUtil.sendMsg(OrderContent.ORDER_EXCHANGE, OrderContent.ORDER_AUTO_NODE_SEND_QUEUE, JSON.toJSONString(msg));
+        MqUtil.sendMsg(OrderContent.ORDER_TOPIC, OrderContent.ORDER_AUTO_NODE_SEND_TAG, JSON.toJSONString(msg));
     }
 
 
