@@ -31,11 +31,11 @@ log-out:
   path: D:/usher/logs
 redis:
   normal:
-    ip: ${hosts}
+    ip: usher
     port: 6379
     password: uhyils-single
   hotspot:
-    hosts: ${hosts}:26380;${hosts}:26381;${hosts}:26382
+    hosts: usher:26380;usher:26381;usher:26382
     password: uhyils
     sentinels: mymaster
 

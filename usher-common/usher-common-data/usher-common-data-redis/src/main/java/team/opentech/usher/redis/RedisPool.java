@@ -1,12 +1,12 @@
 package team.opentech.usher.redis;
 
-import team.opentech.usher.util.LogUtil;
-import team.opentech.usher.util.SpringUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import team.opentech.usher.util.LogUtil;
+import team.opentech.usher.util.SpringUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -18,7 +18,7 @@ public class RedisPool {
     /**
      * jedis连接池
      */
-    private volatile static JedisPool pool;
+    private static JedisPool pool;
 
     /**
      * 是否初始化的标志 如果此类已经初始化,则表示整个类已经初始化过

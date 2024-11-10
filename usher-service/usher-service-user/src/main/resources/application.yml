@@ -1,5 +1,8 @@
+# nacos相关配置
 nacos:
   config:
+    # 配置ID
+    data-id: usher_user
     bootstrap:
       #开启系统启动时预读取nacos的配置，用于满足@Value注入数据的场景
       enable: true
@@ -16,7 +19,10 @@ nacos:
     # 针对配置项同名的情况，是否允许nacos的配置覆盖本地的配置
     remote-first: true
     # 使用extension-configs，多个配置加载多个dataId
-    extension-configs:
+    ext-config:
       - data-id: global-common #新建的配置，名称需要完全对应上
         group: DEFAULT_GROUP
-        refresh: true  # 动态刷新配置
+        type: yaml
+        auto-refresh: true  # 动态刷新配置
+    username: nacos
+    password: uhyils

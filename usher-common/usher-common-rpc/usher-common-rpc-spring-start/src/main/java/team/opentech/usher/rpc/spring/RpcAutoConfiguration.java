@@ -53,9 +53,9 @@ public class RpcAutoConfiguration implements BeanFactoryAware, ApplicationContex
      * @return
      */
     @Bean(RPC_CONFIGURER)
-    public RpcConfigurer createRpcConfigurer() {
+    public static RpcConfigurer createRpcConfigurer(BeanFactory beanFactory) {
         // 获取所有的扫描包(spring自带)
-        List<String> packages = AutoConfigurationPackages.get(this.beanFactory);
+        List<String> packages = AutoConfigurationPackages.get(beanFactory);
         RpcConfigurer rpcConfigurer = new RpcConfigurer();
         rpcConfigurer.setBasePackage(StringUtils.collectionToCommaDelimitedString(packages));
         rpcConfigurer.setAnnotationClass(RpcService.class);
@@ -132,7 +132,7 @@ public class RpcAutoConfiguration implements BeanFactoryAware, ApplicationContex
      */
     @Bean("team.opentech.usher.rpc.spring.RpcConsumerBeanFieldInjectConfiguration")
     @DependsOn("rpcConfig")
-    public RpcConsumerBeanFieldInjectConfiguration createRpcConsumerBeanFieldInjectConfiguration() {
+    public static RpcConsumerBeanFieldInjectConfiguration createRpcConsumerBeanFieldInjectConfiguration() {
         return new RpcConsumerBeanFieldInjectConfiguration();
     }
 
