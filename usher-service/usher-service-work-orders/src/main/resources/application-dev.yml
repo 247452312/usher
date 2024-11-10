@@ -11,7 +11,7 @@ log-out:
 
 spring:
   datasource:
-    url: jdbc:mysql://${hosts}:3306/usher_order
+    url: jdbc:mysql://usher:3306/usher_order
     username: root
     password: Shang1996.
 id:

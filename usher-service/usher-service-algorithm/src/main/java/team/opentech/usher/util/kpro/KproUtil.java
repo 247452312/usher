@@ -623,7 +623,7 @@
 //        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 hh时mm分");
 //        String dateFormat = simpleDateFormat.format(date);
 //        DbInformationDTO dbInformation = new DbInformationDTO();
-//        dbInformation.setUrl("jdbc:mysql://${hosts}:3306/usher_user");
+//        dbInformation.setUrl("jdbc:mysql://usher:3306/usher_user");
 //        dbInformation.setDbName("usheruser");
 //        dbInformation.setProjectName("user");
 //        dbInformation.setType(1);

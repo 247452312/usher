@@ -9,7 +9,7 @@ log-out:
   dir-name: push
 spring:
   datasource:
-    url: jdbc:mysql://${hosts}:3306/usher_push
+    url: jdbc:mysql://usher:3306/usher_push
     username: root
     password: Shang1996.
 id:

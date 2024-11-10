@@ -1,10 +1,11 @@
 package team.opentech.usher;
 
 
-import team.opentech.usher.rpc.annotation.UsherRpc;
+import com.alibaba.nacos.spring.context.annotation.config.EnableNacosConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import team.opentech.usher.rpc.annotation.UsherRpc;
 
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @date 文件创建日期 2020年04月20日 12时05分
  */
 @SpringBootApplication
+@EnableNacosConfig
 @UsherRpc
 @EnableTransactionManagement
 public class UserApplication {
