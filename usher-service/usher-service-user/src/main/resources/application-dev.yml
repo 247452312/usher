@@ -2,7 +2,7 @@
 nacos:
   config:
     # 配置ID
-    data-id: usher_mongo
+    data-id: usher_user
 spring:
   application:
-    name: usher_mongo
+    name: usher_user

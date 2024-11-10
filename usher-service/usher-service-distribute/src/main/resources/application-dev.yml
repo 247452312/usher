@@ -1,15 +1,8 @@
-server:
-  port: 8005
-rpc:
-  provider:
-    port: 20805
+# nacos相关配置
+nacos:
+  config:
+    # 配置ID
+    data-id: usher_distribute
+spring:
   application:
-    name: provider-distribute
-
-log-out:
-  dir-name: distribute
-
-id:
-  organization:
-    # 机构代码
-    code: 3
+    name: usher_distribute

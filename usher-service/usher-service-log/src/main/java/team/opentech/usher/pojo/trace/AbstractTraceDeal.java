@@ -1,6 +1,6 @@
 package team.opentech.usher.pojo.trace;
 
-import com.alibaba.nacos.common.utils.Objects;
+import java.util.Objects;
 import team.opentech.usher.pojo.DTO.TraceIdDTO;
 
 /**

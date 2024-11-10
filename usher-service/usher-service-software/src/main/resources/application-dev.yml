@@ -1,20 +1,8 @@
-server:
-  port: 8004
-rpc:
-  provider:
-    port: 20804
-  application:
-    name: provider-software
-
-log-out:
-  dir-name: software
-
+# nacos相关配置
+nacos:
+  config:
+    # 配置ID
+    data-id: usher_software
 spring:
-  datasource:
-    url: jdbc:mysql://usher:3306/usher_software
-    username: root
-    password: Shang1996.
-id:
-  organization:
-    # 机构代码
-    code: 9
+  application:
+    name: usher_software

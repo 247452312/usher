@@ -1,24 +1,8 @@
-server:
-  port: 8006
-rpc:
-  provider:
-    port: 20806
-  application:
-    name: provider-push
-log-out:
-  dir-name: push
+# nacos相关配置
+nacos:
+  config:
+    # 配置ID
+    data-id: usher_push
 spring:
-  datasource:
-    url: jdbc:mysql://usher:3306/usher_push
-    username: root
-    password: Shang1996.
-id:
-  organization:
-    # 机构代码
-    code: 7
-task:
-  pool:
-    core_pool_size: 10
-    max_pool_size: 20
-    keep_alive_seconds: 3
-    queue_capacity: 100
+  application:
+    name: usher_push
