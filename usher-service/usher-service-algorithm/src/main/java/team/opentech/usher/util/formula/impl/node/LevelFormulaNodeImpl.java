@@ -1,6 +1,6 @@
 package team.opentech.usher.util.formula.impl.node;
 
-import com.alibaba.nacos.common.utils.Objects;
+import java.util.Objects;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.formula.FormulaNode;
 

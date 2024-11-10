@@ -1,8 +1,11 @@
 package team.opentech.usher.repository.impl;
 
-import com.alibaba.nacos.common.utils.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.UserAssembler;
 import team.opentech.usher.dao.UserDao;
@@ -19,10 +22,7 @@ import team.opentech.usher.redis.RedisPoolHandle;
 import team.opentech.usher.repository.UserRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 import team.opentech.usher.util.Asserts;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import team.opentech.usher.util.CollectionUtil;
 
 
 /**
@@ -82,7 +82,7 @@ public class UserRepositoryImpl extends AbstractRepository<User, UserDO, UserDao
         objects.add(new Arg(UserDO::getUsername, "=", user.username().getUserName()));
         objects.add(new Arg(UserDO::getPassword, "=", user.password().encode()));
         List<UserDO> byArgsNoPage = dao.selectList(Symbol.makeWrapper(objects));
-        Asserts.assertTrue(CollectionUtils.isNotEmpty(byArgsNoPage) && byArgsNoPage.size() == 1, "登录失败,用户名或密码不正确!");
+        Asserts.assertTrue(CollectionUtil.isNotEmpty(byArgsNoPage) && byArgsNoPage.size() == 1, "登录失败,用户名或密码不正确!");
         UserDO userDO = byArgsNoPage.get(0);
         Asserts.assertEqual(UserStatusEnum.parse(userDO.getStatus()), UserStatusEnum.USING);
         return new User(userDO);

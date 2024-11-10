@@ -1,20 +1,8 @@
-server:
-  port: 8001
-rpc:
-  provider:
-    port: 20801
-  application:
-    name: consumer-web
-  consumer:
-    check: false # 关闭启动时检查依赖服务
-
-log-out:
-  dir-name: web
-id:
-  organization:
-    # 机构代码
-    code: 12
-
-rocketmq:
+# nacos相关配置
+nacos:
   config:
-    producerName: web_group
+    # 配置ID
+    data-id: usher_web
+spring:
+  application:
+    name: usher_web

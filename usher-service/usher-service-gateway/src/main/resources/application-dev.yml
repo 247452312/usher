@@ -1,27 +1,8 @@
-server:
-  port: 8011
-rpc:
-  provider:
-    port: 20811
-  application:
-    name: provider-gateway
-
-log-out:
-  dir-name: gateway
-  level: INFO
-
-id:
-  organization:
-    # 机构代码
-    code: 3
-
+# nacos相关配置
+nacos:
+  config:
+    # 配置ID
+    data-id: usher_gateway
 spring:
-  datasource:
-    url: jdbc:mysql://usher:3306/usher_gateway?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
-    username: root
-    password: Shang1996.
-
-token:
-  enable: false
-
-mysql-netty: 3300
+  application:
+    name: usher_gateway

@@ -1,3 +1,6 @@
+spring:
+  profiles:
+    active: dev
 nacos:
   config:
     bootstrap:
@@ -6,17 +9,21 @@ nacos:
     # 配置所属命名空间的id,此处我们配置名称为dev的id，可以在命名空间列表查看id的值
     namespace: cdc6df5f-6762-4a08-864d-fce07ac31ded
     # 配置所属分组
-    group: DEFAULT_GROUP
+    # group: DEFAULT_GROUP
     # 配置文件类型,对应nacos配置页面的配置格式，默认是properties
     type: yaml
     # nacos服务器地址
-    server-addr: usher:8848
+    server-addr: 47.104.81.117:8848
     # 开启自动刷新nacos配置
     auto-refresh: true
     # 针对配置项同名的情况，是否允许nacos的配置覆盖本地的配置
     remote-first: true
+    username: nacos
+    password: uhyils
     # 使用extension-configs，多个配置加载多个dataId
-    extension-configs:
+    ext-config:
       - data-id: global-common #新建的配置，名称需要完全对应上
-        group: DEFAULT_GROUP
-        refresh: true  # 动态刷新配置
+        # group: DEFAULT_GROUP
+        auto-refresh: true  # 动态刷新配置
+        # 配置文件类型,对应nacos配置页面的配置格式，默认是properties
+        type: yaml

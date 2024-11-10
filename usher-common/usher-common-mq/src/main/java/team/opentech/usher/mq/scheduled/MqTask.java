@@ -1,6 +1,8 @@
 package team.opentech.usher.mq.scheduled;
 
 import com.alibaba.fastjson.JSON;
+import java.util.Collections;
+import javax.annotation.PostConstruct;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +16,6 @@ import team.opentech.usher.mq.pojo.mqinfo.JvmUniqueMark;
 import team.opentech.usher.mq.util.JvmUtil;
 import team.opentech.usher.mq.util.MqUtil;
 import team.opentech.usher.util.LogUtil;
-
-import javax.annotation.PostConstruct;
-import java.util.Collections;
 
 /**
  * MQ发送者
@@ -48,6 +47,7 @@ public class MqTask {
         if (!RocketMqContent.getLogServiceOnLine()) {
             JvmStartInfoCommand jvmStartInfo = JvmUtil.getJvmStartInfo(jvmUniqueMark);
             MqUtil.sendConfirmMsg(RocketMqContent.TOPIC_NAME, Collections.singletonList(RocketMqContent.JVM_START_TAG_NAME), new SendCallback() {
+
                 @Override
                 public void onSuccess(SendResult sendResult) {
                     synchronized (this) {
@@ -61,7 +61,7 @@ public class MqTask {
 
                 @Override
                 public void onException(Throwable e) {
-                    LogUtil.warn(this, "启动信息处理失败(定时任务)");
+                    LogUtil.error(this, e, "启动信息处理失败(定时任务)");
                 }
             }, JSON.toJSONString(jvmStartInfo));
         } else {
@@ -69,6 +69,7 @@ public class MqTask {
             JvmStatusInfoCommand jvmStatusInfo = JvmUtil.getJvmStatusInfo(jvmUniqueMark);
             // 否则正常发送
             MqUtil.sendConfirmMsg(RocketMqContent.TOPIC_NAME, Collections.singletonList(RocketMqContent.JVM_STATUS_TAG_NAME), new SendCallback() {
+
                 @Override
                 public void onSuccess(SendResult sendResult) {
                     LogUtil.info(this, "JVM状态消息处理成功");

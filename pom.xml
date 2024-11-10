@@ -20,6 +20,7 @@
         <java.version>1.8</java.version>
         <spring-boot.version>2.6.1</spring-boot.version>
         <spring.version>5.3.13</spring.version>
+        <spring-cloud-common.version>2.1.1.RELEASE</spring-cloud-common.version>
         <swagger2.version>3.0.0</swagger2.version>
         <!--        <org.dubbo.version>2.7.3</org.dubbo.version>-->
         <druid.version>1.1.22</druid.version>
@@ -72,7 +73,7 @@
         <math3.version>3.6.1</math3.version>
         <commons-io.version>2.11.0</commons-io.version>
         <manifold.version>2024.1.17</manifold.version>
-        <nacos.config.spring.version>0.2.7</nacos.config.spring.version>
+        <nacos.config.spring.version>0.3.0-RC</nacos.config.spring.version>
     </properties>
 
     <dependencyManagement>
@@ -97,7 +98,11 @@
                 <artifactId>ganymed-ssh2</artifactId>
                 <version>${ssh2.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-commons</artifactId>
+                <version>${spring-cloud-common.version}</version>
+            </dependency>
 
             <dependency>
                 <!-- Import dependency management from Spring Boot -->
@@ -285,6 +290,13 @@
                 <artifactId>nacos-config-spring-boot-starter</artifactId>
                 <version>${nacos.config.spring.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.alibaba.boot</groupId>
+                <artifactId>nacos-config-spring-boot-actuator</artifactId>
+                <version>${nacos.config.spring.version}</version>
+            </dependency>
+
 
             <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
             <dependency>

@@ -1,36 +1,8 @@
-server:
-  port: 8003
-rpc:
-  provider:
-    port: 20803
-  application:
-    name: provider-log
-
-log-out:
-  dir-name: log
-
-#访问警告数量 如果总数超出12次,则不进行对比
-black-list:
-  size: 12
-  # 用户访问请求的平均间隔方差最小值 请求时间的单位为ms
-  spider:
-    frequency: 10
-
-spring:
-  datasource:
-    url: jdbc:mysql://usher:3306/usher_log?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
-    username: root
-    password: Shang1996.
-
-id:
-  organization:
-    # 机构代码
-    code: 4
-
-#mybatis-plus:
-#  configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-rocketmq:
+# nacos相关配置
+nacos:
   config:
-    producerName: log_group
+    # 配置ID
+    data-id: usher_log
+spring:
+  application:
+    name: usher_log
