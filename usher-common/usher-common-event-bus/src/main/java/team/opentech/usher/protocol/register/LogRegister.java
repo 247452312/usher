@@ -1,12 +1,11 @@
 package team.opentech.usher.protocol.register;
 
-import team.opentech.usher.pojo.cqe.event.base.BaseEvent;
-import team.opentech.usher.protocol.register.base.Register;
-import team.opentech.usher.util.LogUtil;
-import java.text.MessageFormat;
+
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
+import team.opentech.usher.pojo.cqe.event.base.BaseEvent;
+import team.opentech.usher.protocol.register.base.Register;
 
 
 /**
@@ -27,13 +26,16 @@ public class LogRegister implements Register {
 
     @Override
     public void onEvent(BaseEvent event) {
-        if (info) {
-            LogUtil.info(MessageFormat.format("事件:{0}发布", event.getClass()));
-        } else {
-            if (LogUtil.isDebugEnabled(this)) {
-                LogUtil.debug(() -> MessageFormat.format("事件:{0}发布", event.getClass()));
-            }
-        }
+        //        if (StringUtils.containsIgnoreCase(Thread.currentThread().getName(), LogContent.TRACE_INFO)) {
+        //            return;
+        //        }
+        //        if (info) {
+        //            LogUtil.info(MessageFormat.format("事件:{0}发布", event.getClass()));
+        //        } else {
+        //            if (LogUtil.isDebugEnabled(this)) {
+        //                LogUtil.debug(() -> MessageFormat.format("事件:{0}发布", event.getClass()));
+        //            }
+        //        }
     }
 
 }

@@ -14,6 +14,7 @@ import team.opentech.usher.UsherExecutorWrapper;
 import team.opentech.usher.annotation.UsherMq;
 import team.opentech.usher.bus.BusInterface;
 import team.opentech.usher.enums.LogDetailTypeEnum;
+import team.opentech.usher.log.content.LogContent;
 import team.opentech.usher.mq.util.LogInfoSendMqUtil;
 import team.opentech.usher.pojo.DTO.TraceDetailDTO;
 import team.opentech.usher.pojo.DTO.TraceInfoDTO;
@@ -43,11 +44,6 @@ public class RocketMqLogInfoConsumer extends AbstractRocketMqConsumer {
 
     private static final String THREAD_NAME = "thread_";
 
-    /**
-     * 包含这个字段的日志不发送MQ
-     */
-    private static final String TRACE_INFO = "sys_trace";
-
     private final Executor executor;
 
     private final TraceDetailService traceDetailService;
@@ -72,7 +68,7 @@ public class RocketMqLogInfoConsumer extends AbstractRocketMqConsumer {
 
     /**
      * 注: 此处不打印日志,如果打印日志,会造成递归效果.快速将磁盘吃没 具体方法为,线程名称中带有:
-     * {@link RocketMqLogInfoConsumer#TRACE_INFO}
+     * {@link LogContent#TRACE_INFO}
      * 请不要在此方法创建的线程中再次创建其他线程
      */
     @Override
@@ -121,7 +117,7 @@ public class RocketMqLogInfoConsumer extends AbstractRocketMqConsumer {
 
         @Override
         public Thread newThread(Runnable runnable) {
-            return new Thread(runnable, TRACE_INFO + "_" + THREAD_NAME + ATOMIC_INTEGER.getAndAdd(1));
+            return new Thread(runnable, LogContent.TRACE_INFO + "_" + THREAD_NAME + ATOMIC_INTEGER.getAndAdd(1));
         }
     }
 

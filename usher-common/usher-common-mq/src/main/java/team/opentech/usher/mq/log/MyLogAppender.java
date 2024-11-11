@@ -3,9 +3,10 @@ package team.opentech.usher.mq.log;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.rolling.RollingFileAppender;
+import org.apache.commons.lang3.StringUtils;
+import team.opentech.usher.log.content.LogContent;
 import team.opentech.usher.mq.util.LogInfoSendMqUtil;
 import team.opentech.usher.util.SpringUtil;
-import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -19,7 +20,6 @@ public class MyLogAppender extends RollingFileAppender {
 
     private static final String PIPE_SYMBOL = "|";
 
-    private static final String TRACE_INFO = "sys_trace";
 
     private static final String DEBUG = "debug";
 
@@ -39,7 +39,7 @@ public class MyLogAppender extends RollingFileAppender {
             return;
         }
         String message = loggingEvent.getMessage();
-        if (message == null || StringUtils.containsIgnoreCase(message, TRACE_INFO)) {
+        if (message == null || StringUtils.containsIgnoreCase(message, LogContent.TRACE_INFO) || StringUtils.containsIgnoreCase(Thread.currentThread().getName(), LogContent.TRACE_INFO)) {
             return;
         }
         if (message.contains(PIPE_SYMBOL)) {
