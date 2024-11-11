@@ -25,6 +25,12 @@
             <groupId>team.opentech.usher</groupId>
             <artifactId>usher-common-mq</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-common-log</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

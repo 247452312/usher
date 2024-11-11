@@ -14,6 +14,7 @@ import com.alibaba.druid.sql.ast.statement.SQLUpdateStatement;
 import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
 import team.opentech.usher.context.MyTraceIdContext;
 import team.opentech.usher.enums.LogTypeEnum;
+import team.opentech.usher.log.content.LogContent;
 import team.opentech.usher.util.LogUtil;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,14 +31,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class DbLogFilter extends FilterEventAdapter {
 
-    private static final String TRACE_INFO = "sys_trace";
-
     private final FormatOption statementSqlFormatOption = new FormatOption(false, true);
 
     @Override
     public boolean preparedStatement_execute(FilterChain chain, PreparedStatementProxy statement) throws SQLException {
         String preparedSql = statement.getSql();
-        if (preparedSql.contains(TRACE_INFO)) {
+        if (preparedSql.contains(LogContent.TRACE_INFO)) {
             return super.preparedStatement_execute(chain, statement);
         }
         String sql = changeSqlPlaceholder(preparedSql, statement.getParameters());
