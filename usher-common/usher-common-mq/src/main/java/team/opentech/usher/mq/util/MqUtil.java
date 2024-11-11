@@ -1,6 +1,15 @@
 package team.opentech.usher.mq.util;
 
 import com.alibaba.fastjson.JSON;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.MQProducer;
@@ -16,14 +25,6 @@ import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.SpringUtil;
 import team.opentech.usher.util.SupplierWithException;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 /**
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2020年11月22日 14时11分
@@ -36,15 +37,6 @@ public class MqUtil {
      */
     private static final Map<String, BaseMqConsumer> consumers = new HashMap<>();
 
-    /**
-     * 保存producer
-     */
-    private static final Map<MqQueueInfo, MQProducer> PRODUCER_MAP = new HashMap<>();
-
-    /**
-     * 创建channel时的锁
-     */
-    private static Lock NEW_CHANNEL_LOCK = new ReentrantLock();
 
     private MqUtil() {
     }
@@ -96,6 +88,7 @@ public class MqUtil {
      * @param topic 队列名称
      * @param tags  tag
      * @param msg   发送的信息的byte
+     *
      * @return
      */
     public static void sendMsg(String topic, List<String> tags, String msg) {
@@ -108,62 +101,9 @@ public class MqUtil {
      * 推送信息到mq
      *
      * @param topic 队列名称
-     * @param tags  tag名称
-     * @param bytes 发送的信息的byte
-     * @return
-     */
-    private static void sendMsg(String topic, List<String> tags, byte[] bytes) {
-        SupplierWithException<?> direct = () -> {
-            doSendMsg(topic, tags, bytes);
-            return null;
-        };
-        try {
-            String tagsStr = String.join("||", tags);
-            MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, direct, new String[]{topic, tagsStr}, topic, tagsStr);
-        } catch (Throwable throwable) {
-            LogUtil.error(MqUtil.class, throwable);
-        }
-    }
-
-    /**
-     * 发送信息
-     *
-     * @param topic
-     * @param tags
-     * @param bytes
-     */
-    private static void doSendMsg(String topic, List<String> tags, byte[] bytes) {
-        MqQueueInfo key = new MqQueueInfo(topic, tags);
-        MQProducer producer = null;
-        if (PRODUCER_MAP.containsKey(key)) {
-            producer = PRODUCER_MAP.get(key);
-        } else {
-            NEW_CHANNEL_LOCK.lock();
-            try {
-                if (!PRODUCER_MAP.containsKey(key)) {
-                    RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
-                    producer = factory.getProducer();
-                    PRODUCER_MAP.put(key, producer);
-                } else {
-                    producer = PRODUCER_MAP.get(key);
-                }
-            } finally {
-                NEW_CHANNEL_LOCK.unlock();
-            }
-        }
-        try {
-            producer.send(new Message(topic, String.join("||", tags), bytes));
-        } catch (MQBrokerException | RemotingException | InterruptedException | MQClientException e) {
-            LogUtil.error(e);
-        }
-    }
-
-    /**
-     * 推送信息到mq
-     *
-     * @param topic 队列名称
      * @param tag   tag
      * @param msg   发送的信息的byte
+     *
      * @return
      */
     public static void sendMsg(String topic, String tag, String msg) {
@@ -179,6 +119,7 @@ public class MqUtil {
      * @param tags     tags
      * @param callback 回应监听
      * @param msg      发送的信息
+     *
      * @return
      */
     public static void sendConfirmMsg(String topic, List<String> tags, SendCallback callback, String msg) {
@@ -203,51 +144,11 @@ public class MqUtil {
     /**
      * 推送信息到mq
      *
-     * @param topic 队列名称
-     * @param tags  tags
-     * @param bytes 发送的信息的byte
-     * @return
-     */
-    private static void sendConfirmMsg(String topic, List<String> tags, SendCallback sendCallback, byte[] bytes) {
-        String join = String.join("||", tags);
-
-        SupplierWithException<?> direct = () -> {
-            MqQueueInfo key = new MqQueueInfo(topic, tags);
-            MQProducer producer = null;
-            if (PRODUCER_MAP.containsKey(key)) {
-                producer = PRODUCER_MAP.get(key);
-            } else {
-                NEW_CHANNEL_LOCK.lock();
-                try {
-                    if (!PRODUCER_MAP.containsKey(key)) {
-                        RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
-                        producer = factory.getProducer();
-                        PRODUCER_MAP.put(key, producer);
-                    } else {
-                        producer = PRODUCER_MAP.get(key);
-                    }
-                } finally {
-                    NEW_CHANNEL_LOCK.unlock();
-                }
-            }
-
-            producer.send(new Message(topic, join, bytes), sendCallback);
-            return null;
-        };
-        try {
-            MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, direct, new String[]{topic, join}, topic, join);
-        } catch (Throwable throwable) {
-            LogUtil.error(throwable);
-        }
-    }
-
-    /**
-     * 推送信息到mq
-     *
-     * @param topic     路由名称
-     * @param tags        队列名称
+     * @param topic        路由名称
+     * @param tags         队列名称
      * @param sendCallback 回应监听
      * @param obj          发送的信息
+     *
      * @return
      */
     public static void sendConfirmMsg(String topic, List<String> tags, SendCallback sendCallback, Object obj) {
@@ -276,12 +177,74 @@ public class MqUtil {
      * @param exchange 路由名称
      * @param queue    队列名称
      * @param msg      发送的信息的byte
+     *
      * @return
      */
     protected static void sendMsgNoLog(String exchange, List<String> queue, String msg) {
         doSendMsg(exchange, queue, JSON.toJSONString(msg).getBytes(StandardCharsets.UTF_8));
     }
 
+    /**
+     * 推送信息到mq
+     *
+     * @param topic 队列名称
+     * @param tags  tag名称
+     * @param bytes 发送的信息的byte
+     *
+     * @return
+     */
+    private static void sendMsg(String topic, List<String> tags, byte[] bytes) {
+        SupplierWithException<?> direct = () -> {
+            doSendMsg(topic, tags, bytes);
+            return null;
+        };
+        try {
+            String tagsStr = String.join("||", tags);
+            MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, direct, new String[]{topic, tagsStr}, topic, tagsStr);
+        } catch (Throwable throwable) {
+            LogUtil.error(MqUtil.class, throwable);
+        }
+    }
+
+    /**
+     * 发送信息
+     *
+     * @param topic
+     * @param tags
+     * @param bytes
+     */
+    private static void doSendMsg(String topic, List<String> tags, byte[] bytes) {
+        MQProducer producer = SpringUtil.getBean(MQProducer.class);
+        try {
+            producer.send(new Message(topic, String.join("||", tags), bytes));
+        } catch (MQBrokerException | RemotingException | InterruptedException | MQClientException e) {
+            LogUtil.error(e);
+        }
+    }
+
+    /**
+     * 推送信息到mq
+     *
+     * @param topic 队列名称
+     * @param tags  tags
+     * @param bytes 发送的信息的byte
+     *
+     * @return
+     */
+    private static void sendConfirmMsg(String topic, List<String> tags, SendCallback sendCallback, byte[] bytes) {
+        String join = String.join("||", tags);
+
+        SupplierWithException<?> direct = () -> {
+            MQProducer producer = SpringUtil.getBean(MQProducer.class);
+            producer.send(new Message(topic, join, bytes), sendCallback);
+            return null;
+        };
+        try {
+            MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, direct, new String[]{topic, join}, topic, join);
+        } catch (Throwable throwable) {
+            LogUtil.error(throwable);
+        }
+    }
 
     static class MqQueueInfo {
 

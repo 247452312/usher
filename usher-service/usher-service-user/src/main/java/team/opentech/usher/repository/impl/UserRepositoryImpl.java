@@ -84,7 +84,6 @@ public class UserRepositoryImpl extends AbstractRepository<User, UserDO, UserDao
         List<UserDO> byArgsNoPage = dao.selectList(Symbol.makeWrapper(objects));
         Asserts.assertTrue(CollectionUtil.isNotEmpty(byArgsNoPage) && byArgsNoPage.size() == 1, "登录失败,用户名或密码不正确!");
         UserDO userDO = byArgsNoPage.get(0);
-        Asserts.assertEqual(UserStatusEnum.parse(userDO.getStatus()), UserStatusEnum.USING);
         return new User(userDO);
     }
 

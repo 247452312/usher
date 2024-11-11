@@ -1,6 +1,5 @@
 package team.opentech.usher.elegant.assembly.controller;
 
-import team.opentech.usher.elegant.AbstractElegantHandler;
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.servlet.Filter;
@@ -8,8 +7,11 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import team.opentech.usher.elegant.AbstractElegantHandler;
 
 /**
+ * http 优雅上下线拦截组件
+ *
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年08月03日 08时22分
  */

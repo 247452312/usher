@@ -29,7 +29,7 @@ import java.util.Objects;
  * @version 1.0
  * @date 文件创建日期 2021年09月19日 09时20分
  */
-@UsherMq(topic = BusInterface.BUS_EVENT_EXCHANGE_NAME, tags = {BusInterface.BUS_EVENT_QUEUE_NAME}, group = BusInterface.BUS_EVENT_GROUP_NAME, isOrder = true)
+@UsherMq(topic = BusInterface.BUS_EVENT_TOPIC_NAME, tags = {BusInterface.BUS_EVENT_TAG_NAME}, group = BusInterface.BUS_EVENT_GROUP_NAME, isOrder = true)
 public class Bus extends AbstractRocketMqConsumer implements BusInterface {
 
     /**
@@ -354,7 +354,7 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
         while (iterator.hasNext()) {
             BaseEvent next = iterator.next();
             String msg = JSON.toJSONString(next, SerializerFeature.WriteClassName);
-            MqUtil.sendMsg(BUS_EVENT_EXCHANGE_NAME, BUS_EVENT_QUEUE_NAME, msg);
+            MqUtil.sendMsg(BUS_EVENT_TOPIC_NAME, BUS_EVENT_TAG_NAME, msg);
             iterator.remove();
         }
     }

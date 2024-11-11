@@ -1,5 +1,10 @@
 package team.opentech.usher.mq.pojo.rocket;
 
+import static org.apache.rocketmq.client.ClientConfig.SEND_MESSAGE_WITH_VIP_CHANNEL_PROPERTY;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.common.MixAll;
@@ -11,19 +16,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.apache.rocketmq.client.ClientConfig.SEND_MESSAGE_WITH_VIP_CHANNEL_PROPERTY;
-
 /**
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年11月09日 13时02分
  */
 @Configuration
 @ConfigurationProperties(prefix = "rocketmq.config")
-public class RocketMqConfig {
+public class RocketMqConfigInfo {
 
     private volatile String namesrvAddr = System.getProperty(MixAll.NAMESRV_ADDR_PROPERTY, System.getenv(MixAll.NAMESRV_ADDR_ENV));
 
