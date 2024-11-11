@@ -46,7 +46,7 @@ public class MqTask {
         // 如果start信息没有发送过,那么发送start信息(只有项目启动时发送start信息失败时重复发送)
         if (!RocketMqContent.getLogServiceOnLine()) {
             JvmStartInfoCommand jvmStartInfo = JvmUtil.getJvmStartInfo(jvmUniqueMark);
-            MqUtil.sendConfirmMsg(RocketMqContent.TOPIC_NAME, Collections.singletonList(RocketMqContent.JVM_START_TAG_NAME), new SendCallback() {
+            MqUtil.sendConfirmMsg(RocketMqContent.JVM_TOPIC_NAME, Collections.singletonList(RocketMqContent.JVM_START_TAG_NAME), new SendCallback() {
 
                 @Override
                 public void onSuccess(SendResult sendResult) {
@@ -68,7 +68,7 @@ public class MqTask {
 
             JvmStatusInfoCommand jvmStatusInfo = JvmUtil.getJvmStatusInfo(jvmUniqueMark);
             // 否则正常发送
-            MqUtil.sendConfirmMsg(RocketMqContent.TOPIC_NAME, Collections.singletonList(RocketMqContent.JVM_STATUS_TAG_NAME), new SendCallback() {
+            MqUtil.sendConfirmMsg(RocketMqContent.JVM_TOPIC_NAME, Collections.singletonList(RocketMqContent.JVM_STATUS_TAG_NAME), new SendCallback() {
 
                 @Override
                 public void onSuccess(SendResult sendResult) {

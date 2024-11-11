@@ -1,8 +1,9 @@
 package team.opentech.usher.mq.config;
 
+import org.apache.rocketmq.client.producer.MQProducer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
-import team.opentech.usher.mq.pojo.rocket.RocketMqConfig;
+import org.springframework.context.annotation.Configuration;
+import team.opentech.usher.mq.pojo.rocket.RocketMqConfigInfo;
 import team.opentech.usher.mq.pojo.rocket.RocketMqFactory;
 
 /**
@@ -11,20 +12,17 @@ import team.opentech.usher.mq.pojo.rocket.RocketMqFactory;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2020年06月19日 19时03分
  */
-@Component
+@Configuration
 public class MqConfig {
 
-
-    private final RocketMqConfig rocketMqConfig;
-
-    public MqConfig(RocketMqConfig rocketMqConfig) {
-        this.rocketMqConfig = rocketMqConfig;
+    @Bean
+    public RocketMqFactory getRocketMqFactory(RocketMqConfigInfo rocketMqConfigInfo) {
+        return new RocketMqFactory(rocketMqConfigInfo);
     }
 
-
     @Bean
-    public RocketMqFactory getRocketMqFactory() {
-        return RocketMqFactory.getInstance(rocketMqConfig);
+    public MQProducer makeMqProducer(RocketMqFactory mqFactory) {
+        return mqFactory.getProducer();
     }
 
 }

@@ -1,5 +1,14 @@
 package team.opentech.usher.pojo.entity;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.context.UserInfoHelper;
 import team.opentech.usher.enums.Symbol;
@@ -22,15 +31,6 @@ import team.opentech.usher.repository.UserRepository;
 import team.opentech.usher.util.AESUtil;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
  * 用户
@@ -182,6 +182,9 @@ public class User extends AbstractDoEntity<UserDO> {
         /*查询是否正确*/
         User user = userRepository.checkLogin(this);
         this.copyOf(user);
+
+        UserStatusEnum userStatus = UserStatusEnum.parse(toDataAndValidate().getStatus());
+        Asserts.assertEqual(userStatus, UserStatusEnum.USING, "用户状态不正确,当前用户状态为:{}", userStatus.getName());
         this.token = user.toToken(salt, encodeRole);
         return this;
     }

@@ -23,31 +23,10 @@ import team.opentech.usher.protocol.mq.base.BaseMqConsumer;
  */
 public class RocketMqFactory {
 
-    /**
-     * 单例工厂
-     */
-    private volatile static RocketMqFactory factory;
+    private final RocketMqConfigInfo mqConfig;
 
-    private final RocketMqConfig mqConfig;
-
-    private RocketMqFactory(RocketMqConfig mqConfig) {
+    public RocketMqFactory(RocketMqConfigInfo mqConfig) {
         this.mqConfig = mqConfig;
-    }
-
-    /**
-     * 双重检测锁
-     *
-     * @return 单例
-     */
-    public static RocketMqFactory getInstance(RocketMqConfig mqConfig) {
-        if (null == factory) {
-            synchronized (RocketMqFactory.class) {
-                if (null == factory) {
-                    factory = new RocketMqFactory(mqConfig);
-                }
-            }
-        }
-        return factory;
     }
 
 

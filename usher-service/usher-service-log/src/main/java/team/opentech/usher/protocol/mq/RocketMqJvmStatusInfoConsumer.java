@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2020年06月19日 11时33分
  */
-@UsherMq(topic = RocketMqContent.TOPIC_NAME, tags = {RocketMqContent.JVM_STATUS_TAG_NAME}, group = RocketMqContent.JVM_STATUS_GROUP_NAME, isOrder = true)
+@UsherMq(topic = RocketMqContent.JVM_TOPIC_NAME, tags = {RocketMqContent.JVM_STATUS_TAG_NAME}, group = RocketMqContent.JVM_GROUP_NAME, isOrder = true)
 public class RocketMqJvmStatusInfoConsumer extends AbstractRocketMqConsumer {
 
 
