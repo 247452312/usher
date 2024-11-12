@@ -9,13 +9,19 @@ import com.alibaba.nacos.api.naming.listener.Event;
 import com.alibaba.nacos.api.naming.listener.EventListener;
 import com.alibaba.nacos.api.naming.listener.NamingEvent;
 import com.alibaba.nacos.api.naming.pojo.Instance;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.Executor;
 import org.apache.commons.lang3.StringUtils;
 import team.opentech.usher.rpc.annotation.RpcSpi;
-import team.opentech.usher.rpc.cluster.pojo.NettyInfo;
 import team.opentech.usher.rpc.config.RegistryConfig;
 import team.opentech.usher.rpc.config.RpcConfig;
 import team.opentech.usher.rpc.config.RpcConfigFactory;
 import team.opentech.usher.rpc.exception.RpcException;
+import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
 import team.opentech.usher.rpc.registry.content.RegistryContent;
 import team.opentech.usher.rpc.registry.mode.AbstractConsumerRegistryCenterHandler;
 import team.opentech.usher.rpc.registry.pojo.RegistryMetadata;
@@ -23,9 +29,6 @@ import team.opentech.usher.rpc.registry.pojo.RegistryModelInfo;
 import team.opentech.usher.rpc.registry.pojo.RegistryProviderNecessaryInfo;
 import team.opentech.usher.rpc.registry.pojo.event.RegistryEvent;
 import team.opentech.usher.util.LogUtil;
-
-import java.util.*;
-import java.util.concurrent.Executor;
 
 /**
  * 消费者注册中心句柄 的nacos默认实现 此类为实现句柄的例子可以通过spi机制修改
@@ -115,14 +118,14 @@ public class NacosConsumerRegistryCenterHandler extends AbstractConsumerRegistry
         List<Instance> instances = event.getInstances();
         RegistryEvent registryEvent = new RegistryEvent();
         // key-> 集群名称 value -> netty信息
-        Map<String, List<NettyInfo>> nettyInfos = new HashMap<>(instances.size());
+        Map<String, List<NettyInitDto>> nettyInfos = new HashMap<>(instances.size());
         // 处理新增和修改
         for (int i = 0; i < instances.size(); i++) {
             Instance instance = instances.get(i);
             if (!instance.isEnabled() || !instance.isHealthy()) {
                 continue;
             }
-            NettyInfo nettyInfo = new NettyInfo();
+            NettyInitDto nettyInfo = new NettyInitDto();
             nettyInfo.setIndexInColony(i);
             nettyInfo.setHost(instance.getIp());
             nettyInfo.setPort(instance.getPort());

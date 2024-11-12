@@ -104,12 +104,22 @@ public final class LogUtil {
         writeLog(Thread.currentThread().getName(), msg, null, LogLevelEnum.INFO, params);
     }
 
+    public static void info(String msg, Object... params) {
+        String[] paramStrArray = arrayTransToStrDefaultNull(params);
+        writeLog(Thread.currentThread().getName(), msg, null, LogLevelEnum.INFO, paramStrArray);
+    }
+
     public static void info(String msg, String params) {
         writeLog(Thread.currentThread().getName(), msg, null, LogLevelEnum.INFO, params);
     }
 
     public static void info(Object obj, String msg, String... params) {
         writeLog(obj.getClass().getName(), msg, null, LogLevelEnum.INFO, params);
+    }
+
+    public static void info(Object obj, String msg, Object... params) {
+        String[] strParams = arrayTransToStrDefaultNull(params);
+        writeLog(obj.getClass().getName(), msg, null, LogLevelEnum.INFO, strParams);
     }
 
     public static void info(Object obj, Throwable e) {
@@ -143,7 +153,6 @@ public final class LogUtil {
     public static void debug(Supplier<String> msg) {
         writeLog(Thread.currentThread().getName(), msg, null, LogLevelEnum.DEBUG);
     }
-
 
     public static void debug(String msg, String... params) {
         writeLog(Thread.currentThread().getName(), msg, null, LogLevelEnum.DEBUG, params);
@@ -322,6 +331,26 @@ public final class LogUtil {
     public static void controller(Long traceId, String hash, long useTime, String url, String ip) {
         String msg = String.format(LogDetailTypeEnum.DETAIL.getCode() + "%d|%d|%s|%d|%d|%s|%s", traceId, LogTypeEnum.CONTROLLER.getCode(), hash, System.currentTimeMillis(), useTime, url, ip);
         CONTROLLER_LOG.info(CONTROLLER_MARKER, msg);
+    }
+
+    /**
+     * 将参数全部变成string格式,使用toString方法
+     *
+     * @param params
+     *
+     * @return
+     */
+    private static String[] arrayTransToStrDefaultNull(Object[] params) {
+        String[] result = new String[params.length];
+        for (int i = 0; i < params.length; i++) {
+            Object param = params[i];
+            if (param == null) {
+                result[i] = "null";
+            } else {
+                result[i] = param.toString();
+            }
+        }
+        return result;
     }
 
     /**

@@ -1,26 +1,26 @@
 package team.opentech.usher.rpc.cluster.consumer.impl;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import team.opentech.usher.rpc.annotation.RpcSpi;
 import team.opentech.usher.rpc.cluster.Cluster;
 import team.opentech.usher.rpc.cluster.enums.LoadBalanceEnum;
 import team.opentech.usher.rpc.cluster.load.LoadBalanceFactory;
 import team.opentech.usher.rpc.cluster.load.LoadBalanceInterface;
-import team.opentech.usher.rpc.cluster.pojo.NettyInfo;
 import team.opentech.usher.rpc.cluster.pojo.SendInfo;
 import team.opentech.usher.rpc.exception.RpcException;
 import team.opentech.usher.rpc.exception.RpcNetException;
 import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
 import team.opentech.usher.rpc.netty.RpcNetty;
 import team.opentech.usher.rpc.netty.callback.impl.RpcDefaultResponseCallBack;
-import team.opentech.usher.rpc.netty.enums.RpcNettyTypeEnum;
+import team.opentech.usher.rpc.netty.core.RpcNettyConsumer;
 import team.opentech.usher.rpc.netty.factory.RpcNettyFactory;
 import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
 import team.opentech.usher.util.LogUtil;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * 消费者默认的cluster
@@ -34,7 +34,12 @@ public class ConsumerDefaultCluster implements Cluster {
     /**
      * 需要负载均衡的netty们
      */
-    private Map<NettyInfo, RpcNetty> nettyMap;
+    protected volatile Map<NettyInitDto, RpcNettyConsumer> nettyMap = new ConcurrentHashMap<>();
+
+    /**
+     * 离线的netty
+     */
+    protected volatile Map<NettyInitDto, RpcNettyConsumer> offLineNettyMap = new ConcurrentHashMap<>();
 
     /**
      * 负载均衡策略
@@ -64,34 +69,7 @@ public class ConsumerDefaultCluster implements Cluster {
             this.loadBalanceType = LoadBalanceEnum.RANDOM;
         }
 
-        boolean self = false;
-        for (NettyInitDto nettyInit : nettyInits) {
-            if (nettyInit.getSelfService()) {
-                self = true;
-                break;
-            }
-        }
-        HashMap<NettyInfo, RpcNetty> initNettyMap;
-        if (self) {
-            initNettyMap = new HashMap<>(1);
-            RpcNetty netty;
-            try {
-                netty = RpcNettyFactory.createSelfNetty(target);
-            } catch (Exception e) {
-                throw new RpcException(e);
-            }
-            NettyInfo nettyInfo = new NettyInfo(1, null, null, null);
-            initNettyMap.put(nettyInfo, netty);
-        } else {
-            initNettyMap = new HashMap<>(nettyInits.length);
-            for (int i = 0; i < nettyInits.length; i++) {
-                NettyInitDto nettyInit = nettyInits[i];
-                RpcNetty netty = RpcNettyFactory.createNetty(RpcNettyTypeEnum.CONSUMER, nettyInit);
-                NettyInfo nettyInfo = new NettyInfo(i, nettyInit.getWeight(), nettyInit.getHost(), nettyInit.getPort());
-                initNettyMap.put(nettyInfo, netty);
-            }
-        }
-        this.nettyMap = initNettyMap;
+        buildNetty(nettyInits);
     }
 
     @Override
@@ -115,14 +93,16 @@ public class ConsumerDefaultCluster implements Cluster {
     }
 
     @Override
-    public Map<NettyInfo, RpcNetty> getAllNetty() {
-        return nettyMap;
+    public Map<NettyInitDto, RpcNetty> getAllNetty() {
+        Map<NettyInitDto, RpcNetty> nettyInfoRpcNettyHashMap = new HashMap<>();
+        nettyInfoRpcNettyHashMap.putAll(nettyMap);
+        return nettyInfoRpcNettyHashMap;
     }
 
     @Override
     public Boolean shutdown() {
         boolean result = Boolean.TRUE;
-        for (Map.Entry<NettyInfo, RpcNetty> nettyInfoRpcNettyEntry : nettyMap.entrySet()) {
+        for (Map.Entry<NettyInitDto, RpcNettyConsumer> nettyInfoRpcNettyEntry : nettyMap.entrySet()) {
             boolean shutdown = nettyInfoRpcNettyEntry.getValue().shutdown();
             if (!shutdown) {
                 result = Boolean.FALSE;
@@ -132,32 +112,56 @@ public class ConsumerDefaultCluster implements Cluster {
     }
 
     @Override
+    public void onOffLine(NettyInitDto nettyInitDto) {
+        if (this.nettyMap.containsKey(nettyInitDto)) {
+            synchronized (ReConnCallBackImpl.class) {
+                if (this.nettyMap.containsKey(nettyInitDto)) {
+                    RpcNettyConsumer remove = this.nettyMap.remove(nettyInitDto);
+                    this.offLineNettyMap.put(nettyInitDto, remove);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onReConn(NettyInitDto nettyInitDto) {
+        if (this.offLineNettyMap.containsKey(nettyInitDto)) {
+            synchronized (ReConnCallBackImpl.class) {
+                if (this.offLineNettyMap.containsKey(nettyInitDto)) {
+                    RpcNettyConsumer remove = this.offLineNettyMap.remove(nettyInitDto);
+                    this.nettyMap.put(nettyInitDto, remove);
+                }
+            }
+        }
+    }
+
+    @Override
     public RpcData sendMsg(RpcData rpcData, SendInfo info) throws InterruptedException {
         if (nettyMap.isEmpty()) {
             String interfaceName = getInterfaceName();
             throw new RpcNetException("指定的服务端 " + interfaceName + " 不存在");
         }
         LoadBalanceInterface loadBalance = LoadBalanceFactory.createByLoadBalanceEnum(loadBalanceType, nettyMap);
-        return loadBalance.send(rpcData, info, nettyMap);
+        return loadBalance.send(rpcData, info, getInterfaceName(), nettyMap);
 
     }
 
     @Override
-    public Boolean onServiceStatusChange(List<NettyInfo> nettyInfos) {
+    public Boolean onServiceStatusChange(List<NettyInitDto> nettyInfos) {
         // 筛选出没有的,移出->下线
-        Set<NettyInfo> set = new HashSet<>();
-        for (NettyInfo nettyInfo : nettyMap.keySet()) {
+        Set<NettyInitDto> set = new HashSet<>();
+        for (NettyInitDto nettyInfo : nettyMap.keySet()) {
             if (!nettyInfos.contains(nettyInfo)) {
                 set.add(nettyInfo);
             }
         }
-        for (NettyInfo nettyInfo : set) {
+        for (NettyInitDto nettyInfo : set) {
             RpcNetty rpcNetty = nettyMap.get(nettyInfo);
             rpcNetty.shutdown();
             nettyMap.remove(nettyInfo);
         }
         // 筛选不存在的,添加->上线
-        for (NettyInfo nettyInfo : nettyInfos) {
+        for (NettyInitDto nettyInfo : nettyInfos) {
             if (nettyMap.containsKey(nettyInfo)) {
                 continue;
             }
@@ -166,12 +170,47 @@ public class ConsumerDefaultCluster implements Cluster {
             nettyInit.setPort(nettyInfo.getPort());
             nettyInit.setCallback(new RpcDefaultResponseCallBack());
             try {
-                RpcNetty netty = RpcNettyFactory.createNetty(RpcNettyTypeEnum.CONSUMER, nettyInit);
-                nettyMap.put(nettyInfo, netty);
+                RpcNetty netty = RpcNettyFactory.createConsumer(nettyInit, 1000L * 60 * 60, new ReConnCallBackImpl(this));
+                nettyMap.put(nettyInfo, (RpcNettyConsumer) netty);
             } catch (Exception e) {
                 LogUtil.error(this, e);
             }
         }
         return Boolean.TRUE;
+    }
+
+    /**
+     * 构建netty层
+     *
+     * @param nettyInits
+     *
+     * @throws InterruptedException
+     */
+    private void buildNetty(NettyInitDto[] nettyInits) throws InterruptedException {
+        boolean self = false;
+        for (NettyInitDto nettyInit : nettyInits) {
+            if (nettyInit.getSelfService()) {
+                self = true;
+                break;
+            }
+        }
+        // 如果调用的是自身的服务,那么就完全不会调用集群中其他的自己,而是全部调用到自身的服务中去
+        if (self) {
+            RpcNettyConsumer netty;
+            try {
+                netty = RpcNettyFactory.createSelfNetty(target);
+            } catch (Exception e) {
+                throw new RpcException(e);
+            }
+            NettyInitDto nettyInfo = NettyInitDto.build(1, null, null, null, null);
+            nettyMap.put(nettyInfo, netty);
+        } else {
+            for (int i = 0; i < nettyInits.length; i++) {
+                NettyInitDto nettyInit = nettyInits[i];
+                RpcNetty netty = RpcNettyFactory.createConsumer(nettyInit, 1000L * 60 * 60, new ReConnCallBackImpl(this));
+                nettyInit.setIndexInColony(i);
+                nettyMap.put(nettyInit, (RpcNettyConsumer) netty);
+            }
+        }
     }
 }

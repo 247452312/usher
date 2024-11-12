@@ -79,4 +79,16 @@ public class ElegantRpcFilter extends AbstractElegantHandler implements Provider
     private void doClose() {
         registryManager.closeHook();
     }
+
+    @Override
+    public void allowToPublish() {
+        super.allowToPublish();
+        registryManager.allowProviderToPublish();
+    }
+
+    @Override
+    public void notAllowToPublish() {
+        super.notAllowToPublish();
+        registryManager.notAllowProviderToPublish();
+    }
 }

@@ -53,12 +53,12 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<ByteBuf> {
         assert build != null;
 
         RpcData requestRpcData = build.createByBytes(bytes);
-        LogUtil.info("接收端接收唯一标示:{}", requestRpcData.unique().toString());
+        LogUtil.debug("接收端接收唯一标示:{}", requestRpcData.unique().toString());
         LastProviderInvoker invoker = new LastProviderInvoker(callback);
         RpcInvoker rpcInvoker = InvokerChainBuilder.buildProviderAroundInvokerChain(invoker);
         FilterContext context = new FilterContext(requestRpcData);
         RpcData invoke = rpcInvoker.invoke(context);
-        LogUtil.info("接收端发送唯一标示:{}", invoke.unique().toString());
+        LogUtil.debug("接收端发送唯一标示:{}", invoke.unique().toString());
         return invoke.toBytes();
     }
 

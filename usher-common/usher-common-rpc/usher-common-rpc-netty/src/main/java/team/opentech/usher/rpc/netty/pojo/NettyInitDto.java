@@ -1,7 +1,8 @@
 package team.opentech.usher.rpc.netty.pojo;
 
-import team.opentech.usher.rpc.netty.callback.RpcCallBack;
 import java.io.Serializable;
+import java.util.Objects;
+import team.opentech.usher.rpc.netty.callback.RpcCallBack;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -10,6 +11,11 @@ import java.io.Serializable;
 public class NettyInitDto implements Serializable {
 
     private static final long serialVersionUID = 8849579140716709610L;
+
+    /**
+     * 在集群中的位置
+     */
+    private Integer indexInColony;
 
     /**
      * 端口
@@ -37,8 +43,9 @@ public class NettyInitDto implements Serializable {
     private Boolean selfService = Boolean.FALSE;
 
 
-    public static NettyInitDto build(Integer port, String host, RpcCallBack callback, Integer weight) {
+    public static NettyInitDto build(Integer indexInColony, Integer port, String host, RpcCallBack callback, Integer weight) {
         NettyInitDto build = new NettyInitDto();
+        build.indexInColony = indexInColony;
         build.port = port;
         build.host = host;
         build.callback = callback;
@@ -93,4 +100,28 @@ public class NettyInitDto implements Serializable {
         this.selfService = selfService;
     }
 
+    public Integer getIndexInColony() {
+        return indexInColony;
+    }
+
+    public void setIndexInColony(Integer indexInColony) {
+        this.indexInColony = indexInColony;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        NettyInitDto that = (NettyInitDto) o;
+        return Objects.equals(getPort(), that.getPort()) && Objects.equals(getHost(), that.getHost());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPort(), getHost());
+    }
 }

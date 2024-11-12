@@ -1,8 +1,9 @@
 package team.opentech.usher.rpc.netty.callback;
 
+import java.util.Map;
 import team.opentech.usher.rpc.config.RpcConfigFactory;
 import team.opentech.usher.rpc.spi.RpcSpiManager;
-import java.util.Map;
+import team.opentech.usher.util.LogUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -34,8 +35,13 @@ public class RpcCallBackFactory {
      *
      * @return
      */
-    public static RpcCallBack createResponseCallBack() throws InterruptedException {
+    public static RpcCallBack createResponseCallBack() {
         String registryName = (String) RpcConfigFactory.getCustomOrDefault(responseCallBackConfigName, responseCallBackDefaultName);
-        return (RpcCallBack) RpcSpiManager.createOrGetExtensionByClass(RpcCallBack.class, registryName);
+        try {
+            return (RpcCallBack) RpcSpiManager.createOrGetExtensionByClass(RpcCallBack.class, registryName);
+        } catch (InterruptedException e) {
+            LogUtil.error(e);
+            return null;
+        }
     }
 }

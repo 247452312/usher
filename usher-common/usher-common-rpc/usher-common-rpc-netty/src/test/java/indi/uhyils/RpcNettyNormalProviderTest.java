@@ -1,5 +1,7 @@
 package team.opentech.usher;
 
+import java.io.IOException;
+import java.util.HashMap;
 import team.opentech.usher.rpc.config.RpcConfigFactory;
 import team.opentech.usher.rpc.enums.RpcTypeEnum;
 import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
@@ -8,15 +10,13 @@ import team.opentech.usher.rpc.exchange.pojo.data.factory.RpcFactoryProducer;
 import team.opentech.usher.rpc.exchange.pojo.head.RpcHeader;
 import team.opentech.usher.rpc.factory.RpcBeanFactory;
 import team.opentech.usher.rpc.netty.RpcNetty;
+import team.opentech.usher.rpc.netty.callback.ReConnCallBack;
 import team.opentech.usher.rpc.netty.callback.impl.RpcDefaultRequestCallBack;
 import team.opentech.usher.rpc.netty.callback.impl.RpcDefaultResponseCallBack;
-import team.opentech.usher.rpc.netty.enums.RpcNettyTypeEnum;
-import team.opentech.usher.rpc.netty.factory.NettyInitDtoFactory;
 import team.opentech.usher.rpc.netty.factory.RpcNettyFactory;
 import team.opentech.usher.rpc.netty.function.FunctionOne;
 import team.opentech.usher.rpc.netty.function.FunctionOneInterface;
-import java.io.IOException;
-import java.util.HashMap;
+import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -31,7 +31,7 @@ class RpcNettyNormalProviderTest {
         beans.put(functionOneInterface.getClass().getName(), functionOneInterface);
         RpcBeanFactory instance = RpcBeanFactory.getInstance(beans);
         RpcConfigFactory.setRpcConfig(RpcConfigFactory.newDefault());
-        RpcNetty netty = RpcNettyFactory.createNetty(RpcNettyTypeEnum.PROVIDER, NettyInitDtoFactory.createNettyInitDto("127.0.0.1", 8081, 1, new RpcDefaultRequestCallBack(instance.getRpcBeans())));
+        RpcNetty netty = RpcNettyFactory.createProvider(NettyInitDto.build(1, 8081, "127.0.0.1", new RpcDefaultRequestCallBack(instance.getRpcBeans()), 1), 60 * 60 * 1000L);
         System.out.println("providerStart");
         try {
             System.in.read();
@@ -44,7 +44,18 @@ class RpcNettyNormalProviderTest {
     void consumerInit() throws Exception {
 
         RpcConfigFactory.setRpcConfig(RpcConfigFactory.newDefault());
-        RpcNetty netty = RpcNettyFactory.createNetty(RpcNettyTypeEnum.CONSUMER, NettyInitDtoFactory.createNettyInitDto("127.0.0.1", 1, 8081, new RpcDefaultResponseCallBack()));
+        RpcNetty netty = RpcNettyFactory.createConsumer(NettyInitDto.build(1, 8081, "127.0.0.1", new RpcDefaultResponseCallBack(), 1), 60 * 60 * 1000L, new ReConnCallBack() {
+
+            @Override
+            public void onOffLine(NettyInitDto nettyInitDto) {
+
+            }
+
+            @Override
+            public void onReConn(NettyInitDto nettyInitDto) {
+
+            }
+        });
         System.out.println("consumerStart");
         RpcFactory build = RpcFactoryProducer.build(RpcTypeEnum.REQUEST);
         RpcHeader rpcHeader = new RpcHeader();

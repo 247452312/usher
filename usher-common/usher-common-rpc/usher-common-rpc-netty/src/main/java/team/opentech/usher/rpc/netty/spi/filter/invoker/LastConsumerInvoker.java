@@ -24,7 +24,7 @@ public class LastConsumerInvoker implements RpcInvoker {
     @Override
     public RpcData invoke(FilterContext context) {
         RpcData request = context.getRequestData();
-        LogUtil.info("请求唯一标示:{},方法:{}", request.unique().toString(), request.content().contentString());
+        LogUtil.debug("请求唯一标示:{},方法:{}", request.unique().toString(), request.content().contentString());
 
         if (netty.sendMsg(request.toBytes())) {
             return netty.wait(request.unique());

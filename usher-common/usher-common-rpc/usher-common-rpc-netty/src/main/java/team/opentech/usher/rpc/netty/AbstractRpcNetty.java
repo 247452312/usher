@@ -1,8 +1,9 @@
 package team.opentech.usher.rpc.netty;
 
-import team.opentech.usher.rpc.netty.callback.RpcCallBack;
 import io.netty.bootstrap.AbstractBootstrap;
 import io.netty.channel.Channel;
+import team.opentech.usher.rpc.netty.callback.RpcCallBack;
+import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -21,9 +22,9 @@ public abstract class AbstractRpcNetty implements RpcNetty {
     protected AbstractBootstrap<?, ? extends Channel> bootstrap;
 
     /**
-     * 回调
+     * 当前netty的必要信息
      */
-    protected RpcCallBack callback;
+    protected NettyInitDto nettyInitDto;
 
     protected AbstractRpcNetty() {
     }
@@ -31,7 +32,7 @@ public abstract class AbstractRpcNetty implements RpcNetty {
     @Override
     public void init(Object... params) throws InterruptedException {
         this.timeOut = (Long) params[0];
-        this.callback = (RpcCallBack) params[1];
+        this.nettyInitDto = (NettyInitDto) params[1];
     }
 
     public Long getTimeOut() {
@@ -48,10 +49,6 @@ public abstract class AbstractRpcNetty implements RpcNetty {
      * @return
      */
     public RpcCallBack getRpcCallBack() {
-        return callback;
-    }
-
-    public void setRpcCallback(RpcCallBack callback) {
-        this.callback = callback;
+        return nettyInitDto.getCallback();
     }
 }
