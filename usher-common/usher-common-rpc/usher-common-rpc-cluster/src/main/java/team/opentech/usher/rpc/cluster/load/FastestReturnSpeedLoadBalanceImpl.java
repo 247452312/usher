@@ -1,13 +1,13 @@
 package team.opentech.usher.rpc.cluster.load;
 
-import team.opentech.usher.UsherThreadLocal;
-import team.opentech.usher.rpc.annotation.RpcSpi;
-import team.opentech.usher.rpc.cluster.pojo.NettyInfo;
-import team.opentech.usher.rpc.cluster.pojo.SendInfo;
-import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
-import team.opentech.usher.rpc.netty.RpcNetty;
 import java.util.HashMap;
 import java.util.Map;
+import team.opentech.usher.UsherThreadLocal;
+import team.opentech.usher.rpc.annotation.RpcSpi;
+import team.opentech.usher.rpc.cluster.pojo.SendInfo;
+import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
+import team.opentech.usher.rpc.netty.core.RpcNettyConsumer;
+import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
 
 /**
  * 最快返回速度
@@ -24,13 +24,13 @@ public class FastestReturnSpeedLoadBalanceImpl extends AbstractLoadBalance {
      */
     private UsherThreadLocal<Long> timeThreadLocal;
 
-    private Map<NettyInfo, Long> lastFiveSendAvgTimeMap = new HashMap<>();
+    private Map<NettyInitDto, Long> lastFiveSendAvgTimeMap = new HashMap<>();
 
     @Override
-    protected NettyInfo getNettyInfo(SendInfo info, Map<NettyInfo, RpcNetty> nettyMap) {
-        NettyInfo fastNettyInfo = null;
+    protected NettyInitDto getNettyInfo(SendInfo info, Map<NettyInitDto, RpcNettyConsumer> nettyMap) {
+        NettyInitDto fastNettyInfo = null;
         long minTime = 0;
-        for (NettyInfo nettyInfo : nettyMap.keySet()) {
+        for (NettyInitDto nettyInfo : nettyMap.keySet()) {
             Long lastFiveSendAvgTime = lastFiveSendAvgTimeMap.putIfAbsent(fastNettyInfo, null);
             // 如果一个netty一次都没有执行过,那么就选它
             if (lastFiveSendAvgTime == null) {
@@ -51,14 +51,14 @@ public class FastestReturnSpeedLoadBalanceImpl extends AbstractLoadBalance {
     }
 
     @Override
-    protected void preprocessing(NettyInfo nettyInfo, RpcNetty netty) {
+    protected void preprocessing(NettyInitDto nettyInfo, RpcNettyConsumer netty) {
         long l = System.currentTimeMillis();
         timeThreadLocal = new UsherThreadLocal<>();
         timeThreadLocal.set(l);
     }
 
     @Override
-    protected void postProcessing(NettyInfo nettyInfo, RpcNetty netty, RpcData rpcData) {
+    protected void postProcessing(NettyInitDto nettyInfo, RpcNettyConsumer netty, RpcData rpcData) {
         long runTime = System.currentTimeMillis() - timeThreadLocal.get();
         timeThreadLocal.remove();
         Long lastFiveSendAvgTime = lastFiveSendAvgTimeMap.putIfAbsent(nettyInfo, runTime);
@@ -70,7 +70,7 @@ public class FastestReturnSpeedLoadBalanceImpl extends AbstractLoadBalance {
     }
 
     @Override
-    protected void exceptionHandle(NettyInfo nettyInfo, RpcNetty rpcNetty, Exception e) {
+    protected void exceptionHandle(NettyInitDto nettyInfo, RpcNettyConsumer rpcNetty, Exception e) {
         timeThreadLocal.remove();
     }
 }

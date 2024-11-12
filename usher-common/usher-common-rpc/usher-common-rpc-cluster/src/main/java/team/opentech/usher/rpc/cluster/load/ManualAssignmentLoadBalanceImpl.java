@@ -1,12 +1,12 @@
 package team.opentech.usher.rpc.cluster.load;
 
-import team.opentech.usher.rpc.annotation.RpcSpi;
-import team.opentech.usher.rpc.cluster.pojo.NettyInfo;
-import team.opentech.usher.rpc.cluster.pojo.SendInfo;
-import team.opentech.usher.rpc.netty.RpcNetty;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 import org.apache.commons.lang3.RandomUtils;
+import team.opentech.usher.rpc.annotation.RpcSpi;
+import team.opentech.usher.rpc.cluster.pojo.SendInfo;
+import team.opentech.usher.rpc.netty.core.RpcNettyConsumer;
+import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
 
 /**
  * 手动分配权重
@@ -21,19 +21,19 @@ public class ManualAssignmentLoadBalanceImpl extends AbstractLoadBalance {
     /**
      * 权重分配的标记
      */
-    private AtomicReferenceArray<NettyInfo> weightArrayForManualAssignment;
+    private AtomicReferenceArray<NettyInitDto> weightArrayForManualAssignment;
 
 
     @Override
     public void init(Object... objects) {
-        Map<NettyInfo, RpcNetty> nettyMap = (Map<NettyInfo, RpcNetty>) objects[0];
+        Map<NettyInitDto, RpcNettyConsumer> nettyMap = (Map<NettyInitDto, RpcNettyConsumer>) objects[0];
         int length = 0;
-        for (NettyInfo nettyInfo : nettyMap.keySet()) {
+        for (NettyInitDto nettyInfo : nettyMap.keySet()) {
             length += nettyInfo.getWeight();
         }
         weightArrayForManualAssignment = new AtomicReferenceArray<>(length);
         int writeIndex = 0;
-        for (NettyInfo nettyInfo : nettyMap.keySet()) {
+        for (NettyInitDto nettyInfo : nettyMap.keySet()) {
             int weight = nettyInfo.getWeight();
             for (int i = 0; i < weight; i++, writeIndex++) {
                 weightArrayForManualAssignment.set(writeIndex, nettyInfo);
@@ -43,7 +43,7 @@ public class ManualAssignmentLoadBalanceImpl extends AbstractLoadBalance {
 
 
     @Override
-    protected NettyInfo getNettyInfo(SendInfo info, Map<NettyInfo, RpcNetty> nettyMap) {
+    protected NettyInitDto getNettyInfo(SendInfo info, Map<NettyInitDto, RpcNettyConsumer> nettyMap) {
         int i = RandomUtils.nextInt(0, weightArrayForManualAssignment.length());
         return weightArrayForManualAssignment.get(i);
     }

@@ -1,14 +1,14 @@
 package team.opentech.usher.rpc.cluster;
 
+import java.util.List;
+import java.util.Map;
 import team.opentech.usher.annotation.NotNull;
 import team.opentech.usher.rpc.cluster.enums.LoadBalanceEnum;
-import team.opentech.usher.rpc.cluster.pojo.NettyInfo;
 import team.opentech.usher.rpc.cluster.pojo.SendInfo;
 import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
 import team.opentech.usher.rpc.netty.RpcNetty;
+import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
 import team.opentech.usher.rpc.spi.RpcSpiExtension;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 服务集群
@@ -52,7 +52,7 @@ public interface Cluster extends RpcSpiExtension {
      *
      * @return
      */
-    Map<NettyInfo, RpcNetty> getAllNetty();
+    Map<NettyInitDto, RpcNetty> getAllNetty();
 
 
     /**
@@ -82,7 +82,20 @@ public interface Cluster extends RpcSpiExtension {
      *
      * @return
      */
-    Boolean onServiceStatusChange(List<NettyInfo> nettyInfos);
+    Boolean onServiceStatusChange(List<NettyInitDto> nettyInfos);
 
+    /**
+     * 某个连接断开时
+     *
+     * @param nettyInitDto
+     */
+    void onOffLine(NettyInitDto nettyInitDto);
+
+    /**
+     * 某个连接重连时
+     *
+     * @param nettyInitDto
+     */
+    void onReConn(NettyInitDto nettyInitDto);
 
 }

@@ -37,4 +37,11 @@ public interface RpcNettyConsumer extends RpcNetty {
      * @param rpcData 返回值的内容
      */
     void put(RpcData rpcData);
+
+    /**
+     * 是否活着
+     *
+     * @return
+     */
+    boolean isActive();
 }

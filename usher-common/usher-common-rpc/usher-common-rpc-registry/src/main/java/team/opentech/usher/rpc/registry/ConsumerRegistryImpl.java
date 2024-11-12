@@ -1,9 +1,15 @@
 package team.opentech.usher.rpc.registry;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import team.opentech.usher.rpc.annotation.RpcSpi;
 import team.opentech.usher.rpc.cluster.Cluster;
 import team.opentech.usher.rpc.cluster.ClusterFactory;
-import team.opentech.usher.rpc.cluster.pojo.NettyInfo;
 import team.opentech.usher.rpc.cluster.pojo.SendInfo;
 import team.opentech.usher.rpc.config.RpcConfigFactory;
 import team.opentech.usher.rpc.content.ClusterNameContext;
@@ -12,7 +18,6 @@ import team.opentech.usher.rpc.exception.RpcShowDownException;
 import team.opentech.usher.rpc.exchange.pojo.content.impl.RpcRequestContentImpl;
 import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
 import team.opentech.usher.rpc.netty.callback.RpcCallBackFactory;
-import team.opentech.usher.rpc.netty.factory.NettyInitDtoFactory;
 import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
 import team.opentech.usher.rpc.registry.mode.ConsumerRegistryCenterHandler;
 import team.opentech.usher.rpc.registry.mode.RegistryCenterHandler;
@@ -25,13 +30,6 @@ import team.opentech.usher.util.CollectionUtil;
 import team.opentech.usher.util.IpUtil;
 import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.StringUtil;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -124,24 +122,19 @@ public class ConsumerRegistryImpl extends AbstractRegistry implements ConsumerRe
     }
 
     private void onEvent(RegistryEvent event) {
-        Map<String, List<NettyInfo>> registryNettyInfoMap = event.getRegistryNettyInfoMap();
-        for (Entry<String, List<NettyInfo>> entry : registryNettyInfoMap.entrySet()) {
+        Map<String, List<NettyInitDto>> registryNettyInfoMap = event.getRegistryNettyInfoMap();
+        for (Entry<String, List<NettyInitDto>> entry : registryNettyInfoMap.entrySet()) {
             String clusterName = entry.getKey();
-            List<NettyInfo> value = entry.getValue();
-            List<NettyInitDto> nettyInitDtos = value.stream().map(t -> {
-                try {
-                    return NettyInitDtoFactory.createNettyInitDto(t.getHost(), t.getPort(), t.getWeight(), RpcCallBackFactory.createResponseCallBack());
-                } catch (InterruptedException e) {
-                    LogUtil.error(this, e);
-                    return null;
-                }
-            }).collect(Collectors.toList());
+            List<NettyInitDto> value = entry.getValue();
+            for (NettyInitDto nettyInitDto : value) {
+                nettyInitDto.setCallback(RpcCallBackFactory.createResponseCallBack());
+            }
             if (clusters.containsKey(clusterName)) {
                 Cluster cluster = clusters.get(clusterName);
                 cluster.onServiceStatusChange(value);
             } else {
                 try {
-                    Cluster defaultConsumerCluster = ClusterFactory.createDefaultConsumerCluster(this.serviceClass, nettyInitDtos.toArray(new NettyInitDto[0]));
+                    Cluster defaultConsumerCluster = ClusterFactory.createDefaultConsumerCluster(this.serviceClass, value.toArray(new NettyInitDto[0]));
                     clusters.put(clusterName, defaultConsumerCluster);
                 } catch (Exception e) {
                     LogUtil.error(this, e);
@@ -175,10 +168,10 @@ public class ConsumerRegistryImpl extends AbstractRegistry implements ConsumerRe
 
             // 是否允许调用自身
             if (Boolean.TRUE.equals(RpcConfigFactory.getInstance().getProtocol().getAutoUseSelf()) && isSelfService(necessaryInfo.getHost(), necessaryInfo.getPort())) {
-                nettyInits[i] = NettyInitDtoFactory.createSelfNettyInitDto();
+                nettyInits[i] = NettyInitDto.buildSelf();
                 continue;
             }
-            nettyInits[i] = NettyInitDtoFactory.createNettyInitDto(necessaryInfo.getHost(), necessaryInfo.getPort(), necessaryInfo.getWeight().intValue(), RpcCallBackFactory.createResponseCallBack());
+            nettyInits[i] = NettyInitDto.build(i, necessaryInfo.getPort(), necessaryInfo.getHost(), RpcCallBackFactory.createResponseCallBack(), necessaryInfo.getWeight().intValue());
         }
         try {
             return ClusterFactory.createDefaultConsumerCluster(this.serviceClass, nettyInits);

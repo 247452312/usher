@@ -1,13 +1,14 @@
 package team.opentech.usher.rpc.cluster.load;
 
-import team.opentech.usher.rpc.cluster.pojo.NettyInfo;
+import java.util.Map;
+import org.apache.commons.lang3.RandomUtils;
+import org.jetbrains.annotations.Nullable;
 import team.opentech.usher.rpc.cluster.pojo.SendInfo;
 import team.opentech.usher.rpc.exception.RpcNetException;
 import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
-import team.opentech.usher.rpc.netty.RpcNetty;
+import team.opentech.usher.rpc.netty.core.RpcNettyConsumer;
+import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
 import team.opentech.usher.util.LogUtil;
-import java.util.Map;
-import org.apache.commons.lang3.RandomUtils;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -27,21 +28,11 @@ public abstract class AbstractLoadBalance implements LoadBalanceInterface {
     static final Integer NETTY_INFO_TYPE = 2;
 
     @Override
-    public RpcData send(RpcData rpcSendData, SendInfo info, Map<NettyInfo, RpcNetty> nettyMap) throws InterruptedException {
+    public RpcData send(RpcData rpcSendData, SendInfo info, String interfaceName, Map<NettyInitDto, RpcNettyConsumer> nettyMap) throws InterruptedException {
         /*1.通过子类查询出要使用的netty 2.发送信息*/
-        NettyInfo nettyInfo = null;
-        RpcNetty rpcNetty = null;
-        int type = getType();
-        if (type == 1) {
-            int index = getIndex(info, nettyMap.size());
-            index = index % nettyMap.size();
-            nettyInfo = nettyMap.keySet().toArray(new NettyInfo[0])[index];
-            rpcNetty = nettyMap.get(nettyInfo);
+        NettyInitDto nettyInfo = findOnlineNettyInfoAndRemoveOffLine(info, nettyMap, interfaceName);
 
-        } else if (type == 2) {
-            nettyInfo = getNettyInfo(info, nettyMap);
-            rpcNetty = nettyMap.get(nettyInfo);
-        }
+        RpcNettyConsumer rpcNetty = nettyMap.get(nettyInfo);
         // 发送信息
         if (rpcNetty != null) {
             preprocessing(nettyInfo, rpcNetty);
@@ -61,7 +52,6 @@ public abstract class AbstractLoadBalance implements LoadBalanceInterface {
         throw new RpcNetException("netty没有找到");
 
     }
-
 
     /**
      * 通过指定算法计算出要获取的netty的下标
@@ -84,7 +74,7 @@ public abstract class AbstractLoadBalance implements LoadBalanceInterface {
      *
      * @return 一个指定算法计算出的key
      */
-    protected NettyInfo getNettyInfo(SendInfo info, Map<NettyInfo, RpcNetty> nettyMap) {
+    protected NettyInitDto getNettyInfo(SendInfo info, Map<NettyInitDto, RpcNettyConsumer> nettyMap) {
         return null;
     }
 
@@ -104,13 +94,13 @@ public abstract class AbstractLoadBalance implements LoadBalanceInterface {
      *
      * @return 要实现的方式
      */
-    protected void preprocessing(NettyInfo nettyInfo, RpcNetty netty) {
+    protected void preprocessing(NettyInitDto nettyInfo, RpcNettyConsumer netty) {
     }
 
     /**
      * 后置处理
      */
-    protected void postProcessing(NettyInfo nettyInfo, RpcNetty netty, RpcData rpcData) {
+    protected void postProcessing(NettyInitDto nettyInfo, RpcNettyConsumer netty, RpcData rpcData) {
     }
 
     /**
@@ -119,7 +109,25 @@ public abstract class AbstractLoadBalance implements LoadBalanceInterface {
      * @param rpcNetty
      * @param e
      */
-    protected void exceptionHandle(NettyInfo nettyInfo, RpcNetty rpcNetty, Exception e) {
+    protected void exceptionHandle(NettyInitDto nettyInfo, RpcNettyConsumer rpcNetty, Exception e) {
 
+    }
+
+    @Nullable
+    private NettyInitDto findOnlineNettyInfoAndRemoveOffLine(SendInfo info, Map<NettyInitDto, RpcNettyConsumer> nettyMap, String interfaceName) {
+        NettyInitDto nettyInfo = null;
+        int type = getType();
+        if (nettyMap.isEmpty()) {
+            throw new RpcNetException("未找到任何连接,服务名称:" + interfaceName);
+        }
+
+        if (type == 1) {
+            int index = getIndex(info, nettyMap.size());
+            index = index % nettyMap.size();
+            nettyInfo = nettyMap.keySet().toArray(new NettyInitDto[0])[index];
+        } else if (type == 2) {
+            nettyInfo = getNettyInfo(info, nettyMap);
+        }
+        return nettyInfo;
     }
 }

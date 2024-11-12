@@ -1,10 +1,10 @@
 package team.opentech.usher.rpc.cluster.load;
 
-import team.opentech.usher.rpc.cluster.enums.LoadBalanceEnum;
-import team.opentech.usher.rpc.cluster.pojo.NettyInfo;
-import team.opentech.usher.rpc.netty.RpcNetty;
-import team.opentech.usher.rpc.spi.RpcSpiManager;
 import java.util.Map;
+import team.opentech.usher.rpc.cluster.enums.LoadBalanceEnum;
+import team.opentech.usher.rpc.netty.core.RpcNettyConsumer;
+import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
+import team.opentech.usher.rpc.spi.RpcSpiManager;
 
 /**
  * 负载均衡器工厂
@@ -26,7 +26,7 @@ public class LoadBalanceFactory {
      *
      * @return
      */
-    public static LoadBalanceInterface createByLoadBalanceEnum(LoadBalanceEnum loadBalanceEnum, Map<NettyInfo, RpcNetty> nettyMap) throws InterruptedException {
+    public static LoadBalanceInterface createByLoadBalanceEnum(LoadBalanceEnum loadBalanceEnum, Map<NettyInitDto, RpcNettyConsumer> nettyMap) throws InterruptedException {
         // 返回一个构造完成的消费者
         return (LoadBalanceInterface) RpcSpiManager.createOrGetExtensionByClass(LoadBalanceInterface.class, loadBalanceEnum.getSpiName(), nettyMap);
 

@@ -1,9 +1,9 @@
 package team.opentech.usher.rpc.registry.pojo.event;
 
 
-import team.opentech.usher.rpc.cluster.pojo.NettyInfo;
 import java.util.List;
 import java.util.Map;
+import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
 
 /**
  * 注册中心发来的消息
@@ -17,13 +17,13 @@ public class RegistryEvent {
      * 对应的服务信息
      * key->集群名称 value 集群中所有服务器
      */
-    private Map<String, List<NettyInfo>> registryNettyInfoMap;
+    private Map<String, List<NettyInitDto>> registryNettyInfoMap;
 
-    public Map<String, List<NettyInfo>> getRegistryNettyInfoMap() {
+    public Map<String, List<NettyInitDto>> getRegistryNettyInfoMap() {
         return registryNettyInfoMap;
     }
 
-    public void setRegistryNettyInfoMap(Map<String, List<NettyInfo>> registryNettyInfoMap) {
+    public void setRegistryNettyInfoMap(Map<String, List<NettyInitDto>> registryNettyInfoMap) {
         this.registryNettyInfoMap = registryNettyInfoMap;
     }
 }

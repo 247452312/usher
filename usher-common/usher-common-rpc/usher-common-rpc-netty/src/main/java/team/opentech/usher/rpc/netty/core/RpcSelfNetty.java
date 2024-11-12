@@ -1,8 +1,10 @@
 package team.opentech.usher.rpc.netty.core;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.jetbrains.annotations.NotNull;
 import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
 import team.opentech.usher.rpc.factory.RpcBeanFactory;
-import team.opentech.usher.rpc.netty.RpcNetty;
 import team.opentech.usher.rpc.netty.callback.RpcCallBackFactory;
 import team.opentech.usher.rpc.netty.core.handler.RpcConsumerHandler;
 import team.opentech.usher.rpc.netty.core.handler.RpcProviderHandler;
@@ -15,8 +17,6 @@ import team.opentech.usher.rpc.netty.spi.step.template.ConsumerResponseByteExten
 import team.opentech.usher.rpc.netty.spi.step.template.ConsumerResponseDataExtension;
 import team.opentech.usher.rpc.netty.spi.step.template.ProviderRequestByteExtension;
 import team.opentech.usher.rpc.spi.RpcSpiManager;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 调用自身服务的rpcSelfNetty
@@ -24,7 +24,7 @@ import java.util.List;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年07月26日 10时16分
  */
-public class RpcSelfNetty<T> implements RpcNetty {
+public class RpcSelfNetty<T> implements RpcNettyConsumer {
 
     private final Class<T> targetClass;
 
@@ -101,5 +101,29 @@ public class RpcSelfNetty<T> implements RpcNetty {
      */
     public RpcData parseInvoke(byte[] invoke) throws InterruptedException {
         return RpcConsumerHandler.invokeResponseBytes(invoke, consumerResponseByteFilters, consumerResponseDataFilters, RpcCallBackFactory.createResponseCallBack());
+    }
+
+    @Override
+    public boolean sendMsg(byte[] bytes) {
+        // 调用本体不会用到这个方法
+        return false;
+    }
+
+    @NotNull
+    @Override
+    public RpcData wait(Long unique) {
+        // 调用本体不会用到这个方法
+        return null;
+    }
+
+    @Override
+    public void put(RpcData rpcData) {
+        // 调用本体不会用到这个方法
+    }
+
+    @Override
+    public boolean isActive() {
+        // 调用本体不会下线
+        return true;
     }
 }

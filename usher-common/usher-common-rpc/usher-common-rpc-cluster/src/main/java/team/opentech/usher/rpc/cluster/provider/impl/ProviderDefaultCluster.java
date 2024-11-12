@@ -1,8 +1,10 @@
 package team.opentech.usher.rpc.cluster.provider.impl;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import team.opentech.usher.rpc.annotation.RpcSpi;
 import team.opentech.usher.rpc.cluster.enums.LoadBalanceEnum;
-import team.opentech.usher.rpc.cluster.pojo.NettyInfo;
 import team.opentech.usher.rpc.cluster.pojo.SendInfo;
 import team.opentech.usher.rpc.cluster.provider.AbstractProviderCluster;
 import team.opentech.usher.rpc.exception.RpcSpiInitException;
@@ -10,13 +12,9 @@ import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
 import team.opentech.usher.rpc.factory.RpcBeanFactory;
 import team.opentech.usher.rpc.netty.RpcNetty;
 import team.opentech.usher.rpc.netty.callback.RpcCallBackFactory;
-import team.opentech.usher.rpc.netty.enums.RpcNettyTypeEnum;
 import team.opentech.usher.rpc.netty.factory.RpcNettyFactory;
 import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
 import team.opentech.usher.util.IpUtil;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -28,7 +26,7 @@ public class ProviderDefaultCluster extends AbstractProviderCluster {
     /**
      * netty信息
      */
-    private NettyInfo nettyInfo;
+    private NettyInitDto nettyInfo;
 
     /**
      * netty的本体
@@ -56,8 +54,8 @@ public class ProviderDefaultCluster extends AbstractProviderCluster {
         }
         nettyInit.setHost(IpUtil.getIp());
         nettyInit.setPort(port);
-        RpcNetty initNetty = RpcNettyFactory.createNetty(RpcNettyTypeEnum.PROVIDER, nettyInit);
-        NettyInfo initNettyInfo = new NettyInfo();
+        RpcNetty initNetty = RpcNettyFactory.createProvider(nettyInit, 1000L * 60 * 60);
+        NettyInitDto initNettyInfo = new NettyInitDto();
         initNettyInfo.setIndexInColony(1);
 
         this.nettyInfo = initNettyInfo;
@@ -86,8 +84,8 @@ public class ProviderDefaultCluster extends AbstractProviderCluster {
     }
 
     @Override
-    public Map<NettyInfo, RpcNetty> getAllNetty() {
-        Map<NettyInfo, RpcNetty> nettyInfoRpcNettyMap = new HashMap<>(1);
+    public Map<NettyInitDto, RpcNetty> getAllNetty() {
+        Map<NettyInitDto, RpcNetty> nettyInfoRpcNettyMap = new HashMap<>(1);
         nettyInfoRpcNettyMap.put(nettyInfo, netty);
         return nettyInfoRpcNettyMap;
     }
@@ -104,7 +102,7 @@ public class ProviderDefaultCluster extends AbstractProviderCluster {
 
 
     @Override
-    public Boolean onServiceStatusChange(List<NettyInfo> nettyInfos) {
+    public Boolean onServiceStatusChange(List<NettyInitDto> nettyInfos) {
         return Boolean.TRUE;
     }
 
@@ -116,5 +114,15 @@ public class ProviderDefaultCluster extends AbstractProviderCluster {
     @Override
     public Float getWeight() {
         return 0F;
+    }
+
+    @Override
+    public void onOffLine(NettyInitDto nettyInitDto) {
+
+    }
+
+    @Override
+    public void onReConn(NettyInitDto nettyInitDto) {
+
     }
 }

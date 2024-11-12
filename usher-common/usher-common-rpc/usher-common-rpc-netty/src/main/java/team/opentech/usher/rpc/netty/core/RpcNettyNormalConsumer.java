@@ -1,16 +1,5 @@
 package team.opentech.usher.rpc.netty.core;
 
-import team.opentech.usher.rpc.annotation.RpcSpi;
-import team.opentech.usher.rpc.exception.RpcTimeOutException;
-import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
-import team.opentech.usher.rpc.netty.AbstractRpcNetty;
-import team.opentech.usher.rpc.netty.core.handler.RpcConsumerHandler;
-import team.opentech.usher.rpc.netty.spi.filter.FilterContext;
-import team.opentech.usher.rpc.netty.spi.filter.filter.InvokerChainBuilder;
-import team.opentech.usher.rpc.netty.spi.filter.invoker.LastConsumerInvoker;
-import team.opentech.usher.rpc.netty.spi.filter.invoker.RpcInvoker;
-import team.opentech.usher.rpc.netty.util.FixedLengthQueue;
-import team.opentech.usher.util.LogUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -28,6 +17,19 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import team.opentech.usher.rpc.annotation.RpcSpi;
+import team.opentech.usher.rpc.exception.RpcTimeOutException;
+import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
+import team.opentech.usher.rpc.netty.AbstractRpcNetty;
+import team.opentech.usher.rpc.netty.callback.ReConnCallBack;
+import team.opentech.usher.rpc.netty.core.handler.RpcConsumerHandler;
+import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
+import team.opentech.usher.rpc.netty.spi.filter.FilterContext;
+import team.opentech.usher.rpc.netty.spi.filter.filter.InvokerChainBuilder;
+import team.opentech.usher.rpc.netty.spi.filter.invoker.LastConsumerInvoker;
+import team.opentech.usher.rpc.netty.spi.filter.invoker.RpcInvoker;
+import team.opentech.usher.rpc.netty.util.FixedLengthQueue;
+import team.opentech.usher.util.LogUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -39,43 +41,52 @@ public class RpcNettyNormalConsumer extends AbstractRpcNetty implements RpcNetty
     /**
      * 客户端
      */
-    private EventLoopGroup group;
+    protected EventLoopGroup group;
+
+    /**
+     * 客户端
+     */
+    protected Bootstrap client;
 
     /**
      * 客户端channel
      */
-    private ChannelFuture channelFuture;
+    protected ChannelFuture channelFuture;
 
     /*如果返回值来了,先判断是不是超时了, 如果超时了, 就直接释放内存, 如果没有超时,就先把值放入rpcResponse,然后唤醒*/
 
     /**
      * 存储返回值->如果返回值来了 但是还没有wait,就把返回值存在这里
      */
-    private Map<Long, RpcData> rpcResponseMap = new ConcurrentHashMap<>();
+    protected Map<Long, RpcData> rpcResponseMap = new ConcurrentHashMap<>();
 
     /**
      * 记录等待中的请求 -> 想获取的时候 还没有返回
      */
-    private volatile Map<Long, CountDownLatch> waitLock = new ConcurrentHashMap<>();
+    protected volatile Map<Long, CountDownLatch> waitLock = new ConcurrentHashMap<>();
 
     /**
      * 超时的记录在这里,防止返回值的内存溢出
      */
-    private FixedLengthQueue<Long> timeOutUnique = new FixedLengthQueue<>(200, Long.class);
+    protected FixedLengthQueue<Long> timeOutUnique = new FixedLengthQueue<>(200, Long.class);
+
+    /**
+     * 断线重连成功回调
+     */
+    protected ReConnCallBack offlineRetrySuccessCallBack;
 
 
     @Override
     public void init(Object... params) throws InterruptedException {
         super.init(params);
 
-        String host = (String) params[2];
-        Integer port = (Integer) params[3];
+        this.offlineRetrySuccessCallBack = (ReConnCallBack) params[2];
 
-        Bootstrap client = new Bootstrap();
+        this.client = new Bootstrap();
         EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
         this.group = eventLoopGroup;
         this.bootstrap = client;
-        client.group(eventLoopGroup)
+        this.client.group(eventLoopGroup)
               .channel(NioSocketChannel.class)
               .handler(new LoggingHandler(LogLevel.DEBUG))
               .handler(new ChannelInitializer<NioSocketChannel>() {
@@ -85,11 +96,16 @@ public class RpcNettyNormalConsumer extends AbstractRpcNetty implements RpcNetty
                       ChannelPipeline p = ch.pipeline();
                       p.addLast("length-decoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 3, 4, 9, 0));
                       p.addLast("byte-to-object", new RpcConsumerHandler(getRpcCallBack(), RpcNettyNormalConsumer.this));
+                      p.addLast("offline-retry-connect", new RpcFibonacciSequenceRetryHandle(RpcNettyNormalConsumer.this));
                   }
               });
 
         //连接服务器
-        this.channelFuture = client.connect(host, port);
+        this.channelFuture = client.connect(nettyInitDto.getHost(), nettyInitDto.getPort());
+    }
+
+    public NettyInitDto getNettyInitDto() {
+        return this.nettyInitDto;
     }
 
     @Override
@@ -136,7 +152,7 @@ public class RpcNettyNormalConsumer extends AbstractRpcNetty implements RpcNetty
             // 等待第一次
             CountDownLatch value = new CountDownLatch(1);
             waitLock.put(unique, value);
-            LogUtil.info("请求进入等待状态,标识:{}", unique.toString());
+            LogUtil.debug("请求进入等待状态,标识:{}", unique.toString());
             //阻塞
             value.await(50000L, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
@@ -147,10 +163,10 @@ public class RpcNettyNormalConsumer extends AbstractRpcNetty implements RpcNetty
         if (rpcResponseMap.containsKey(unique)) {
             RpcData rpcData = rpcResponseMap.get(unique);
             rpcResponseMap.remove(unique);
-            LogUtil.info("请求等待后接收到信息,标识:{}", unique.toString());
+            LogUtil.debug("请求等待后接收到信息,标识:{}", unique.toString());
             return rpcData;
         }
-        LogUtil.info("请求没有接收到信息,标识:{}", unique.toString());
+        LogUtil.debug("请求没有接收到信息,标识:{}", unique.toString());
         timeOutUnique.add(unique);
         throw new RpcTimeOutException("rpc超出最大等待时间:" + getTimeOut());
     }
@@ -168,10 +184,18 @@ public class RpcNettyNormalConsumer extends AbstractRpcNetty implements RpcNetty
         if (contain) {
             return;
         }
-        LogUtil.info("返回唯一标示:{}", unique.toString());
+        LogUtil.debug("返回唯一标示:{}", unique.toString());
         rpcResponseMap.put(unique, rpcData);
         // 尝试唤醒
         awaken(unique);
+    }
+
+    @Override
+    public boolean isActive() {
+        if (channelFuture == null) {
+            return false;
+        }
+        return channelFuture.channel().isActive();
     }
 
     private void awaken(Long unique) {

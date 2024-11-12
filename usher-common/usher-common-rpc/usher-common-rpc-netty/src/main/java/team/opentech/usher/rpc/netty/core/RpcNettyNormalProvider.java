@@ -15,6 +15,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import team.opentech.usher.rpc.netty.pojo.NettyInitDto;
 
 /**
  * netty服务提供者
@@ -45,8 +46,7 @@ public class RpcNettyNormalProvider extends AbstractRpcNetty implements RpcNetty
     public void init(Object... params) throws InterruptedException {
         super.init(params);
 
-        String host = (String) params[2];
-        Integer port = (Integer) params[3];
+        NettyInitDto param = (NettyInitDto) params[1];
         bossGroup = new NioEventLoopGroup(1);
         workerGroup = new NioEventLoopGroup();
 
@@ -65,7 +65,7 @@ public class RpcNettyNormalProvider extends AbstractRpcNetty implements RpcNetty
              }
          });
 
-        b.bind(port).sync();
+        b.bind(param.getPort()).sync();
         this.bootstrap = b;
     }
 
