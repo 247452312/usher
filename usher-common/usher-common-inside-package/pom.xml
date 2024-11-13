@@ -121,6 +121,11 @@
             </dependency>
             <dependency>
                 <groupId>team.opentech.usher</groupId>
+                <artifactId>usher-api-provider-ai-control</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>team.opentech.usher</groupId>
                 <artifactId>usher-api-provider-algorithm</artifactId>
                 <version>${project.version}</version>
             </dependency>

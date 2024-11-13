@@ -24,6 +24,7 @@
         <module>usher-service-work-orders</module>
         <module>usher-service-all</module>
         <module>usher-service-gateway</module>
+        <module>usher-service-ai-control</module>
     </modules>
 
 
