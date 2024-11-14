@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>usher-service-gateway</artifactId>
+    <artifactId>usher-service-external-gateway</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
