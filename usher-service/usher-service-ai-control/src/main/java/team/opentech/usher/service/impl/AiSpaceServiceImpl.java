@@ -1,21 +1,28 @@
 package team.opentech.usher.service.impl;
 
+import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.AiSpaceAssembler;
+import team.opentech.usher.assembler.AiSubspaceAssembler;
 import team.opentech.usher.pojo.DO.AiSpaceDO;
 import team.opentech.usher.pojo.DTO.AiSpaceDTO;
+import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
 import team.opentech.usher.pojo.cqe.AddUserToSpaceCommand;
+import team.opentech.usher.pojo.cqe.CreateSubSpaceCommand;
+import team.opentech.usher.pojo.cqe.FindSubSpaceBySpaceIdQuery;
 import team.opentech.usher.pojo.cqe.RemoveSpaceCommand;
 import team.opentech.usher.pojo.cqe.RemoveUserFromSpaceCommand;
 import team.opentech.usher.pojo.cqe.SpaceCreateCommand;
 import team.opentech.usher.pojo.entity.AiSpace;
+import team.opentech.usher.pojo.entity.AiSubspace;
 import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.event.CleanSpaceUserEvent;
 import team.opentech.usher.repository.AiSpaceRepository;
 import team.opentech.usher.repository.AiSpaceUserLinkRepository;
+import team.opentech.usher.repository.AiSubspaceRepository;
 import team.opentech.usher.service.AiSpaceService;
 import team.opentech.usher.util.Asserts;
 
@@ -32,6 +39,12 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
 
     @Resource
     private AiSpaceUserLinkRepository userLinkRepository;
+
+    @Resource
+    private AiSubspaceAssembler subspaceAssembler;
+
+    @Resource
+    private AiSubspaceRepository subspaceRepository;
 
     public AiSpaceServiceImpl(AiSpaceAssembler assembler, AiSpaceRepository repository) {
         super(assembler, repository);
@@ -64,6 +77,13 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
     }
 
     @Override
+    public Boolean createSubSpace(CreateSubSpaceCommand command) {
+        AiSubspace subspace = subspaceAssembler.toEntity(command);
+        subspace.saveSelf(subspaceRepository);
+        return Boolean.TRUE;
+    }
+
+    @Override
     public Boolean removeSpace(RemoveSpaceCommand command) {
         AiSpace aiSpace = rep.find(Identifier.build(command.getSpaceId()));
         Asserts.assertTrue(aiSpace != null, "指定的独立空间不存在!");
@@ -74,5 +94,11 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
     @Override
     public void cleanSpaceUserEvent(CleanSpaceUserEvent event) {
         userLinkRepository.removeBySpaceId(event.getSpaceId());
+    }
+
+    @Override
+    public List<AiSubspaceDTO> findSubSpaceBySpaceId(FindSubSpaceBySpaceIdQuery query) {
+        List<AiSubspace> bySpaceId = subspaceRepository.findBySpaceId(query.getApaceId());
+        return subspaceAssembler.listEntityToDTO(bySpaceId);
     }
 }

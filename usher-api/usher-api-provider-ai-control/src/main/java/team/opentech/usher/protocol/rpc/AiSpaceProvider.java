@@ -1,7 +1,11 @@
 package team.opentech.usher.protocol.rpc;
 
+import java.util.List;
 import team.opentech.usher.pojo.DTO.AiSpaceDTO;
+import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
 import team.opentech.usher.pojo.cqe.AddUserToSpaceCommand;
+import team.opentech.usher.pojo.cqe.CreateSubSpaceCommand;
+import team.opentech.usher.pojo.cqe.FindSubSpaceBySpaceIdQuery;
 import team.opentech.usher.pojo.cqe.RemoveSpaceCommand;
 import team.opentech.usher.pojo.cqe.RemoveUserFromSpaceCommand;
 import team.opentech.usher.pojo.cqe.SpaceCreateCommand;
@@ -39,9 +43,28 @@ public interface AiSpaceProvider extends DTOProvider<AiSpaceDTO> {
     Boolean removeUserFromSpace(RemoveUserFromSpaceCommand command);
 
     /**
+     * 创建一个子空间
+     *
+     * @param command
+     *
+     * @return
+     */
+    Boolean createSubSpace(CreateSubSpaceCommand command);
+
+    /**
      * 移除空间
      *
      * @return 是否移除成功
      */
     Boolean removeSpace(RemoveSpaceCommand command);
+
+
+    /**
+     * 根据独立空间id获取独立空间下所有子空间
+     *
+     * @param query
+     *
+     * @return
+     */
+    List<AiSubspaceDTO> findSubSpaceBySpaceId(FindSubSpaceBySpaceIdQuery query);
 }

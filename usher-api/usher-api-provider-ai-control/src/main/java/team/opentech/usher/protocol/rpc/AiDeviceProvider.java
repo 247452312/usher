@@ -1,6 +1,8 @@
 package team.opentech.usher.protocol.rpc;
 
+import java.util.List;
 import team.opentech.usher.pojo.DTO.AiDeviceDTO;
+import team.opentech.usher.pojo.cqe.FindDeviceBySubSpaceIdQuery;
 import team.opentech.usher.protocol.rpc.base.DTOProvider;
 
 /**
@@ -12,4 +14,12 @@ import team.opentech.usher.protocol.rpc.base.DTOProvider;
  */
 public interface AiDeviceProvider extends DTOProvider<AiDeviceDTO> {
 
+    /**
+     * 根据子空间id获取设备id
+     *
+     * @param query
+     *
+     * @return
+     */
+    List<AiDeviceDTO> findDeviceBySubSpaceId(FindDeviceBySubSpaceIdQuery query);
 }

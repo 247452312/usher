@@ -1,7 +1,9 @@
 package team.opentech.usher.protocol.rpc.impl;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import team.opentech.usher.pojo.DTO.AiDeviceDTO;
+import team.opentech.usher.pojo.cqe.FindDeviceBySubSpaceIdQuery;
 import team.opentech.usher.protocol.rpc.AiDeviceProvider;
 import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
@@ -21,6 +23,11 @@ public class AiDeviceProviderImpl extends BaseDefaultProvider<AiDeviceDTO> imple
 
     @Autowired
     private AiDeviceService service;
+
+    @Override
+    public List<AiDeviceDTO> findDeviceBySubSpaceId(FindDeviceBySubSpaceIdQuery query) {
+        return service.findDeviceBySubSpaceId(query);
+    }
 
 
     @Override

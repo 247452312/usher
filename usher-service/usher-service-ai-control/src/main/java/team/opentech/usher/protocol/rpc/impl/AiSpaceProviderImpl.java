@@ -1,8 +1,12 @@
 package team.opentech.usher.protocol.rpc.impl;
 
+import java.util.List;
 import javax.annotation.Resource;
 import team.opentech.usher.pojo.DTO.AiSpaceDTO;
+import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
 import team.opentech.usher.pojo.cqe.AddUserToSpaceCommand;
+import team.opentech.usher.pojo.cqe.CreateSubSpaceCommand;
+import team.opentech.usher.pojo.cqe.FindSubSpaceBySpaceIdQuery;
 import team.opentech.usher.pojo.cqe.RemoveSpaceCommand;
 import team.opentech.usher.pojo.cqe.RemoveUserFromSpaceCommand;
 import team.opentech.usher.pojo.cqe.SpaceCreateCommand;
@@ -42,8 +46,19 @@ public class AiSpaceProviderImpl extends BaseDefaultProvider<AiSpaceDTO> impleme
     }
 
     @Override
+    public Boolean createSubSpace(CreateSubSpaceCommand command) {
+        return service.createSubSpace(command);
+    }
+
+
+    @Override
     public Boolean removeSpace(RemoveSpaceCommand command) {
         return service.removeSpace(command);
+    }
+
+    @Override
+    public List<AiSubspaceDTO> findSubSpaceBySpaceId(FindSubSpaceBySpaceIdQuery query) {
+        return service.findSubSpaceBySpaceId(query);
     }
 
 

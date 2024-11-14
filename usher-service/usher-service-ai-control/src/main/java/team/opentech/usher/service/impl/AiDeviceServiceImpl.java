@@ -7,6 +7,7 @@ import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.AiDeviceAssembler;
 import team.opentech.usher.pojo.DO.AiDeviceDO;
 import team.opentech.usher.pojo.DTO.AiDeviceDTO;
+import team.opentech.usher.pojo.cqe.FindDeviceBySubSpaceIdQuery;
 import team.opentech.usher.pojo.entity.AiDevice;
 import team.opentech.usher.pojo.event.DeviceCleanEvent;
 import team.opentech.usher.pojo.event.DeviceInstructionCleanEvent;
@@ -45,5 +46,11 @@ public class AiDeviceServiceImpl extends AbstractDoService<AiDeviceDO, AiDevice,
     @Override
     public void deviceInstructionCleanEvent(DeviceInstructionCleanEvent event) {
         instructionRepository.removeByDeviceId(event.getDeviceId());
+    }
+
+    @Override
+    public List<AiDeviceDTO> findDeviceBySubSpaceId(FindDeviceBySubSpaceIdQuery query) {
+        List<AiDevice> bySubSpaceId = rep.findBySubSpaceId(query.getSpaceId());
+        return assem.listEntityToDTO(bySubSpaceId);
     }
 }

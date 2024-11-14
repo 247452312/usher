@@ -1,7 +1,9 @@
 package team.opentech.usher.service;
 
 
+import java.util.List;
 import team.opentech.usher.pojo.DTO.AiDeviceDTO;
+import team.opentech.usher.pojo.cqe.FindDeviceBySubSpaceIdQuery;
 import team.opentech.usher.pojo.event.DeviceCleanEvent;
 import team.opentech.usher.pojo.event.DeviceInstructionCleanEvent;
 
@@ -27,4 +29,14 @@ public interface AiDeviceService extends BaseDoService<AiDeviceDTO> {
      * @param event
      */
     void deviceInstructionCleanEvent(DeviceInstructionCleanEvent event);
+
+    /**
+     * 根据子空间id获取设备id
+     *
+     * @param query
+     *
+     * @return
+     */
+    List<AiDeviceDTO> findDeviceBySubSpaceId(FindDeviceBySubSpaceIdQuery query);
+
 }

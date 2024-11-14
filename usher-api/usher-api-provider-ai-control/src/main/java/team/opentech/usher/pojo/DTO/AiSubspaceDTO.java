@@ -1,5 +1,6 @@
 package team.opentech.usher.pojo.DTO;
 
+import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import team.opentech.usher.pojo.DTO.base.IdDTO;
 
@@ -27,45 +28,44 @@ public class AiSubspaceDTO extends IdDTO {
     /**
      * 边缘坐标,三维坐标,每三个点确定一个面
      */
-    private String edgeCoordinates;
+    private List<EdgeCoordinaties> edgeCoordinates;
 
     /**
      * 原点相对独立空间原点坐标
      */
-    private String originRelativeCoordinates;
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private Point3D originRelativeCoordinates;
 
     public String getName() {
         return name;
     }
 
-    public void setSpaceId(Long spaceId) {
-        this.spaceId = spaceId;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getSpaceId() {
         return spaceId;
     }
 
-    public void setEdgeCoordinates(String edgeCoordinates) {
-        this.edgeCoordinates = edgeCoordinates;
+    public void setSpaceId(Long spaceId) {
+        this.spaceId = spaceId;
     }
 
-    public String getEdgeCoordinates() {
+    public List<EdgeCoordinaties> getEdgeCoordinates() {
         return edgeCoordinates;
     }
 
-    public void setOriginRelativeCoordinates(String originRelativeCoordinates) {
-        this.originRelativeCoordinates = originRelativeCoordinates;
+    public void setEdgeCoordinates(List<EdgeCoordinaties> edgeCoordinates) {
+        this.edgeCoordinates = edgeCoordinates;
     }
 
-    public String getOriginRelativeCoordinates() {
+    public Point3D getOriginRelativeCoordinates() {
         return originRelativeCoordinates;
     }
 
+    public void setOriginRelativeCoordinates(Point3D originRelativeCoordinates) {
+        this.originRelativeCoordinates = originRelativeCoordinates;
+    }
 
     @Override
     public String toString() {
