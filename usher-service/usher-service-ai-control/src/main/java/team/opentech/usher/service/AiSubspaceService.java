@@ -2,6 +2,7 @@ package team.opentech.usher.service;
 
 
 import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
+import team.opentech.usher.pojo.event.CleanSubSpaceEvent;
 
 /**
  * 子空间(AiSubspace)表 内部服务接口
@@ -12,4 +13,10 @@ import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
  */
 public interface AiSubspaceService extends BaseDoService<AiSubspaceDTO> {
 
+    /**
+     * 清空某一个独立空间的所有子空间
+     *
+     * @param event
+     */
+    void cleanSubSpaceEvent(CleanSubSpaceEvent event);
 }

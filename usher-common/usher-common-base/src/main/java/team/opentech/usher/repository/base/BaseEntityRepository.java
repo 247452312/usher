@@ -104,6 +104,14 @@ public interface BaseEntityRepository<DO extends BaseDO, EN extends AbstractDoEn
      * @return
      */
     int remove(List<EN> entitys);
+    /**
+     * 删除
+     *
+     * @param entity
+     *
+     * @return
+     */
+    int remove(EN entity);
 
     /**
      * 批量删除

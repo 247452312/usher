@@ -90,6 +90,13 @@ public abstract class AbstractDoEntity<T extends BaseDO> extends AbstractEntity<
         repository.save((EN) this);
     }
 
+
+    public <EN extends AbstractDoEntity<T>> void removeSelf(BaseEntityRepository<T, EN> repository) {
+        repository.remove((EN) this);
+    }
+
+
+
     public boolean canUpdate() {
         return canUpdate;
     }

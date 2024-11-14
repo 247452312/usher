@@ -1,5 +1,6 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.AiDeviceInstructionDO;
 import team.opentech.usher.pojo.entity.AiDeviceInstruction;
 import team.opentech.usher.repository.base.BaseEntityRepository;
@@ -13,4 +14,19 @@ import team.opentech.usher.repository.base.BaseEntityRepository;
  */
 public interface AiDeviceInstructionRepository extends BaseEntityRepository<AiDeviceInstructionDO, AiDeviceInstruction> {
 
+    /**
+     * 根据设备id获取指令
+     *
+     * @param deviceId
+     *
+     * @return
+     */
+    List<AiDeviceInstruction> findByDeviceId(Long deviceId);
+
+    /**
+     * 根据设备id删除指令
+     *
+     * @param deviceId
+     */
+    void removeByDeviceId(Long deviceId);
 }

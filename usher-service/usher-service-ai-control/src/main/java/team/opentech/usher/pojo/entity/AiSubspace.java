@@ -1,8 +1,11 @@
 package team.opentech.usher.pojo.entity;
 
 import team.opentech.usher.annotation.Default;
+import team.opentech.usher.bus.Bus;
 import team.opentech.usher.pojo.DO.AiSubspaceDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
+import team.opentech.usher.pojo.event.SubSpaceRemoveParentEvent;
+import team.opentech.usher.repository.base.BaseEntityRepository;
 
 /**
  * 子空间(AiSubspace)表 数据库实体类
@@ -21,4 +24,9 @@ public class AiSubspace extends AbstractDoEntity<AiSubspaceDO> {
         super(id, new AiSubspaceDO());
     }
 
+    @Override
+    public <EN extends AbstractDoEntity<AiSubspaceDO>> void removeSelf(BaseEntityRepository<AiSubspaceDO, EN> repository) {
+        Bus.single().commitAndPush(new SubSpaceRemoveParentEvent(this));
+        super.removeSelf(repository);
+    }
 }

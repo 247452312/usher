@@ -1,7 +1,11 @@
 package team.opentech.usher.protocol.rpc.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import team.opentech.usher.pojo.DTO.AiSpaceDTO;
+import team.opentech.usher.pojo.cqe.AddUserToSpaceCommand;
+import team.opentech.usher.pojo.cqe.RemoveSpaceCommand;
+import team.opentech.usher.pojo.cqe.RemoveUserFromSpaceCommand;
+import team.opentech.usher.pojo.cqe.SpaceCreateCommand;
 import team.opentech.usher.protocol.rpc.AiSpaceProvider;
 import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
@@ -19,8 +23,28 @@ import team.opentech.usher.service.BaseDoService;
 public class AiSpaceProviderImpl extends BaseDefaultProvider<AiSpaceDTO> implements AiSpaceProvider {
 
 
-    @Autowired
+    @Resource
     private AiSpaceService service;
+
+    @Override
+    public Boolean create(SpaceCreateCommand command) {
+        return service.create(command);
+    }
+
+    @Override
+    public Boolean addUserToSpace(AddUserToSpaceCommand command) {
+        return service.addUserToSpace(command);
+    }
+
+    @Override
+    public Boolean removeUserFromSpace(RemoveUserFromSpaceCommand command) {
+        return service.removeUserFromSpace(command);
+    }
+
+    @Override
+    public Boolean removeSpace(RemoveSpaceCommand command) {
+        return service.removeSpace(command);
+    }
 
 
     @Override

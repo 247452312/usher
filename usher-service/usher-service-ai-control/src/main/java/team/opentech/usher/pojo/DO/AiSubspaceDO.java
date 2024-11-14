@@ -30,7 +30,7 @@ public class AiSubspaceDO extends BaseDO {
     private Long spaceId;
 
     /**
-     * 边缘坐标
+     * 边缘坐标,三维坐标,每三个点确定一个面
      */
     @TableField
     private String edgeCoordinates;

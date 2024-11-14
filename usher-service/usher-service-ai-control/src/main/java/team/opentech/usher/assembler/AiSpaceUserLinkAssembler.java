@@ -4,6 +4,7 @@ package team.opentech.usher.assembler;
 import org.mapstruct.Mapper;
 import team.opentech.usher.pojo.DO.AiSpaceUserLinkDO;
 import team.opentech.usher.pojo.DTO.AiSpaceUserLinkDTO;
+import team.opentech.usher.pojo.entity.AiSpace;
 import team.opentech.usher.pojo.entity.AiSpaceUserLink;
 
 /**
@@ -16,4 +17,11 @@ import team.opentech.usher.pojo.entity.AiSpaceUserLink;
 @Mapper(componentModel = "spring")
 public abstract class AiSpaceUserLinkAssembler extends AbstractAssembler<AiSpaceUserLinkDO, AiSpaceUserLink, AiSpaceUserLinkDTO> {
 
+    public AiSpaceUserLink toEntity(Long userId, Boolean isAdmin, AiSpace aiSpace) {
+        AiSpaceUserLinkDO data = new AiSpaceUserLinkDO();
+        data.setSpaceId(aiSpace.unique.getId());
+        data.setUserId(userId);
+        data.setIsAdmin(isAdmin);
+        return new AiSpaceUserLink(data);
+    }
 }

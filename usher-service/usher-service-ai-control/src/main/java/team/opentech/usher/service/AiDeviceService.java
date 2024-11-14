@@ -2,6 +2,8 @@ package team.opentech.usher.service;
 
 
 import team.opentech.usher.pojo.DTO.AiDeviceDTO;
+import team.opentech.usher.pojo.event.DeviceCleanEvent;
+import team.opentech.usher.pojo.event.DeviceInstructionCleanEvent;
 
 /**
  * 设备表(AiDevice)表 内部服务接口
@@ -12,4 +14,17 @@ import team.opentech.usher.pojo.DTO.AiDeviceDTO;
  */
 public interface AiDeviceService extends BaseDoService<AiDeviceDTO> {
 
+    /**
+     * 设备清空事件
+     *
+     * @param event
+     */
+    void deviceCleanEvent(DeviceCleanEvent event);
+
+    /**
+     * 设备指令清空事件
+     *
+     * @param event
+     */
+    void deviceInstructionCleanEvent(DeviceInstructionCleanEvent event);
 }

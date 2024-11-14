@@ -4,6 +4,7 @@ package team.opentech.usher.assembler;
 import org.mapstruct.Mapper;
 import team.opentech.usher.pojo.DO.AiSpaceDO;
 import team.opentech.usher.pojo.DTO.AiSpaceDTO;
+import team.opentech.usher.pojo.cqe.SpaceCreateCommand;
 import team.opentech.usher.pojo.entity.AiSpace;
 
 /**
@@ -16,4 +17,9 @@ import team.opentech.usher.pojo.entity.AiSpace;
 @Mapper(componentModel = "spring")
 public abstract class AiSpaceAssembler extends AbstractAssembler<AiSpaceDO, AiSpace, AiSpaceDTO> {
 
+    public AiSpace toEntity(SpaceCreateCommand command) {
+        return new AiSpace(toDo(command));
+    }
+
+    public abstract AiSpaceDO toDo(SpaceCreateCommand command);
 }

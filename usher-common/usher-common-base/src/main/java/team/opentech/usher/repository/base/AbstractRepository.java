@@ -2,6 +2,11 @@ package team.opentech.usher.repository.base;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import team.opentech.usher.assembler.AbstractAssembler;
 import team.opentech.usher.dao.base.DefaultDao;
 import team.opentech.usher.enums.OrderSymbolEnum;
@@ -18,11 +23,6 @@ import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
 import team.opentech.usher.pojo.entity.base.IdEntity;
 import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.util.Asserts;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 /**
@@ -131,8 +131,15 @@ public abstract class AbstractRepository<EN extends AbstractDoEntity<DO>, DO ext
 
     @Override
     public int remove(List<EN> entities) {
-        List<DO> doList = entities.stream().map(t -> assembler.toDo(t)).peek(BaseDO::changeToDelete).peek(BaseDO::preUpdate).collect(Collectors.toList());
-        return doList.stream().mapToInt(dao::updateById).sum();
+        return entities.stream().mapToInt(this::remove).sum();
+    }
+
+    @Override
+    public int remove(EN entity) {
+        DO aDo = assembler.toDo(entity);
+        aDo.changeToDelete();
+        aDo.preUpdate();
+        return dao.updateById(aDo);
     }
 
     @Override

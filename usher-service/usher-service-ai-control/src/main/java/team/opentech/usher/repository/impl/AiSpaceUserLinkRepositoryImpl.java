@@ -1,5 +1,7 @@
 package team.opentech.usher.repository.impl;
 
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.AiSpaceUserLinkAssembler;
 import team.opentech.usher.dao.AiSpaceUserLinkDao;
@@ -25,4 +27,44 @@ public class AiSpaceUserLinkRepositoryImpl extends AbstractRepository<AiSpaceUse
     }
 
 
+    @Override
+    public boolean haveAdmin(Long spaceId) {
+        LambdaQueryChainWrapper<AiSpaceUserLinkDO> wrapper = lambdaQuery();
+        wrapper.eq(AiSpaceUserLinkDO::getSpaceId, spaceId);
+        wrapper.eq(AiSpaceUserLinkDO::getIsAdmin, true);
+        Long count = wrapper.count();
+        return count != 0;
+    }
+
+    @Override
+    public boolean checkUsher(Long userId, Long spaceId) {
+        LambdaQueryChainWrapper<AiSpaceUserLinkDO> wrapper = lambdaQuery();
+        wrapper.eq(AiSpaceUserLinkDO::getUserId, userId);
+        wrapper.eq(AiSpaceUserLinkDO::getSpaceId, spaceId);
+        return wrapper.count() != 0;
+    }
+
+    @Override
+    public Boolean removeUser(Long id, Long userId) {
+        LambdaUpdateChainWrapper<AiSpaceUserLinkDO> wrapper = lambdaUpdate();
+        wrapper.eq(AiSpaceUserLinkDO::getId, id);
+        wrapper.eq(AiSpaceUserLinkDO::getUserId, userId);
+        return wrapper.remove();
+    }
+
+    @Override
+    public boolean isAdmin(Long userId, Long spaceId) {
+        LambdaQueryChainWrapper<AiSpaceUserLinkDO> wrapper = lambdaQuery();
+        wrapper.eq(AiSpaceUserLinkDO::getUserId, userId);
+        wrapper.eq(AiSpaceUserLinkDO::getSpaceId, spaceId);
+        wrapper.eq(AiSpaceUserLinkDO::getIsAdmin, true);
+        return wrapper.count() != 0;
+    }
+
+    @Override
+    public void removeBySpaceId(Long spaceId) {
+        LambdaUpdateChainWrapper<AiSpaceUserLinkDO> wrapper = lambdaUpdate();
+        wrapper.eq(AiSpaceUserLinkDO::getSpaceId, spaceId);
+        wrapper.remove();
+    }
 }

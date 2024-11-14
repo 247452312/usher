@@ -1,11 +1,13 @@
 package team.opentech.usher.service.impl;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.AiSubspaceAssembler;
 import team.opentech.usher.pojo.DO.AiSubspaceDO;
 import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
 import team.opentech.usher.pojo.entity.AiSubspace;
+import team.opentech.usher.pojo.event.CleanSubSpaceEvent;
 import team.opentech.usher.repository.AiSubspaceRepository;
 import team.opentech.usher.service.AiSubspaceService;
 
@@ -25,4 +27,12 @@ public class AiSubspaceServiceImpl extends AbstractDoService<AiSubspaceDO, AiSub
     }
 
 
+    @Override
+    public void cleanSubSpaceEvent(CleanSubSpaceEvent event) {
+        List<AiSubspace> subspaces = rep.findBySpaceId(event.getSpaceId());
+        for (AiSubspace subspace : subspaces) {
+            subspace.removeSelf(rep);
+        }
+
+    }
 }
