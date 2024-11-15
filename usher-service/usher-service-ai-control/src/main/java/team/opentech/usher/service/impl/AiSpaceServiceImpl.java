@@ -1,6 +1,7 @@
 package team.opentech.usher.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +13,13 @@ import team.opentech.usher.pojo.DTO.AiSpaceDTO;
 import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
 import team.opentech.usher.pojo.cqe.AddUserToSpaceCommand;
 import team.opentech.usher.pojo.cqe.CreateSubSpaceCommand;
+import team.opentech.usher.pojo.cqe.DefaultCQE;
 import team.opentech.usher.pojo.cqe.FindSubSpaceBySpaceIdQuery;
 import team.opentech.usher.pojo.cqe.RemoveSpaceCommand;
 import team.opentech.usher.pojo.cqe.RemoveUserFromSpaceCommand;
 import team.opentech.usher.pojo.cqe.SpaceCreateCommand;
 import team.opentech.usher.pojo.entity.AiSpace;
+import team.opentech.usher.pojo.entity.AiSpaceUserLink;
 import team.opentech.usher.pojo.entity.AiSubspace;
 import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.event.CleanSpaceUserEvent;
@@ -79,6 +82,7 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
     @Override
     public Boolean createSubSpace(CreateSubSpaceCommand command) {
         AiSubspace subspace = subspaceAssembler.toEntity(command);
+        subspace.removeId();
         subspace.saveSelf(subspaceRepository);
         return Boolean.TRUE;
     }
@@ -97,8 +101,16 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
     }
 
     @Override
+    public List<AiSpaceDTO> findByOnlineUser(DefaultCQE blackQuery) {
+        List<AiSpaceUserLink> userLinks = userLinkRepository.findByUserId(blackQuery.getUser().getId());
+        List<Identifier> spaceIds = userLinks.stream().map(AiSpaceUserLink::spaceId).map(Identifier::build).collect(Collectors.toList());
+        List<AiSpace> aiSpaces = rep.find(spaceIds);
+        return assem.listEntityToDTO(aiSpaces);
+    }
+
+    @Override
     public List<AiSubspaceDTO> findSubSpaceBySpaceId(FindSubSpaceBySpaceIdQuery query) {
-        List<AiSubspace> bySpaceId = subspaceRepository.findBySpaceId(query.getApaceId());
+        List<AiSubspace> bySpaceId = subspaceRepository.findBySpaceId(query.getSpaceId());
         return subspaceAssembler.listEntityToDTO(bySpaceId);
     }
 }

@@ -6,6 +6,7 @@ import team.opentech.usher.pojo.DTO.AiSpaceDTO;
 import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
 import team.opentech.usher.pojo.cqe.AddUserToSpaceCommand;
 import team.opentech.usher.pojo.cqe.CreateSubSpaceCommand;
+import team.opentech.usher.pojo.cqe.DefaultCQE;
 import team.opentech.usher.pojo.cqe.FindSubSpaceBySpaceIdQuery;
 import team.opentech.usher.pojo.cqe.RemoveSpaceCommand;
 import team.opentech.usher.pojo.cqe.RemoveUserFromSpaceCommand;
@@ -54,6 +55,11 @@ public class AiSpaceProviderImpl extends BaseDefaultProvider<AiSpaceDTO> impleme
     @Override
     public Boolean removeSpace(RemoveSpaceCommand command) {
         return service.removeSpace(command);
+    }
+
+    @Override
+    public List<AiSpaceDTO> findByOnlineUser(DefaultCQE blackQuery) {
+        return service.findByOnlineUser(blackQuery);
     }
 
     @Override

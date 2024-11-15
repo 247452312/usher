@@ -23,6 +23,7 @@ import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
 import team.opentech.usher.pojo.entity.base.IdEntity;
 import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.util.Asserts;
+import team.opentech.usher.util.CollectionUtil;
 
 
 /**
@@ -88,6 +89,9 @@ public abstract class AbstractRepository<EN extends AbstractDoEntity<DO>, DO ext
      */
     @Override
     public <E extends Identifier> List<EN> find(List<E> ids) {
+        if (CollectionUtil.isEmpty(ids)) {
+            return new ArrayList<>();
+        }
         List<Long> idList = ids.stream().map(t -> t.getId()).collect(Collectors.toList());
         List<DO> byIds = dao.selectBatchIds(idList);
         return byIds.stream().map(assembler::toEntity).collect(Collectors.toList());

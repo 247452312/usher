@@ -1,5 +1,6 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.AiSpaceUserLinkDO;
 import team.opentech.usher.pojo.entity.AiSpaceUserLink;
 import team.opentech.usher.repository.base.BaseEntityRepository;
@@ -58,4 +59,13 @@ public interface AiSpaceUserLinkRepository extends BaseEntityRepository<AiSpaceU
      * @param spaceId
      */
     void removeBySpaceId(Long spaceId);
+
+    /**
+     * 根据用户id获取与独立空间的关联
+     *
+     * @param usherId
+     *
+     * @return
+     */
+    List<AiSpaceUserLink> findByUserId(Long usherId);
 }

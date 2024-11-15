@@ -5,6 +5,7 @@ import team.opentech.usher.pojo.DTO.AiSpaceDTO;
 import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
 import team.opentech.usher.pojo.cqe.AddUserToSpaceCommand;
 import team.opentech.usher.pojo.cqe.CreateSubSpaceCommand;
+import team.opentech.usher.pojo.cqe.DefaultCQE;
 import team.opentech.usher.pojo.cqe.FindSubSpaceBySpaceIdQuery;
 import team.opentech.usher.pojo.cqe.RemoveSpaceCommand;
 import team.opentech.usher.pojo.cqe.RemoveUserFromSpaceCommand;
@@ -58,6 +59,14 @@ public interface AiSpaceProvider extends DTOProvider<AiSpaceDTO> {
      */
     Boolean removeSpace(RemoveSpaceCommand command);
 
+    /**
+     * 查询当前账号下的所有独立空间
+     *
+     * @param blackQuery
+     *
+     * @return
+     */
+    List<AiSpaceDTO> findByOnlineUser(DefaultCQE blackQuery);
 
     /**
      * 根据独立空间id获取独立空间下所有子空间

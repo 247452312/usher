@@ -75,6 +75,10 @@
         </dependency>
         <dependency>
             <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-api-provider-ai-control</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
             <artifactId>usher-common-hot-spot</artifactId>
         </dependency>
 

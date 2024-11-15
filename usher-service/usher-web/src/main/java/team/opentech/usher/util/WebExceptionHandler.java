@@ -1,12 +1,14 @@
 package team.opentech.usher.util;
 
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import team.opentech.usher.enums.ServiceCode;
 import team.opentech.usher.exception.AssertException;
 import team.opentech.usher.exception.NoLoginException;
+import team.opentech.usher.exception.ServiceResultException;
 import team.opentech.usher.pojo.DTO.response.WebResponse;
-import team.opentech.usher.rpc.exception.UsherRpcProviderThrowException;
 import team.opentech.usher.rpc.exception.RpcNetException;
-import java.util.concurrent.ExecutionException;
+import team.opentech.usher.rpc.exception.UsherRpcProviderThrowException;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -32,6 +34,22 @@ public class WebExceptionHandler {
         // 断言异常 返回前端
         if (th instanceof AssertException) {
             return onAssertException((AssertException) th);
+        }
+        //rpc返回了相关的错误码
+        if (th instanceof ServiceResultException) {
+            ServiceResultException resultException = (ServiceResultException) th;
+            Integer errorCode = resultException.getErrorCode();
+            Optional<ServiceCode> byText = ServiceCode.getByText(errorCode);
+            if (!byText.isPresent()) {
+                return onOtherException(th);
+            }
+            switch (byText.get()) {
+                case ERROR:
+                case REQUEST_PARAM_ERROR:
+                    return onOtherException(th);
+                default:
+                    return WebResponse.buildWithError(resultException.getMessage(), errorCode);
+            }
         }
         // 未登录异常返回前端
         if (th instanceof NoLoginException) {

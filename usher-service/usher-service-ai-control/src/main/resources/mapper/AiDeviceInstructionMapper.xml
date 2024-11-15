@@ -12,7 +12,7 @@
         <result property="updateDate" column="update_date" jdbcType="BIGINT"/>
         <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
         <result property="deviceInstructionNo" column="device_instruction_no" jdbcType="VARCHAR"/>
-        <result property="context" column="context" jdbcType="TEXT"/>
+        <result property="context" column="context" jdbcType="VARCHAR"/>
         <result property="deviceId" column="device_id" jdbcType="BIGINT"/>
         <result property="notes" column="notes" jdbcType="VARCHAR"/>
     </resultMap>

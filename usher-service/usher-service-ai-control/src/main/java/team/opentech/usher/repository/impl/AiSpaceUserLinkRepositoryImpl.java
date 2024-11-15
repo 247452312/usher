@@ -2,6 +2,7 @@ package team.opentech.usher.repository.impl;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
+import java.util.List;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.AiSpaceUserLinkAssembler;
 import team.opentech.usher.dao.AiSpaceUserLinkDao;
@@ -66,5 +67,13 @@ public class AiSpaceUserLinkRepositoryImpl extends AbstractRepository<AiSpaceUse
         LambdaUpdateChainWrapper<AiSpaceUserLinkDO> wrapper = lambdaUpdate();
         wrapper.eq(AiSpaceUserLinkDO::getSpaceId, spaceId);
         wrapper.remove();
+    }
+
+    @Override
+    public List<AiSpaceUserLink> findByUserId(Long usherId) {
+        LambdaQueryChainWrapper<AiSpaceUserLinkDO> wrapper = lambdaQuery();
+        wrapper.eq(AiSpaceUserLinkDO::getUserId, usherId);
+        List<AiSpaceUserLinkDO> list = wrapper.list();
+        return assembler.listToEntity(list);
     }
 }

@@ -50,7 +50,7 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
      * @return
      */
     public static BusInterface single() {
-        return SpringUtil.getBean(Bus.class);
+        return SpringUtil.getBean(BusInterface.class);
     }
 
     @Override

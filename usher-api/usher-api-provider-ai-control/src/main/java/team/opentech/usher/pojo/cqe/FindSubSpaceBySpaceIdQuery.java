@@ -12,13 +12,13 @@ public class FindSubSpaceBySpaceIdQuery extends AbstractQuery {
     /**
      * 空间id
      */
-    private Long apaceId;
+    private Long spaceId;
 
-    public Long getApaceId() {
-        return apaceId;
+    public Long getSpaceId() {
+        return spaceId;
     }
 
-    public void setApaceId(Long apaceId) {
-        this.apaceId = apaceId;
+    public void setSpaceId(Long spaceId) {
+        this.spaceId = spaceId;
     }
 }

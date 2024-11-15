@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
 public @interface RpcSpi {
 
     /**
-     * 排序,数值越小越靠前
+     * 排序,数值越小越靠前  [-9999,9999]
      *
      * @return
      */
