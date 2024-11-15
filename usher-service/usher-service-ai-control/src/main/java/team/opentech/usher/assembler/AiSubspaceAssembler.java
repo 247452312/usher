@@ -1,17 +1,16 @@
 package team.opentech.usher.assembler;
 
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson2.JSON;
 import java.util.List;
+import javax.annotation.Resource;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import team.opentech.usher.pojo.DO.AiSubspaceDO;
+import team.opentech.usher.pojo.DTO.AiSubspaceConnectionPointDTO;
 import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
-import team.opentech.usher.pojo.DTO.EdgeCoordinaties;
-import team.opentech.usher.pojo.DTO.Point3D;
 import team.opentech.usher.pojo.cqe.CreateSubSpaceCommand;
 import team.opentech.usher.pojo.entity.AiSubspace;
+import team.opentech.usher.pojo.entity.AiSubspaceConnectionPoint;
 
 /**
  * 子空间(AiSubspace)表 entity,DO,DTO转换工具
@@ -23,34 +22,35 @@ import team.opentech.usher.pojo.entity.AiSubspace;
 @Mapper(componentModel = "spring")
 public abstract class AiSubspaceAssembler extends AbstractAssembler<AiSubspaceDO, AiSubspace, AiSubspaceDTO> {
 
-    @Override
-    public AiSubspaceDTO toDTO(AiSubspaceDO dO) {
-        AiSubspaceDTO aiSubspaceDTO = new AiSubspaceDTO();
-        aiSubspaceDTO.setId(dO.getId());
-        aiSubspaceDTO.setName(dO.getName());
-        aiSubspaceDTO.setSpaceId(dO.getSpaceId());
-        List<EdgeCoordinaties> edgeCoordinaties = JSONArray.parseArray(dO.getEdgeCoordinates(), EdgeCoordinaties.class);
-        aiSubspaceDTO.setEdgeCoordinates(edgeCoordinaties);
-        Point3D originRelativeCoordinates = JSONObject.parseObject(dO.getOriginRelativeCoordinates(), Point3D.class);
-        aiSubspaceDTO.setOriginRelativeCoordinates(originRelativeCoordinates);
-        return aiSubspaceDTO;
-    }
+    @Resource
+    private AiSubspaceConnectionPointAssembler connectionPointAssembler;
 
     @Override
-    public AiSubspaceDO toDo(AiSubspaceDTO dto) {
-        AiSubspaceDO aiSubspaceDO = new AiSubspaceDO();
-        aiSubspaceDO.setName(dto.getName());
-        aiSubspaceDO.setSpaceId(dto.getSpaceId());
-        aiSubspaceDO.setId(dto.getId());
-        List<EdgeCoordinaties> edgeCoordinates = dto.getEdgeCoordinates();
-        aiSubspaceDO.setEdgeCoordinates(JSON.toJSONString(edgeCoordinates));
-        aiSubspaceDO.setOriginRelativeCoordinates(JSON.toJSONString(dto.getOriginRelativeCoordinates()));
-        return aiSubspaceDO;
-    }
+    @Mapping(expression = "java(com.alibaba.fastjson.JSONArray.parseArray(dO.getEdgeCoordinates(),team.opentech.usher.pojo.DTO.EdgeCoordinaties.class))", target = "edgeCoordinates")
+    @Mapping(expression = "java(com.alibaba.fastjson.JSONObject.parseObject(dO.getOriginRelativeCoordinates(),team.opentech.usher.pojo.DTO.Point3D.class))", target = "originRelativeCoordinates")
+    public abstract AiSubspaceDTO toDTO(AiSubspaceDO dO);
+
+    @Override
+    @Mapping(expression = "java(com.alibaba.fastjson.JSON.toJSONString(dto.getEdgeCoordinates()))", target = "edgeCoordinates")
+    @Mapping(expression = "java(com.alibaba.fastjson.JSON.toJSONString(dto.getOriginRelativeCoordinates()))", target = "originRelativeCoordinates")
+    public abstract AiSubspaceDO toDo(AiSubspaceDTO dto);
 
     public AiSubspace toEntity(CreateSubSpaceCommand command) {
-        AiSubspaceDO aDo = toDo(command.getSubspaceDTO());
+        AiSubspaceDTO subspaceDTO = command.getSubspaceDTO();
+        AiSubspaceDO aDo = toDo(subspaceDTO);
         aDo.setSpaceId(command.getSpaceId());
-        return toEntity(aDo);
+        AiSubspace entity = toEntity(aDo);
+        List<AiSubspaceConnectionPoint> aiSubspaceConnectionPoints = connectionPointAssembler.listDTOToEntity(subspaceDTO.getConnectionPointDTOS());
+        entity.fillConnectionPoint(aiSubspaceConnectionPoints);
+        return entity;
+    }
+
+    @Override
+    public AiSubspaceDTO toDTO(AiSubspace entity) {
+        AiSubspaceDTO dto = toDTO(entity.toDataAndValidate());
+        List<AiSubspaceConnectionPoint> aiSubspaceConnectionPoints = entity.connectionPoints();
+        List<AiSubspaceConnectionPointDTO> aiSubspaceConnectionPointDTOS = connectionPointAssembler.listEntityToDTO(aiSubspaceConnectionPoints);
+        dto.setConnectionPointDTOS(aiSubspaceConnectionPointDTOS);
+        return dto;
     }
 }

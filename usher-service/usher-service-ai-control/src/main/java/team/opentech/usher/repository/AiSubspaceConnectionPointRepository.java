@@ -1,5 +1,6 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.AiSubspaceConnectionPointDO;
 import team.opentech.usher.pojo.entity.AiSubspaceConnectionPoint;
 import team.opentech.usher.repository.base.BaseEntityRepository;
@@ -13,4 +14,12 @@ import team.opentech.usher.repository.base.BaseEntityRepository;
  */
 public interface AiSubspaceConnectionPointRepository extends BaseEntityRepository<AiSubspaceConnectionPointDO, AiSubspaceConnectionPoint> {
 
+    /**
+     * 根据子空间id查询所有连通点
+     *
+     * @param subspaceId
+     *
+     * @return
+     */
+    List<AiSubspaceConnectionPoint> findBySubspaceId(Long subspaceId);
 }

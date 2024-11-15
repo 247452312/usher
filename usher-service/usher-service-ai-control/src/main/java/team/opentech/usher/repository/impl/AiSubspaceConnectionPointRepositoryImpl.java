@@ -1,5 +1,7 @@
 package team.opentech.usher.repository.impl;
 
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import java.util.List;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.AiSubspaceConnectionPointAssembler;
 import team.opentech.usher.dao.AiSubspaceConnectionPointDao;
@@ -25,4 +27,11 @@ public class AiSubspaceConnectionPointRepositoryImpl extends AbstractRepository<
     }
 
 
+    @Override
+    public List<AiSubspaceConnectionPoint> findBySubspaceId(Long subspaceId) {
+        LambdaQueryChainWrapper<AiSubspaceConnectionPointDO> wrapper = lambdaQuery();
+        wrapper.eq(AiSubspaceConnectionPointDO::getSpaceId, subspaceId);
+        List<AiSubspaceConnectionPointDO> list = wrapper.list();
+        return assembler.listToEntity(list);
+    }
 }

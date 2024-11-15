@@ -19,7 +19,7 @@ public class AiSubspaceConnectionPointDTO extends IdDTO {
     /**
      * 连通点坐标
      */
-    private String pointCoordinate;
+    private Point3D pointCoordinate;
 
     public void setSpaceId(Long spaceId) {
         this.spaceId = spaceId;
@@ -29,11 +29,11 @@ public class AiSubspaceConnectionPointDTO extends IdDTO {
         return spaceId;
     }
 
-    public void setPointCoordinate(String pointCoordinate) {
+    public void setPointCoordinate(Point3D pointCoordinate) {
         this.pointCoordinate = pointCoordinate;
     }
 
-    public String getPointCoordinate() {
+    public Point3D getPointCoordinate() {
         return pointCoordinate;
     }
 

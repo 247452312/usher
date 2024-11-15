@@ -25,6 +25,7 @@ import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.event.CleanSpaceUserEvent;
 import team.opentech.usher.repository.AiSpaceRepository;
 import team.opentech.usher.repository.AiSpaceUserLinkRepository;
+import team.opentech.usher.repository.AiSubspaceConnectionPointRepository;
 import team.opentech.usher.repository.AiSubspaceRepository;
 import team.opentech.usher.service.AiSpaceService;
 import team.opentech.usher.util.Asserts;
@@ -48,6 +49,9 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
 
     @Resource
     private AiSubspaceRepository subspaceRepository;
+
+    @Resource
+    private AiSubspaceConnectionPointRepository connectionPointRepository;
 
     public AiSpaceServiceImpl(AiSpaceAssembler assembler, AiSpaceRepository repository) {
         super(assembler, repository);
@@ -83,7 +87,10 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
     public Boolean createSubSpace(CreateSubSpaceCommand command) {
         AiSubspace subspace = subspaceAssembler.toEntity(command);
         subspace.removeId();
+        // 保存子空间
         subspace.saveSelf(subspaceRepository);
+        // 保存连通点(如果有的话)
+        subspace.createConnectionPoint(connectionPointRepository);
         return Boolean.TRUE;
     }
 
@@ -111,6 +118,9 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
     @Override
     public List<AiSubspaceDTO> findSubSpaceBySpaceId(FindSubSpaceBySpaceIdQuery query) {
         List<AiSubspace> bySpaceId = subspaceRepository.findBySpaceId(query.getSpaceId());
+        for (AiSubspace subspace : bySpaceId) {
+            subspace.fillConnectionPoint(connectionPointRepository);
+        }
         return subspaceAssembler.listEntityToDTO(bySpaceId);
     }
 }

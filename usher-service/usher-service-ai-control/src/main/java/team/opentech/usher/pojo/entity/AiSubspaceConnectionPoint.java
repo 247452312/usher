@@ -21,4 +21,13 @@ public class AiSubspaceConnectionPoint extends AbstractDoEntity<AiSubspaceConnec
         super(id, new AiSubspaceConnectionPointDO());
     }
 
+    /**
+     * 填充子空间id
+     *
+     * @param subspaceId
+     */
+    public void fillSubspaceId(Long subspaceId) {
+        toDataAndValidate().setSpaceId(subspaceId);
+    }
+
 }

@@ -35,6 +35,11 @@ public class AiSubspaceDTO extends IdDTO {
      */
     private Point3D originRelativeCoordinates;
 
+    /**
+     * 连通点
+     */
+    private List<AiSubspaceConnectionPointDTO> connectionPointDTOS;
+
     public String getName() {
         return name;
     }
@@ -65,6 +70,14 @@ public class AiSubspaceDTO extends IdDTO {
 
     public void setOriginRelativeCoordinates(Point3D originRelativeCoordinates) {
         this.originRelativeCoordinates = originRelativeCoordinates;
+    }
+
+    public List<AiSubspaceConnectionPointDTO> getConnectionPointDTOS() {
+        return connectionPointDTOS;
+    }
+
+    public void setConnectionPointDTOS(List<AiSubspaceConnectionPointDTO> connectionPointDTOS) {
+        this.connectionPointDTOS = connectionPointDTOS;
     }
 
     @Override
