@@ -38,6 +38,7 @@ public class RocketMqFactory {
             rpcHook = new AclClientRPCHook(new SessionCredentials(mqConfig.getAccessKey(), mqConfig.getSecretKey()));
         }
         DefaultMQPushConsumer defaultMQPushConsumer = new DefaultMQPushConsumer(consumer.group(), rpcHook);
+        defaultMQPushConsumer.setNamesrvAddr(mqConfig.getNamesrvAddr());
         String join = String.join("||", consumer.tags());
         defaultMQPushConsumer.subscribe(consumer.topic(), join);
         consumer.setPushConsumer(defaultMQPushConsumer);

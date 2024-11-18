@@ -4,6 +4,7 @@ package team.opentech.usher.service;
 import java.util.List;
 import team.opentech.usher.pojo.DTO.AiSpaceDTO;
 import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
+import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.cqe.AddUserToSpaceCommand;
 import team.opentech.usher.pojo.cqe.CreateSubSpaceCommand;
 import team.opentech.usher.pojo.cqe.DefaultCQE;
@@ -11,6 +12,8 @@ import team.opentech.usher.pojo.cqe.FindSubSpaceBySpaceIdQuery;
 import team.opentech.usher.pojo.cqe.RemoveSpaceCommand;
 import team.opentech.usher.pojo.cqe.RemoveUserFromSpaceCommand;
 import team.opentech.usher.pojo.cqe.SpaceCreateCommand;
+import team.opentech.usher.pojo.cqe.UpdateSpaceInfoCommand;
+import team.opentech.usher.pojo.cqe.query.IdQuery;
 import team.opentech.usher.pojo.event.CleanSpaceUserEvent;
 
 /**
@@ -79,6 +82,15 @@ public interface AiSpaceService extends BaseDoService<AiSpaceDTO> {
 
 
     /**
+     * 根据空间id查询下面的所有用户
+     *
+     * @param query
+     *
+     * @return
+     */
+    List<UserDTO> findUserBySpaceId(IdQuery query);
+
+    /**
      * 根据独立空间id获取独立空间下所有子空间
      *
      * @param query
@@ -86,4 +98,14 @@ public interface AiSpaceService extends BaseDoService<AiSpaceDTO> {
      * @return
      */
     List<AiSubspaceDTO> findSubSpaceBySpaceId(FindSubSpaceBySpaceIdQuery query);
+
+
+    /**
+     * 更新空间信息
+     *
+     * @param command
+     *
+     * @return
+     */
+    Boolean updateSpaceInfo(UpdateSpaceInfoCommand command);
 }

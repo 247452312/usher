@@ -6,6 +6,7 @@ import team.opentech.usher.bus.Bus;
 import team.opentech.usher.context.UserInfoHelper;
 import team.opentech.usher.pojo.DO.AiSpaceDO;
 import team.opentech.usher.pojo.DTO.UserDTO;
+import team.opentech.usher.pojo.cqe.UpdateSpaceInfoCommand;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
 import team.opentech.usher.pojo.event.SpaceRemoveParentEvent;
 import team.opentech.usher.repository.AiSpaceUserLinkRepository;
@@ -76,6 +77,26 @@ public class AiSpace extends AbstractDoEntity<AiSpaceDO> {
         checkUserPower(UserInfoHelper.doGet());
         Bus.single().commitAndPush(new SpaceRemoveParentEvent(this));
         super.removeSelf(repository);
+    }
+
+    /**
+     * 根据command修改
+     *
+     * @param command
+     */
+    public void changeByCommand(UpdateSpaceInfoCommand command) {
+
+    }
+
+    /**
+     * 根据command修改
+     *
+     * @param spaceName
+     */
+    public void changeName(String spaceName) {
+        Asserts.assertTrue(spaceName != null, "空间名称不能为空");
+        toDataAndValidate().setName(spaceName);
+        onUpdate();
     }
 
     /**

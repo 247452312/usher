@@ -68,4 +68,13 @@ public interface AiSpaceUserLinkRepository extends BaseEntityRepository<AiSpaceU
      * @return
      */
     List<AiSpaceUserLink> findByUserId(Long usherId);
+
+    /**
+     * 根据空间id获取所有用户
+     *
+     * @param spaceId
+     *
+     * @return
+     */
+    List<AiSpaceUserLink> findBySpaceId(Long spaceId);
 }

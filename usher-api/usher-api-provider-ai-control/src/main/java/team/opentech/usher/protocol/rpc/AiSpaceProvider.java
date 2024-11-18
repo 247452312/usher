@@ -3,6 +3,7 @@ package team.opentech.usher.protocol.rpc;
 import java.util.List;
 import team.opentech.usher.pojo.DTO.AiSpaceDTO;
 import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
+import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.cqe.AddUserToSpaceCommand;
 import team.opentech.usher.pojo.cqe.CreateSubSpaceCommand;
 import team.opentech.usher.pojo.cqe.DefaultCQE;
@@ -10,6 +11,8 @@ import team.opentech.usher.pojo.cqe.FindSubSpaceBySpaceIdQuery;
 import team.opentech.usher.pojo.cqe.RemoveSpaceCommand;
 import team.opentech.usher.pojo.cqe.RemoveUserFromSpaceCommand;
 import team.opentech.usher.pojo.cqe.SpaceCreateCommand;
+import team.opentech.usher.pojo.cqe.UpdateSpaceInfoCommand;
+import team.opentech.usher.pojo.cqe.query.IdQuery;
 import team.opentech.usher.protocol.rpc.base.DTOProvider;
 
 /**
@@ -21,6 +24,8 @@ import team.opentech.usher.protocol.rpc.base.DTOProvider;
  */
 public interface AiSpaceProvider extends DTOProvider<AiSpaceDTO> {
 
+    /*独立空间 start*/
+
     /**
      * 创建一个新的空间
      *
@@ -28,6 +33,35 @@ public interface AiSpaceProvider extends DTOProvider<AiSpaceDTO> {
      */
     Boolean create(SpaceCreateCommand command);
 
+    /**
+     * 移除空间
+     *
+     * @return 是否移除成功
+     */
+    Boolean removeSpace(RemoveSpaceCommand command);
+
+    /**
+     * 更新空间信息
+     *
+     * @param command
+     *
+     * @return
+     */
+    Boolean updateSpaceInfo(UpdateSpaceInfoCommand command);
+
+
+    /**
+     * 查询当前账号下的所有独立空间
+     *
+     * @param blackQuery
+     *
+     * @return
+     */
+    List<AiSpaceDTO> findByOnlineUser(DefaultCQE blackQuery);
+
+    /*独立空间 end*/
+
+    /*空间用户 start*/
 
     /**
      * 添加一个用户到空间
@@ -44,6 +78,19 @@ public interface AiSpaceProvider extends DTOProvider<AiSpaceDTO> {
     Boolean removeUserFromSpace(RemoveUserFromSpaceCommand command);
 
     /**
+     * 根据空间id查询下面的所有用户
+     *
+     * @param query
+     *
+     * @return
+     */
+    List<UserDTO> findUserBySpaceId(IdQuery query);
+
+    /*空间用户 end*/
+
+    /*子空间 start*/
+
+    /**
      * 创建一个子空间
      *
      * @param command
@@ -53,22 +100,6 @@ public interface AiSpaceProvider extends DTOProvider<AiSpaceDTO> {
     Boolean createSubSpace(CreateSubSpaceCommand command);
 
     /**
-     * 移除空间
-     *
-     * @return 是否移除成功
-     */
-    Boolean removeSpace(RemoveSpaceCommand command);
-
-    /**
-     * 查询当前账号下的所有独立空间
-     *
-     * @param blackQuery
-     *
-     * @return
-     */
-    List<AiSpaceDTO> findByOnlineUser(DefaultCQE blackQuery);
-
-    /**
      * 根据独立空间id获取独立空间下所有子空间
      *
      * @param query
@@ -76,4 +107,7 @@ public interface AiSpaceProvider extends DTOProvider<AiSpaceDTO> {
      * @return
      */
     List<AiSubspaceDTO> findSubSpaceBySpaceId(FindSubSpaceBySpaceIdQuery query);
+
+    /*子空间 end*/
+
 }

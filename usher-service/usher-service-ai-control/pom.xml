@@ -18,6 +18,10 @@
 
         <dependency>
             <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-api-provider-user</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
             <artifactId>usher-api-provider-ai-control</artifactId>
         </dependency>
     </dependencies>

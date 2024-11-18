@@ -38,6 +38,9 @@ public class AiSpaceUserLink extends AbstractDoEntity<AiSpaceUserLinkDO> {
         return data.getSpaceId();
     }
 
+    public Long userId() {
+        return data.getUserId();
+    }
     private void initAiSpace() {
         if (aiSpace != null) {
             return;

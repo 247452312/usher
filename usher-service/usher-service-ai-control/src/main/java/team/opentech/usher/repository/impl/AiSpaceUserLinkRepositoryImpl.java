@@ -76,4 +76,12 @@ public class AiSpaceUserLinkRepositoryImpl extends AbstractRepository<AiSpaceUse
         List<AiSpaceUserLinkDO> list = wrapper.list();
         return assembler.listToEntity(list);
     }
+
+    @Override
+    public List<AiSpaceUserLink> findBySpaceId(Long spaceId) {
+        LambdaQueryChainWrapper<AiSpaceUserLinkDO> wrapper = lambdaQuery();
+        wrapper.eq(AiSpaceUserLinkDO::getSpaceId, spaceId);
+        List<AiSpaceUserLinkDO> list = wrapper.list();
+        return assembler.listToEntity(list);
+    }
 }
