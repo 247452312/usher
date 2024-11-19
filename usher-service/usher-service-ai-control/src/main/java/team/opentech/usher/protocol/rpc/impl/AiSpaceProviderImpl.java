@@ -6,6 +6,7 @@ import team.opentech.usher.pojo.DTO.AiSpaceDTO;
 import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
 import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.cqe.AddUserToSpaceCommand;
+import team.opentech.usher.pojo.cqe.ChangeSubSpaceCommand;
 import team.opentech.usher.pojo.cqe.CreateSubSpaceCommand;
 import team.opentech.usher.pojo.cqe.DefaultCQE;
 import team.opentech.usher.pojo.cqe.FindSubSpaceBySpaceIdQuery;
@@ -13,6 +14,7 @@ import team.opentech.usher.pojo.cqe.RemoveSpaceCommand;
 import team.opentech.usher.pojo.cqe.RemoveUserFromSpaceCommand;
 import team.opentech.usher.pojo.cqe.SpaceCreateCommand;
 import team.opentech.usher.pojo.cqe.UpdateSpaceInfoCommand;
+import team.opentech.usher.pojo.cqe.command.IdCommand;
 import team.opentech.usher.pojo.cqe.query.IdQuery;
 import team.opentech.usher.protocol.rpc.AiSpaceProvider;
 import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
@@ -59,6 +61,16 @@ public class AiSpaceProviderImpl extends BaseDefaultProvider<AiSpaceDTO> impleme
         return service.createSubSpace(command);
     }
 
+    @Override
+    public Boolean removeSubSpace(IdCommand command) {
+        return service.removeSubSpace(command);
+    }
+
+    @Override
+    public Boolean changeSubSpace(ChangeSubSpaceCommand command) {
+        return service.changeSubSpace(command);
+    }
+
 
     @Override
     public Boolean removeSpace(RemoveSpaceCommand command) {
@@ -78,6 +90,11 @@ public class AiSpaceProviderImpl extends BaseDefaultProvider<AiSpaceDTO> impleme
     @Override
     public List<AiSubspaceDTO> findSubSpaceBySpaceId(FindSubSpaceBySpaceIdQuery query) {
         return service.findSubSpaceBySpaceId(query);
+    }
+
+    @Override
+    public AiSubspaceDTO findSubSpaceById(IdQuery query) {
+        return service.findSubSpaceById(query);
     }
 
 

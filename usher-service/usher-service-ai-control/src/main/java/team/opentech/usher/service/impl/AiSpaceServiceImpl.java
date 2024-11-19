@@ -14,6 +14,7 @@ import team.opentech.usher.pojo.DTO.AiSpaceDTO;
 import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
 import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.cqe.AddUserToSpaceCommand;
+import team.opentech.usher.pojo.cqe.ChangeSubSpaceCommand;
 import team.opentech.usher.pojo.cqe.CreateSubSpaceCommand;
 import team.opentech.usher.pojo.cqe.DefaultCQE;
 import team.opentech.usher.pojo.cqe.FindSubSpaceBySpaceIdQuery;
@@ -21,6 +22,7 @@ import team.opentech.usher.pojo.cqe.RemoveSpaceCommand;
 import team.opentech.usher.pojo.cqe.RemoveUserFromSpaceCommand;
 import team.opentech.usher.pojo.cqe.SpaceCreateCommand;
 import team.opentech.usher.pojo.cqe.UpdateSpaceInfoCommand;
+import team.opentech.usher.pojo.cqe.command.IdCommand;
 import team.opentech.usher.pojo.cqe.query.IdQuery;
 import team.opentech.usher.pojo.entity.AiSpace;
 import team.opentech.usher.pojo.entity.AiSpaceUserLink;
@@ -127,6 +129,25 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
         List<AiSpaceUserLink> userLinks = userLinkRepository.findBySpaceId(query.getId());
         List<Long> userIds = userLinks.stream().map(AiSpaceUserLink::userId).collect(Collectors.toList());
         return userFacade.findByUserIdList(userIds);
+    }
+
+    @Override
+    public Boolean removeSubSpace(IdCommand command) {
+        return subspaceRepository.remove(Identifier.build(command.getId())) == 1;
+    }
+
+    @Override
+    public Boolean changeSubSpace(ChangeSubSpaceCommand command) {
+        AiSubspace aiSubspace = subspaceAssembler.toEntity(command);
+        aiSubspace.onUpdate();
+        aiSubspace.saveSelf(subspaceRepository);
+        return Boolean.TRUE;
+    }
+
+    @Override
+    public AiSubspaceDTO findSubSpaceById(IdQuery query) {
+        AiSubspace aiSubspace = subspaceRepository.find(Identifier.build(query.getId()));
+        return subspaceAssembler.toDTO(aiSubspace);
     }
 
     @Override

@@ -8,6 +8,7 @@ import org.mapstruct.Mapping;
 import team.opentech.usher.pojo.DO.AiSubspaceDO;
 import team.opentech.usher.pojo.DTO.AiSubspaceConnectionPointDTO;
 import team.opentech.usher.pojo.DTO.AiSubspaceDTO;
+import team.opentech.usher.pojo.cqe.ChangeSubSpaceCommand;
 import team.opentech.usher.pojo.cqe.CreateSubSpaceCommand;
 import team.opentech.usher.pojo.entity.AiSubspace;
 import team.opentech.usher.pojo.entity.AiSubspaceConnectionPoint;
@@ -53,4 +54,13 @@ public abstract class AiSubspaceAssembler extends AbstractAssembler<AiSubspaceDO
         dto.setConnectionPointDTOS(aiSubspaceConnectionPointDTOS);
         return dto;
     }
+
+    public AiSubspace toEntity(ChangeSubSpaceCommand command) {
+        AiSubspaceDTO dto = toDTO(command);
+        AiSubspaceDO aDo = toDo(dto);
+        return new AiSubspace(aDo);
+    }
+
+    @Mapping(target = "id", source = "subspaceId")
+    public abstract AiSubspaceDTO toDTO(ChangeSubSpaceCommand command);
 }
