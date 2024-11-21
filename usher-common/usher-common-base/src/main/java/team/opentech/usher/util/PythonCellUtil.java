@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.util.StringUtils;
 
 /**
  * python文件调用接口
@@ -64,7 +63,7 @@ public final class PythonCellUtil {
         BufferedReader br = new BufferedReader(new InputStreamReader(exec.getInputStream()));
         StringBuilder result = new StringBuilder();
         String get;
-        while (!StringUtils.isEmpty(get = br.readLine())) {
+        while (!StringUtil.isEmpty(get = br.readLine())) {
             result.append(get);
         }
         br.close();
@@ -96,7 +95,7 @@ public final class PythonCellUtil {
             paths.addAll(Arrays.asList(split));
         }
         for (String path : paths) {
-            if (!StringUtils.isEmpty(path)) {
+            if (!StringUtil.isEmpty(path)) {
                 File file = new File(path);
                 if (file.exists()) {
                     if (file.isFile() && file.getName().equalsIgnoreCase(PYTHON_FILE_NAME)) {

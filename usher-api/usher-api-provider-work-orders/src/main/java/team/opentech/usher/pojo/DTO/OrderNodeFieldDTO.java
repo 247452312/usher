@@ -155,4 +155,60 @@ public class OrderNodeFieldDTO extends IdDTO {
         this.relationId = relationId;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        OrderNodeFieldDTO that = (OrderNodeFieldDTO) o;
+
+        if (getBaseOrderNodeId() != null ? !getBaseOrderNodeId().equals(that.getBaseOrderNodeId()) : that.getBaseOrderNodeId() != null) {
+            return false;
+        }
+        if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) {
+            return false;
+        }
+        if (getDesc() != null ? !getDesc().equals(that.getDesc()) : that.getDesc() != null) {
+            return false;
+        }
+        if (getDefaultValue() != null ? !getDefaultValue().equals(that.getDefaultValue()) : that.getDefaultValue() != null) {
+            return false;
+        }
+        if (getEmpty() != null ? !getEmpty().equals(that.getEmpty()) : that.getEmpty() != null) {
+            return false;
+        }
+        if (getEdit() != null ? !getEdit().equals(that.getEdit()) : that.getEdit() != null) {
+            return false;
+        }
+        if (getType() != null ? !getType().equals(that.getType()) : that.getType() != null) {
+            return false;
+        }
+        if (getValueType() != null ? !getValueType().equals(that.getValueType()) : that.getValueType() != null) {
+            return false;
+        }
+        if (getDataSources() != null ? !getDataSources().equals(that.getDataSources()) : that.getDataSources() != null) {
+            return false;
+        }
+        return getRelationId() != null ? getRelationId().equals(that.getRelationId()) : that.getRelationId() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getBaseOrderNodeId() != null ? getBaseOrderNodeId().hashCode() : 0;
+        result = 31 * result + (getName() != null ? getName().hashCode() : 0);
+        result = 31 * result + (getDesc() != null ? getDesc().hashCode() : 0);
+        result = 31 * result + (getDefaultValue() != null ? getDefaultValue().hashCode() : 0);
+        result = 31 * result + (getEmpty() != null ? getEmpty().hashCode() : 0);
+        result = 31 * result + (getEdit() != null ? getEdit().hashCode() : 0);
+        result = 31 * result + (getType() != null ? getType().hashCode() : 0);
+        result = 31 * result + (getValueType() != null ? getValueType().hashCode() : 0);
+        result = 31 * result + (getDataSources() != null ? getDataSources().hashCode() : 0);
+        result = 31 * result + (getRelationId() != null ? getRelationId().hashCode() : 0);
+        return result;
+    }
 }
