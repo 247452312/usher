@@ -13,4 +13,12 @@ import team.opentech.usher.repository.base.BaseEntityRepository;
  */
 public interface AiSpaceRepository extends BaseEntityRepository<AiSpaceDO, AiSpace> {
 
+    /**
+     * 根据设备id获取独立空间
+     *
+     * @param deviceId
+     *
+     * @return
+     */
+    AiSpace findByDeviceId(Long deviceId);
 }

@@ -1,6 +1,7 @@
 package team.opentech.usher.dao;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import team.opentech.usher.dao.base.DefaultDao;
 import team.opentech.usher.pojo.DO.AiDeviceDO;
 
@@ -15,4 +16,12 @@ import team.opentech.usher.pojo.DO.AiDeviceDO;
 @Mapper
 public interface AiDeviceDao extends DefaultDao<AiDeviceDO> {
 
+    /**
+     * 根据设备id获取子空间id
+     *
+     * @param deviceId
+     *
+     * @return
+     */
+    Long findSubSpaceIdById(@Param("deviceId") Long deviceId);
 }

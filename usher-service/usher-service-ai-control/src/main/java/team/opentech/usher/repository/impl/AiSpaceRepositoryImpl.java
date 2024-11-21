@@ -1,11 +1,15 @@
 package team.opentech.usher.repository.impl;
 
+import javax.annotation.Resource;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.AiSpaceAssembler;
 import team.opentech.usher.dao.AiSpaceDao;
 import team.opentech.usher.pojo.DO.AiSpaceDO;
 import team.opentech.usher.pojo.DTO.AiSpaceDTO;
 import team.opentech.usher.pojo.entity.AiSpace;
+import team.opentech.usher.pojo.entity.AiSubspace;
+import team.opentech.usher.pojo.entity.type.Identifier;
+import team.opentech.usher.repository.AiDeviceRepository;
 import team.opentech.usher.repository.AiSpaceRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 
@@ -20,9 +24,17 @@ import team.opentech.usher.repository.base.AbstractRepository;
 @Repository
 public class AiSpaceRepositoryImpl extends AbstractRepository<AiSpace, AiSpaceDO, AiSpaceDao, AiSpaceDTO, AiSpaceAssembler> implements AiSpaceRepository {
 
+    @Resource
+    private AiDeviceRepository deviceRepository;
+
     protected AiSpaceRepositoryImpl(AiSpaceAssembler convert, AiSpaceDao dao) {
         super(convert, dao);
     }
 
-
+    @Override
+    public AiSpace findByDeviceId(Long deviceId) {
+        AiSubspace aiSubspace = deviceRepository.findSubSpaceById(deviceId);
+        Long spaceId = aiSubspace.spaceId();
+        return find(Identifier.build(spaceId));
+    }
 }

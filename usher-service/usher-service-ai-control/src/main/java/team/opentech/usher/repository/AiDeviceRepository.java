@@ -3,6 +3,7 @@ package team.opentech.usher.repository;
 import java.util.List;
 import team.opentech.usher.pojo.DO.AiDeviceDO;
 import team.opentech.usher.pojo.entity.AiDevice;
+import team.opentech.usher.pojo.entity.AiSubspace;
 import team.opentech.usher.repository.base.BaseEntityRepository;
 
 /**
@@ -38,4 +39,13 @@ public interface AiDeviceRepository extends BaseEntityRepository<AiDeviceDO, AiD
      * @return
      */
     List<AiDevice> findBySubSpaceIds(List<Long> subSpaceIds);
+
+    /**
+     * 根据设备id获取所在子空间
+     *
+     * @param deviceId
+     *
+     * @return
+     */
+    AiSubspace findSubSpaceById(Long deviceId);
 }

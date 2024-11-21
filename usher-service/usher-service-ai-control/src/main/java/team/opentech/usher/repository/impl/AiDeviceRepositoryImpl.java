@@ -3,13 +3,17 @@ package team.opentech.usher.repository.impl;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import java.util.List;
+import javax.annotation.Resource;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.AiDeviceAssembler;
 import team.opentech.usher.dao.AiDeviceDao;
 import team.opentech.usher.pojo.DO.AiDeviceDO;
 import team.opentech.usher.pojo.DTO.AiDeviceDTO;
 import team.opentech.usher.pojo.entity.AiDevice;
+import team.opentech.usher.pojo.entity.AiSubspace;
+import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.AiDeviceRepository;
+import team.opentech.usher.repository.AiSubspaceRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 
 
@@ -50,5 +54,14 @@ public class AiDeviceRepositoryImpl extends AbstractRepository<AiDevice, AiDevic
         wrapper.eq(AiDeviceDO::getSubspaceId, subSpaceIds);
         List<AiDeviceDO> list = wrapper.list();
         return assembler.listToEntity(list);
+    }
+
+    @Resource
+    private AiSubspaceRepository subspaceRepository;
+
+    @Override
+    public AiSubspace findSubSpaceById(Long deviceId) {
+        Long subSpaceId = dao.findSubSpaceIdById(deviceId);
+        return subspaceRepository.find(Identifier.build(subSpaceId));
     }
 }

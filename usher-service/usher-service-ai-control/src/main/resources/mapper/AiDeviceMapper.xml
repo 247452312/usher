@@ -76,4 +76,9 @@
             where ${pkColumn.name} = #{${pkColumn.smallName}}
         </foreach>
     </update>
+    <select id="findSubSpaceIdById" resultType="java.lang.Long">
+        select subspace_id
+        from sys_ai_device
+        where id = #{deviceId}
+    </select>
 </mapper>

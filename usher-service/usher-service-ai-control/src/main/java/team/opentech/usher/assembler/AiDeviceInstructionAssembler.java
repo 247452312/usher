@@ -4,6 +4,7 @@ package team.opentech.usher.assembler;
 import org.mapstruct.Mapper;
 import team.opentech.usher.pojo.DO.AiDeviceInstructionDO;
 import team.opentech.usher.pojo.DTO.AiDeviceInstructionDTO;
+import team.opentech.usher.pojo.cqe.CreateDeviceInstructionCommand;
 import team.opentech.usher.pojo.entity.AiDeviceInstruction;
 
 /**
@@ -16,4 +17,9 @@ import team.opentech.usher.pojo.entity.AiDeviceInstruction;
 @Mapper(componentModel = "spring")
 public abstract class AiDeviceInstructionAssembler extends AbstractAssembler<AiDeviceInstructionDO, AiDeviceInstruction, AiDeviceInstructionDTO> {
 
+    public AiDeviceInstruction toEntity(CreateDeviceInstructionCommand command) {
+        return new AiDeviceInstruction(toDo(command));
+    }
+
+    public abstract AiDeviceInstructionDO toDo(CreateDeviceInstructionCommand command);
 }

@@ -81,4 +81,8 @@ public class AiSubspace extends AbstractDoEntity<AiSubspaceDO> {
         }
 
     }
+
+    public Long spaceId() {
+        return toDataAndValidate().getSpaceId();
+    }
 }
