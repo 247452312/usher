@@ -1,15 +1,14 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.Optional;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.enums.LogTypeEnum;
 import team.opentech.usher.facade.ServiceControlFacade;
 import team.opentech.usher.pojo.DO.RelegationDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.RelegationRepository;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.StringUtil;
-import java.util.Optional;
 
 /**
  * 接口降级策略(Relegation)表 数据库实体类
@@ -53,9 +52,6 @@ public class Relegation extends AbstractDoEntity<RelegationDO> {
         completion(rep);
     }
 
-    public Relegation(Identifier id) {
-        super(id, new RelegationDO());
-    }
 
     public Relegation(Integer type, String serviceName, String methodName) {
         super(new RelegationDO());

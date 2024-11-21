@@ -1,11 +1,10 @@
 package team.opentech.usher.service;
 
 
+import java.util.List;
 import team.opentech.usher.pojo.DTO.DeptDTO;
 import team.opentech.usher.pojo.DTO.RoleDTO;
 import team.opentech.usher.pojo.DTO.response.GetAllDeptWithHaveMarkDTO;
-import team.opentech.usher.pojo.entity.type.Identifier;
-import java.util.List;
 
 /**
  * 角色(Role)表 内部服务接口
@@ -23,7 +22,7 @@ public interface RoleService extends BaseDoService<RoleDTO> {
      *
      * @return 角色
      */
-    RoleDTO getRoleByRoleId(Identifier roleId);
+    RoleDTO getRoleByRoleId(Long roleId);
 
     /**
      * 给角色添加权限集
@@ -33,7 +32,7 @@ public interface RoleService extends BaseDoService<RoleDTO> {
      *
      * @return 是否成功
      */
-    Boolean putDeptsToRole(Identifier roleId, List<Identifier> deptIds);
+    Boolean putDeptsToRole(Long roleId, List<Long> deptIds);
 
     /**
      * 删除 -> 真删. 不是假删
@@ -58,7 +57,7 @@ public interface RoleService extends BaseDoService<RoleDTO> {
      *
      * @return 对应的权限集
      */
-    List<DeptDTO> getUserDeptsByRoleId(Identifier roleId);
+    List<DeptDTO> getUserDeptsByRoleId(Long roleId);
 
     /**
      * 获取所有权限集(带有角色包不包含此权限集的标记)
@@ -67,7 +66,7 @@ public interface RoleService extends BaseDoService<RoleDTO> {
      *
      * @return 所有权限集(带有角色包不包含此权限集的标记)
      */
-    List<GetAllDeptWithHaveMarkDTO> getAllDeptWithHaveMark(Identifier roleId);
+    List<GetAllDeptWithHaveMarkDTO> getAllDeptWithHaveMark(Long roleId);
 
     /**
      * 根据角色id删除角色以及关联表
@@ -76,6 +75,6 @@ public interface RoleService extends BaseDoService<RoleDTO> {
      *
      * @return 删除是否成功
      */
-    Boolean deleteRole(Identifier roleId);
+    Boolean deleteRole(Long roleId);
 
 }

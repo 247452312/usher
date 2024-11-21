@@ -1,5 +1,10 @@
 package team.opentech.usher.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.DeptAssembler;
 import team.opentech.usher.assembler.RoleAssembler;
@@ -11,16 +16,10 @@ import team.opentech.usher.pojo.DTO.response.GetAllDeptWithHaveMarkDTO;
 import team.opentech.usher.pojo.entity.Dept;
 import team.opentech.usher.pojo.entity.Role;
 import team.opentech.usher.pojo.entity.base.BaseEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.DeptRepository;
 import team.opentech.usher.repository.RoleRepository;
 import team.opentech.usher.service.RoleService;
 import team.opentech.usher.util.Asserts;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * 角色(Role)表 内部服务实现类
@@ -45,7 +44,7 @@ public class RoleServiceImpl extends AbstractDoService<RoleDO, Role, RoleDTO, Ro
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.WRITE, tables = {"sys_role_dept", "sys_role_dept"})
-    public RoleDTO getRoleByRoleId(Identifier roleId) {
+    public RoleDTO getRoleByRoleId(Long roleId) {
         Role role = new Role(roleId);
         role.completion(rep);
         Optional<RoleDO> roleDOOpt = role.toData();
@@ -55,7 +54,7 @@ public class RoleServiceImpl extends AbstractDoService<RoleDO, Role, RoleDTO, Ro
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.WRITE, tables = {"sys_role_dept"})
-    public Boolean putDeptsToRole(Identifier roleId, List<Identifier> deptIds) {
+    public Boolean putDeptsToRole(Long roleId, List<Long> deptIds) {
         Role role = new Role(roleId);
 
         role.cleanDeptLink(rep);
@@ -78,7 +77,7 @@ public class RoleServiceImpl extends AbstractDoService<RoleDO, Role, RoleDTO, Ro
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.READ, tables = {"sys_dept", "sys_role_dept"})
-    public List<DeptDTO> getUserDeptsByRoleId(Identifier roleId) {
+    public List<DeptDTO> getUserDeptsByRoleId(Long roleId) {
         Role role = new Role(roleId);
         role.fillDeptIds(rep);
         List<Dept> deptIds = role.deptIds();
@@ -88,14 +87,14 @@ public class RoleServiceImpl extends AbstractDoService<RoleDO, Role, RoleDTO, Ro
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.READ, tables = {"sys_role_dept", "sys_dept"})
-    public List<GetAllDeptWithHaveMarkDTO> getAllDeptWithHaveMark(Identifier roleId) {
+    public List<GetAllDeptWithHaveMarkDTO> getAllDeptWithHaveMark(Long roleId) {
         Role role = new Role(roleId);
         return role.toDeptWithHaveMark(rep);
     }
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.WRITE, tables = {"sys_role_dept", "sys_user"})
-    public Boolean deleteRole(Identifier roleId) {
+    public Boolean deleteRole(Long roleId) {
         Role role = new Role(roleId);
         role.cleanDeptLink(rep);
         role.removeSelf(rep);

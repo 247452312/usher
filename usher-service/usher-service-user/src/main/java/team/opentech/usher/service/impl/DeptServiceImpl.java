@@ -1,5 +1,12 @@
 package team.opentech.usher.service.impl;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.DeptAssembler;
 import team.opentech.usher.enums.ReadWriteTypeEnum;
@@ -9,16 +16,8 @@ import team.opentech.usher.pojo.DTO.response.GetAllPowerWithHaveMarkDTO;
 import team.opentech.usher.pojo.entity.Dept;
 import team.opentech.usher.pojo.entity.Menu;
 import team.opentech.usher.pojo.entity.Power;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.DeptRepository;
 import team.opentech.usher.service.DeptService;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 部门(Dept)表 内部服务实现类
@@ -38,12 +37,12 @@ public class DeptServiceImpl extends AbstractDoService<DeptDO, Dept, DeptDTO, De
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.WRITE, tables = {"sys_dept_power"})
-    public Boolean putPowersToDept(Identifier deptId, List<Identifier> powerIds) {
+    public Boolean putPowersToDept(Long deptId, List<Long> powerIds) {
 
-        Dept dept = new Dept(deptId.getId());
+        Dept dept = new Dept(deptId);
         // 清空之前这个部门的权限
         dept.cleanPower(rep);
-        dept.addPower(powerIds.stream().map(Identifier::getId).map(Power::new).collect(Collectors.toList()), rep);
+        dept.addPower(powerIds.stream().map(Power::new).collect(Collectors.toList()), rep);
         return true;
     }
 
@@ -57,11 +56,11 @@ public class DeptServiceImpl extends AbstractDoService<DeptDO, Dept, DeptDTO, De
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.WRITE, tables = {"sys_dept_menu"})
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, timeout = 36000, rollbackFor = Exception.class)
-    public Boolean putMenusToDept(Identifier deptId, List<Identifier> menuIds) {
-        Dept dept = new Dept(deptId.getId());
+    public Boolean putMenusToDept(Long deptId, List<Long> menuIds) {
+        Dept dept = new Dept(deptId);
         // 清空之前这个部门的按钮
         dept.cleanMenu(rep);
-        dept.addMenu(menuIds.stream().map(Identifier::getId).map(Menu::new).collect(Collectors.toList()), rep);
+        dept.addMenu(menuIds.stream().map(Menu::new).collect(Collectors.toList()), rep);
         return true;
     }
 
@@ -73,13 +72,13 @@ public class DeptServiceImpl extends AbstractDoService<DeptDO, Dept, DeptDTO, De
 
     @Override
     @ReadWriteMark(tables = {"sys_dept_power", "sys_power"})
-    public List<GetAllPowerWithHaveMarkDTO> getAllPowerWithHaveMark(Identifier deptId) {
-        return rep.getAllPowerWithHaveMark(new Dept(deptId.getId()));
+    public List<GetAllPowerWithHaveMarkDTO> getAllPowerWithHaveMark(Long deptId) {
+        return rep.getAllPowerWithHaveMark(new Dept(deptId));
     }
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.WRITE, tables = {"sys_dept", "sys_dept_power", "sys_dept_menu", "sys_role_dept"})
-    public Boolean deleteDept(Identifier deptId) {
+    public Boolean deleteDept(Long deptId) {
         Dept dept = rep.find(deptId);
         dept.removeMenuLink(rep);
         dept.removePowerLink(rep);

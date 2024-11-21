@@ -3,7 +3,6 @@ package team.opentech.usher.repository;
 import team.opentech.usher.pojo.DO.ProviderInterfaceMysqlDO;
 import team.opentech.usher.pojo.entity.ProviderExample;
 import team.opentech.usher.pojo.entity.ProviderInterfaceMysql;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
 
 /**
@@ -22,5 +21,5 @@ public interface ProviderInterfaceMysqlRepository extends BaseEntityRepository<P
      *
      * @return
      */
-    ProviderExample findByProviderId(Identifier id);
+    ProviderExample findByProviderId(Long id);
 }

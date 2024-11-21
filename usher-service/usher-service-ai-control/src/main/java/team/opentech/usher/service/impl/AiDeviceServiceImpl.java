@@ -16,7 +16,6 @@ import team.opentech.usher.pojo.cqe.command.IdsCommand;
 import team.opentech.usher.pojo.cqe.query.IdQuery;
 import team.opentech.usher.pojo.entity.AiDevice;
 import team.opentech.usher.pojo.entity.AiSubspace;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.event.DeviceCleanEvent;
 import team.opentech.usher.pojo.event.DeviceInstructionCleanEvent;
 import team.opentech.usher.repository.AiDeviceInstructionRepository;
@@ -78,13 +77,14 @@ public class AiDeviceServiceImpl extends AbstractDoService<AiDeviceDO, AiDevice,
 
     @Override
     public Boolean removeDevice(IdCommand command) {
-        int remove = rep.remove(Identifier.build(command.getId()));
+        int remove = rep.remove(command.getId());
         return remove == 1;
     }
 
     @Override
     public Boolean removeDevices(IdsCommand command) {
-        return rep.removeByIds(command.getIds());
+        int i = rep.removeByIds(command.getIds());
+        return Boolean.TRUE;
     }
 
     @Override
@@ -95,7 +95,7 @@ public class AiDeviceServiceImpl extends AbstractDoService<AiDeviceDO, AiDevice,
 
     @Override
     public Boolean changePosition(ChangePositionCommand command) {
-        AiDevice aiDevice = rep.find(Identifier.build(command.getId()));
+        AiDevice aiDevice = rep.find(command.getId());
         aiDevice.changePosition(command.getPosition(), command.getAngle(), command.getRotate());
         aiDevice.saveSelf(rep);
         return Boolean.TRUE;
@@ -103,7 +103,7 @@ public class AiDeviceServiceImpl extends AbstractDoService<AiDeviceDO, AiDevice,
 
     @Override
     public Boolean changeDevice(ChangeDeviceCommand command) {
-        AiDevice aiDevice = rep.find(Identifier.build(command.getId()));
+        AiDevice aiDevice = rep.find(command.getId());
         aiDevice.name(command.getName());
         aiDevice.type(command.getType(), command.getSubtype());
         aiDevice.subSpace(command.getSubspaceId());
@@ -114,7 +114,7 @@ public class AiDeviceServiceImpl extends AbstractDoService<AiDeviceDO, AiDevice,
     @Override
     public List<AiDeviceDTO> findDeviceBySpaceId(IdQuery query) {
         List<AiSubspace> bySpaceId = subspaceRepository.findBySpaceId(query.getId());
-        List<Long> subSpaceIds = bySpaceId.stream().map(t -> t.unique.getId()).collect(Collectors.toList());
+        List<Long> subSpaceIds = bySpaceId.stream().map(t -> t.unique).collect(Collectors.toList());
         List<AiDevice> devices = rep.findBySubSpaceIds(subSpaceIds);
         return assem.listEntityToDTO(devices);
     }

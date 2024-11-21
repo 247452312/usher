@@ -1,5 +1,8 @@
 package team.opentech.usher.service.impl;
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.OrderInfoAssembler;
 import team.opentech.usher.assembler.OrderNodeAssembler;
@@ -16,7 +19,6 @@ import team.opentech.usher.pojo.cqe.command.IncapacityFailOrderNodeCommand;
 import team.opentech.usher.pojo.entity.OrderApply;
 import team.opentech.usher.pojo.entity.OrderNode;
 import team.opentech.usher.pojo.entity.OrderNodeList;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.OrderApplyRepository;
 import team.opentech.usher.repository.OrderInfoRepository;
 import team.opentech.usher.repository.OrderNodeFieldRepository;
@@ -25,10 +27,6 @@ import team.opentech.usher.repository.OrderNodeRepository;
 import team.opentech.usher.repository.OrderNodeResultTypeRepository;
 import team.opentech.usher.repository.OrderNodeRouteRepository;
 import team.opentech.usher.service.OrderNodeService;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * 工单节点样例表(OrderNode)表 内部服务实现类
@@ -71,7 +69,7 @@ public class OrderNodeServiceImpl extends AbstractDoService<OrderNodeDO, OrderNo
 
     @Override
     public Boolean deleteByIds(IdsCommand request) {
-        List<Identifier> nodeIds = request.getIds().stream().map(Identifier::new).collect(Collectors.toList());
+        List<Long> nodeIds = request.getIds();
         List<OrderNode> orderNodes = rep.find(nodeIds);
         OrderNodeList orderNodeList = new OrderNodeList(orderNodes);
         /*删除属性*/

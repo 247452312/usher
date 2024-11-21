@@ -1,12 +1,11 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.UserDO;
 import team.opentech.usher.pojo.entity.Token;
 import team.opentech.usher.pojo.entity.User;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.Password;
 import team.opentech.usher.repository.base.BaseEntityRepository;
-import java.util.List;
 
 /**
  * 用户仓库
@@ -39,7 +38,7 @@ public interface UserRepository extends BaseEntityRepository<UserDO, User> {
      *
      * @return
      */
-    User findUserByIdInRedis(Identifier userId);
+    User findUserByIdInRedis(Long userId);
 
     /**
      * 判断token是否存在

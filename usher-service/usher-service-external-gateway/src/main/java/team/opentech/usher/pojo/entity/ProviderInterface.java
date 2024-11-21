@@ -6,7 +6,6 @@ import team.opentech.usher.annotation.Default;
 import team.opentech.usher.enums.InvokeTypeEnum;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import team.opentech.usher.pojo.DO.ProviderInterfaceDO;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.NodeRepository;
 import team.opentech.usher.repository.ProviderInterfaceRepository;
 import team.opentech.usher.util.Asserts;
@@ -48,10 +47,9 @@ public class ProviderInterface extends AbstractDataNode<ProviderInterfaceDO> {
     @Override
     public void fill(NodeRepository nodeRepository, ProviderInterfaceRepository providerInterfaceRepository) {
         ProviderInterfaceDO providerInterfaceDO = toDataAndValidate();
-        Identifier id = Identifier.build(providerInterfaceDO.getId());
-        this.shouldParams = providerInterfaceRepository.findParamByInterfaceId(id);
+        this.shouldParams = providerInterfaceRepository.findParamByInterfaceId(providerInterfaceDO.getId());
         InvokeTypeEnum type = InvokeTypeEnum.getByCode(providerInterfaceDO.getInvokeType());
-        this.example = providerInterfaceRepository.findExample(id, type);
+        this.example = providerInterfaceRepository.findExample(providerInterfaceDO.getId(), type);
         this.example.fillInterface(this);
     }
 

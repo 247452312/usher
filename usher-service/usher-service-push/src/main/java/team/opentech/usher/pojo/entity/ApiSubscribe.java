@@ -1,5 +1,7 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.List;
+import java.util.Objects;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.enums.PushTypeEnum;
 import team.opentech.usher.pojo.DO.ApiGroupDO;
@@ -7,13 +9,10 @@ import team.opentech.usher.pojo.DO.ApiSubscribeDO;
 import team.opentech.usher.pojo.DTO.PushMsgDTO;
 import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ApiSubscribeRepository;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
 import team.opentech.usher.util.PushUtils;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * api订阅表(ApiSubscribe)表 数据库实体类
@@ -42,7 +41,7 @@ public class ApiSubscribe extends AbstractDoEntity<ApiSubscribeDO> {
     }
 
     public void checkRepeat(ApiSubscribeRepository rep) {
-        List<ApiSubscribe> subscribes = rep.findByGroupAndUserId(new Identifier(toData().map(ApiSubscribeDO::getApiGroupId).orElseThrow(Asserts::throwOptionalException)), new Identifier(toData().map(ApiSubscribeDO::getUserId).orElseThrow(Asserts::throwOptionalException)));
+        List<ApiSubscribe> subscribes = rep.findByGroupAndUserId(toData().map(ApiSubscribeDO::getApiGroupId).orElseThrow(Asserts::throwOptionalException), toData().map(ApiSubscribeDO::getUserId).orElseThrow(Asserts::throwOptionalException));
         Asserts.assertTrue(CollectionUtil.isEmpty(subscribes), "不能同时订阅同一个api两次");
     }
 

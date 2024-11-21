@@ -9,7 +9,6 @@ import team.opentech.usher.dao.ProviderInterfaceParamDao;
 import team.opentech.usher.pojo.DO.ProviderInterfaceParamDO;
 import team.opentech.usher.pojo.DTO.ProviderInterfaceParamDTO;
 import team.opentech.usher.pojo.entity.ProviderInterfaceParam;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ProviderInterfaceParamRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 
@@ -30,9 +29,9 @@ public class ProviderInterfaceParamRepositoryImpl extends AbstractRepository<Pro
 
 
     @Override
-    public List<ProviderInterfaceParam> findByInterfaceId(Identifier interfaceId) {
+    public List<ProviderInterfaceParam> findByInterfaceId(Long interfaceId) {
         LambdaQueryWrapper<ProviderInterfaceParamDO> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(ProviderInterfaceParamDO::getProviderInterfaceId, interfaceId.getId());
+        queryWrapper.eq(ProviderInterfaceParamDO::getProviderInterfaceId, interfaceId);
         return assembler.listToEntity(dao.selectList(queryWrapper));
     }
 

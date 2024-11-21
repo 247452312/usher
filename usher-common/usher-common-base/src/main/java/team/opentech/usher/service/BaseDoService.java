@@ -1,12 +1,11 @@
 package team.opentech.usher.service;
 
+import java.util.List;
 import team.opentech.usher.pojo.DTO.base.IdDTO;
 import team.opentech.usher.pojo.DTO.base.Page;
 import team.opentech.usher.pojo.cqe.query.demo.Arg;
 import team.opentech.usher.pojo.cqe.query.demo.Limit;
 import team.opentech.usher.pojo.cqe.query.demo.Order;
-import team.opentech.usher.pojo.entity.type.Identifier;
-import java.util.List;
 
 /**
  * 代表有数据库对象映射的service,带有一些默认方法
@@ -33,7 +32,7 @@ public interface BaseDoService<E extends IdDTO> extends BaseService {
      *
      * @return
      */
-    Integer remove(Identifier id);
+    Integer remove(Long id);
 
     /**
      * 根据条件删除
@@ -56,7 +55,7 @@ public interface BaseDoService<E extends IdDTO> extends BaseService {
      *
      * @param ids
      */
-    List<E> query(List<Identifier> ids);
+    List<E> query(List<Long> ids);
 
     /**
      * 查询
@@ -80,7 +79,7 @@ public interface BaseDoService<E extends IdDTO> extends BaseService {
      *
      * @return
      */
-    E query(Identifier id);
+    E query(Long id);
 
     /**
      * 修改

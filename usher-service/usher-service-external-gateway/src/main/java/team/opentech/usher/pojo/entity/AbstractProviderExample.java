@@ -6,7 +6,6 @@ import java.util.Map;
 import team.opentech.usher.mysql.pojo.DTO.NodeInvokeResult;
 import team.opentech.usher.pojo.DO.base.BaseDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -26,13 +25,10 @@ public abstract class AbstractProviderExample<T extends BaseDO> extends Abstract
     protected AbstractProviderExample() {
     }
 
-    protected AbstractProviderExample(Identifier id, T t) {
-        super(id, t);
-    }
-
     protected AbstractProviderExample(Long id, T t) {
         super(id, t);
     }
+
 
     @Override
     public NodeInvokeResult invoke(Map<String, String> header, Map<String, Object> params, List<ProviderInterfaceParam> shouldParams) {

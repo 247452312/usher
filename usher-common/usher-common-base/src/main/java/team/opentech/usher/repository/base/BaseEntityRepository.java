@@ -1,6 +1,7 @@
 package team.opentech.usher.repository.base;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import java.util.List;
 import team.opentech.usher.pojo.DO.base.BaseDO;
 import team.opentech.usher.pojo.DTO.base.Page;
 import team.opentech.usher.pojo.cqe.query.demo.Arg;
@@ -8,8 +9,6 @@ import team.opentech.usher.pojo.cqe.query.demo.Limit;
 import team.opentech.usher.pojo.cqe.query.demo.Order;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
 import team.opentech.usher.pojo.entity.base.IdEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
-import java.util.List;
 
 /**
  * 基础仓库
@@ -27,7 +26,7 @@ public interface BaseEntityRepository<DO extends BaseDO, EN extends AbstractDoEn
      *
      * @return id
      */
-    Identifier save(EN entity);
+    Long save(EN entity);
 
     /**
      * 批量报错或修改
@@ -36,7 +35,7 @@ public interface BaseEntityRepository<DO extends BaseDO, EN extends AbstractDoEn
      *
      * @return
      */
-    List<Identifier> save(List<EN> entities);
+    List<Long> save(List<EN> entities);
 
     /**
      * 根据id查询
@@ -54,7 +53,7 @@ public interface BaseEntityRepository<DO extends BaseDO, EN extends AbstractDoEn
      *
      * @return
      */
-    <E extends Identifier> List<EN> find(List<E> ids);
+    <E extends Long> List<EN> find(List<E> ids);
 
     /**
      * 根据id查询
@@ -63,7 +62,7 @@ public interface BaseEntityRepository<DO extends BaseDO, EN extends AbstractDoEn
      *
      * @return
      */
-    <E extends Identifier> EN find(E id);
+    <E extends Long> EN find(E id);
 
     /**
      * 根据条件查询
@@ -104,6 +103,7 @@ public interface BaseEntityRepository<DO extends BaseDO, EN extends AbstractDoEn
      * @return
      */
     int remove(List<EN> entitys);
+
     /**
      * 删除
      *
@@ -120,7 +120,7 @@ public interface BaseEntityRepository<DO extends BaseDO, EN extends AbstractDoEn
      *
      * @return
      */
-    <E extends Identifier> int remove(E... ids);
+    <E extends Long> int remove(E... ids);
 
     /**
      * 批量删除
@@ -129,7 +129,7 @@ public interface BaseEntityRepository<DO extends BaseDO, EN extends AbstractDoEn
      *
      * @return
      */
-    <E extends Identifier> int removeByIds(List<E> ids);
+    <E extends Long> int removeByIds(List<E> ids);
 
     /**
      * 批量删除

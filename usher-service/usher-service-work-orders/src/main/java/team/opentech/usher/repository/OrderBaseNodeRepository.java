@@ -1,10 +1,9 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.OrderBaseNodeDO;
 import team.opentech.usher.pojo.entity.OrderBaseNode;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
-import java.util.List;
 
 /**
  * 工单节点样例表(OrderBaseNode)表 数据仓库层
@@ -23,5 +22,5 @@ public interface OrderBaseNodeRepository extends BaseEntityRepository<OrderBaseN
      *
      * @return
      */
-    List<OrderBaseNode> findNoHiddenNodeById(Identifier id);
+    List<OrderBaseNode> findNoHiddenNodeById(Long id);
 }

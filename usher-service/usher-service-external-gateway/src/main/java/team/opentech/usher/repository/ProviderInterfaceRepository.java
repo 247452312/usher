@@ -7,7 +7,6 @@ import team.opentech.usher.pojo.entity.AbstractDataNode;
 import team.opentech.usher.pojo.entity.ProviderExample;
 import team.opentech.usher.pojo.entity.ProviderInterface;
 import team.opentech.usher.pojo.entity.ProviderInterfaceParam;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
 
 /**
@@ -47,7 +46,7 @@ public interface ProviderInterfaceRepository extends BaseEntityRepository<Provid
      *
      * @return
      */
-    List<ProviderInterfaceParam> findParamByInterfaceId(Identifier id);
+    List<ProviderInterfaceParam> findParamByInterfaceId(Long id);
 
     /**
      * 获取实际执行者
@@ -57,5 +56,5 @@ public interface ProviderInterfaceRepository extends BaseEntityRepository<Provid
      *
      * @return
      */
-    ProviderExample findExample(Identifier id, InvokeTypeEnum type);
+    ProviderExample findExample(Long id, InvokeTypeEnum type);
 }

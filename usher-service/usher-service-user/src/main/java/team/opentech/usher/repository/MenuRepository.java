@@ -1,13 +1,12 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.MenuDO;
 import team.opentech.usher.pojo.DTO.response.GetAllMenuWithHaveMarkDTO;
 import team.opentech.usher.pojo.entity.Dept;
 import team.opentech.usher.pojo.entity.Menu;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.MenuIframe;
 import team.opentech.usher.repository.base.BaseEntityRepository;
-import java.util.List;
 
 /**
  * 权限仓库
@@ -49,7 +48,7 @@ public interface MenuRepository extends BaseEntityRepository<MenuDO, Menu> {
      *
      * @return
      */
-    List<Menu> findByDeptId(Identifier identifier);
+    List<Menu> findByDeptId(Long identifier);
 
     /**
      * 查询
@@ -58,5 +57,5 @@ public interface MenuRepository extends BaseEntityRepository<MenuDO, Menu> {
      *
      * @return
      */
-    List<GetAllMenuWithHaveMarkDTO> findAllMenuWithHaveMark(Identifier menu);
+    List<GetAllMenuWithHaveMarkDTO> findAllMenuWithHaveMark(Long menu);
 }

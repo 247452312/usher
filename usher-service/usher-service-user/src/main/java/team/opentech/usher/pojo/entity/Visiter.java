@@ -6,7 +6,6 @@ import java.util.Optional;
 import java.util.Random;
 import team.opentech.usher.enums.UserTypeEnum;
 import team.opentech.usher.pojo.DO.UserDO;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.UserRepository;
 import team.opentech.usher.util.AESUtil;
 import team.opentech.usher.util.Asserts;
@@ -63,9 +62,9 @@ public class Visiter extends User {
         //盐 x位
         sb.append(salt);
 
-        Optional<Identifier> unique = getUnique();
+        Optional<Long> unique = getUnique();
         Asserts.assertTrue(unique.isPresent(), "唯一标示不存在,不能进行token生成");
-        return new Token(unique.get().getId(), AESUtil.AESEncode(encodeRules, sb.toString()));
+        return new Token(unique.get(), AESUtil.AESEncode(encodeRules, sb.toString()));
     }
 
     @Override

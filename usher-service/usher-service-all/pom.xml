@@ -3,30 +3,6 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>team.opentech.usher</groupId>
-        <artifactId>usher-service</artifactId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
-    </parent>
-
-    <artifactId>usher-service-all</artifactId>
-
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
-    <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.ow2.asm/asm -->
-        <dependency>
-            <groupId>org.ow2.asm</groupId>
-            <artifactId>asm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>team.opentech.usher</groupId>
-            <artifactId>usher-common-base</artifactId>
-        </dependency>
-    </dependencies>
-
     <build>
         <finalName>usher-service-all</finalName>
 
@@ -67,7 +43,7 @@
                                 <artifactItem>
                                     <groupId>team.opentech.usher</groupId>
                                     <artifactId>usher-web</artifactId>
-                                    <version>2.1.0.0.usher-SNAPSHOT</version>
+                                    <version>2.1.0.1.usher-SNAPSHOT</version>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/classes/webapp/usher-web</outputDirectory>
                                     <excludes>
@@ -90,7 +66,7 @@
                                 <artifactItem>
                                     <groupId>team.opentech.usher</groupId>
                                     <artifactId>usher-service-user</artifactId>
-                                    <version>2.1.0.0.usher-SNAPSHOT</version>
+                                    <version>2.1.0.1.usher-SNAPSHOT</version>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
                                         ${project.build.directory}/classes/webapp/usher-user
@@ -112,7 +88,7 @@
                                 <artifactItem>
                                     <groupId>team.opentech.usher</groupId>
                                     <artifactId>usher-service-log</artifactId>
-                                    <version>2.1.0.0.usher-SNAPSHOT</version>
+                                    <version>2.1.0.1.usher-SNAPSHOT</version>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
                                         ${project.build.directory}/classes/webapp/usher-log
@@ -127,4 +103,28 @@
             </plugin>
         </plugins>
     </build>
+
+    <artifactId>usher-service-all</artifactId>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.ow2.asm/asm -->
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-common-base</artifactId>
+        </dependency>
+    </dependencies>
+
+    <parent>
+        <groupId>team.opentech.usher</groupId>
+        <artifactId>usher-service</artifactId>
+        <version>2.1.0.1.usher-SNAPSHOT</version>
+    </parent>
 </project>

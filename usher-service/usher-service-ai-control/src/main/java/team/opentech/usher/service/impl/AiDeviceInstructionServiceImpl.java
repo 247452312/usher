@@ -18,7 +18,6 @@ import team.opentech.usher.pojo.entity.AiDeviceInstruction;
 import team.opentech.usher.pojo.entity.AiSpace;
 import team.opentech.usher.pojo.entity.AiSubspace;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.AiDeviceInstructionRepository;
 import team.opentech.usher.repository.AiSpaceRepository;
 import team.opentech.usher.repository.AiSubspaceRepository;
@@ -59,7 +58,7 @@ public class AiDeviceInstructionServiceImpl extends AbstractDoService<AiDeviceIn
 
     @Override
     public Boolean removeDeviceInstruction(IdCommand command) {
-        int remove = rep.remove(Identifier.build(command.getId()));
+        int remove = rep.remove(command.getId());
         return remove == 1;
     }
 
@@ -83,7 +82,7 @@ public class AiDeviceInstructionServiceImpl extends AbstractDoService<AiDeviceIn
     @Override
     public List<AiSubspaceDTO> findAllSubSpaceInSpaceByDeviceId(IdQuery query) {
         AiSpace space = spaceRepository.findByDeviceId(query.getId());
-        List<AiSubspace> bySpaceId = subspaceRepository.findBySpaceId(space.unique.getId());
+        List<AiSubspace> bySpaceId = subspaceRepository.findBySpaceId(space.unique);
         return aiSubspaceAssembler.listEntityToDTO(bySpaceId);
     }
 

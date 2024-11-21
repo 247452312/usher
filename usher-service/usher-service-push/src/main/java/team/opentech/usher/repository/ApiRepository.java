@@ -1,11 +1,10 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.ApiDO;
 import team.opentech.usher.pojo.entity.Api;
 import team.opentech.usher.pojo.entity.ApiGroup;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
-import java.util.List;
 
 /**
  * api表(Api)表 数据仓库层
@@ -24,7 +23,7 @@ public interface ApiRepository extends BaseEntityRepository<ApiDO, Api> {
      *
      * @return
      */
-    List<Api> findByGroupId(Identifier groupId);
+    List<Api> findByGroupId(Long groupId);
 
     /**
      * 根据groupId删除

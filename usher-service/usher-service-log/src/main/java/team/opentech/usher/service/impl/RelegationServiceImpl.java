@@ -1,5 +1,8 @@
 package team.opentech.usher.service.impl;
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.RelegationAssembler;
 import team.opentech.usher.facade.ServiceControlFacade;
@@ -11,12 +14,8 @@ import team.opentech.usher.pojo.cqe.query.demo.Arg;
 import team.opentech.usher.pojo.cqe.query.demo.Limit;
 import team.opentech.usher.pojo.cqe.query.demo.Order;
 import team.opentech.usher.pojo.entity.Relegation;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.RelegationRepository;
 import team.opentech.usher.service.RelegationService;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * 接口降级策略(Relegation)表 内部服务实现类
@@ -78,7 +77,7 @@ public class RelegationServiceImpl extends AbstractDoService<RelegationDO, Releg
     }
 
     @Override
-    public List<RelegationDTO> query(List<Identifier> ids) {
+    public List<RelegationDTO> query(List<Long> ids) {
         List<RelegationDTO> query = super.query(ids);
         facade.fillDisable(query);
         return query;
@@ -92,7 +91,7 @@ public class RelegationServiceImpl extends AbstractDoService<RelegationDO, Releg
     }
 
     @Override
-    public RelegationDTO query(Identifier id) {
+    public RelegationDTO query(Long id) {
         RelegationDTO query = super.query(id);
         facade.fillDisable(query);
         return query;

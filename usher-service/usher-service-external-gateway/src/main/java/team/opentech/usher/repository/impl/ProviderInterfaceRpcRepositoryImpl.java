@@ -9,7 +9,6 @@ import team.opentech.usher.pojo.DO.ProviderInterfaceRpcDO;
 import team.opentech.usher.pojo.DTO.ProviderInterfaceRpcDTO;
 import team.opentech.usher.pojo.entity.ProviderExample;
 import team.opentech.usher.pojo.entity.ProviderInterfaceRpc;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ProviderInterfaceRpcRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 
@@ -30,9 +29,9 @@ public class ProviderInterfaceRpcRepositoryImpl extends AbstractRepository<Provi
 
 
     @Override
-    public ProviderExample findByProviderId(Identifier id) {
+    public ProviderExample findByProviderId(Long id) {
         LambdaQueryWrapper<ProviderInterfaceRpcDO> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(ProviderInterfaceRpcDO::getFid, id.getId());
+        queryWrapper.eq(ProviderInterfaceRpcDO::getFid, id);
         ProviderInterfaceRpcDO little = dao.selectOne(queryWrapper);
         return assembler.toEntity(little);
     }

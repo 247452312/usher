@@ -3,7 +3,6 @@ package team.opentech.usher.repository;
 import team.opentech.usher.pojo.DO.ProviderInterfaceRpcDO;
 import team.opentech.usher.pojo.entity.ProviderExample;
 import team.opentech.usher.pojo.entity.ProviderInterfaceRpc;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
 
 /**
@@ -22,5 +21,5 @@ public interface ProviderInterfaceRpcRepository extends BaseEntityRepository<Pro
      *
      * @return
      */
-    ProviderExample findByProviderId(Identifier id);
+    ProviderExample findByProviderId(Long id);
 }

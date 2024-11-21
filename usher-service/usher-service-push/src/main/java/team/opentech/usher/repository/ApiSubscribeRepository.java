@@ -1,10 +1,9 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.ApiSubscribeDO;
 import team.opentech.usher.pojo.entity.ApiSubscribe;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
-import java.util.List;
 
 /**
  * api订阅表(ApiSubscribe)表 数据仓库层
@@ -24,7 +23,7 @@ public interface ApiSubscribeRepository extends BaseEntityRepository<ApiSubscrib
      *
      * @return
      */
-    List<ApiSubscribe> findByGroupAndUserId(Identifier groupId, Identifier userId);
+    List<ApiSubscribe> findByGroupAndUserId(Long groupId, Long userId);
 
     /**
      * 根据groupId获取
@@ -33,7 +32,7 @@ public interface ApiSubscribeRepository extends BaseEntityRepository<ApiSubscrib
      *
      * @return
      */
-    List<ApiSubscribe> findByGroupId(Identifier groupId);
+    List<ApiSubscribe> findByGroupId(Long groupId);
 
     /**
      * 获取全部

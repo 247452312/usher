@@ -14,7 +14,6 @@ import team.opentech.usher.pojo.entity.AbstractDataNode;
 import team.opentech.usher.pojo.entity.ProviderExample;
 import team.opentech.usher.pojo.entity.ProviderInterface;
 import team.opentech.usher.pojo.entity.ProviderInterfaceParam;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ProviderInterfaceHttpRepository;
 import team.opentech.usher.repository.ProviderInterfaceMysqlRepository;
 import team.opentech.usher.repository.ProviderInterfaceParamRepository;
@@ -70,12 +69,12 @@ public class ProviderInterfaceRepositoryImpl extends AbstractRepository<Provider
     }
 
     @Override
-    public List<ProviderInterfaceParam> findParamByInterfaceId(Identifier id) {
+    public List<ProviderInterfaceParam> findParamByInterfaceId(Long id) {
         return paramRepository.findByInterfaceId(id);
     }
 
     @Override
-    public ProviderExample findExample(Identifier id, InvokeTypeEnum type) {
+    public ProviderExample findExample(Long id, InvokeTypeEnum type) {
         switch (type) {
             case RPC:
                 return rpcRepository.findByProviderId(id);

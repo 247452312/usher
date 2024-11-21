@@ -3,7 +3,6 @@ package team.opentech.usher.pojo.entity;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.pojo.DO.AiSpaceUserLinkDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.AiSpaceRepository;
 import team.opentech.usher.util.SpringUtil;
 
@@ -45,7 +44,7 @@ public class AiSpaceUserLink extends AbstractDoEntity<AiSpaceUserLinkDO> {
         if (aiSpace != null) {
             return;
         }
-        this.aiSpace = SpringUtil.getBean(AiSpaceRepository.class).find(Identifier.build(spaceId()));
+        this.aiSpace = SpringUtil.getBean(AiSpaceRepository.class).find(spaceId());
     }
 
 }

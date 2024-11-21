@@ -1,5 +1,8 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.assembler.OrderNodeResultTypeAssembler;
 import team.opentech.usher.assembler.OrderNodeRouteAssembler;
@@ -18,7 +21,6 @@ import team.opentech.usher.pojo.DTO.OrderNodeResultTypeDTO;
 import team.opentech.usher.pojo.DTO.OrderNodeRouteDTO;
 import team.opentech.usher.pojo.IdMapping;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.OrderInfoRepository;
 import team.opentech.usher.repository.OrderNodeFieldRepository;
 import team.opentech.usher.repository.OrderNodeFieldValueRepository;
@@ -28,9 +30,6 @@ import team.opentech.usher.repository.OrderNodeRouteRepository;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.BeanUtil;
 import team.opentech.usher.util.CollectionUtil;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 工单节点样例表(OrderNode)表 数据库实体类
@@ -74,11 +73,11 @@ public class OrderNode extends AbstractDoEntity<OrderNodeDO> {
      * @param nodeRepository 节点
      */
     public IdMapping saveSelf(OrderNodeRepository nodeRepository) {
-        Long oldId = this.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException);
+        Long oldId = this.getUnique().orElseThrow(Asserts::throwOptionalException);
         this.setUnique(null);
         toData().orElseThrow(Asserts::throwOptionalException).setId(null);
         nodeRepository.save(this);
-        Long newId = this.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException);
+        Long newId = this.getUnique().orElseThrow(Asserts::throwOptionalException);
         return IdMapping.build(newId, oldId);
     }
 
@@ -112,15 +111,13 @@ public class OrderNode extends AbstractDoEntity<OrderNodeDO> {
             return;
         }
         for (OrderNodeResultType resultType : resultTypes) {
-            Identifier unique = resultType.getUnique().orElseThrow(Asserts::throwOptionalException);
-            Long oldId = unique.getId();
+            Long unique = resultType.getUnique().orElseThrow(Asserts::throwOptionalException);
             OrderNodeResultTypeDO orderNodeResultTypeDO = resultType.toData().orElseThrow(Asserts::throwOptionalException);
             orderNodeResultTypeDO.setBaseNodeId(idMappings.get(orderNodeResultTypeDO.getBaseNodeId()));
             orderNodeResultTypeDO.setId(null);
             resultType.setUnique(null);
             resultType.setUnique(resultTypeRepository.save(resultType));
-            Long newId = unique.getId();
-            idMappings.put(oldId, newId);
+            idMappings.put(unique, unique);
         }
 
         for (OrderNodeRoute route : routes) {
@@ -149,8 +146,8 @@ public class OrderNode extends AbstractDoEntity<OrderNodeDO> {
     }
 
     public OrderNodeResultType createResultByTrans(OrderNodeResultTypeAssembler typeAssembler) {
-        Identifier unique = getUnique().orElseThrow(Asserts::throwOptionalException);
-        OrderNodeResultTypeDTO transResult = OrderNodeResultTypeBuilder.build(unique.getId(), "转交");
+        Long unique = getUnique().orElseThrow(Asserts::throwOptionalException);
+        OrderNodeResultTypeDTO transResult = OrderNodeResultTypeBuilder.build(unique, "转交");
         return typeAssembler.toEntity(transResult);
 
     }
@@ -162,8 +159,8 @@ public class OrderNode extends AbstractDoEntity<OrderNodeDO> {
         nodeRepository.save(this);
     }
 
-    public OrderNodeRoute createRoute(OrderNodeRouteRepository routeRepository, OrderNodeRouteAssembler routeAssembler, Identifier resultId, OrderNode lastNode) {
-        OrderNodeRouteDTO build = OrderNodeRouteBuilder.build(getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException), resultId.getId(), lastNode.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException));
+    public OrderNodeRoute createRoute(OrderNodeRouteRepository routeRepository, OrderNodeRouteAssembler routeAssembler, Long resultId, OrderNode lastNode) {
+        OrderNodeRouteDTO build = OrderNodeRouteBuilder.build(getUnique().orElseThrow(Asserts::throwOptionalException), resultId, lastNode.getUnique().orElseThrow(Asserts::throwOptionalException));
         OrderNodeRoute orderNodeRoute = routeAssembler.toEntity(build);
         routeRepository.save(orderNodeRoute);
         return orderNodeRoute;
@@ -177,7 +174,7 @@ public class OrderNode extends AbstractDoEntity<OrderNodeDO> {
 
     public void fillField(OrderNodeFieldRepository fieldRepository) {
         if (this.fields == null) {
-            this.fields = fieldRepository.findByNodeId(getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException));
+            this.fields = fieldRepository.findByNodeId(getUnique().orElseThrow(Asserts::throwOptionalException));
         }
 
 
@@ -187,7 +184,7 @@ public class OrderNode extends AbstractDoEntity<OrderNodeDO> {
         Asserts.assertTrue(this.fields != null, "节点属性本身信息不存在!");
 
         for (OrderNodeField field : fields) {
-            Long id = field.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException);
+            Long id = field.getUnique().orElseThrow(Asserts::throwOptionalException);
             Asserts.assertTrue(orderNodeFieldValueMap.containsKey(id), field.toData().map(OrderNodeFieldDO::getName).orElseThrow(Asserts::throwOptionalException) + " 未填写");
             String realValue = String.valueOf(orderNodeFieldValueMap.get(id));
             OrderNodeFieldValue orderNodeFieldValue = new OrderNodeFieldValue(field, realValue);
@@ -234,6 +231,6 @@ public class OrderNode extends AbstractDoEntity<OrderNodeDO> {
     }
 
     public OrderInfo findBaseInfo(OrderInfoRepository infoRepository) {
-        return infoRepository.find(new Identifier(data.getBaseInfoId()));
+        return infoRepository.find(data.getBaseInfoId());
     }
 }

@@ -1,20 +1,19 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.pojo.DO.DeptDO;
 import team.opentech.usher.pojo.DO.RoleDO;
 import team.opentech.usher.pojo.DO.RoleDeptDO;
 import team.opentech.usher.pojo.DTO.response.GetAllDeptWithHaveMarkDTO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.DeptRepository;
 import team.opentech.usher.repository.MenuRepository;
 import team.opentech.usher.repository.PowerRepository;
 import team.opentech.usher.repository.RoleRepository;
 import team.opentech.usher.util.Asserts;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * 角色
@@ -30,10 +29,6 @@ public class Role extends AbstractDoEntity<RoleDO> {
     @Default
     public Role(RoleDO data) {
         super(data);
-    }
-
-    public Role(Identifier roleId) {
-        super(roleId, new RoleDO());
     }
 
     public Role(Long id) {
@@ -70,7 +65,7 @@ public class Role extends AbstractDoEntity<RoleDO> {
         if (this.depts != null) {
             return;
         }
-        Optional<Identifier> unique = getUnique();
+        Optional<Long> unique = getUnique();
         unique.ifPresent(t -> {
             this.depts = deptRepository.findByRoleId(t);
             for (Dept dept : depts) {
@@ -128,7 +123,7 @@ public class Role extends AbstractDoEntity<RoleDO> {
     }
 
     public void removeSelf(RoleRepository rep) {
-        Optional<Identifier> unique = getUnique();
+        Optional<Long> unique = getUnique();
         Asserts.assertTrue(unique.isPresent(), "唯一标识不存在,不能移除自身");
         rep.remove(unique.get());
     }

@@ -1,5 +1,10 @@
 package team.opentech.usher.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.UserAssembler;
 import team.opentech.usher.context.UserInfoHelper;
@@ -11,7 +16,6 @@ import team.opentech.usher.pojo.DTO.request.FindUserByNameQuery;
 import team.opentech.usher.pojo.entity.Token;
 import team.opentech.usher.pojo.entity.User;
 import team.opentech.usher.pojo.entity.Visiter;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.Password;
 import team.opentech.usher.pojo.entity.type.UserName;
 import team.opentech.usher.repository.DeptRepository;
@@ -22,11 +26,6 @@ import team.opentech.usher.repository.UserRepository;
 import team.opentech.usher.service.UserService;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
-import java.util.List;
-import java.util.Optional;
-import javax.annotation.Resource;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 
 /**
@@ -62,13 +61,13 @@ public class UserServiceImpl extends AbstractDoService<UserDO, User, UserDTO, Us
     }
 
     @Override
-    public UserDTO getUserById(Identifier userId) {
+    public UserDTO getUserById(Long userId) {
         User user = rep.find(userId);
         return assem.toDTO(user);
     }
 
     @Override
-    public String getUserToken(Identifier userId) {
+    public String getUserToken(Long userId) {
         User user = new User(userId);
         Token token = user.toToken(salt, encodeRules);
         return token.getToken();
@@ -121,13 +120,13 @@ public class UserServiceImpl extends AbstractDoService<UserDO, User, UserDTO, Us
     }
 
     @Override
-    public String getNameById(Identifier userId) {
+    public String getNameById(Long userId) {
         User user = rep.find(userId);
         return user.toData().map(UserDO::getNickName).orElse(null);
     }
 
     @Override
-    public List<UserDTO> getSampleUserByIds(List<Identifier> userIds) {
+    public List<UserDTO> getSampleUserByIds(List<Long> userIds) {
         List<User> users = rep.find(userIds);
         return assem.listEntityToDTO(users);
     }
@@ -141,14 +140,14 @@ public class UserServiceImpl extends AbstractDoService<UserDO, User, UserDTO, Us
     }
 
     @Override
-    public Boolean passApply(Identifier request) {
-        User user = new User(request.getId());
+    public Boolean passApply(Long request) {
+        User user = new User(request);
         user.passApply(rep);
         return true;
     }
 
     @Override
-    public Boolean stopUser(Identifier request) {
+    public Boolean stopUser(Long request) {
         User user = new User(request);
         user.stopUser(rep);
         return true;

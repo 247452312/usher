@@ -1,5 +1,12 @@
 package team.opentech.usher.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.ContentAssembler;
 import team.opentech.usher.assembler.MenuAssembler;
@@ -20,7 +27,6 @@ import team.opentech.usher.pojo.entity.Content;
 import team.opentech.usher.pojo.entity.Dept;
 import team.opentech.usher.pojo.entity.Menu;
 import team.opentech.usher.pojo.entity.User;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.Iframe;
 import team.opentech.usher.pojo.entity.type.MenuIframe;
 import team.opentech.usher.repository.ContentRepository;
@@ -29,13 +35,6 @@ import team.opentech.usher.repository.MenuRepository;
 import team.opentech.usher.repository.PowerRepository;
 import team.opentech.usher.repository.RoleRepository;
 import team.opentech.usher.service.MenuService;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 菜单(Menu)表 内部服务实现类
@@ -84,7 +83,7 @@ public class MenuServiceImpl extends AbstractDoService<MenuDO, Menu, MenuDTO, Me
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.WRITE, tables = {"sys_dept_menu"})
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, timeout = 36000, rollbackFor = Exception.class)
-    public Boolean putDeptsToMenu(Identifier menuId, List<Identifier> deptIds) {
+    public Boolean putDeptsToMenu(Long menuId, List<Long> deptIds) {
         Menu menu = new Menu(menuId);
         menu.cleanDept(rep);
         menu.addDepts(deptIds.stream().map(Dept::new).collect(Collectors.toList()), rep);
@@ -134,14 +133,14 @@ public class MenuServiceImpl extends AbstractDoService<MenuDO, Menu, MenuDTO, Me
 
     @Override
     @ReadWriteMark(tables = {"sys_dept_menu", "sys_menu"})
-    public List<GetAllMenuWithHaveMarkDTO> getAllMenuWithHaveMark(Identifier deptId) {
+    public List<GetAllMenuWithHaveMarkDTO> getAllMenuWithHaveMark(Long deptId) {
         return rep.findAllMenuWithHaveMark(deptId);
     }
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.WRITE, tables = {"sys_dept_menu"})
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT, timeout = 36000, rollbackFor = Exception.class)
-    public Boolean removeMenu(Identifier menuId) {
+    public Boolean removeMenu(Long menuId) {
         /* 注:开启了事务 即@Transactional 参数propagation->事务传播类型,其中Propagation.REQUIRED为如果事务不存在,则创建新事物,如果事务存在,则加入
            isolation事务隔离级别 Isolation.DEFAULT默认隔离级别 */
 
@@ -157,7 +156,7 @@ public class MenuServiceImpl extends AbstractDoService<MenuDO, Menu, MenuDTO, Me
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.WRITE, tables = {"sys_dept_menu", "sys_dept"})
-    public List<GetDeptsByMenuIdDTO> getDeptsByMenuId(Identifier menuId) {
+    public List<GetDeptsByMenuIdDTO> getDeptsByMenuId(Long menuId) {
         return deptRepository.findByMenuId(new Menu(menuId));
     }
 

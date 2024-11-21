@@ -1,14 +1,13 @@
 package team.opentech.usher.service;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.base.TokenInfo;
 import team.opentech.usher.pojo.DTO.LoginDTO;
 import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.DTO.request.FindUserByNameQuery;
 import team.opentech.usher.pojo.entity.Token;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.Password;
 import team.opentech.usher.pojo.entity.type.UserName;
-import java.util.List;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -24,7 +23,7 @@ public interface UserService extends BaseDoService<UserDTO> {
      *
      * @return 用户
      */
-    UserDTO getUserById(Identifier userId);
+    UserDTO getUserById(Long userId);
 
 
     /**
@@ -40,7 +39,7 @@ public interface UserService extends BaseDoService<UserDTO> {
      *
      * @return 通过用户id和用户类型编译的token
      */
-    String getUserToken(Identifier userId);
+    String getUserToken(Long userId);
 
 
     /**
@@ -100,7 +99,7 @@ public interface UserService extends BaseDoService<UserDTO> {
      *
      * @return 用户名称
      */
-    String getNameById(Identifier userId);
+    String getNameById(Long userId);
 
     /**
      * 根据id批量获取不填充角色的用户
@@ -109,7 +108,7 @@ public interface UserService extends BaseDoService<UserDTO> {
      *
      * @return
      */
-    List<UserDTO> getSampleUserByIds(List<Identifier> userIds);
+    List<UserDTO> getSampleUserByIds(List<Long> userIds);
 
     /**
      * 申请一个用户
@@ -127,7 +126,7 @@ public interface UserService extends BaseDoService<UserDTO> {
      *
      * @return
      */
-    Boolean passApply(Identifier request);
+    Boolean passApply(Long request);
 
     /**
      * 停用一个用户
@@ -136,7 +135,7 @@ public interface UserService extends BaseDoService<UserDTO> {
      *
      * @return
      */
-    Boolean stopUser(Identifier identifier);
+    Boolean stopUser(Long identifier);
 
     /**
      * 根据用户名获取用户信息

@@ -9,7 +9,6 @@ import team.opentech.usher.pojo.DO.ProviderInterfaceMysqlDO;
 import team.opentech.usher.pojo.DTO.ProviderInterfaceMysqlDTO;
 import team.opentech.usher.pojo.entity.ProviderExample;
 import team.opentech.usher.pojo.entity.ProviderInterfaceMysql;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ProviderInterfaceMysqlRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 
@@ -30,9 +29,9 @@ public class ProviderInterfaceMysqlRepositoryImpl extends AbstractRepository<Pro
 
 
     @Override
-    public ProviderExample findByProviderId(Identifier id) {
+    public ProviderExample findByProviderId(Long id) {
         LambdaQueryWrapper<ProviderInterfaceMysqlDO> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(ProviderInterfaceMysqlDO::getFid, id.getId());
+        queryWrapper.eq(ProviderInterfaceMysqlDO::getFid, id);
         ProviderInterfaceMysqlDO little = dao.selectOne(queryWrapper);
         return assembler.toEntity(little);
     }

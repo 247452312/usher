@@ -1,5 +1,7 @@
 package team.opentech.usher.protocol.rpc.impl;
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import team.opentech.usher.annotation.Public;
 import team.opentech.usher.pojo.DTO.DeptDTO;
 import team.opentech.usher.pojo.DTO.RoleDTO;
@@ -9,15 +11,11 @@ import team.opentech.usher.pojo.cqe.DefaultCQE;
 import team.opentech.usher.pojo.cqe.command.IdCommand;
 import team.opentech.usher.pojo.cqe.command.IdsCommand;
 import team.opentech.usher.pojo.cqe.query.IdQuery;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.protocol.rpc.RoleProvider;
 import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.RoleService;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -34,15 +32,12 @@ public class RoleProviderImpl extends BaseDefaultProvider<RoleDTO> implements Ro
     @Override
     @Public
     public RoleDTO getRoleByRoleId(IdQuery request) {
-        Identifier roleId = new Identifier(request.getId());
-        return service.getRoleByRoleId(roleId);
+        return service.getRoleByRoleId(request.getId());
     }
 
     @Override
     public Boolean putDeptsToRole(PutDeptsToRoleCommand request) {
-        Identifier roleId = new Identifier(request.getRoleId());
-        List<Identifier> deptIds = request.getDeptIds().stream().map(Identifier::new).collect(Collectors.toList());
-        return service.putDeptsToRole(roleId, deptIds);
+        return service.putDeptsToRole(request.getRoleId(), request.getDeptIds());
     }
 
     @Override
@@ -58,20 +53,17 @@ public class RoleProviderImpl extends BaseDefaultProvider<RoleDTO> implements Ro
 
     @Override
     public List<DeptDTO> getUserDeptsByRoleId(IdQuery request) {
-        Identifier roleId = new Identifier(request.getId());
-        return service.getUserDeptsByRoleId(roleId);
+        return service.getUserDeptsByRoleId(request.getId());
     }
 
     @Override
     public List<GetAllDeptWithHaveMarkDTO> getAllDeptWithHaveMark(IdQuery request) {
-        Identifier roleId = new Identifier(request.getId());
-        return service.getAllDeptWithHaveMark(roleId);
+        return service.getAllDeptWithHaveMark(request.getId());
     }
 
     @Override
     public Boolean deleteRole(IdCommand request) {
-        Identifier roleId = new Identifier(request.getId());
-        return service.deleteRole(roleId);
+        return service.deleteRole(request.getId());
     }
 
     @Override

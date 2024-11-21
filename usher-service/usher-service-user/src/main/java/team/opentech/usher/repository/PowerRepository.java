@@ -1,14 +1,13 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.PowerDO;
 import team.opentech.usher.pojo.entity.Power;
 import team.opentech.usher.pojo.entity.User;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.InterfaceName;
 import team.opentech.usher.pojo.entity.type.MethodName;
 import team.opentech.usher.pojo.entity.type.PowerInfo;
 import team.opentech.usher.repository.base.BaseEntityRepository;
-import java.util.List;
 
 /**
  * 权限仓库
@@ -26,7 +25,7 @@ public interface PowerRepository extends BaseEntityRepository<PowerDO, Power> {
      *
      * @return
      */
-    List<Power> findByDeptId(Identifier deptId);
+    List<Power> findByDeptId(Long deptId);
 
     /**
      * 获取全部权限

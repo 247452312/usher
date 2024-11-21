@@ -1,5 +1,6 @@
 package team.opentech.usher.protocol.rpc.base;
 
+import java.util.List;
 import team.opentech.usher.pojo.DTO.base.IdDTO;
 import team.opentech.usher.pojo.DTO.base.Page;
 import team.opentech.usher.pojo.cqe.command.ChangeCommand;
@@ -10,11 +11,8 @@ import team.opentech.usher.pojo.cqe.query.BlackQuery;
 import team.opentech.usher.pojo.cqe.query.IdQuery;
 import team.opentech.usher.pojo.cqe.query.IdsQuery;
 import team.opentech.usher.pojo.cqe.query.base.BaseArgQuery;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.util.LogUtil;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -34,7 +32,7 @@ public abstract class BaseDefaultProvider<T extends IdDTO> implements DTOProvide
 
     @Override
     public T queryById(IdQuery query) {
-        return getService().query(new Identifier(query.getId()));
+        return getService().query(query.getId());
     }
 
     /**
@@ -49,7 +47,7 @@ public abstract class BaseDefaultProvider<T extends IdDTO> implements DTOProvide
         List<Long> ids = query.getIds();
         List<T> result = null;
         try {
-            result = getService().query(ids.stream().map(Identifier::new).collect(Collectors.toList()));
+            result = getService().query(ids);
         } catch (Exception e) {
             LogUtil.error(this, e);
         }
@@ -74,7 +72,7 @@ public abstract class BaseDefaultProvider<T extends IdDTO> implements DTOProvide
 
     @Override
     public Integer remove(IdCommand id) {
-        return getService().remove(new Identifier(id.getId()));
+        return getService().remove(id.getId());
     }
 
     @Override

@@ -1,15 +1,14 @@
 package team.opentech.usher.repository.impl;
 
+import java.util.List;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.OrderBaseNodeAssembler;
 import team.opentech.usher.dao.OrderBaseNodeDao;
 import team.opentech.usher.pojo.DO.OrderBaseNodeDO;
 import team.opentech.usher.pojo.DTO.OrderBaseNodeDTO;
 import team.opentech.usher.pojo.entity.OrderBaseNode;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.OrderBaseNodeRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
-import java.util.List;
 
 
 /**
@@ -29,8 +28,8 @@ public class OrderBaseNodeRepositoryImpl extends AbstractRepository<OrderBaseNod
 
 
     @Override
-    public List<OrderBaseNode> findNoHiddenNodeById(Identifier id) {
-        List<OrderBaseNodeDO> noHiddenByOrderId = dao.getNoHiddenByOrderId(id.getId());
+    public List<OrderBaseNode> findNoHiddenNodeById(Long id) {
+        List<OrderBaseNodeDO> noHiddenByOrderId = dao.getNoHiddenByOrderId(id);
         return assembler.listToEntity(noHiddenByOrderId);
     }
 }

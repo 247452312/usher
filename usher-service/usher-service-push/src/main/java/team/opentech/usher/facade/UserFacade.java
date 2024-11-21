@@ -1,8 +1,7 @@
 package team.opentech.usher.facade;
 
-import team.opentech.usher.pojo.DTO.UserDTO;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import java.util.List;
+import team.opentech.usher.pojo.DTO.UserDTO;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -19,7 +18,7 @@ public interface UserFacade extends BaseFacade {
      *
      * @return
      */
-    UserDTO getById(Identifier userId);
+    UserDTO getById(Long userId);
 
     /**
      * 批量根据id获取用户

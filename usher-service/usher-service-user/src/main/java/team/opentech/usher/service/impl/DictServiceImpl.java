@@ -1,5 +1,10 @@
 package team.opentech.usher.service.impl;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.DictAssembler;
 import team.opentech.usher.assembler.DictItemAssembler;
@@ -21,17 +26,11 @@ import team.opentech.usher.pojo.entity.Dict;
 import team.opentech.usher.pojo.entity.DictItem;
 import team.opentech.usher.pojo.entity.Menu;
 import team.opentech.usher.pojo.entity.type.Code;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.DictItemRepository;
 import team.opentech.usher.repository.DictRepository;
 import team.opentech.usher.repository.MenuRepository;
 import team.opentech.usher.service.DictService;
 import team.opentech.usher.util.LogUtil;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * 数据字典(Dict)表 内部服务实现类
@@ -90,8 +89,8 @@ public class DictServiceImpl extends AbstractDoService<DictDO, Dict, DictDTO, Di
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.READ, tables = {"sys_dict_item"})
-    public List<DictItemDTO> getItemByDictId(Identifier dictId) {
-        Dict dict = new Dict(dictId.getId());
+    public List<DictItemDTO> getItemByDictId(Long dictId) {
+        Dict dict = new Dict(dictId);
         dict.fillItem(dictItemRepository);
         return dict.toItem().stream().map(dictItemAssembler::toDTO).collect(Collectors.toList());
     }
@@ -106,8 +105,8 @@ public class DictServiceImpl extends AbstractDoService<DictDO, Dict, DictDTO, Di
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.WRITE, tables = {"sys_dict_item"})
-    public Boolean deleteItem(Identifier dictItemId) {
-        DictItem dictItem = new DictItem(dictItemId.getId());
+    public Boolean deleteItem(Long dictItemId) {
+        DictItem dictItem = new DictItem(dictItemId);
         dictItem.completion(dictItemRepository);
         dictItemRepository.remove(Collections.singletonList(dictItem));
         return true;
@@ -115,8 +114,8 @@ public class DictServiceImpl extends AbstractDoService<DictDO, Dict, DictDTO, Di
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.WRITE, tables = {"sys_dict_item"})
-    public Boolean cleanDictItem(Identifier dictId) {
-        Dict dict = new Dict(dictId.getId());
+    public Boolean cleanDictItem(Long dictId) {
+        Dict dict = new Dict(dictId);
         dict.fillItem(dictItemRepository);
         dict.cleanItem(dictItemRepository);
         return true;
@@ -124,15 +123,15 @@ public class DictServiceImpl extends AbstractDoService<DictDO, Dict, DictDTO, Di
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.READ, tables = {"sys_dict_item"})
-    public DictItemDTO getItemById(Identifier dictItemId) {
-        DictItem dictItem = new DictItem(dictItemId.getId());
+    public DictItemDTO getItemById(Long dictItemId) {
+        DictItem dictItem = new DictItem(dictItemId);
         dictItem.completion(dictItemRepository);
         return dictItemAssembler.toDTO(dictItem);
     }
 
     @Override
     @ReadWriteMark(type = ReadWriteTypeEnum.READ, tables = {"sys_dict_item"})
-    public Page<DictItemDTO> getByItemArgs(Identifier dictId, List<Arg> args, Order order, Limit limit) {
+    public Page<DictItemDTO> getByItemArgs(Long dictId, List<Arg> args, Order order, Limit limit) {
         Page<DictItem> dictItemPage = dictItemRepository.find(dictId, args, order, limit);
         return dictItemAssembler.toDTO(dictItemPage);
     }

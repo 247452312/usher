@@ -19,7 +19,7 @@ public abstract class AiSpaceUserLinkAssembler extends AbstractAssembler<AiSpace
 
     public AiSpaceUserLink toEntity(Long userId, Boolean isAdmin, AiSpace aiSpace) {
         AiSpaceUserLinkDO data = new AiSpaceUserLinkDO();
-        data.setSpaceId(aiSpace.unique.getId());
+        data.setSpaceId(aiSpace.unique);
         data.setUserId(userId);
         data.setIsAdmin(isAdmin);
         return new AiSpaceUserLink(data);

@@ -1,5 +1,11 @@
 package team.opentech.usher.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.OrderInfoAssembler;
 import team.opentech.usher.assembler.OrderNodeFieldValueAssembler;
@@ -30,7 +36,6 @@ import team.opentech.usher.pojo.entity.OrderNode;
 import team.opentech.usher.pojo.entity.OrderNodeFieldValue;
 import team.opentech.usher.pojo.entity.OrderNodeList;
 import team.opentech.usher.pojo.entity.OrderNodeResultType;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.OrderApplyRepository;
 import team.opentech.usher.repository.OrderInfoRepository;
 import team.opentech.usher.repository.OrderNodeFieldRepository;
@@ -41,12 +46,6 @@ import team.opentech.usher.repository.OrderNodeRouteRepository;
 import team.opentech.usher.service.OrderBaseInfoService;
 import team.opentech.usher.service.OrderInfoService;
 import team.opentech.usher.util.Asserts;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * 工单基础信息样例表(OrderInfo)表 内部服务实现类
@@ -138,7 +137,7 @@ public class OrderInfoServiceImpl extends AbstractDoService<OrderInfoDO, OrderIn
         List<Long> nodeIds = new ArrayList<>(dealUserIds.size() + noticeUserIds.size());
         nodeIds.addAll(dealUserIds.keySet());
         nodeIds.addAll(noticeUserIds.keySet());
-        List<Identifier> identifiers = nodeIds.stream().distinct().map(Identifier::new).collect(Collectors.toList());
+        List<Long> identifiers = nodeIds.stream().distinct().collect(Collectors.toList());
         List<OrderNode> orderNodes = nodeRepository.find(identifiers);
         OrderNodeList orderNodeList = new OrderNodeList(orderNodes);
         orderNodeList.compareAndSaveDealUser(dealUserIds);

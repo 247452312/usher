@@ -1,18 +1,17 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.enums.SoftwareStatusEnum;
 import team.opentech.usher.pojo.DO.ServerDO;
 import team.opentech.usher.pojo.DO.SoftwareDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ServerRepository;
 import team.opentech.usher.repository.SoftwareRepository;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.SocketUtil;
 import team.opentech.usher.util.SshUtils;
-import java.util.List;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * 中间件表(Software)表 数据库实体类
@@ -88,7 +87,7 @@ public class Software extends AbstractDoEntity<SoftwareDO> {
         throw new RuntimeException("错误,不能使用基类获取详情,请子类实现");
     }
 
-    public Identifier saveSelf(SoftwareRepository rep) {
+    public Long saveSelf(SoftwareRepository rep) {
         return rep.save(this);
     }
 

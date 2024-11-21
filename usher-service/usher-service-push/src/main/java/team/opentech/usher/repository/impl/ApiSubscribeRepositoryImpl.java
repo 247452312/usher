@@ -1,15 +1,14 @@
 package team.opentech.usher.repository.impl;
 
+import java.util.List;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.ApiSubscribeAssembler;
 import team.opentech.usher.dao.ApiSubscribeDao;
 import team.opentech.usher.pojo.DO.ApiSubscribeDO;
 import team.opentech.usher.pojo.DTO.ApiSubscribeDTO;
 import team.opentech.usher.pojo.entity.ApiSubscribe;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ApiSubscribeRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
-import java.util.List;
 
 
 /**
@@ -28,14 +27,14 @@ public class ApiSubscribeRepositoryImpl extends AbstractRepository<ApiSubscribe,
 
 
     @Override
-    public List<ApiSubscribe> findByGroupAndUserId(Identifier groupId, Identifier userId) {
-        List<ApiSubscribeDO> apiSubscribeDOS = dao.getByGroupAndUserId(groupId.getId(), userId.getId());
+    public List<ApiSubscribe> findByGroupAndUserId(Long groupId, Long userId) {
+        List<ApiSubscribeDO> apiSubscribeDOS = dao.getByGroupAndUserId(groupId, userId);
         return assembler.listToEntity(apiSubscribeDOS);
     }
 
     @Override
-    public List<ApiSubscribe> findByGroupId(Identifier groupId) {
-        List<ApiSubscribeDO> subscribeDOS = dao.getByGroupId(groupId.getId());
+    public List<ApiSubscribe> findByGroupId(Long groupId) {
+        List<ApiSubscribeDO> subscribeDOS = dao.getByGroupId(groupId);
         return assembler.listToEntity(subscribeDOS);
     }
 

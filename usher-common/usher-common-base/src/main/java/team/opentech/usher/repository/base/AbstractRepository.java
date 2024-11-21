@@ -21,7 +21,6 @@ import team.opentech.usher.pojo.cqe.query.demo.Limit;
 import team.opentech.usher.pojo.cqe.query.demo.Order;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
 import team.opentech.usher.pojo.entity.base.IdEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
 
@@ -48,34 +47,34 @@ public abstract class AbstractRepository<EN extends AbstractDoEntity<DO>, DO ext
     }
 
     @Override
-    public Identifier save(EN entity) {
+    public Long save(EN entity) {
         if (entity.notHaveId()) {
             entity.perInsert();
             DO aDo = assembler.toDo(entity);
             dao.insert(aDo);
             entity.upId();
-            return Identifier.build(aDo.getId());
+            return aDo.getId();
         }
         boolean canUpdate = entity.canUpdate();
         if (!canUpdate) {
             DO aDo = assembler.toDo(entity);
-            return Identifier.build(aDo.getId());
+            return aDo.getId();
         }
         entity.perUpdate();
         DO aDo = assembler.toDo(entity);
         dao.updateById(aDo);
-        return Identifier.build(aDo.getId());
+        return aDo.getId();
     }
 
     @Override
-    public List<Identifier> save(List<EN> entities) {
+    public List<Long> save(List<EN> entities) {
         return entities.stream().map(this::save).collect(Collectors.toList());
     }
 
 
     @Override
     public <E extends IdEntity> EN find(E query) {
-        Optional<Identifier> id = query.getUnique();
+        Optional<Long> id = query.getUnique();
         Asserts.assertTrue(id.isPresent(), "单个查询中不存在id");
         return find(id.get());
     }
@@ -88,19 +87,17 @@ public abstract class AbstractRepository<EN extends AbstractDoEntity<DO>, DO ext
      * @return
      */
     @Override
-    public <E extends Identifier> List<EN> find(List<E> ids) {
+    public <E extends Long> List<EN> find(List<E> ids) {
         if (CollectionUtil.isEmpty(ids)) {
             return new ArrayList<>();
         }
-        List<Long> idList = ids.stream().map(t -> t.getId()).collect(Collectors.toList());
-        List<DO> byIds = dao.selectBatchIds(idList);
+        List<DO> byIds = dao.selectBatchIds(ids);
         return byIds.stream().map(assembler::toEntity).collect(Collectors.toList());
     }
 
     @Override
-    public <E extends Identifier> EN find(E id) {
-        Long idValue = id.getId();
-        DO byId = dao.selectById(idValue);
+    public <E extends Long> EN find(E id) {
+        DO byId = dao.selectById(id);
         return assembler.toEntity(byId);
     }
 
@@ -147,7 +144,7 @@ public abstract class AbstractRepository<EN extends AbstractDoEntity<DO>, DO ext
     }
 
     @Override
-    public <E extends Identifier> int remove(E... ids) {
+    public <E extends Long> int remove(E... ids) {
         List<EN> ens = find(Arrays.asList(ids));
 
         List<DO> updateDos = ens.stream().peek(AbstractDoEntity::perUpdate).map(AbstractDoEntity::toData).map(Optional::get).collect(Collectors.toList());
@@ -161,7 +158,7 @@ public abstract class AbstractRepository<EN extends AbstractDoEntity<DO>, DO ext
     }
 
     @Override
-    public <E extends Identifier> int removeByIds(List<E> ids) {
+    public <E extends Long> int removeByIds(List<E> ids) {
         List<EN> ens = find(ids);
         List<DO> updateDos = ens.stream().peek(AbstractDoEntity::perUpdate).map(AbstractDoEntity::toData).map(Optional::get).collect(Collectors.toList());
         return dao.updateBatch(updateDos);

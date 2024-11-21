@@ -1,14 +1,13 @@
 package team.opentech.usher.facade.impl;
 
+import java.util.List;
 import team.opentech.usher.annotation.Facade;
 import team.opentech.usher.facade.UserFacade;
 import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.cqe.query.IdQuery;
 import team.opentech.usher.pojo.cqe.query.IdsQuery;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.protocol.rpc.UserProvider;
 import team.opentech.usher.rpc.annotation.RpcReference;
-import java.util.List;
 
 
 /**
@@ -23,8 +22,8 @@ public class UserFacadeImpl implements UserFacade {
     private UserProvider userProvider;
 
     @Override
-    public UserDTO getById(Identifier userId) {
-        return userProvider.getUserById(new IdQuery(userId.getId()));
+    public UserDTO getById(Long userId) {
+        return userProvider.getUserById(new IdQuery(userId));
     }
 
     @Override

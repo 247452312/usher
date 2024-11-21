@@ -1,6 +1,7 @@
 package team.opentech.usher.service;
 
 
+import java.util.List;
 import team.opentech.usher.pojo.DTO.DictDTO;
 import team.opentech.usher.pojo.DTO.DictItemDTO;
 import team.opentech.usher.pojo.DTO.base.Page;
@@ -11,8 +12,6 @@ import team.opentech.usher.pojo.cqe.query.demo.Arg;
 import team.opentech.usher.pojo.cqe.query.demo.Limit;
 import team.opentech.usher.pojo.cqe.query.demo.Order;
 import team.opentech.usher.pojo.entity.type.Code;
-import team.opentech.usher.pojo.entity.type.Identifier;
-import java.util.List;
 
 /**
  * 数据字典(Dict)表 内部服务接口
@@ -40,7 +39,7 @@ public interface DictService extends BaseDoService<DictDTO> {
      *
      * @return 字典项
      */
-    List<DictItemDTO> getItemByDictId(Identifier dictId);
+    List<DictItemDTO> getItemByDictId(Long dictId);
 
     /**
      * 修改字典项
@@ -59,7 +58,7 @@ public interface DictService extends BaseDoService<DictDTO> {
      *
      * @return 是否删除成功
      */
-    Boolean deleteItem(Identifier dictItemId);
+    Boolean deleteItem(Long dictItemId);
 
 
     /**
@@ -69,7 +68,7 @@ public interface DictService extends BaseDoService<DictDTO> {
      *
      * @return 是否成功
      */
-    Boolean cleanDictItem(Identifier dictId);
+    Boolean cleanDictItem(Long dictId);
 
 
     /**
@@ -79,7 +78,7 @@ public interface DictService extends BaseDoService<DictDTO> {
      *
      * @return 字典项
      */
-    DictItemDTO getItemById(Identifier dictItemId);
+    DictItemDTO getItemById(Long dictItemId);
 
     /**
      * 根据某几列获取item数据
@@ -91,7 +90,7 @@ public interface DictService extends BaseDoService<DictDTO> {
      *
      * @return 分页数据(也可以设置不分页)
      */
-    Page<DictItemDTO> getByItemArgs(Identifier dictId, List<Arg> args, Order order, Limit limit);
+    Page<DictItemDTO> getByItemArgs(Long dictId, List<Arg> args, Order order, Limit limit);
 
 
     /**

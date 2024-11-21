@@ -62,7 +62,7 @@ public class AiSubspace extends AbstractDoEntity<AiSubspaceDO> {
      * @param subspaceConnectionPointRepository
      */
     public void fillConnectionPoint(AiSubspaceConnectionPointRepository subspaceConnectionPointRepository) {
-        this.connectionPoints = subspaceConnectionPointRepository.findBySubspaceId(this.unique.getId());
+        this.connectionPoints = subspaceConnectionPointRepository.findBySubspaceId(this.unique);
     }
 
     /**
@@ -75,7 +75,7 @@ public class AiSubspace extends AbstractDoEntity<AiSubspaceDO> {
             return;
         }
         for (AiSubspaceConnectionPoint connectionPoint : this.connectionPoints) {
-            connectionPoint.fillSubspaceId(this.unique.getId());
+            connectionPoint.fillSubspaceId(this.unique);
             connectionPoint.removeId();
             connectionPoint.saveSelf(connectionPointRepository);
         }

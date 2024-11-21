@@ -1,6 +1,7 @@
 package team.opentech.usher.repository.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import java.util.List;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.LogMonitorAssembler;
 import team.opentech.usher.dao.LogMonitorDao;
@@ -9,10 +10,8 @@ import team.opentech.usher.pojo.DO.LogMonitorDO;
 import team.opentech.usher.pojo.DTO.LogMonitorDTO;
 import team.opentech.usher.pojo.entity.LogMonitor;
 import team.opentech.usher.pojo.entity.LogMonitorJvmStatus;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.LogMonitorRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
-import java.util.List;
 
 
 /**
@@ -55,8 +54,8 @@ public class LogMonitorRepositoryImpl extends AbstractRepository<LogMonitor, Log
     }
 
     @Override
-    public Identifier getIdByUnique(JvmUniqueMark unique) {
-        return new Identifier(dao.getIdByJvmUniqueMark(unique));
+    public Long getIdByUnique(JvmUniqueMark unique) {
+        return dao.getIdByJvmUniqueMark(unique);
     }
 
 }

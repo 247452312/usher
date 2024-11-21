@@ -3,13 +3,13 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <version>2.1.0.1.usher-SNAPSHOT</version>
+    <artifactId>usher-api</artifactId>
     <parent>
         <groupId>team.opentech.usher</groupId>
         <artifactId>usher</artifactId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
+        <version>2.1.0.1.usher-SNAPSHOT</version>
     </parent>
-    <artifactId>usher-api</artifactId>
-    <version>2.1.0.0.usher-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
         <module>usher-api-provider-user</module>

@@ -9,7 +9,6 @@ import team.opentech.usher.pojo.DO.ProviderInterfaceHttpDO;
 import team.opentech.usher.pojo.DTO.ProviderInterfaceHttpDTO;
 import team.opentech.usher.pojo.entity.ProviderExample;
 import team.opentech.usher.pojo.entity.ProviderInterfaceHttp;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ProviderInterfaceHttpRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 
@@ -30,9 +29,9 @@ public class ProviderInterfaceHttpRepositoryImpl extends AbstractRepository<Prov
 
 
     @Override
-    public ProviderExample findByProviderId(Identifier id) {
+    public ProviderExample findByProviderId(Long id) {
         LambdaQueryWrapper<ProviderInterfaceHttpDO> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(ProviderInterfaceHttpDO::getFid, id.getId());
+        queryWrapper.eq(ProviderInterfaceHttpDO::getFid, id);
         ProviderInterfaceHttpDO little = dao.selectOne(queryWrapper);
         return assembler.toEntity(little);
     }

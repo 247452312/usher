@@ -1,12 +1,11 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.Optional;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.pojo.DO.PowerDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.PowerRepository;
 import team.opentech.usher.util.Asserts;
-import java.util.Optional;
 
 
 /**
@@ -23,10 +22,6 @@ public class Power extends AbstractDoEntity<PowerDO> {
         super(data);
     }
 
-    public Power(Identifier powerId) {
-        super(powerId, new PowerDO());
-    }
-
 
     public Power(Long id) {
         super(id, new PowerDO());
@@ -37,7 +32,7 @@ public class Power extends AbstractDoEntity<PowerDO> {
     }
 
     public void removeSelf(PowerRepository rep) {
-        Optional<Identifier> unique = this.getUnique();
+        Optional<Long> unique = this.getUnique();
         Asserts.assertTrue(unique.isPresent(), "唯一标识");
         rep.remove(unique.get());
     }

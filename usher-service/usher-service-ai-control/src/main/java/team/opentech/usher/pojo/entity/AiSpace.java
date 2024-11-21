@@ -63,7 +63,7 @@ public class AiSpace extends AbstractDoEntity<AiSpaceDO> {
      */
     public Boolean removeUser(AiSpaceUserLinkRepository userLinkRepository, Long userId) {
         checkUserPower(UserInfoHelper.doGet());
-        return userLinkRepository.removeUser(unique.getId(), userId);
+        return userLinkRepository.removeUser(unique, userId);
     }
 
     /**
@@ -106,7 +106,7 @@ public class AiSpace extends AbstractDoEntity<AiSpaceDO> {
      */
     private void checkUserPower(UserDTO userDTO) {
         AiSpaceUserLinkRepository spaceUserLinkRepository = SpringUtil.getBean(AiSpaceUserLinkRepository.class);
-        Asserts.assertTrue(spaceUserLinkRepository.isAdmin(userDTO.getId(), unique.getId()), "当前用户不是独立空间的管理员");
+        Asserts.assertTrue(spaceUserLinkRepository.isAdmin(userDTO.getId(), unique), "当前用户不是独立空间的管理员");
 
     }
 
@@ -117,7 +117,7 @@ public class AiSpace extends AbstractDoEntity<AiSpaceDO> {
      * @param isAdmin 是否是管理员
      */
     private void checkAddUserRepeat(AiSpaceUserLinkRepository userLinkRepository, Long userId, Boolean isAdmin) {
-        Asserts.assertTrue(!(userLinkRepository.haveAdmin(unique.getId()) && isAdmin), "已存在管理员,不能再次设置管理员");
-        Asserts.assertTrue(!userLinkRepository.checkUsher(userId, unique.getId()), "该用户在当前独立空间下已存在,请不要重复添加");
+        Asserts.assertTrue(!(userLinkRepository.haveAdmin(unique) && isAdmin), "已存在管理员,不能再次设置管理员");
+        Asserts.assertTrue(!userLinkRepository.checkUsher(userId, unique), "该用户在当前独立空间下已存在,请不要重复添加");
     }
 }

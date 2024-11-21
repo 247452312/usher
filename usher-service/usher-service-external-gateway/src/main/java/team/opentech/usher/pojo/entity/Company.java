@@ -12,7 +12,6 @@ import team.opentech.usher.mysql.util.MysqlUtil;
 import team.opentech.usher.pojo.DO.CompanyDO;
 import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.Password;
 import team.opentech.usher.repository.CompanyRepository;
 import team.opentech.usher.util.Asserts;
@@ -62,7 +61,7 @@ public class Company extends AbstractDoEntity<CompanyDO> {
         Asserts.assertTrue(company != null, "未找到ak对应的公司,请联系管理");
         company.toData().ifPresent(t -> {
             this.data = t;
-            setUnique(new Identifier(t.getId()));
+            setUnique(t.getId());
         });
 
     }
@@ -96,7 +95,7 @@ public class Company extends AbstractDoEntity<CompanyDO> {
         userDTO.setPhone(dataAndValidate.getPersonPhone());
         userDTO.setStatus(1);
         userDTO.setIp(ip);
-        userDTO.setId(getUnique().get().getId());
+        userDTO.setId(getUnique().get());
         UserInfoHelper.setUser(userDTO);
         return userDTO;
 

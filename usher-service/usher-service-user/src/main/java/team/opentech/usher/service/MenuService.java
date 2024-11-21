@@ -1,14 +1,13 @@
 package team.opentech.usher.service;
 
 
+import java.util.List;
 import team.opentech.usher.pojo.DTO.MenuDTO;
 import team.opentech.usher.pojo.DTO.response.GetAllMenuWithHaveMarkDTO;
 import team.opentech.usher.pojo.DTO.response.GetDeptsByMenuIdDTO;
 import team.opentech.usher.pojo.DTO.response.IndexMenuTreeDTO;
 import team.opentech.usher.pojo.DTO.response.MenuHtmlTreeDTO;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.Iframe;
-import java.util.List;
 
 /**
  * 菜单(Menu)表 内部服务接口
@@ -27,7 +26,7 @@ public interface MenuService extends BaseDoService<MenuDTO> {
      *
      * @return 是否成功
      */
-    Boolean putDeptsToMenu(Identifier menuId, List<Identifier> deptIds);
+    Boolean putDeptsToMenu(Long menuId, List<Long> deptIds);
 
     /**
      * 获取index
@@ -52,7 +51,7 @@ public interface MenuService extends BaseDoService<MenuDTO> {
      *
      * @return 所有叶子菜单(包含羁绊标记)
      */
-    List<GetAllMenuWithHaveMarkDTO> getAllMenuWithHaveMark(Identifier deptId);
+    List<GetAllMenuWithHaveMarkDTO> getAllMenuWithHaveMark(Long deptId);
 
     /**
      * 1.删除对应id节点以及所有子节点
@@ -62,7 +61,7 @@ public interface MenuService extends BaseDoService<MenuDTO> {
      *
      * @return 是否删除成功
      */
-    Boolean removeMenu(Identifier menuId);
+    Boolean removeMenu(Long menuId);
 
     /**
      * 根据菜单id获取属于这个菜单的权限集以及全部权限集
@@ -71,5 +70,5 @@ public interface MenuService extends BaseDoService<MenuDTO> {
      *
      * @return 权限集们
      */
-    List<GetDeptsByMenuIdDTO> getDeptsByMenuId(Identifier menuId);
+    List<GetDeptsByMenuIdDTO> getDeptsByMenuId(Long menuId);
 }

@@ -1,5 +1,6 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.List;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.assembler.OrderInfoAssembler;
 import team.opentech.usher.enums.OrderNodeStatusEnum;
@@ -10,7 +11,6 @@ import team.opentech.usher.pojo.DO.OrderApplyDO;
 import team.opentech.usher.pojo.DO.OrderNodeDO;
 import team.opentech.usher.pojo.DO.base.BaseIdDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.OrderApplyRepository;
 import team.opentech.usher.repository.OrderInfoRepository;
 import team.opentech.usher.repository.OrderNodeFieldRepository;
@@ -18,7 +18,6 @@ import team.opentech.usher.repository.OrderNodeRepository;
 import team.opentech.usher.repository.OrderNodeResultTypeRepository;
 import team.opentech.usher.repository.OrderNodeRouteRepository;
 import team.opentech.usher.util.Asserts;
-import java.util.List;
 
 /**
  * (OrderApply)表 数据库实体类
@@ -47,7 +46,7 @@ public class OrderApply extends AbstractDoEntity<OrderApplyDO> {
             return;
         }
 
-        this.orderNode = nodeRepository.find(new Identifier(toData().map(OrderApplyDO::getOrderNodeId).orElseThrow(Asserts::throwOptionalException)));
+        this.orderNode = nodeRepository.find(toData().map(OrderApplyDO::getOrderNodeId).orElseThrow(Asserts::throwOptionalException));
         List<OrderNodeField> fields = fieldRepository.findByNodeId(orderNode.toData().map(BaseIdDO::getId).orElseThrow(Asserts::throwOptionalException));
         List<OrderNodeResultType> resultTypes = resultTypeRepository.findByNodeId(orderNode.toData().map(BaseIdDO::getId).orElseThrow(Asserts::throwOptionalException));
         List<OrderNodeRoute> route = routeRepository.findByNodeId(orderNode.toData().map(BaseIdDO::getId).orElseThrow(Asserts::throwOptionalException));
@@ -81,7 +80,7 @@ public class OrderApply extends AbstractDoEntity<OrderApplyDO> {
     }
 
     public void noticeTargetUser(OrderInfoRepository rep, OrderInfoAssembler assem, OrderStatusEnum status, PushFacade pushFacade, PushTypeEnum email) {
-        OrderInfo orderInfo = rep.find(new Identifier(data.getOrderId()));
+        OrderInfo orderInfo = rep.find(data.getOrderId());
         pushFacade.pushMsg(assem.toDTO(orderInfo), data.getTargetUserId(), status, email);
     }
 

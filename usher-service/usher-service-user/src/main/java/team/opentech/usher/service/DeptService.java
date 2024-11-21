@@ -1,10 +1,9 @@
 package team.opentech.usher.service;
 
 
+import java.util.List;
 import team.opentech.usher.pojo.DTO.DeptDTO;
 import team.opentech.usher.pojo.DTO.response.GetAllPowerWithHaveMarkDTO;
-import team.opentech.usher.pojo.entity.type.Identifier;
-import java.util.List;
 
 /**
  * 部门(Dept)表 内部服务接口
@@ -24,7 +23,7 @@ public interface DeptService extends BaseDoService<DeptDTO> {
      *
      * @return
      */
-    Boolean putPowersToDept(Identifier deptId, List<Identifier> powerIds) throws Exception;
+    Boolean putPowersToDept(Long deptId, List<Long> powerIds) throws Exception;
 
     /**
      * 删除 -> 真删. 不是假删
@@ -45,7 +44,7 @@ public interface DeptService extends BaseDoService<DeptDTO> {
      *
      * @return 是否成功
      */
-    Boolean putMenusToDept(Identifier deptId, List<Identifier> menuIds);
+    Boolean putMenusToDept(Long deptId, List<Long> menuIds);
 
     /**
      * 获取全部权限集
@@ -61,7 +60,7 @@ public interface DeptService extends BaseDoService<DeptDTO> {
      *
      * @return
      */
-    List<GetAllPowerWithHaveMarkDTO> getAllPowerWithHaveMark(Identifier deptId);
+    List<GetAllPowerWithHaveMarkDTO> getAllPowerWithHaveMark(Long deptId);
 
 
     /**
@@ -71,5 +70,5 @@ public interface DeptService extends BaseDoService<DeptDTO> {
      *
      * @return 删除是否成功
      */
-    Boolean deleteDept(Identifier deptId);
+    Boolean deleteDept(Long deptId);
 }

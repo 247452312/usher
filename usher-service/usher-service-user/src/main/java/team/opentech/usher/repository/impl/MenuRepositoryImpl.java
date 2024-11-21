@@ -1,5 +1,10 @@
 package team.opentech.usher.repository.impl;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.MenuAssembler;
 import team.opentech.usher.dao.DeptDao;
@@ -10,16 +15,10 @@ import team.opentech.usher.pojo.DTO.MenuDTO;
 import team.opentech.usher.pojo.DTO.response.GetAllMenuWithHaveMarkDTO;
 import team.opentech.usher.pojo.entity.Dept;
 import team.opentech.usher.pojo.entity.Menu;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.MenuIframe;
 import team.opentech.usher.repository.MenuRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 import team.opentech.usher.util.Asserts;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -42,14 +41,14 @@ public class MenuRepositoryImpl extends AbstractRepository<Menu, MenuDO, MenuDao
 
     @Override
     public void cleanDept(Menu menuId) {
-        dao.deleteDeptMenuByMenuIds(Arrays.asList(menuId.getUnique().map(Identifier::getId).orElseThrow(() -> Asserts.makeException("清空dept失败,没有id"))));
+        dao.deleteDeptMenuByMenuIds(Arrays.asList(menuId.getUnique().orElseThrow(() -> Asserts.makeException("清空dept失败,没有id"))));
     }
 
     @Override
     public void addDept(Menu menuId, Dept newDeptId) {
         DeptMenuDO t = new DeptMenuDO();
-        t.setMenuId(menuId.getUnique().map(Identifier::getId).orElse(null));
-        t.setDeptId(newDeptId.getUnique().map(Identifier::getId).orElse(null));
+        t.setMenuId(menuId.getUnique().orElse(null));
+        t.setDeptId(newDeptId.getUnique().orElse(null));
         t.preInsert();
         deptDao.insertDeptMenu(t);
     }
@@ -61,13 +60,13 @@ public class MenuRepositoryImpl extends AbstractRepository<Menu, MenuDO, MenuDao
     }
 
     @Override
-    public List<Menu> findByDeptId(Identifier identifier) {
-        List<MenuDO> byDeptIds = dao.getByDeptIds(Collections.singletonList(identifier.getId()));
+    public List<Menu> findByDeptId(Long identifier) {
+        List<MenuDO> byDeptIds = dao.getByDeptIds(Collections.singletonList(identifier));
         return assembler.listToEntity(byDeptIds);
     }
 
     @Override
-    public List<GetAllMenuWithHaveMarkDTO> findAllMenuWithHaveMark(Identifier menu) {
-        return dao.getAllMenuWithHaveMark(menu.getId());
+    public List<GetAllMenuWithHaveMarkDTO> findAllMenuWithHaveMark(Long menu) {
+        return dao.getAllMenuWithHaveMark(menu);
     }
 }

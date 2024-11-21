@@ -27,7 +27,6 @@ import team.opentech.usher.pojo.cqe.query.IdQuery;
 import team.opentech.usher.pojo.entity.AiSpace;
 import team.opentech.usher.pojo.entity.AiSpaceUserLink;
 import team.opentech.usher.pojo.entity.AiSubspace;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.event.CleanSpaceUserEvent;
 import team.opentech.usher.repository.AiSpaceRepository;
 import team.opentech.usher.repository.AiSpaceUserLinkRepository;
@@ -79,7 +78,7 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
 
     @Override
     public Boolean addUserToSpace(AddUserToSpaceCommand command) {
-        AiSpace aiSpace = rep.find(Identifier.build(command.getSpaceId()));
+        AiSpace aiSpace = rep.find(command.getSpaceId());
         Asserts.assertTrue(aiSpace != null, "指定的独立空间不存在!");
         aiSpace.addUser(userLinkRepository, command.getUserId(), command.getAdmin());
         return Boolean.TRUE;
@@ -87,7 +86,7 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
 
     @Override
     public Boolean removeUserFromSpace(RemoveUserFromSpaceCommand command) {
-        AiSpace aiSpace = rep.find(Identifier.build(command.getSpaceId()));
+        AiSpace aiSpace = rep.find(command.getSpaceId());
         Asserts.assertTrue(aiSpace != null, "指定的独立空间不存在!");
         return aiSpace.removeUser(userLinkRepository, command.getUserId());
     }
@@ -105,7 +104,7 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
 
     @Override
     public Boolean removeSpace(RemoveSpaceCommand command) {
-        AiSpace aiSpace = rep.find(Identifier.build(command.getSpaceId()));
+        AiSpace aiSpace = rep.find(command.getSpaceId());
         Asserts.assertTrue(aiSpace != null, "指定的独立空间不存在!");
         aiSpace.removeSelf(rep);
         return Boolean.TRUE;
@@ -119,7 +118,7 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
     @Override
     public List<AiSpaceDTO> findByOnlineUser(DefaultCQE blackQuery) {
         List<AiSpaceUserLink> userLinks = userLinkRepository.findByUserId(blackQuery.getUser().getId());
-        List<Identifier> spaceIds = userLinks.stream().map(AiSpaceUserLink::spaceId).map(Identifier::build).collect(Collectors.toList());
+        List<Long> spaceIds = userLinks.stream().map(AiSpaceUserLink::spaceId).collect(Collectors.toList());
         List<AiSpace> aiSpaces = rep.find(spaceIds);
         return assem.listEntityToDTO(aiSpaces);
     }
@@ -133,7 +132,7 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
 
     @Override
     public Boolean removeSubSpace(IdCommand command) {
-        return subspaceRepository.remove(Identifier.build(command.getId())) == 1;
+        return subspaceRepository.remove(command.getId()) == 1;
     }
 
     @Override
@@ -146,7 +145,7 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
 
     @Override
     public AiSubspaceDTO findSubSpaceById(IdQuery query) {
-        AiSubspace aiSubspace = subspaceRepository.find(Identifier.build(query.getId()));
+        AiSubspace aiSubspace = subspaceRepository.find(query.getId());
         return subspaceAssembler.toDTO(aiSubspace);
     }
 
@@ -162,7 +161,7 @@ public class AiSpaceServiceImpl extends AbstractDoService<AiSpaceDO, AiSpace, Ai
     @Override
     public Boolean updateSpaceInfo(UpdateSpaceInfoCommand command) {
         Asserts.assertTrue(command.getSpaceId() != null, "修改时空间id不能为空");
-        AiSpace aiSpace = rep.find(Identifier.build(command.getSpaceId()));
+        AiSpace aiSpace = rep.find(command.getSpaceId());
         aiSpace.changeName(command.getSpaceName());
         aiSpace.saveSelf(rep);
         return Boolean.TRUE;

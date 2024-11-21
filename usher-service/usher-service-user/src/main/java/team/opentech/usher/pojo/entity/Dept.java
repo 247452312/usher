@@ -1,15 +1,14 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.pojo.DO.DeptDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.DeptRepository;
 import team.opentech.usher.repository.MenuRepository;
 import team.opentech.usher.repository.PowerRepository;
 import team.opentech.usher.util.CollectionUtil;
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -32,10 +31,6 @@ public class Dept extends AbstractDoEntity<DeptDO> {
 
     public Dept(Long id) {
         super(parseIdToDO(id));
-    }
-
-    public Dept(Identifier id) {
-        super(id, new DeptDO());
     }
 
     public Dept(DeptDO deptDO, List<Power> powers) {
@@ -105,7 +100,7 @@ public class Dept extends AbstractDoEntity<DeptDO> {
         if (powers != null) {
             return;
         }
-        this.powers = powerRepository.findByDeptId(new Identifier(data.getId()));
+        this.powers = powerRepository.findByDeptId(data.getId());
     }
 
     /**
@@ -117,7 +112,7 @@ public class Dept extends AbstractDoEntity<DeptDO> {
         if (menus != null) {
             return;
         }
-        this.menus = menuRepository.findByDeptId(new Identifier(data.getId()));
+        this.menus = menuRepository.findByDeptId(data.getId());
     }
 
     public List<Menu> menus() {

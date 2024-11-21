@@ -3,7 +3,6 @@ package team.opentech.usher.repository;
 import java.util.List;
 import team.opentech.usher.pojo.DO.ProviderInterfaceParamDO;
 import team.opentech.usher.pojo.entity.ProviderInterfaceParam;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
 
 /**
@@ -22,5 +21,5 @@ public interface ProviderInterfaceParamRepository extends BaseEntityRepository<P
      *
      * @return
      */
-    List<ProviderInterfaceParam> findByInterfaceId(Identifier interfaceId);
+    List<ProviderInterfaceParam> findByInterfaceId(Long interfaceId);
 }

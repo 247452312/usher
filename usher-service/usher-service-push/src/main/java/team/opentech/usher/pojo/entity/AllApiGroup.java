@@ -1,21 +1,20 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import team.opentech.usher.assembler.PushMsgAssembler;
 import team.opentech.usher.facade.UserFacade;
 import team.opentech.usher.pojo.DO.ApiDO;
 import team.opentech.usher.pojo.DO.ApiSubscribeDO;
 import team.opentech.usher.pojo.DTO.PushMsgDTO;
 import team.opentech.usher.pojo.entity.base.AbstractEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ApiGroupRepository;
 import team.opentech.usher.repository.ApiRepository;
 import team.opentech.usher.repository.ApiSubscribeRepository;
 import team.opentech.usher.repository.PushMsgRepository;
 import team.opentech.usher.util.Asserts;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -35,10 +34,10 @@ public class AllApiGroup extends AbstractEntity {
         List<Api> apis = apiRepository.findAll();
         Map<Long, List<Api>> groupIdApiMap = apis.stream().collect(Collectors.groupingBy(t -> t.toData().map(ApiDO::getApiGroupId).orElseThrow(Asserts::throwOptionalException)));
         for (ApiGroup group : groups) {
-            if (!groupIdApiMap.containsKey(group.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException))) {
+            if (!groupIdApiMap.containsKey(group.getUnique().orElseThrow(Asserts::throwOptionalException))) {
                 continue;
             }
-            List<Api> groupApis = groupIdApiMap.get(group.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException));
+            List<Api> groupApis = groupIdApiMap.get(group.getUnique().orElseThrow(Asserts::throwOptionalException));
             group.forceFillApi(groupApis);
         }
     }
@@ -47,10 +46,10 @@ public class AllApiGroup extends AbstractEntity {
         List<ApiSubscribe> subscribes = subscribeRepository.findByCron(cron);
         Map<Long, List<ApiSubscribe>> groupIdSubscribeMap = subscribes.stream().collect(Collectors.groupingBy(t -> t.toData().map(ApiSubscribeDO::getApiGroupId).orElseThrow(Asserts::throwOptionalException)));
         for (ApiGroup group : groups) {
-            if (!groupIdSubscribeMap.containsKey(group.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException))) {
+            if (!groupIdSubscribeMap.containsKey(group.getUnique().orElseThrow(Asserts::throwOptionalException))) {
                 continue;
             }
-            List<ApiSubscribe> groupSubscribes = groupIdSubscribeMap.get(group.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException));
+            List<ApiSubscribe> groupSubscribes = groupIdSubscribeMap.get(group.getUnique().orElseThrow(Asserts::throwOptionalException));
             group.forceFillSubscribe(groupSubscribes);
         }
     }

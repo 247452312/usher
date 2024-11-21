@@ -1,5 +1,11 @@
 package team.opentech.usher.pojo.entity;
 
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.enums.ServiceQualityEnum;
 import team.opentech.usher.mq.pojo.mqinfo.JvmUniqueMark;
@@ -7,17 +13,10 @@ import team.opentech.usher.pojo.DO.LogMonitorDO;
 import team.opentech.usher.pojo.DO.LogMonitorJvmStatusDO;
 import team.opentech.usher.pojo.DO.base.BaseIdDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.LogMonitorJvmStatusRepository;
 import team.opentech.usher.repository.LogMonitorRepository;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * JVM日志表(LogMonitor)表 数据库实体类
@@ -246,9 +245,9 @@ public class LogMonitor extends AbstractDoEntity<LogMonitorDO> {
     }
 
     public void addSelf(LogMonitorRepository rep) {
-        Identifier save = rep.save(this);
+        Long save = rep.save(this);
         for (LogMonitorJvmStatus status : statuses) {
-            status.toData().orElseThrow(() -> Asserts.makeException("未找到data")).setFid(save.getId());
+            status.toData().orElseThrow(() -> Asserts.makeException("未找到data")).setFid(save);
         }
     }
 
