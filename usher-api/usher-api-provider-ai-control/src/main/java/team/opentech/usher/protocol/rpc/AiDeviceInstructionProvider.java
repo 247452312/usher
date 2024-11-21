@@ -1,6 +1,10 @@
 package team.opentech.usher.protocol.rpc;
 
+import java.util.List;
 import team.opentech.usher.pojo.DTO.AiDeviceInstructionDTO;
+import team.opentech.usher.pojo.cqe.CopyInstructionsByDeviceIdCommand;
+import team.opentech.usher.pojo.cqe.CreateDeviceInstructionCommand;
+import team.opentech.usher.pojo.cqe.command.IdCommand;
 import team.opentech.usher.protocol.rpc.base.DTOProvider;
 
 /**
@@ -11,5 +15,54 @@ import team.opentech.usher.protocol.rpc.base.DTOProvider;
  * @date 文件创建日期 2024年11月13日 20时55分
  */
 public interface AiDeviceInstructionProvider extends DTOProvider<AiDeviceInstructionDTO> {
+
+    /**
+     * 创建指令
+     *
+     * @param command
+     *
+     * @return
+     */
+    Boolean createDeviceInstruction(CreateDeviceInstructionCommand command);
+
+
+    /**
+     * 删除指令
+     *
+     * @param command
+     *
+     * @return
+     */
+    Boolean removeDeviceInstruction(IdCommand command);
+
+
+    /**
+     * 根据设备id查询指令
+     *
+     * @param command
+     *
+     * @return
+     */
+    List<AiDeviceInstructionDTO> findDeviceInstructionById(IdCommand command);
+
+    /**
+     * 复制设备指令
+     *
+     * @param command
+     *
+     * @return
+     */
+    Boolean copyInstructionsByDeviceId(CopyInstructionsByDeviceIdCommand command);
+
+
+    /**
+     * 执行指令
+     *
+     * @param command
+     *
+     * @return
+     */
+    Boolean executeInstruction(IdCommand command);
+
 
 }

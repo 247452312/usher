@@ -36,15 +36,6 @@ public abstract class AiSubspaceAssembler extends AbstractAssembler<AiSubspaceDO
     @Mapping(expression = "java(com.alibaba.fastjson.JSON.toJSONString(dto.getOriginRelativeCoordinates()))", target = "originRelativeCoordinates")
     public abstract AiSubspaceDO toDo(AiSubspaceDTO dto);
 
-    public AiSubspace toEntity(CreateSubSpaceCommand command) {
-        AiSubspaceDTO subspaceDTO = command.getSubspaceDTO();
-        AiSubspaceDO aDo = toDo(subspaceDTO);
-        aDo.setSpaceId(command.getSpaceId());
-        AiSubspace entity = toEntity(aDo);
-        List<AiSubspaceConnectionPoint> aiSubspaceConnectionPoints = connectionPointAssembler.listDTOToEntity(subspaceDTO.getConnectionPointDTOS());
-        entity.fillConnectionPoint(aiSubspaceConnectionPoints);
-        return entity;
-    }
 
     @Override
     public AiSubspaceDTO toDTO(AiSubspace entity) {
@@ -53,6 +44,16 @@ public abstract class AiSubspaceAssembler extends AbstractAssembler<AiSubspaceDO
         List<AiSubspaceConnectionPointDTO> aiSubspaceConnectionPointDTOS = connectionPointAssembler.listEntityToDTO(aiSubspaceConnectionPoints);
         dto.setConnectionPointDTOS(aiSubspaceConnectionPointDTOS);
         return dto;
+    }
+
+    public AiSubspace toEntity(CreateSubSpaceCommand command) {
+        AiSubspaceDTO subspaceDTO = command.getSubspaceDTO();
+        AiSubspaceDO aDo = toDo(subspaceDTO);
+        aDo.setSpaceId(command.getSpaceId());
+        AiSubspace entity = toEntity(aDo);
+        List<AiSubspaceConnectionPoint> aiSubspaceConnectionPoints = connectionPointAssembler.listDTOToEntity(subspaceDTO.getConnectionPointDTOS());
+        entity.fillConnectionPoint(aiSubspaceConnectionPoints);
+        return entity;
     }
 
     public AiSubspace toEntity(ChangeSubSpaceCommand command) {

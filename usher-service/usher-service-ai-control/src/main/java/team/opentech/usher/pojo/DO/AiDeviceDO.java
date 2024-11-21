@@ -47,47 +47,87 @@ public class AiDeviceDO extends BaseDO {
     @TableField
     private Integer subtype;
 
+    /**
+     * 相对子空间位置
+     */
+    @TableField
+    private String position;
 
-    public void setDeviceNo(String deviceNo) {
-        this.deviceNo = deviceNo;
+    /**
+     * 相对子空间角度
+     */
+    @TableField
+    private String angle;
+
+    /**
+     * 相对主轴旋转角度
+     */
+    @TableField
+    private String rotate;
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getAngle() {
+        return angle;
+    }
+
+    public void setAngle(String angle) {
+        this.angle = angle;
+    }
+
+    public String getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(String rotate) {
+        this.rotate = rotate;
     }
 
     public String getDeviceNo() {
         return deviceNo;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDeviceNo(String deviceNo) {
+        this.deviceNo = deviceNo;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setSubspaceId(Long subspaceId) {
-        this.subspaceId = subspaceId;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getSubspaceId() {
         return subspaceId;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setSubspaceId(Long subspaceId) {
+        this.subspaceId = subspaceId;
     }
 
     public Integer getType() {
         return type;
     }
 
-    public void setSubtype(Integer subtype) {
-        this.subtype = subtype;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
     public Integer getSubtype() {
         return subtype;
     }
 
+    public void setSubtype(Integer subtype) {
+        this.subtype = subtype;
+    }
 
     @Override
     public String toString() {

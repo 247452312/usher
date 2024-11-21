@@ -22,4 +22,20 @@ public interface AiDeviceRepository extends BaseEntityRepository<AiDeviceDO, AiD
      * @return
      */
     List<AiDevice> findBySubSpaceId(Long subspaceId);
+
+    /**
+     * 根据子空间id删除设备
+     *
+     * @param subSpaceId
+     */
+    void removeBySubSpaceId(Long subSpaceId);
+
+    /**
+     * 根据子空间id集合查询设备
+     *
+     * @param subSpaceIds
+     *
+     * @return
+     */
+    List<AiDevice> findBySubSpaceIds(List<Long> subSpaceIds);
 }

@@ -16,6 +16,9 @@
         <result property="subspaceId" column="subspace_id" jdbcType="BIGINT"/>
         <result property="type" column="type" jdbcType="INTEGER"/>
         <result property="subtype" column="subtype" jdbcType="INTEGER"/>
+        <result property="position" column="position" jdbcType="VARCHAR"/>
+        <result property="angle" column="angle" jdbcType="VARCHAR"/>
+        <result property="rotate" column="rotate" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--批量通过主键修改数据-->
@@ -60,6 +63,15 @@
             </if>
             <if test="subtype != null">
                 ,subtype = #{subtype}
+            </if>
+            <if test="position != null">
+                ,position = #{position}
+            </if>
+            <if test="angle != null">
+                ,angle = #{angle}
+            </if>
+            <if test="rotate != null">
+                ,rotate = #{rotate}
             </if>
             where ${pkColumn.name} = #{${pkColumn.smallName}}
         </foreach>

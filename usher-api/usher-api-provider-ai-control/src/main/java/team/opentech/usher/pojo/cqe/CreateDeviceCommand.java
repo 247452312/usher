@@ -1,18 +1,13 @@
-package team.opentech.usher.pojo.DTO;
+package team.opentech.usher.pojo.cqe;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import team.opentech.usher.pojo.DTO.base.IdDTO;
+import team.opentech.usher.pojo.DTO.Point3D;
+import team.opentech.usher.pojo.cqe.command.base.AbstractCommand;
 
 /**
- * 设备表表(AiDevice)表 对外数据传输载体
- *
  * @author uhyils <247452312@qq.com>
- * @version 1.0
- * @date 文件创建日期 2024年11月13日 20时55分
+ * @date 文件创建日期 2024年11月21日 08时33分
  */
-public class AiDeviceDTO extends IdDTO {
-
-    private static final long serialVersionUID = -1L;
+public class CreateDeviceCommand extends AbstractCommand {
 
     /**
      * 设备编号
@@ -54,30 +49,6 @@ public class AiDeviceDTO extends IdDTO {
      */
     private String rotate;
 
-    public Point3D getPosition() {
-        return position;
-    }
-
-    public void setPosition(Point3D position) {
-        this.position = position;
-    }
-
-    public Point3D getAngle() {
-        return angle;
-    }
-
-    public void setAngle(Point3D angle) {
-        this.angle = angle;
-    }
-
-    public String getRotate() {
-        return rotate;
-    }
-
-    public void setRotate(String rotate) {
-        this.rotate = rotate;
-    }
-
     public String getDeviceNo() {
         return deviceNo;
     }
@@ -118,16 +89,27 @@ public class AiDeviceDTO extends IdDTO {
         this.subtype = subtype;
     }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("id", getId())
-            .append("deviceNo", getDeviceNo())
-            .append("name", getName())
-            .append("subspaceId", getSubspaceId())
-            .append("type", getType())
-            .append("subtype", getSubtype())
-            .toString();
+    public Point3D getPosition() {
+        return position;
     }
 
+    public void setPosition(Point3D position) {
+        this.position = position;
+    }
+
+    public Point3D getAngle() {
+        return angle;
+    }
+
+    public void setAngle(Point3D angle) {
+        this.angle = angle;
+    }
+
+    public String getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(String rotate) {
+        this.rotate = rotate;
+    }
 }

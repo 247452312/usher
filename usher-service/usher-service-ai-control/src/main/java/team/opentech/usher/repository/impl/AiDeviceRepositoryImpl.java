@@ -1,6 +1,7 @@
 package team.opentech.usher.repository.impl;
 
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import java.util.List;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.AiDeviceAssembler;
@@ -31,6 +32,22 @@ public class AiDeviceRepositoryImpl extends AbstractRepository<AiDevice, AiDevic
     public List<AiDevice> findBySubSpaceId(Long subspaceId) {
         LambdaQueryChainWrapper<AiDeviceDO> wrapper = lambdaQuery();
         wrapper.eq(AiDeviceDO::getSubspaceId, subspaceId);
+        List<AiDeviceDO> list = wrapper.list();
+        return assembler.listToEntity(list);
+    }
+
+    @Override
+    public void removeBySubSpaceId(Long subSpaceId) {
+        LambdaUpdateChainWrapper<AiDeviceDO> wrapper = lambdaUpdate();
+        wrapper.eq(AiDeviceDO::getSubspaceId, subSpaceId);
+        wrapper.set(AiDeviceDO::getDeleteFlag, true);
+        wrapper.update();
+    }
+
+    @Override
+    public List<AiDevice> findBySubSpaceIds(List<Long> subSpaceIds) {
+        LambdaQueryChainWrapper<AiDeviceDO> wrapper = lambdaQuery();
+        wrapper.eq(AiDeviceDO::getSubspaceId, subSpaceIds);
         List<AiDeviceDO> list = wrapper.list();
         return assembler.listToEntity(list);
     }
