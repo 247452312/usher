@@ -1,5 +1,7 @@
 package team.opentech.usher.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.LogMonitorJvmStatusAssembler;
 import team.opentech.usher.mq.pojo.mqinfo.JvmStatusInfoCommand;
@@ -9,8 +11,6 @@ import team.opentech.usher.pojo.entity.LogMonitorJvmStatus;
 import team.opentech.usher.repository.LogMonitorJvmStatusRepository;
 import team.opentech.usher.repository.LogMonitorRepository;
 import team.opentech.usher.service.LogMonitorJvmStatusService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * JVM状态子表(LogMonitorJvmStatus)表 内部服务实现类
@@ -38,7 +38,7 @@ public class LogMonitorJvmStatusServiceImpl extends AbstractDoService<LogMonitor
         // 填充父id
         logMonitorJvmStatus.fillFid(repository);
         // 保存状态信息
-        logMonitorJvmStatus.addSelf(rep);
+        logMonitorJvmStatus.saveSelf(rep);
         // 修改主类假想结束时间
         logMonitorJvmStatus.changeEndTimeLag(repository);
     }

@@ -5,7 +5,6 @@ import team.opentech.usher.mq.content.RocketMqContent;
 import team.opentech.usher.mq.pojo.mqinfo.JvmUniqueMark;
 import team.opentech.usher.pojo.DO.LogMonitorJvmStatusDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.repository.LogMonitorJvmStatusRepository;
 import team.opentech.usher.repository.LogMonitorRepository;
 import team.opentech.usher.util.Asserts;
 
@@ -54,7 +53,4 @@ public class LogMonitorJvmStatus extends AbstractDoEntity<LogMonitorJvmStatusDO>
         return data.getFid();
     }
 
-    public void addSelf(LogMonitorJvmStatusRepository rep) {
-        rep.save(this);
-    }
 }

@@ -1,5 +1,10 @@
 package team.opentech.usher.rpc.netty.core.handler;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
+import java.util.List;
 import team.opentech.usher.rpc.enums.RpcTypeEnum;
 import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
 import team.opentech.usher.rpc.exchange.pojo.data.factory.RpcFactory;
@@ -13,11 +18,6 @@ import team.opentech.usher.rpc.netty.spi.step.RpcStep;
 import team.opentech.usher.rpc.netty.spi.step.template.ProviderRequestByteExtension;
 import team.opentech.usher.rpc.spi.RpcSpiManager;
 import team.opentech.usher.util.LogUtil;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
-import java.util.List;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -53,12 +53,12 @@ public class RpcProviderHandler extends SimpleChannelInboundHandler<ByteBuf> {
         assert build != null;
 
         RpcData requestRpcData = build.createByBytes(bytes);
-        LogUtil.debug("接收端接收唯一标示:{}", requestRpcData.unique().toString());
+        LogUtil.debug("接收端接收唯一标示:{}", () -> new String[]{requestRpcData.unique().toString()});
         LastProviderInvoker invoker = new LastProviderInvoker(callback);
         RpcInvoker rpcInvoker = InvokerChainBuilder.buildProviderAroundInvokerChain(invoker);
         FilterContext context = new FilterContext(requestRpcData);
         RpcData invoke = rpcInvoker.invoke(context);
-        LogUtil.debug("接收端发送唯一标示:{}", invoke.unique().toString());
+        LogUtil.debug("接收端发送唯一标示:{}", () -> new String[]{invoke.unique().toString()});
         return invoke.toBytes();
     }
 

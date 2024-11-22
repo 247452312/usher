@@ -1,5 +1,8 @@
 package team.opentech.usher.context;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import team.opentech.usher.UsherThreadLocal;
 import team.opentech.usher.enums.LogDetailTypeEnum;
 import team.opentech.usher.enums.LogTypeEnum;
@@ -8,9 +11,6 @@ import team.opentech.usher.util.IpUtil;
 import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.SpringUtil;
 import team.opentech.usher.util.SupplierWithException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * traceId生成的地方
@@ -49,12 +49,12 @@ public class MyTraceIdContext {
     /**
      * 保存上一次调用链顺序的地方
      */
-    private static final UsherThreadLocal<List<Integer>> traceId = new UsherThreadLocal<>();
+    private static final UsherThreadLocal<List<Integer>> rpcId = new UsherThreadLocal<>();
 
     /**
      * 这一次调用的RPCid
      */
-    private static final UsherThreadLocal<AtomicInteger> thisTraceId = new UsherThreadLocal<>();
+    private static final UsherThreadLocal<AtomicInteger> thisRpcId = new UsherThreadLocal<>();
 
     /**
      * 项目名称
@@ -82,7 +82,7 @@ public class MyTraceIdContext {
      *
      * @return
      */
-    public static String getLogInfo(String traceStr, LogTypeEnum logTypeEnum, long startTime, long timeConsuming, String... otherInfo) {
+    public static String getLogInfo(String rpcIdStr, LogTypeEnum logTypeEnum, long startTime, long timeConsuming, String... otherInfo) {
         StringBuilder sb = new StringBuilder();
         sb.append(LogDetailTypeEnum.LINK.getCode());
         sb.append(getThraceId());
@@ -93,7 +93,7 @@ public class MyTraceIdContext {
         sb.append(PIPE_SYMBOL);
         sb.append(IpUtil.getIp());
         sb.append(PIPE_SYMBOL);
-        sb.append(traceStr);
+        sb.append(rpcIdStr);
         sb.append(PIPE_SYMBOL);
         String threadName = Thread.currentThread().getName();
         sb.append(threadName);
@@ -118,8 +118,8 @@ public class MyTraceIdContext {
      *
      * @return MD5 唯一值
      */
-    public static String printLogInfo(String traceStr, LogTypeEnum logTypeEnum, long startTime, long timeConsuming, String... otherInfo) {
-        String logInfo = getLogInfo(traceStr, logTypeEnum, startTime, timeConsuming, otherInfo);
+    public static String printLogInfo(String rpcIdStr, LogTypeEnum logTypeEnum, long startTime, long timeConsuming, String... otherInfo) {
+        String logInfo = getLogInfo(rpcIdStr, logTypeEnum, startTime, timeConsuming, otherInfo);
         LogUtil.link(logInfo);
         return logInfo;
     }
@@ -139,7 +139,6 @@ public class MyTraceIdContext {
                     IdUtil bean = SpringUtil.getBean(IdUtil.class);
                     if (bean == null) {
                         bean = new IdUtil();
-                        bean.setCode(1L);
                     }
                     thraceId.set(bean.newId());
                 }
@@ -159,45 +158,45 @@ public class MyTraceIdContext {
     }
 
     /**
-     * 获取traceId
+     * 获取rpcId
      *
      * @return
      */
-    public static String getAndAddTraceIdStr() {
-        List<Integer> lastTraceIds = getTraceId();
-        int traceId = getThisTraceId().getAndAdd(1);
-        StringBuilder sb = mergeTraceId(lastTraceIds, traceId);
+    public static String getAndAddRpcIdStr() {
+        List<Integer> lastRpcIds = getRpcId();
+        int rpcId = getThisRpcId().getAndAdd(1);
+        StringBuilder sb = mergeRpcId(lastRpcIds, rpcId);
         return sb.toString();
     }
 
     /**
-     * 获取traceId
+     * 获取rpcId
      *
      * @return
      */
-    public static String getTraceIdStr() {
-        List<Integer> lastTraceIds = getTraceId();
-        int traceId = getThisTraceId().get();
-        StringBuilder sb = mergeTraceId(lastTraceIds, traceId);
+    public static String getRpcIdStr() {
+        List<Integer> lastRpcIds = getRpcId();
+        int rpcId = getThisRpcId().get();
+        StringBuilder sb = mergeRpcId(lastRpcIds, rpcId);
         return sb.toString();
     }
 
     public static void clean() {
         thraceId.remove();
-        traceId.remove();
-        thisTraceId.remove();
+        rpcId.remove();
+        thisRpcId.remove();
     }
 
     /**
-     * 获取下一个trace应该使用的traceId
+     * 获取下一个rpc应该使用的rpcId
      *
      * @return
      */
-    public static List<Integer> getNextTraceIds() {
-        List<Integer> nestTraceIds = new ArrayList<>(getTraceId());
-        AtomicInteger atomicInteger = getThisTraceId();
-        nestTraceIds.add(atomicInteger.get());
-        return nestTraceIds;
+    public static List<Integer> getNextRpcIds() {
+        List<Integer> nextRpcIds = new ArrayList<>(getRpcId());
+        AtomicInteger atomicInteger = getThisRpcId();
+        nextRpcIds.add(atomicInteger.get());
+        return nextRpcIds;
     }
 
     /**
@@ -212,7 +211,7 @@ public class MyTraceIdContext {
      * @return
      */
     public static <T> T printLogInfo(LogTypeEnum logType, SupplierWithException<T> supplier, String[] other, String... additional) throws Throwable {
-        String traceIdStr = getAndAddTraceIdStr();
+        String rpcIdStr = getAndAddRpcIdStr();
         long startTime = System.currentTimeMillis();
         try {
             return supplier.get();
@@ -226,7 +225,7 @@ public class MyTraceIdContext {
                 realOther[0] = hash;
                 other = realOther;
             }
-            printLogInfo(traceIdStr, logType, startTime, useTime, other);
+            printLogInfo(rpcIdStr, logType, startTime, useTime, other);
             assert additional != null;
             switch (logType) {
                 case DB:
@@ -275,33 +274,33 @@ public class MyTraceIdContext {
 
     }
 
-    private static List<Integer> getTraceId() {
-        if (traceId.get() == null) {
+    private static List<Integer> getRpcId() {
+        if (rpcId.get() == null) {
             if (checkMainThread()) {
                 ArrayList<Integer> integers = new ArrayList<>();
                 integers.add(-1);
                 return integers;
             }
             synchronized (MyTraceIdContext.class) {
-                if (traceId.get() == null) {
+                if (rpcId.get() == null) {
                     ArrayList<Integer> value = new ArrayList<>();
                     value.add(1);
-                    traceId.set(value);
-                    thisTraceId.set(new AtomicInteger(1));
+                    rpcId.set(value);
+                    thisRpcId.set(new AtomicInteger(1));
                 }
             }
         }
-        return traceId.get();
+        return rpcId.get();
     }
 
     /**
-     * 设置TraceId
+     * 设置RpcId
      *
-     * @param lastTraceIds
+     * @param lastRpcIds
      */
-    public static void setTraceId(List<Integer> lastTraceIds) {
-        traceId.set(lastTraceIds);
-        thisTraceId.set(new AtomicInteger(1));
+    public static void setRpcId(List<Integer> lastRpcIds) {
+        rpcId.set(lastRpcIds);
+        thisRpcId.set(new AtomicInteger(1));
     }
 
     private static boolean checkMainThread() {
@@ -309,36 +308,36 @@ public class MyTraceIdContext {
     }
 
     /**
-     * traceId
+     * rpcId
      *
-     * @param lastTraceIds 上一层traceId
-     * @param traceId      这一层的traceId
+     * @param lastRpcIds 上一层rpcId
+     * @param rpcId      这一层的RpcId
      *
      * @return
      */
-    private static StringBuilder mergeTraceId(List<Integer> lastTraceIds, int traceId) {
+    private static StringBuilder mergeRpcId(List<Integer> lastRpcIds, int rpcId) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < lastTraceIds.size(); i++) {
-            sb.append(lastTraceIds.get(i));
+        for (int i = 0; i < lastRpcIds.size(); i++) {
+            sb.append(lastRpcIds.get(i));
             sb.append(".");
         }
-        sb.append(traceId);
+        sb.append(rpcId);
         return sb;
     }
 
-    private static AtomicInteger getThisTraceId() {
-        if (thisTraceId.get() == null) {
+    private static AtomicInteger getThisRpcId() {
+        if (thisRpcId.get() == null) {
             if (checkMainThread()) {
                 return new AtomicInteger(-1);
             }
             synchronized (MyTraceIdContext.class) {
-                if (thisTraceId.get() == null) {
+                if (thisRpcId.get() == null) {
                     AtomicInteger integer = new AtomicInteger(1);
-                    thisTraceId.set(integer);
+                    thisRpcId.set(integer);
                 }
             }
         }
-        return thisTraceId.get();
+        return thisRpcId.get();
     }
 
     private static String hash(String[] additionals) {

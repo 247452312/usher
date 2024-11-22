@@ -3,7 +3,6 @@ package team.opentech.usher.mq.util;
 import com.alibaba.fastjson.JSON;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +23,7 @@ import team.opentech.usher.protocol.mq.base.BaseMqConsumer;
 import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.SpringUtil;
 import team.opentech.usher.util.SupplierWithException;
+import team.opentech.usher.util.proxy.ProxyUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -45,9 +45,9 @@ public class MqUtil {
      * 添加消费者
      */
     public static BaseMqConsumer addConsumer(BaseMqConsumer consumer) throws MQClientException {
+        final BaseMqConsumer proxyConsumer = ProxyUtil.proxyObserver(BaseMqConsumer.class, new MqInvocationHandler(consumer));
         RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
-        factory.initConsumer(consumer);
-        final BaseMqConsumer proxyConsumer = (BaseMqConsumer) Proxy.newProxyInstance(consumer.getClass().getClassLoader(), new Class[]{BaseMqConsumer.class}, new MqInvocationHandler(consumer));
+        factory.initConsumer(proxyConsumer);
         String join = String.join("||", proxyConsumer.tags());
         String name = proxyConsumer.topic() + " " + join;
         consumers.put(name, proxyConsumer);
@@ -60,9 +60,9 @@ public class MqUtil {
      * @param consumer 消费者创建逻辑
      */
     public static <T extends BaseMqConsumer> T addConsumer(Class<T> interfaceClass, BaseMqConsumer consumer) throws MQClientException {
+        final T proxyConsumer = ProxyUtil.proxyObserver(interfaceClass, new MqInvocationHandler(consumer));
         RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
-        factory.initConsumer(consumer);
-        final T proxyConsumer = (T) Proxy.newProxyInstance(consumer.getClass().getClassLoader(), new Class[]{interfaceClass}, new MqInvocationHandler(consumer));
+        factory.initConsumer(proxyConsumer);
         String join = String.join("||", proxyConsumer.tags());
         String name = proxyConsumer.topic() + " " + join;
         consumers.put(name, proxyConsumer);
@@ -75,6 +75,7 @@ public class MqUtil {
      * @param consumer 消费者创建逻辑
      */
     public static void addNoLogConsumer(BaseMqConsumer consumer) throws MQClientException {
+        consumer.selfObserver(consumer);
         RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
         factory.initConsumer(consumer);
         String join = String.join("||", consumer.tags());
@@ -92,7 +93,7 @@ public class MqUtil {
      * @return
      */
     public static void sendMsg(String topic, List<String> tags, String msg) {
-        MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextTraceIds()));
+        MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextRpcIds()));
         byte[] bytes = JSON.toJSONString(build).getBytes(StandardCharsets.UTF_8);
         sendMsg(topic, tags, bytes);
     }
@@ -107,7 +108,7 @@ public class MqUtil {
      * @return
      */
     public static void sendMsg(String topic, String tag, String msg) {
-        MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextTraceIds()));
+        MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextRpcIds()));
         byte[] bytes = JSON.toJSONString(build).getBytes(StandardCharsets.UTF_8);
         sendMsg(topic, Collections.singletonList(tag), bytes);
     }
@@ -126,7 +127,7 @@ public class MqUtil {
         try {
             String join = String.join("||", tags);
             MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, () -> {
-                MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextTraceIds()));
+                MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextRpcIds()));
                 byte[] bytes = JSON.toJSONString(build).getBytes(StandardCharsets.UTF_8);
                 try {
                     sendConfirmMsg(topic, tags, callback, bytes);
@@ -156,7 +157,7 @@ public class MqUtil {
         try {
             String join = String.join("||", tags);
             MyTraceIdContext.printLogInfo(LogTypeEnum.MQ, () -> {
-                MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextTraceIds()));
+                MqSendInfo build = MqSendInfo.build(msg, RpcTraceInfo.build(MyTraceIdContext.getThraceId(), MyTraceIdContext.getNextRpcIds()));
                 byte[] bytes = JSON.toJSONString(build).getBytes(StandardCharsets.UTF_8);
                 try {
                     sendConfirmMsg(topic, tags, sendCallback, bytes);
@@ -340,14 +341,14 @@ public class MqUtil {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (method.getName().equals(RECEIVE_METHOD_NAME)) {
-                String json = (String) args[0];
+                String json = new String((byte[]) args[0], StandardCharsets.UTF_8);
                 MqSendInfo mqSendInfo = JSON.parseObject(json, MqSendInfo.class);
                 RpcTraceInfo rpcInfo = mqSendInfo.getRpcInfo();
-
+                String realJson = mqSendInfo.getJson();
                 MyTraceIdContext.setThraceId(rpcInfo.getTraceId());
-                MyTraceIdContext.setTraceId(rpcInfo.getRpcIds());
+                MyTraceIdContext.setRpcId(rpcInfo.getRpcIds());
                 try {
-                    return method.invoke(consumer, json);
+                    return method.invoke(consumer, new Object[]{realJson.getBytes(StandardCharsets.UTF_8)});
                 } finally {
                     MyTraceIdContext.clean();
                 }

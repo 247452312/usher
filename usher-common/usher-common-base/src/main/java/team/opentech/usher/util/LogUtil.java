@@ -162,6 +162,10 @@ public final class LogUtil {
         writeLog(Thread.currentThread().getName(), msg, null, LogLevelEnum.DEBUG, params);
     }
 
+    public static void debug(String msg, Supplier<String[]> params) {
+        writeLog(Thread.currentThread().getName(), msg, null, LogLevelEnum.DEBUG, params);
+    }
+
     public static void debug(String msg, String params) {
         writeLog(Thread.currentThread().getName(), msg, null, LogLevelEnum.DEBUG, params);
     }
@@ -364,7 +368,7 @@ public final class LogUtil {
         msg = MessageFormatter.arrayFormat(msg, params).getMessage();
         Logger logger = getLoggerByName(className);
         if (msg != null && (logTypeEnum != LogLevelEnum.DEBUG || logger.isDebugEnabled())) {
-            msg = String.format(LogDetailTypeEnum.LOG.getCode() + "%s|%s|%d|%s", MyTraceIdContext.getThraceId(), MyTraceIdContext.getAndAddTraceIdStr(), System.currentTimeMillis(), msg);
+            msg = String.format(LogDetailTypeEnum.LOG.getCode() + "%s|%s|%d|%s", MyTraceIdContext.getThraceId(), MyTraceIdContext.getAndAddRpcIdStr(), System.currentTimeMillis(), msg);
         }
         choiceLogType(msg, throwable, logTypeEnum, logger);
     }
@@ -374,10 +378,21 @@ public final class LogUtil {
         Logger logger = getLoggerByName(className);
         if (msg != null && (logTypeEnum != LogLevelEnum.DEBUG || logger.isDebugEnabled())) {
             message = MessageFormatter.arrayFormat(msg.get(), params).getMessage();
-            message = String.format(LogDetailTypeEnum.LOG.getCode() + "%s|%s|%d|%s", MyTraceIdContext.getThraceId(), MyTraceIdContext.getAndAddTraceIdStr(), System.currentTimeMillis(), message);
+            message = String.format(LogDetailTypeEnum.LOG.getCode() + "%s|%s|%d|%s", MyTraceIdContext.getThraceId(), MyTraceIdContext.getAndAddRpcIdStr(), System.currentTimeMillis(), message);
         }
         choiceLogType(message, throwable, logTypeEnum, logger);
     }
+
+    private static void writeLog(String className, String msg, Throwable throwable, LogLevelEnum logTypeEnum, Supplier<String[]> params) {
+        String message = null;
+        Logger logger = getLoggerByName(className);
+        if (msg != null && (logTypeEnum != LogLevelEnum.DEBUG || logger.isDebugEnabled())) {
+            message = MessageFormatter.arrayFormat(msg, params.get()).getMessage();
+            message = String.format(LogDetailTypeEnum.LOG.getCode() + "%s|%s|%d|%s", MyTraceIdContext.getThraceId(), MyTraceIdContext.getAndAddRpcIdStr(), System.currentTimeMillis(), message);
+        }
+        choiceLogType(message, throwable, logTypeEnum, logger);
+    }
+
 
     /**
      * 获取日志名称

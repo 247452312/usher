@@ -24,7 +24,6 @@ public class IdUtilTest {
     public void newId() {
 
         IdUtil idUtil = new IdUtil();
-        idUtil.setCode(1L);
         int process = Runtime.getRuntime().availableProcessors();
         ThreadPoolExecutor executor = new ThreadPoolExecutor(process, process * 2, 3000L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100), new LogDealThreadFactory(), new CallerRunsPolicy());
         Set<Long> set = Collections.synchronizedSet(new HashSet<>());

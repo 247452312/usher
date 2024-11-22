@@ -1,5 +1,6 @@
 package team.opentech.usher.elegant.assembly.rpc;
 
+import org.springframework.context.annotation.DependsOn;
 import team.opentech.usher.elegant.AbstractElegantHandler;
 import team.opentech.usher.rpc.annotation.RpcSpi;
 import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
@@ -16,6 +17,7 @@ import team.opentech.usher.util.LogUtil;
  * @date 文件创建日期 2022年08月03日 19时05分
  */
 @RpcSpi
+@DependsOn("providerCluster")
 public class ElegantRpcFilter extends AbstractElegantHandler implements ProviderFilter {
 
     /**
@@ -69,18 +71,6 @@ public class ElegantRpcFilter extends AbstractElegantHandler implements Provider
     }
 
     @Override
-    protected void doShutdown() {
-        registryManager.notAllowProviderToPublish();
-    }
-
-    /**
-     * 实际关闭需要的业务
-     */
-    private void doClose() {
-        registryManager.closeHook();
-    }
-
-    @Override
     public void allowToPublish() {
         super.allowToPublish();
         registryManager.allowProviderToPublish();
@@ -90,5 +80,17 @@ public class ElegantRpcFilter extends AbstractElegantHandler implements Provider
     public void notAllowToPublish() {
         super.notAllowToPublish();
         registryManager.notAllowProviderToPublish();
+    }
+
+    @Override
+    protected void doShutdown() {
+        registryManager.notAllowProviderToPublish();
+    }
+
+    /**
+     * 实际关闭需要的业务
+     */
+    private void doClose() {
+        registryManager.closeHook();
     }
 }

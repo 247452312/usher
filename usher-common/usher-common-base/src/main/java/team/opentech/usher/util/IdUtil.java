@@ -30,11 +30,15 @@ public class IdUtil {
      */
     private volatile Long lastTime = 0L;
 
-    public void setCode(Long code) {
-        this.code = code;
-    }
 
     public synchronized long newId() {
+        return newId(this.code);
+    }
+
+    public synchronized long newId(Long code) {
+        if (code == null) {
+            code = 1L;
+        }
         // 生成时间
         long time = System.currentTimeMillis();
         Asserts.assertTrue(time >= lastTime, "系统时间不正确");

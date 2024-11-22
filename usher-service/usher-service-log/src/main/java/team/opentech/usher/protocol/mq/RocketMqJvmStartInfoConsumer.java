@@ -1,6 +1,7 @@
 package team.opentech.usher.protocol.mq;
 
 import com.alibaba.fastjson.JSONObject;
+import java.nio.charset.StandardCharsets;
 import org.springframework.context.ApplicationContext;
 import team.opentech.usher.annotation.UsherMq;
 import team.opentech.usher.mq.content.RocketMqContent;
@@ -9,8 +10,6 @@ import team.opentech.usher.protocol.mq.base.AbstractRocketMqConsumer;
 import team.opentech.usher.protocol.mq.base.RocketMqMessageResEnum;
 import team.opentech.usher.service.LogMonitorService;
 import team.opentech.usher.util.LogUtil;
-
-import java.nio.charset.StandardCharsets;
 
 /**
  * 监听JVM启动消息
@@ -34,11 +33,16 @@ public class RocketMqJvmStartInfoConsumer extends AbstractRocketMqConsumer {
 
     @Override
     public RocketMqMessageResEnum onMessage(byte[] bytes) {
-        String message = new String(bytes, StandardCharsets.UTF_8);
-        JvmStartInfoCommand jvmStartInfo = JSONObject.parseObject(message, JvmStartInfoCommand.class);
-        LogUtil.info(this, "接收到JVM启动信息");
-        LogUtil.info(this, message);
-        logMonitorService.receiveJvmStartInfo(jvmStartInfo);
-        return RocketMqMessageResEnum.SUCCESS;
+        try {
+            String message = new String(bytes, StandardCharsets.UTF_8);
+            JvmStartInfoCommand jvmStartInfo = JSONObject.parseObject(message, JvmStartInfoCommand.class);
+            LogUtil.info(this, "接收到JVM启动信息");
+            LogUtil.info(this, message);
+            logMonitorService.receiveJvmStartInfo(jvmStartInfo);
+            return RocketMqMessageResEnum.SUCCESS;
+        } catch (Exception e) {
+            LogUtil.error(this, e);
+            throw e;
+        }
     }
 }

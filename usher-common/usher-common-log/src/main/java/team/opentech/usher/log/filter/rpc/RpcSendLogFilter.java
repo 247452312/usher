@@ -1,6 +1,7 @@
 package team.opentech.usher.log.filter.rpc;
 
 import com.alibaba.fastjson.JSON;
+import java.util.List;
 import team.opentech.usher.context.MyTraceIdContext;
 import team.opentech.usher.enums.LogTypeEnum;
 import team.opentech.usher.pojo.other.RpcTraceInfo;
@@ -16,7 +17,6 @@ import team.opentech.usher.rpc.netty.spi.filter.FilterContext;
 import team.opentech.usher.rpc.netty.spi.filter.filter.ConsumerFilter;
 import team.opentech.usher.rpc.netty.spi.filter.invoker.RpcInvoker;
 import team.opentech.usher.util.SupplierWithException;
-import java.util.List;
 
 
 /**
@@ -30,7 +30,7 @@ public class RpcSendLogFilter implements ConsumerFilter {
     @Override
     public RpcData invoke(RpcInvoker invoker, FilterContext invokerContext) {
         // 优先获取rpcId,防止thisRpcId提前+1
-        List<Integer> nextRpcIds = MyTraceIdContext.getNextTraceIds();
+        List<Integer> nextRpcIds = MyTraceIdContext.getNextRpcIds();
         AbstractRpcData requestData = (AbstractRpcData) invokerContext.getRequestData();
         RpcContent content = requestData.content();
         SupplierWithException<RpcData> rpcDataSupplierWithException = () -> {

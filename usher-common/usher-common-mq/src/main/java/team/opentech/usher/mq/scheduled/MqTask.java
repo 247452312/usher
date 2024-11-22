@@ -1,6 +1,7 @@
 package team.opentech.usher.mq.scheduled;
 
 import com.alibaba.fastjson.JSON;
+import java.util.ArrayList;
 import java.util.Collections;
 import javax.annotation.PostConstruct;
 import org.apache.rocketmq.client.producer.SendCallback;
@@ -55,7 +56,7 @@ public class MqTask {
                         // 设置interface可以开始干活了
                         RocketMqContent.setLogServiceOnLine(Boolean.TRUE);
                         // 设置为空 释放内存
-                        JvmStartInfoCommand.setStatusInfos(null);
+                        JvmStartInfoCommand.setStatusInfos(new ArrayList<>());
                     }
                 }
 

@@ -22,6 +22,7 @@ import team.opentech.usher.protocol.register.base.Register;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
 import team.opentech.usher.util.EventUtil;
+import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.SpringUtil;
 
 /**
@@ -55,12 +56,17 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
 
     @Override
     public RocketMqMessageResEnum onMessage(byte[] message) {
-        BaseEvent event = JSONObject.parseObject(new String(message, StandardCharsets.UTF_8), BaseEvent.class);
-        Asserts.assertTrue(event != null);
-        // 解析事件(打包,父类事件转为子类事件)
-        List<BaseEvent> trans = EventUtil.trans(event);
-        doPublishEvent(trans);
-        return RocketMqMessageResEnum.SUCCESS;
+        try {
+            BaseEvent event = JSONObject.parseObject(new String(message, StandardCharsets.UTF_8), BaseEvent.class);
+            Asserts.assertTrue(event != null);
+            // 解析事件(打包,父类事件转为子类事件)
+            List<BaseEvent> trans = EventUtil.trans(event);
+            doPublishEvent(trans);
+            return RocketMqMessageResEnum.SUCCESS;
+        } catch (Exception e) {
+            LogUtil.error(this, e);
+            throw e;
+        }
     }
 
     /**

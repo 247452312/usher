@@ -1,11 +1,5 @@
 package team.opentech.usher.elegant;
 
-import team.opentech.usher.UsherExecutorWrapper;
-import team.opentech.usher.rpc.netty.spi.filter.RpcFilter;
-import team.opentech.usher.rpc.registry.manager.UsherRpcRegistryManagerFactory;
-import team.opentech.usher.rpc.spi.RpcSpiManager;
-import team.opentech.usher.util.LogUtil;
-import team.opentech.usher.util.SpringUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -16,6 +10,12 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.stereotype.Component;
+import team.opentech.usher.UsherExecutorWrapper;
+import team.opentech.usher.rpc.netty.spi.filter.RpcFilter;
+import team.opentech.usher.rpc.registry.manager.UsherRpcRegistryManagerFactory;
+import team.opentech.usher.rpc.spi.RpcSpiManager;
+import team.opentech.usher.util.LogUtil;
+import team.opentech.usher.util.SpringUtil;
 
 /**
  * 优雅上下线核心处理器
@@ -119,7 +119,7 @@ public class ElegantCoreProcessor implements InitializingBean, ApplicationListen
         }
 
         /**
-         * 是否存在没有上线的应用
+         * 是否存在没有上线的模块
          *
          * @return
          */

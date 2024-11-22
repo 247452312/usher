@@ -12,7 +12,6 @@ import org.apache.rocketmq.client.producer.TransactionListener;
 import org.apache.rocketmq.client.producer.TransactionMQProducer;
 import org.apache.rocketmq.remoting.RPCHook;
 import team.opentech.usher.annotation.NotNull;
-import team.opentech.usher.protocol.mq.base.AbstractRocketMqConsumer;
 import team.opentech.usher.protocol.mq.base.BaseMqConsumer;
 
 /**
@@ -42,7 +41,7 @@ public class RocketMqFactory {
         String join = String.join("||", consumer.tags());
         defaultMQPushConsumer.subscribe(consumer.topic(), join);
         consumer.setPushConsumer(defaultMQPushConsumer);
-        ((AbstractRocketMqConsumer) consumer).registerMessageListener();
+        consumer.registerMessageListener();
         consumer.start();
     }
 

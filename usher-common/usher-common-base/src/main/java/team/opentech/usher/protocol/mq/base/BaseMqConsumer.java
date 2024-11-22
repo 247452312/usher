@@ -1,9 +1,9 @@
 package team.opentech.usher.protocol.mq.base;
 
+import java.util.List;
 import org.apache.rocketmq.client.consumer.MQPushConsumer;
 import org.apache.rocketmq.client.exception.MQClientException;
-
-import java.util.List;
+import team.opentech.usher.util.proxy.ProxySelfObserver;
 
 /**
  * mq consumer标识
@@ -11,7 +11,7 @@ import java.util.List;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2023年03月14日 15时32分
  */
-public interface BaseMqConsumer {
+public interface BaseMqConsumer extends ProxySelfObserver<BaseMqConsumer> {
 
     /**
      * 监听的topic
@@ -59,4 +59,10 @@ public interface BaseMqConsumer {
      * 开启consumer
      */
     void start() throws MQClientException;
+
+    /**
+     * 注册监听器
+     */
+    void registerMessageListener();
+
 }
