@@ -72,7 +72,7 @@
         <kotlin.version>1.6.20-RC</kotlin.version>
         <math3.version>3.6.1</math3.version>
         <commons-io.version>2.11.0</commons-io.version>
-        <manifold.version>2024.1.17</manifold.version>
+        <manifold.version>2024.1.35</manifold.version>
         <nacos.config.spring.version>0.3.0-RC</nacos.config.spring.version>
     </properties>
 
