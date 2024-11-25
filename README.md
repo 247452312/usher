@@ -45,6 +45,12 @@ usher is a Java project for many technologies.
 * rocketMq
 * 本地启动时需要加入 --spring.profiles.active=dev命令
 
+#### 最小化运行:
+
+* java
+* nacos(配置中心,注册中心)
+* mysql
+
 ### 依次运行下列项目
 user-log-web 即可最小化运行
 
