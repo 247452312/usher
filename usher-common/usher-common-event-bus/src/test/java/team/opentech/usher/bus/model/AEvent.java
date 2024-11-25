@@ -1,8 +1,8 @@
 package team.opentech.usher.bus.model;
 
+import java.util.List;
 import team.opentech.usher.pojo.cqe.event.base.AbstractParentEvent;
 import team.opentech.usher.pojo.cqe.event.base.BaseEvent;
-import java.util.List;
 
 /**
  * @author uhyils <247452312@qq.com>

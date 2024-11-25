@@ -16,6 +16,9 @@ public abstract class AbstractEvent extends DefaultCQE implements BaseEvent {
 
     protected AbstractEvent() {
         IdUtil bean = SpringUtil.getBean(IdUtil.class);
+        if (bean == null) {
+            bean = new IdUtil();
+        }
         setUnique(bean.newId());
     }
 

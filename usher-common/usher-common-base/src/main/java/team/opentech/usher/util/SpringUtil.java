@@ -18,8 +18,6 @@
 package team.opentech.usher.util;
 
 
-import team.opentech.usher.annotation.NotNull;
-import team.opentech.usher.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
@@ -32,6 +30,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.Environment;
+import team.opentech.usher.annotation.NotNull;
+import team.opentech.usher.annotation.Nullable;
 
 /**
  * 存储spring上下文缓存的地方
@@ -206,6 +206,7 @@ public class SpringUtil implements ApplicationContextInitializer, ApplicationLis
      *
      * @return 对应类型的bean
      */
+    @Nullable
     public static <T> T getBean(Class<T> clazz) {
         return getApplicationContext().getBean(clazz);
     }

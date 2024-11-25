@@ -15,6 +15,7 @@ import org.apache.rocketmq.client.producer.MQProducer;
 import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.exception.RemotingException;
+import org.jetbrains.annotations.NotNull;
 import team.opentech.usher.context.MyTraceIdContext;
 import team.opentech.usher.enums.LogTypeEnum;
 import team.opentech.usher.mq.pojo.rocket.RocketMqFactory;
@@ -46,12 +47,7 @@ public class MqUtil {
      */
     public static BaseMqConsumer addConsumer(BaseMqConsumer consumer) throws MQClientException {
         final BaseMqConsumer proxyConsumer = ProxyUtil.proxyObserver(BaseMqConsumer.class, new MqInvocationHandler(consumer));
-        RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
-        factory.initConsumer(proxyConsumer);
-        String join = String.join("||", proxyConsumer.tags());
-        String name = proxyConsumer.topic() + " " + join;
-        consumers.put(name, proxyConsumer);
-        return proxyConsumer;
+        return doAddConsumer(proxyConsumer);
     }
 
     /**
@@ -61,12 +57,7 @@ public class MqUtil {
      */
     public static <T extends BaseMqConsumer> T addConsumer(Class<T> interfaceClass, BaseMqConsumer consumer) throws MQClientException {
         final T proxyConsumer = ProxyUtil.proxyObserver(interfaceClass, new MqInvocationHandler(consumer));
-        RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
-        factory.initConsumer(proxyConsumer);
-        String join = String.join("||", proxyConsumer.tags());
-        String name = proxyConsumer.topic() + " " + join;
-        consumers.put(name, proxyConsumer);
-        return proxyConsumer;
+        return doAddConsumer(proxyConsumer);
     }
 
     /**
@@ -74,13 +65,9 @@ public class MqUtil {
      *
      * @param consumer 消费者创建逻辑
      */
-    public static void addNoLogConsumer(BaseMqConsumer consumer) throws MQClientException {
+    public static <T extends BaseMqConsumer> T addNoLogConsumer(T consumer) throws MQClientException {
         consumer.selfObserver(consumer);
-        RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
-        factory.initConsumer(consumer);
-        String join = String.join("||", consumer.tags());
-        String name = consumer.topic() + " " + join;
-        consumers.put(name, consumer);
+        return doAddConsumer(consumer);
     }
 
     /**
@@ -183,6 +170,16 @@ public class MqUtil {
      */
     protected static void sendMsgNoLog(String exchange, List<String> queue, String msg) {
         doSendMsg(exchange, queue, JSON.toJSONString(msg).getBytes(StandardCharsets.UTF_8));
+    }
+
+    @NotNull
+    private static <T extends BaseMqConsumer> T doAddConsumer(T proxyConsumer) throws MQClientException {
+        RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
+        factory.initConsumer(proxyConsumer);
+        String join = String.join("||", proxyConsumer.tags());
+        String name = proxyConsumer.topic() + " " + join;
+        consumers.put(name, proxyConsumer);
+        return proxyConsumer;
     }
 
     /**

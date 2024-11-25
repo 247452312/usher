@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -39,6 +41,11 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
     private final List<Register> registers;
 
     public UsherThreadLocal<List<BaseEvent>> events = new UsherThreadLocal<>();
+
+    /**
+     * 缓存事件和注册者之间的映射, 优化事件发布时的遍历消耗
+     */
+    private Map<BaseEvent, List<Register>> eventRegisterCacheMap = new HashMap<>();
 
     public Bus(List<Register> registers) {
         events.set(new ArrayList<>());
@@ -77,13 +84,9 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
     @Override
     public void commit(BaseParentEvent event) {
         List<BaseEvent> baseEvents = this.events.get();
-        // 打包事件不进行分解
-        if (event instanceof PackageEvent) {
-            baseEvents.add(event);
-        } else {
-            // 其他父类事件进行分解
-            baseEvents.addAll(event.transToBaseEvent());
-        }
+        List<BaseEvent> trans = EventUtil.trans(event);
+        // 父类事件进行分解
+        baseEvents.addAll(trans);
     }
 
     /**
@@ -150,9 +153,7 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
         if (CollectionUtil.isEmpty(baseEvents)) {
             return;
         }
-        // 父类事件(打包事件)转化为子类事件
-        List<BaseEvent> trans = EventUtil.trans(baseEvents);
-        doPublishEvent(trans);
+        doPublishEvent(baseEvents);
     }
 
     /**
@@ -326,18 +327,32 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
         Iterator<BaseEvent> iterator = events.iterator();
         while (iterator.hasNext()) {
             BaseEvent next = iterator.next();
-            // 遍历所有的监听者
-            for (Register register : registers) {
-                List<Class<? extends BaseEvent>> classes = register.targetEvent();
-                Asserts.assertTrue(CollectionUtil.isNotEmpty(classes), "监听者监听的事件不能为空");
-                // 遍历所有的待发布事件
-                if (matchingEvent(register, next)) {
-                    register.onEvent(next);
-                }
-            }
+            List<Register> doRegisters = eventRegisterCacheMap.getOrPutAndGet(next, () -> findAllRegisters(next));
+            doRegisters.forEach(register -> register.onEvent(next));
             // 发布后删除事件
             iterator.remove();
         }
+    }
+
+    /**
+     * 获取所有的监听指定事件的监听者
+     *
+     * @param next
+     *
+     * @return
+     */
+    private List<Register> findAllRegisters(BaseEvent next) {
+        List<Register> doRegisters = new ArrayList<>();
+        // 遍历所有的监听者
+        for (Register register : registers) {
+            List<Class<? extends BaseEvent>> classes = register.targetEvent();
+            Asserts.assertTrue(CollectionUtil.isNotEmpty(classes), "监听者监听的事件不能为空");
+            // 遍历所有的待发布事件
+            if (matchingEvent(register, next)) {
+                doRegisters.add(register);
+            }
+        }
+        return doRegisters;
     }
 
     /**
@@ -372,7 +387,7 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
         while (iterator.hasNext()) {
             BaseEvent next = iterator.next();
             String msg = JSON.toJSONString(next, SerializerFeature.WriteClassName);
-            MqUtil.sendMsg(BUS_EVENT_TOPIC_NAME, BUS_EVENT_TAG_NAME, msg);
+            MqUtil.sendMsg(topic(), tags(), msg);
             iterator.remove();
         }
     }
