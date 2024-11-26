@@ -5,9 +5,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -18,9 +16,10 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
 import org.jetbrains.annotations.NotNull;
 import team.opentech.usher.context.MyTraceIdContext;
 import team.opentech.usher.enums.LogTypeEnum;
+import team.opentech.usher.mq.core.BaseMqConsumer;
+import team.opentech.usher.mq.elegant.ElegantMqHandler;
 import team.opentech.usher.mq.pojo.rocket.RocketMqFactory;
 import team.opentech.usher.pojo.other.RpcTraceInfo;
-import team.opentech.usher.protocol.mq.base.BaseMqConsumer;
 import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.SpringUtil;
 import team.opentech.usher.util.SupplierWithException;
@@ -31,12 +30,6 @@ import team.opentech.usher.util.proxy.ProxyUtil;
  * @date 文件创建日期 2020年11月22日 14时11分
  */
 public class MqUtil {
-
-
-    /**
-     * 保存consumer
-     */
-    private static final Map<String, BaseMqConsumer> consumers = new HashMap<>();
 
 
     private MqUtil() {
@@ -176,9 +169,7 @@ public class MqUtil {
     private static <T extends BaseMqConsumer> T doAddConsumer(T proxyConsumer) throws MQClientException {
         RocketMqFactory factory = SpringUtil.getBean(RocketMqFactory.class);
         factory.initConsumer(proxyConsumer);
-        String join = String.join("||", proxyConsumer.tags());
-        String name = proxyConsumer.topic() + " " + join;
-        consumers.put(name, proxyConsumer);
+        SpringUtil.getBean(ElegantMqHandler.class).addConsumer(proxyConsumer);
         return proxyConsumer;
     }
 

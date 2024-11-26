@@ -15,6 +15,8 @@ import team.opentech.usher.annotation.UsherMq;
 import team.opentech.usher.bus.BusInterface;
 import team.opentech.usher.enums.LogDetailTypeEnum;
 import team.opentech.usher.log.content.LogContent;
+import team.opentech.usher.mq.core.AbstractRocketMqConsumer;
+import team.opentech.usher.mq.core.RocketMqMessageResEnum;
 import team.opentech.usher.mq.util.LogInfoSendMqUtil;
 import team.opentech.usher.pojo.DTO.TraceDetailDTO;
 import team.opentech.usher.pojo.DTO.TraceInfoDTO;
@@ -23,8 +25,6 @@ import team.opentech.usher.pojo.cqe.event.parent.LogReceiveParentEvent;
 import team.opentech.usher.pojo.trace.DetailTraceDeal;
 import team.opentech.usher.pojo.trace.LinkTraceDeal;
 import team.opentech.usher.pojo.trace.LogTraceDeal;
-import team.opentech.usher.protocol.mq.base.AbstractRocketMqConsumer;
-import team.opentech.usher.protocol.mq.base.RocketMqMessageResEnum;
 import team.opentech.usher.service.TraceDetailService;
 import team.opentech.usher.service.TraceInfoService;
 import team.opentech.usher.service.TraceLogService;
@@ -72,7 +72,7 @@ public class RocketMqLogInfoConsumer extends AbstractRocketMqConsumer {
      * 请不要在此方法创建的线程中再次创建其他线程
      */
     @Override
-    public RocketMqMessageResEnum onMessage(byte[] bytes) {
+    public RocketMqMessageResEnum doOnMessage(byte[] bytes) {
         executor.execute(() -> {
             String text = new String(bytes, StandardCharsets.UTF_8);
             try {

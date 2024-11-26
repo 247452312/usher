@@ -9,11 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
-import org.springframework.stereotype.Component;
 import team.opentech.usher.UsherExecutorWrapper;
-import team.opentech.usher.rpc.netty.spi.filter.RpcFilter;
-import team.opentech.usher.rpc.registry.manager.UsherRpcRegistryManagerFactory;
-import team.opentech.usher.rpc.spi.RpcSpiManager;
 import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.SpringUtil;
 
@@ -23,7 +19,6 @@ import team.opentech.usher.util.SpringUtil;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年08月02日 08时54分
  */
-@Component
 public class ElegantCoreProcessor implements InitializingBean, ApplicationListener<ContextClosedEvent> {
 
     private static ExecutorService es = UsherExecutorWrapper.createByThreadPoolExecutor(new ThreadPoolExecutor(2, 100, 3000, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(10)));
@@ -32,12 +27,13 @@ public class ElegantCoreProcessor implements InitializingBean, ApplicationListen
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-
+    public void afterPropertiesSet() {
         LogUtil.info("应用优雅上下线核心处理器开始行动!");
         this.handlers = new ArrayList<>();
-        this.handlers.addAll(SpringUtil.getBeans(ElegantHandler.class));
-        this.handlers.add((ElegantHandler) RpcSpiManager.createOrGetExtensionByClass(RpcFilter.class, "elegantRpcFilter", UsherRpcRegistryManagerFactory.createOrGetUsherRpcRegistryManager()));
+        List<ElegantHandlerFinder> beans = SpringUtil.getBeans(ElegantHandlerFinder.class);
+        for (ElegantHandlerFinder finder : beans) {
+            this.handlers.addAll(finder.find());
+        }
         es.execute(new ElegantHandlerStartMonitor());
     }
 

@@ -1,4 +1,4 @@
-package team.opentech.usher.protocol.mq.listener;
+package team.opentech.usher.mq.listener;
 
 import java.util.List;
 import java.util.Objects;
@@ -6,8 +6,8 @@ import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeOrderlyStatus;
 import org.apache.rocketmq.client.consumer.listener.MessageListenerOrderly;
 import org.apache.rocketmq.common.message.MessageExt;
-import team.opentech.usher.protocol.mq.base.BaseMqConsumer;
-import team.opentech.usher.protocol.mq.base.RocketMqMessageResEnum;
+import team.opentech.usher.mq.core.BaseMqConsumer;
+import team.opentech.usher.mq.core.RocketMqMessageResEnum;
 import team.opentech.usher.util.LogUtil;
 
 /**

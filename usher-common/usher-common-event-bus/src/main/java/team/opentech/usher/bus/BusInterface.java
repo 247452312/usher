@@ -1,9 +1,9 @@
 package team.opentech.usher.bus;
 
 import java.util.List;
+import team.opentech.usher.mq.core.BaseMqConsumer;
 import team.opentech.usher.pojo.cqe.event.base.BaseEvent;
 import team.opentech.usher.pojo.cqe.event.base.BaseParentEvent;
-import team.opentech.usher.protocol.mq.base.BaseMqConsumer;
 
 /**
  * @author uhyils <247452312@qq.com>

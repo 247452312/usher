@@ -7,6 +7,7 @@ import team.opentech.usher.pojo.DO.LogMonitorJvmStatusDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
 import team.opentech.usher.repository.LogMonitorRepository;
 import team.opentech.usher.util.Asserts;
+import team.opentech.usher.util.LogUtil;
 
 /**
  * JVM状态子表(LogMonitorJvmStatus)表 数据库实体类
@@ -35,7 +36,10 @@ public class LogMonitorJvmStatus extends AbstractDoEntity<LogMonitorJvmStatusDO>
      */
     public void changeEndTimeLag(LogMonitorRepository rep) {
         long realEndTime = (long) (data.getTime() + RocketMqContent.OUT_TIME * 60 * 1000 * RocketMqContent.OUT_TIME_PRO);
-        Asserts.assertTrue(data.getFid() != null);
+        if (data.getFid() == null) {
+            LogUtil.warn("接收到状态消息后未找到正在运行的主类");
+            return;
+        }
         rep.changeEndTimeLag(this, realEndTime);
     }
 

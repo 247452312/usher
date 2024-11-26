@@ -1,9 +1,9 @@
 package team.opentech.usher.mq.content;
 
 
-import team.opentech.usher.util.IpUtil;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+import team.opentech.usher.util.IpUtil;
 
 /**
  * 初始化定义的一些事情
@@ -13,23 +13,28 @@ import java.lang.management.RuntimeMXBean;
  */
 public class RocketMqContent {
 
-
     /**
      * exchange 路由名称
      */
-    public static final String JVM_TOPIC_NAME = "JVM_LOG";
+    public static final String JVM_START_TOPIC_NAME = "JVM_START_LOG";
 
     /**
      * JVM 开启通知管道
      */
     public static final String JVM_START_TAG_NAME = "jvm_start";
-    public static final String JVM_GROUP_NAME = "JVM_GROUP";
 
-
+    /**
+     * exchange 路由名称
+     */
+    public static final String JVM_STATUS_TOPIC_NAME = "JVM_STATUS_LOG";
     /**
      * JVM状态信息
      */
     public static final String JVM_STATUS_TAG_NAME = "jvm_status";
+
+    public static final String JVM_GROUP_NAME = "JVM_GROUP";
+
+
 
     /**
      * 数据库中默认假想超时时间 设置假想结束时间=JVM上次发送状态时间+ OUT_TIME*比例系数

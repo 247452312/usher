@@ -1,4 +1,4 @@
-package team.opentech.usher.protocol.mq.base;
+package team.opentech.usher.mq.core;
 
 /**
  * rocketMq收到消息的回应

@@ -1,6 +1,5 @@
-package team.opentech.usher.elegant.assembly.rpc;
+package team.opentech.usher.elegant.rpc;
 
-import org.springframework.context.annotation.DependsOn;
 import team.opentech.usher.elegant.AbstractElegantHandler;
 import team.opentech.usher.rpc.annotation.RpcSpi;
 import team.opentech.usher.rpc.exchange.pojo.data.RpcData;
@@ -17,7 +16,6 @@ import team.opentech.usher.util.LogUtil;
  * @date 文件创建日期 2022年08月03日 19时05分
  */
 @RpcSpi
-@DependsOn("providerCluster")
 public class ElegantRpcFilter extends AbstractElegantHandler implements ProviderFilter {
 
     /**

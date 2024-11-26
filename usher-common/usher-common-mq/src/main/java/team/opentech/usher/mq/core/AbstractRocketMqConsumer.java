@@ -1,8 +1,8 @@
-package team.opentech.usher.protocol.mq.base;
+package team.opentech.usher.mq.core;
 
 
-import team.opentech.usher.protocol.mq.listener.UsherConcurrentlyListener;
-import team.opentech.usher.protocol.mq.listener.UsherOrderlyListener;
+import team.opentech.usher.mq.listener.UsherConcurrentlyListener;
+import team.opentech.usher.mq.listener.UsherOrderlyListener;
 
 /**
  * @author uhyils <247452312@qq.com>

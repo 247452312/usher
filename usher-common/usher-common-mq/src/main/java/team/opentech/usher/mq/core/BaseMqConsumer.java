@@ -1,4 +1,4 @@
-package team.opentech.usher.protocol.mq.base;
+package team.opentech.usher.mq.core;
 
 import java.util.List;
 import org.apache.rocketmq.client.consumer.MQPushConsumer;
@@ -59,6 +59,22 @@ public interface BaseMqConsumer extends ProxySelfObserver<BaseMqConsumer> {
      * 开启consumer
      */
     void start() throws MQClientException;
+
+    /**
+     * 关闭consumer
+     */
+    void shutdown() throws MQClientException;
+
+
+    /**
+     * 暂停
+     */
+    void suspend();
+
+    /**
+     * 继续
+     */
+    void resume();
 
     /**
      * 注册监听器

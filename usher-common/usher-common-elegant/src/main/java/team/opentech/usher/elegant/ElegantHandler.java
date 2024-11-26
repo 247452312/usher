@@ -47,4 +47,14 @@ public interface ElegantHandler {
      * @return
      */
     String name();
+
+    /**
+     * 新请求
+     */
+    void newRequest();
+
+    /**
+     * 请求结束
+     */
+    void requestOver();
 }

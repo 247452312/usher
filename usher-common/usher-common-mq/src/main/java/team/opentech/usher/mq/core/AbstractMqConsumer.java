@@ -1,13 +1,15 @@
-package team.opentech.usher.protocol.mq.base;
-
-import org.apache.rocketmq.client.consumer.MQPushConsumer;
-import org.apache.rocketmq.client.exception.MQClientException;
-import team.opentech.usher.annotation.UsherMq;
-import team.opentech.usher.util.Asserts;
+package team.opentech.usher.mq.core;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.apache.rocketmq.client.consumer.MQPushConsumer;
+import org.apache.rocketmq.client.exception.MQClientException;
+import team.opentech.usher.annotation.UsherMq;
+import team.opentech.usher.elegant.ElegantHandler;
+import team.opentech.usher.mq.elegant.ElegantMqHandler;
+import team.opentech.usher.util.Asserts;
+import team.opentech.usher.util.SpringUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -57,4 +59,39 @@ public abstract class AbstractMqConsumer implements BaseMqConsumer {
         Asserts.assertTrue(this.mq != null, "MQConsumer未加载,无法启动");
         this.mq.start();
     }
+
+    @Override
+    public void shutdown() throws MQClientException {
+        Asserts.assertTrue(this.mq != null, "MQConsumer未加载,无法关闭");
+        this.mq.shutdown();
+    }
+
+    @Override
+    public void suspend() {
+        Asserts.assertTrue(this.mq != null, "MQConsumer未加载,无法暂停");
+        this.mq.suspend();
+
+    }
+
+    @Override
+    public void resume() {
+        Asserts.assertTrue(this.mq != null, "MQConsumer未加载,无法继续");
+        this.mq.resume();
+    }
+
+    @Override
+    public RocketMqMessageResEnum onMessage(byte[] message) {
+        ElegantHandler bean = SpringUtil.getBean(ElegantMqHandler.class);
+        if (!bean.isOnline()) {
+            return RocketMqMessageResEnum.ERROR;
+        }
+        bean.newRequest();
+        try {
+            return doOnMessage(message);
+        } finally {
+            bean.requestOver();
+        }
+    }
+
+    protected abstract RocketMqMessageResEnum doOnMessage(byte[] message);
 }

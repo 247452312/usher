@@ -1,4 +1,4 @@
-package team.opentech.usher.elegant.assembly.controller;
+package team.opentech.usher.elegant.controller;
 
 import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;

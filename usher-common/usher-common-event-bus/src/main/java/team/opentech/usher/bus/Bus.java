@@ -14,12 +14,12 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import team.opentech.usher.UsherThreadLocal;
 import team.opentech.usher.annotation.UsherMq;
+import team.opentech.usher.mq.core.AbstractRocketMqConsumer;
+import team.opentech.usher.mq.core.RocketMqMessageResEnum;
 import team.opentech.usher.mq.util.MqUtil;
 import team.opentech.usher.pojo.cqe.event.base.BaseEvent;
 import team.opentech.usher.pojo.cqe.event.base.BaseParentEvent;
 import team.opentech.usher.pojo.cqe.event.base.PackageEvent;
-import team.opentech.usher.protocol.mq.base.AbstractRocketMqConsumer;
-import team.opentech.usher.protocol.mq.base.RocketMqMessageResEnum;
 import team.opentech.usher.protocol.register.base.Register;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
@@ -62,7 +62,7 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
     }
 
     @Override
-    public RocketMqMessageResEnum onMessage(byte[] message) {
+    public RocketMqMessageResEnum doOnMessage(byte[] message) {
         try {
             BaseEvent event = JSONObject.parseObject(new String(message, StandardCharsets.UTF_8), BaseEvent.class);
             Asserts.assertTrue(event != null);

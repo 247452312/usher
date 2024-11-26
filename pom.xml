@@ -448,42 +448,52 @@
     </dependencyManagement>
 
     <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-maven-plugin</artifactId>
-                    <version>${spring-boot.version}</version>
-                </plugin>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+            </plugin>
 
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven.compiler.plugin.version}</version>
-                    <configuration>
-                        <source>8</source>
-                        <target>8</target>
-                        <encoding>UTF-8</encoding>
-                        <compilerArgs>
-                            <arg>-Xplugin:Manifold no-bootstrap</arg>
-                        </compilerArgs>
-                        <annotationProcessorPaths>
-                            <path>
-                                <groupId>systems.manifold</groupId>
-                                <artifactId>manifold-ext</artifactId>
-                                <version>${manifold.version}</version>
-                            </path>
-                            <path>
-                                <groupId>org.mapstruct</groupId>
-                                <artifactId>mapstruct-processor</artifactId>
-                                <version>${mapStruct.version}</version>
-                            </path>
-                        </annotationProcessorPaths>
-                    </configuration>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                    <encoding>UTF-8</encoding>
+                    <compilerArgs>
+                        <arg>-Xplugin:Manifold no-bootstrap</arg>
+                    </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>systems.manifold</groupId>
+                            <artifactId>manifold-ext</artifactId>
+                            <version>${manifold.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${mapStruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <!--class files as source must be available for extension method classes-->
+                            <Contains-Sources>java,class</Contains-Sources>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
 
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        </plugins>
     </build>
 
     <!-- profile配置 -->

@@ -9,14 +9,14 @@ import team.opentech.usher.handler.InitApiHandler;
 import team.opentech.usher.handler.RunApiHandler;
 import team.opentech.usher.handler.SaveApiHandler;
 import team.opentech.usher.handler.TransApiHandler;
+import team.opentech.usher.mq.core.AbstractRocketMqConsumer;
+import team.opentech.usher.mq.core.RocketMqMessageResEnum;
 import team.opentech.usher.pojo.DO.OrderApiDO;
 import team.opentech.usher.pojo.DO.OrderNodeDO;
 import team.opentech.usher.pojo.temp.InitApiRequestTemporary;
 import team.opentech.usher.pojo.temp.InitToRunApiTemporary;
 import team.opentech.usher.pojo.temp.RunToSaveApiTemporary;
 import team.opentech.usher.pojo.temp.SaveToTransApiTemporary;
-import team.opentech.usher.protocol.mq.base.AbstractRocketMqConsumer;
-import team.opentech.usher.protocol.mq.base.RocketMqMessageResEnum;
 import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.ObjectByteUtil;
 
@@ -47,7 +47,7 @@ public class OrderAutoDealConsumer extends AbstractRocketMqConsumer {
 
 
     @Override
-    public RocketMqMessageResEnum onMessage(byte[] bytes) {
+    public RocketMqMessageResEnum doOnMessage(byte[] bytes) {
         try {
             InitApiRequestTemporary initApiRequestTemporary = ObjectByteUtil.toObject(bytes);
             OrderNodeDO orderNodeEntity = initApiRequestTemporary.getOrderNode();

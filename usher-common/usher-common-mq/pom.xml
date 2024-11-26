@@ -27,6 +27,11 @@
             <artifactId>usher-common-log</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>team.opentech.usher</groupId>
+            <artifactId>usher-common-elegant</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

@@ -12,7 +12,7 @@ import org.apache.rocketmq.client.producer.TransactionListener;
 import org.apache.rocketmq.client.producer.TransactionMQProducer;
 import org.apache.rocketmq.remoting.RPCHook;
 import team.opentech.usher.annotation.NotNull;
-import team.opentech.usher.protocol.mq.base.BaseMqConsumer;
+import team.opentech.usher.mq.core.BaseMqConsumer;
 
 /**
  * rocketMq连接创建工厂
@@ -42,6 +42,7 @@ public class RocketMqFactory {
         defaultMQPushConsumer.subscribe(consumer.topic(), join);
         consumer.setPushConsumer(defaultMQPushConsumer);
         consumer.registerMessageListener();
+        consumer.suspend();
         consumer.start();
     }
 
