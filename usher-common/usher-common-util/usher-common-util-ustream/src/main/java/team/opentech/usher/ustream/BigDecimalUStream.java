@@ -6,7 +6,7 @@ import java.math.BigDecimal;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年11月27日 13时20分
  */
-public interface BigDecimalUstream extends Ustream<BigDecimal> {
+public interface BigDecimalUStream extends UStream<BigDecimal> {
 
     /**
      * 最大
@@ -43,8 +43,8 @@ public interface BigDecimalUstream extends Ustream<BigDecimal> {
      * @return
      */
     default BigDecimal sum() {
-        Uobject<BigDecimal> bigDecimalUobject = new Uobject<>(new BigDecimal(0));
-        consume(t -> bigDecimalUobject.set(bigDecimalUobject.get().add(t)));
-        return bigDecimalUobject.get();
+        UObject<BigDecimal> bigDecimalUObject = new UObject<>(new BigDecimal(0));
+        consume(t -> bigDecimalUObject.set(bigDecimalUObject.get().add(t)));
+        return bigDecimalUObject.get();
     }
 }

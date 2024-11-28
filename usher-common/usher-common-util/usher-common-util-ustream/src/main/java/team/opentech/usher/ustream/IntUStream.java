@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年11月27日 08时47分
  */
-public interface IntUstream extends Ustream<Integer> {
+public interface IntUStream extends UStream<Integer> {
 
 
     /**

@@ -2,15 +2,25 @@ package team.opentech.usher.ustream;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.StringJoiner;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * 核心流, 其实就是由一个Consumer(操作)构成的懒加载的操作链接
@@ -18,10 +28,10 @@ import java.util.function.Function;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年11月26日 16时27分
  */
-public interface Ustream<T> {
+public interface UStream<T> {
 
 
-    static <T> Ustream<T> of(T... t) {
+    static <T> UStream<T> of(T... t) {
         return consumer -> {
             for (T value : t) {
                 consumer.accept(value);
@@ -29,8 +39,38 @@ public interface Ustream<T> {
         };
     }
 
-    static <T> Ustream<T> of(List<T> t) {
+    static <T> UStream<T> of(List<T> t) {
         return t::forEach;
+    }
+
+    static void stop() {
+        throw StopException.INSTANCE;
+    }
+
+    /**
+     * 将UStream 转换为stream
+     *
+     * @return
+     */
+    default Stream<T> stream() {
+        Iterator<T> iterator = new Iterator<T>() {
+
+            @Override
+            public boolean hasNext() {
+                throw new NoSuchElementException();
+            }
+
+            @Override
+            public T next() {
+                throw new NoSuchElementException();
+            }
+
+            @Override
+            public void forEachRemaining(Consumer<? super T> action) {
+                consume(action::accept);
+            }
+        };
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED), false);
     }
 
     /**
@@ -48,7 +88,7 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default <E> Ustream<E> map(Function<T, E> function) {
+    default <E> UStream<E> map(Function<T, E> function) {
         return t -> consume(e -> t.accept(function.apply(e)));
     }
 
@@ -60,7 +100,7 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default <E> Ustream<E> map(BiFunction<Integer, T, E> function) {
+    default <E> UStream<E> map(BiFunction<Integer, T, E> function) {
         return t -> {
             AtomicInteger index = new AtomicInteger(0);
             consume(e -> t.accept(function.apply(index.getAndIncrement(), e)));
@@ -74,7 +114,7 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default <E> Ustream<E> mapNotNull(Function<T, E> function) {
+    default <E> UStream<E> mapNotNull(Function<T, E> function) {
         return map(function).filter(Objects::nonNull);
     }
 
@@ -85,7 +125,7 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default <E> Ustream<E> flatMap(Function<T, Ustream<E>> function) {
+    default <E> UStream<E> flatMap(Function<T, UStream<E>> function) {
         return t -> consume(e -> function.apply(e).consume(t));
     }
 
@@ -96,7 +136,7 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default Ustream<T> peek(Consumer<T> consumer) {
+    default UStream<T> peek(Consumer<T> consumer) {
         return t -> consume(e -> {
             consumer.accept(e);
             t.accept(e);
@@ -110,7 +150,7 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default Ustream<T> filter(Function<T, Boolean> consumer) {
+    default UStream<T> filter(Function<T, Boolean> consumer) {
         return t -> consume(e -> {
             if (Boolean.TRUE.equals(consumer.apply(e))) {
                 t.accept(e);
@@ -125,15 +165,29 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default <E, R> Ustream<R> zip(Iterable<E> iterable, BiFunction<T, E, R> function) {
+    default <E, R> UStream<R> zip(Iterable<E> iterable, BiFunction<T, E, R> function) {
         return t -> {
             Iterator<E> iterator = iterable.iterator();
-            consume(e -> {
+            consumeTillStop(e -> {
                 if (iterator.hasNext()) {
                     t.accept(function.apply(e, iterator.next()));
+                } else {
+                    stop();
                 }
             });
         };
+    }
+
+    /**
+     * 监听截停{@link StopException}
+     *
+     * @param consumer
+     */
+    default void consumeTillStop(Consumer<T> consumer) {
+        try {
+            consume(consumer);
+        } catch (StopException ignore) {
+        }
     }
 
     /**
@@ -143,7 +197,7 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default Ustream<T> filter(BiFunction<Integer, T, Boolean> consumer) {
+    default UStream<T> filter(BiFunction<Integer, T, Boolean> consumer) {
         return t -> {
             AtomicInteger integer = new AtomicInteger(0);
             consume(e -> {
@@ -155,18 +209,17 @@ public interface Ustream<T> {
         };
     }
 
-
     /**
      * 顺序返回符合条件的值,一旦条件不符合立即停止继续判断
      *
      * @return
      */
-    default Ustream<T> takeWhile(Function<T, Boolean> function) {
+    default UStream<T> takeWhile(Function<T, Boolean> function) {
         return t -> {
             AtomicBoolean atomicBoolean = new AtomicBoolean(true);
-            consume(e -> {
+            consumeTillStop(e -> {
                 if (!atomicBoolean.get()) {
-                    return;
+                    stop();
                 }
                 if (Boolean.FALSE.equals(function.apply(e))) {
                     atomicBoolean.set(Boolean.FALSE);
@@ -182,7 +235,7 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default Ustream<T> dropWhile(Function<T, Boolean> function) {
+    default UStream<T> dropWhile(Function<T, Boolean> function) {
         return t -> {
             AtomicBoolean haveNode = new AtomicBoolean(false);
             consume(e -> {
@@ -198,7 +251,6 @@ public interface Ustream<T> {
         };
     }
 
-
     /**
      * 整形过滤流
      *
@@ -206,10 +258,9 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default IntUstream mapToInt(Function<T, Integer> consumer) {
+    default IntUStream mapToInt(Function<T, Integer> consumer) {
         return t -> consume(e -> t.accept(consumer.apply(e)));
     }
-
 
     /**
      * 获取流中第一个元素
@@ -217,17 +268,19 @@ public interface Ustream<T> {
      * @return
      */
     default Optional<T> findFirst() {
-        Uobject<T> tempObj = new Uobject<>();
+        UObject<T> tempObj = new UObject<>();
         AtomicInteger i = new AtomicInteger(0);
-        consume(t -> {
-            if (i.get() == 0) {
-                tempObj.set(t);
-            }
+        consumeTillStop(t -> {
             i.incrementAndGet();
+            if (i.get() == 1) {
+                tempObj.set(t);
+            } else {
+                stop();
+            }
+
         });
         return tempObj.opt();
     }
-
 
     /**
      * 全部匹配
@@ -260,10 +313,10 @@ public interface Ustream<T> {
      */
     default Boolean anyMatch(Function<T, Boolean> function) {
         AtomicBoolean result = new AtomicBoolean(Boolean.FALSE);
-        consume(t -> {
+        consumeTillStop(t -> {
             // 如果有一个匹配,则停止匹配
             if (Boolean.TRUE.equals(result.get())) {
-                return;
+                stop();
             }
             Boolean matchSuccess = function.apply(t);
             if (Boolean.TRUE.equals(matchSuccess)) {
@@ -282,10 +335,10 @@ public interface Ustream<T> {
      */
     default Boolean noneMatch(Function<T, Boolean> function) {
         AtomicBoolean result = new AtomicBoolean(Boolean.TRUE);
-        consume(t -> {
+        consumeTillStop(t -> {
             // 如果有一个匹配,则停止匹配
             if (Boolean.FALSE.equals(result.get())) {
-                return;
+                stop();
             }
             Boolean matchSuccess = function.apply(t);
             if (Boolean.TRUE.equals(matchSuccess)) {
@@ -296,14 +349,14 @@ public interface Ustream<T> {
     }
 
     /**
-     * 合并
+     * 合并所有元素
      *
      * @param function
      *
      * @return
      */
     default <E> E reduce(E startValue, BiFunction<E, T, E> function) {
-        Uobject<E> result = new Uobject<>(startValue);
+        UObject<E> result = new UObject<>(startValue);
         consume(t -> result.set(function.apply(result.get(), t)));
         return result.get();
     }
@@ -313,7 +366,7 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default Ustream<T> skip(long n) {
+    default UStream<T> skip(long n) {
         return t -> {
             AtomicInteger index = new AtomicInteger(0);
             consume(e -> {
@@ -330,16 +383,39 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default Ustream<T> limit(long n) {
+    default UStream<T> limit(long n) {
         return t -> {
             AtomicInteger index = new AtomicInteger(0);
-            consume(e -> {
-                if (index.get() < n) {
-                    t.accept(e);
-                }
+            consumeTillStop(e -> {
                 index.incrementAndGet();
+                if (index.get() <= n) {
+                    t.accept(e);
+                } else {
+                    stop();
+                }
             });
         };
+    }
+
+    /**
+     * 并发流
+     *
+     * @return
+     */
+    default UStream<T> parallel() {
+        ForkJoinPool pool = ForkJoinPool.commonPool();
+        return c -> map(t -> pool.submit(() -> c.accept(t))).cache().consume(ForkJoinTask::join);
+    }
+
+    /**
+     * 将并发流转为顺序流 顺序保持并发前的顺序
+     *
+     * @return
+     */
+    default UStream<T> cache() {
+        UArrayStream<T> arraySeq = new UArrayStream<>();
+        consume(arraySeq::add);
+        return arraySeq;
     }
 
     /**
@@ -348,7 +424,7 @@ public interface Ustream<T> {
      * @return
      */
     default T max(Comparator<T> comparator) {
-        Uobject<T> result = new Uobject<>();
+        UObject<T> result = new UObject<>();
         consume(t -> {
             T obj = result.get();
             if (obj == null || comparator.compare(t, obj) > 0) {
@@ -364,7 +440,7 @@ public interface Ustream<T> {
      * @return
      */
     default T min(Comparator<T> comparator) {
-        Uobject<T> result = new Uobject<>();
+        UObject<T> result = new UObject<>();
         consume(t -> {
             T obj = result.get();
             if (obj == null || comparator.compare(t, obj) < 0) {
@@ -379,13 +455,47 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default Ustream<T> sorted(Comparator<T> comparator) {
+    default UStream<T> sorted(Comparator<T> comparator) {
         return t -> {
             List<T> list = new ArrayList<>();
-            Ustream.this.consume(list::add);
+            UStream.this.consume(list::add);
             list.sort(comparator);
             list.forEach(t);
         };
+    }
+
+    /**
+     * 分组
+     *
+     * @return
+     */
+    default <E> Map<E, List<T>> groupBy(Function<T, E> comparator) {
+        Map<E, List<T>> result = new HashMap<>();
+        consume(t -> {
+            E key = comparator.apply(t);
+            if (!result.containsKey(key)) {
+                result.put(key, new ArrayList<>());
+            }
+            result.get(key).add(t);
+        });
+        return result;
+    }
+
+    /**
+     * 分组
+     *
+     * @return
+     */
+    default <E> UGroupStream<E, T> groupByToUStream(Function<T, E> comparator) {
+        Map<E, UArrayStream<T>> result = new HashMap<>();
+        consume(t -> {
+            E key = comparator.apply(t);
+            if (!result.containsKey(key)) {
+                result.put(key, new UArrayStream<>());
+            }
+            result.get(key).add(t);
+        });
+        return new UGroupStream<>(result);
     }
 
     /**
@@ -393,16 +503,15 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default Ustream<T> reverse() {
+    default UStream<T> reverse() {
         return t -> {
             List<T> list = new ArrayList<>();
-            Ustream.this.consume(list::add);
+            UStream.this.consume(list::add);
             for (int size = list.size() - 1; size >= 0; size--) {
                 t.accept(list.get(size));
             }
         };
     }
-
 
     /**
      * 结局输出流
@@ -418,7 +527,7 @@ public interface Ustream<T> {
      *
      * @return
      */
-    default Ustream<T> distinct() {
+    default UStream<T> distinct() {
         return t -> {
             List<T> temp = new ArrayList<>();
             consume(e -> {
@@ -439,7 +548,6 @@ public interface Ustream<T> {
         return findFirst();
     }
 
-
     /**
      * 流元素数量, 注意 这一步结束流不会执行peek等操作
      *
@@ -455,5 +563,58 @@ public interface Ustream<T> {
         List<T> ts = new ArrayList<>();
         consume(ts::add);
         return ts;
+    }
+
+    default <K, V> Map<K, V> toMap(Function<T, K> keyMap, Function<T, V> valueMap, BiFunction<V, V, V> chose) {
+        Map<K, V> map = new HashMap<>();
+        consume(e -> {
+            K key = keyMap.apply(e);
+            V value = valueMap.apply(e);
+            if (map.containsKey(key)) {
+                V target = chose.apply(map.get(key), value);
+                map.put(key, target);
+            } else {
+                map.put(key, value);
+            }
+        });
+        return map;
+    }
+
+    default <K, V> Map<K, V> toMap(Function<T, K> keyMap, Function<T, V> valueMap) {
+        Map<K, V> map = new HashMap<>();
+        consume(e -> {
+            K key = keyMap.apply(e);
+            V value = valueMap.apply(e);
+            if (map.containsKey(key)) {
+                throw new RuntimeException("错误,ustream toMap时key不能重复");
+            } else {
+                map.put(key, value);
+            }
+        });
+        return map;
+    }
+
+    /**
+     * join
+     *
+     * @param charSequence
+     *
+     * @return
+     */
+    default String join(CharSequence charSequence) {
+        return join(charSequence, T::toString);
+    }
+
+    /**
+     * join
+     *
+     * @param charSequence
+     *
+     * @return
+     */
+    default String join(CharSequence charSequence, Function<T, String> function) {
+        StringJoiner joiner = new StringJoiner(charSequence);
+        consume(t -> joiner.add(function.apply(t)));
+        return joiner.toString();
     }
 }

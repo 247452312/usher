@@ -6,20 +6,20 @@ import java.util.Optional;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年11月27日 09时31分
  */
-public class Uobject<T> {
+public class UObject<T> {
 
 
     private T t;
 
-    public Uobject(T t) {
+    public UObject(T t) {
         this.t = t;
     }
 
-    public Uobject() {
+    public UObject() {
     }
 
-    public static <E> Uobject<E> of(E t) {
-        return new Uobject<>(t);
+    public static <E> UObject<E> of(E t) {
+        return new UObject<>(t);
     }
 
     public T get() {

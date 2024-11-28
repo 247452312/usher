@@ -1,6 +1,6 @@
 package team.opentech.usher.ustream.util;
 
-import team.opentech.usher.ustream.Ustream;
+import team.opentech.usher.ustream.UStream;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -20,7 +20,7 @@ public final class UstreamUtil {
      *
      * @return
      */
-    public static <T> Ustream<T> unit(T t) {
+    public static <T> UStream<T> unit(T t) {
         return c -> c.accept(t);
     }
 }

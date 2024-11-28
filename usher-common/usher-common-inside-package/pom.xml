@@ -84,6 +84,11 @@
             </dependency>
             <dependency>
                 <groupId>team.opentech.usher</groupId>
+                <artifactId>usher-common-util-ustream</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>team.opentech.usher</groupId>
                 <artifactId>usher-common-protocol-mysql</artifactId>
                 <version>${project.version}</version>
             </dependency>
