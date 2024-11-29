@@ -9,7 +9,7 @@
 
     <groupId>top.uhyils.usher</groupId>
     <artifactId>usher</artifactId>
-    <version>2.1.0.2.usher</version>
+    <version>2.1.0.2.usher-SNAPSHOT</version>
     <name>usher</name>
 
     <packaging>pom</packaging>

@@ -52,7 +52,7 @@
                                 <artifactItem>
                                     <groupId>top.uhyils.usher</groupId>
                                     <artifactId>usher-web</artifactId>
-                                    <version>2.1.0.2.usher</version>
+                                    <version>2.1.0.2.usher-SNAPSHOT</version>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>${project.build.directory}/classes/webapp/usher-web</outputDirectory>
                                     <excludes>
@@ -75,7 +75,7 @@
                                 <artifactItem>
                                     <groupId>top.uhyils.usher</groupId>
                                     <artifactId>usher-service-user</artifactId>
-                                    <version>2.1.0.2.usher</version>
+                                    <version>2.1.0.2.usher-SNAPSHOT</version>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
                                         ${project.build.directory}/classes/webapp/usher-user
@@ -97,7 +97,7 @@
                                 <artifactItem>
                                     <groupId>top.uhyils.usher</groupId>
                                     <artifactId>usher-service-log</artifactId>
-                                    <version>2.1.0.2.usher</version>
+                                    <version>2.1.0.2.usher-SNAPSHOT</version>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
                                         ${project.build.directory}/classes/webapp/usher-log
@@ -134,6 +134,6 @@
     <parent>
         <groupId>top.uhyils.usher</groupId>
         <artifactId>usher-service</artifactId>
-        <version>2.1.0.2.usher</version>
+        <version>2.1.0.2.usher-SNAPSHOT</version>
     </parent>
 </project>
