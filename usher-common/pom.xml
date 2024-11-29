@@ -26,7 +26,6 @@
         <module>usher-common-swagger</module>
         <module>usher-common-rpc</module>
         <module>usher-common-protocol</module>
-        <module>usher-common-util/usher-common-util-ustream</module>
     </modules>
 
 </project>
