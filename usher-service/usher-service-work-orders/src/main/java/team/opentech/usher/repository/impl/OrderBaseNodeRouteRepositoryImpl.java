@@ -1,16 +1,14 @@
 package team.opentech.usher.repository.impl;
 
+import java.util.List;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.OrderBaseNodeRouteAssembler;
 import team.opentech.usher.dao.OrderBaseNodeRouteDao;
 import team.opentech.usher.pojo.DO.OrderBaseNodeRouteDO;
 import team.opentech.usher.pojo.DTO.OrderBaseNodeRouteDTO;
 import team.opentech.usher.pojo.entity.OrderBaseNodeRoute;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.OrderBaseNodeRouteRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -29,8 +27,8 @@ public class OrderBaseNodeRouteRepositoryImpl extends AbstractRepository<OrderBa
 
 
     @Override
-    public List<OrderBaseNodeRoute> findNodeRouteByNodes(List<Identifier> nodeIds) {
-        List<OrderBaseNodeRouteDO> byOrderNodeIds = dao.getByOrderNodeIds(nodeIds.stream().map(Identifier::getId).collect(Collectors.toList()));
+    public List<OrderBaseNodeRoute> findNodeRouteByNodes(List<Long> nodeIds) {
+        List<OrderBaseNodeRouteDO> byOrderNodeIds = dao.getByOrderNodeIds(nodeIds);
         return assembler.listToEntity(byOrderNodeIds);
     }
 }

@@ -1,19 +1,6 @@
 package team.opentech.usher.pojo.entity;
 
 import com.alibaba.fastjson.JSON;
-import team.opentech.usher.BaseTest;
-import team.opentech.usher.assembler.MenuAssembler;
-import team.opentech.usher.pojo.DO.DeptDO;
-import team.opentech.usher.pojo.DO.MenuDO;
-import team.opentech.usher.pojo.DTO.MenuDTO;
-import team.opentech.usher.pojo.DTO.UserDTO;
-import team.opentech.usher.pojo.DTO.response.info.MenuTreeDTO;
-import team.opentech.usher.pojo.entity.type.Identifier;
-import team.opentech.usher.repository.DeptRepository;
-import team.opentech.usher.repository.MenuRepository;
-import team.opentech.usher.util.Asserts;
-import team.opentech.usher.util.CollectionUtil;
-import team.opentech.usher.util.ReflactUtil;
 import java.lang.invoke.SerializedLambda;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +8,18 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import team.opentech.usher.BaseTest;
+import team.opentech.usher.assembler.MenuAssembler;
+import team.opentech.usher.pojo.DO.DeptDO;
+import team.opentech.usher.pojo.DO.MenuDO;
+import team.opentech.usher.pojo.DTO.MenuDTO;
+import team.opentech.usher.pojo.DTO.UserDTO;
+import team.opentech.usher.pojo.DTO.response.info.MenuTreeDTO;
+import team.opentech.usher.repository.DeptRepository;
+import team.opentech.usher.repository.MenuRepository;
+import team.opentech.usher.util.Asserts;
+import team.opentech.usher.util.CollectionUtil;
+import team.opentech.usher.util.ReflactUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -60,10 +59,10 @@ public class MenuTest extends BaseTest {
 
         Menu m1 = new Menu(do1);
         repository.save(m1);
-        m1Id = m1.getUnique().get().getId();
+        m1Id = m1.getUnique().get();
 
         MenuDO do2 = new MenuDO();
-        do2.setFid(m1.getUnique().get().getId());
+        do2.setFid(m1.getUnique().get());
         do2.setIFrame(123);
         do2.setIcon("asd");
         do2.setName("asd");
@@ -74,14 +73,14 @@ public class MenuTest extends BaseTest {
 
         Menu m2 = new Menu(do2);
         repository.save(m2);
-        m2Id = m2.getUnique().get().getId();
+        m2Id = m2.getUnique().get();
 
         // dept
         DeptDO deptDO = new DeptDO();
         deptDO.setName("test");
         Dept dept = new Dept(deptDO);
         deptRepository.save(dept);
-        deptId = dept.getUnique().get().getId();
+        deptId = dept.getUnique().get();
 
 
     }
@@ -148,7 +147,7 @@ public class MenuTest extends BaseTest {
     public void cleanDept2() {
         Dept dept = new Dept(deptId);
         dept.completion(deptRepository);
-        Menu menu = new Menu(new Identifier(m1Id));
+        Menu menu = new Menu(m1Id);
         menu.addDepts(Arrays.asList(dept), repository);
         List<Dept> depts = menu.depts();
         Asserts.assertTrue(depts.size() == 1);

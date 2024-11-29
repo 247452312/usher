@@ -765,7 +765,7 @@
         });
 
         function refreshJvmInfo() {
-            pushRequest("JvmProvider", "getJvmDataStatisticsResponse", {}, function (data) {
+            pushRequest("LogMonitorProvider", "getJvmDataStatisticsResponse", {}, function (data) {
                 var myChart = echarts.init(document.getElementById('echarts-records'), 'essos');
                 extracted(myChart, data);
             })

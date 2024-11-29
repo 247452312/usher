@@ -1,10 +1,9 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.OrderBaseNodeResultTypeDO;
 import team.opentech.usher.pojo.entity.OrderBaseNodeResultType;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
-import java.util.List;
 
 /**
  * 工单节点处理结果样例表(OrderBaseNodeResultType)表 数据仓库层
@@ -23,5 +22,5 @@ public interface OrderBaseNodeResultTypeRepository extends BaseEntityRepository<
      *
      * @return
      */
-    List<OrderBaseNodeResultType> findNodeResultTypeByNodes(List<Identifier> nodeIds);
+    List<OrderBaseNodeResultType> findNodeResultTypeByNodes(List<Long> nodeIds);
 }

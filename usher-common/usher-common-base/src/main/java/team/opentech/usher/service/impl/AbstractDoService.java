@@ -1,5 +1,6 @@
 package team.opentech.usher.service.impl;
 
+import java.util.List;
 import team.opentech.usher.assembler.BaseEntityAssembler;
 import team.opentech.usher.pojo.DO.base.BaseDO;
 import team.opentech.usher.pojo.DTO.base.IdDTO;
@@ -8,10 +9,8 @@ import team.opentech.usher.pojo.cqe.query.demo.Arg;
 import team.opentech.usher.pojo.cqe.query.demo.Limit;
 import team.opentech.usher.pojo.cqe.query.demo.Order;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
 import team.opentech.usher.service.BaseDoService;
-import java.util.List;
 
 
 /**
@@ -33,12 +32,12 @@ public abstract class AbstractDoService<DO extends BaseDO, ENTITY extends Abstra
     @Override
     public Long add(DTO dto) {
         ENTITY t = assem.toEntity(dto);
-        Identifier save = rep.save(t);
-        return save.getId();
+        Long save = rep.save(t);
+        return save;
     }
 
     @Override
-    public Integer remove(Identifier id) {
+    public Integer remove(Long id) {
         return rep.remove(id);
     }
 
@@ -54,7 +53,7 @@ public abstract class AbstractDoService<DO extends BaseDO, ENTITY extends Abstra
     }
 
     @Override
-    public List<DTO> query(List<Identifier> ids) {
+    public List<DTO> query(List<Long> ids) {
         List<ENTITY> entities = rep.find(ids);
         return assem.listEntityToDTO(entities);
     }
@@ -72,7 +71,7 @@ public abstract class AbstractDoService<DO extends BaseDO, ENTITY extends Abstra
     }
 
     @Override
-    public DTO query(Identifier id) {
+    public DTO query(Long id) {
         ENTITY entity = rep.find(id);
         return assem.toDTO(entity);
     }

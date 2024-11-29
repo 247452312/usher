@@ -3,17 +3,24 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>team.opentech.usher</groupId>
-        <artifactId>usher-common-data</artifactId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
-    </parent>
-
     <artifactId>usher-common-data-mongo</artifactId>
+
+    <name>usher-common-data-mongo</name>
+
+
+    <description>
+        mongo 工具包
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-common/usher-common-data/usher-common-data-mongo</url>
+    <parent>
+        <groupId>top.uhyils.usher</groupId>
+        <artifactId>usher-common-data</artifactId>
+        <version>2.1.0.2.usher</version>
+    </parent>
 
     <dependencies>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
         <!-- mongo driver -->

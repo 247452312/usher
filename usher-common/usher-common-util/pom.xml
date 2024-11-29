@@ -11,9 +11,9 @@
         <module>usher-common-util-scenario</module>
     </modules>
     <parent>
-        <groupId>team.opentech.usher</groupId>
+        <groupId>top.uhyils.usher</groupId>
         <artifactId>usher-common</artifactId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
+        <version>2.1.0.2.usher</version>
     </parent>
 
     <artifactId>usher-common-util</artifactId>

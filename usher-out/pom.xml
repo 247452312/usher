@@ -7,9 +7,9 @@
 
     <packaging>pom</packaging>
     <parent>
-        <groupId>team.opentech.usher</groupId>
+        <groupId>top.uhyils.usher</groupId>
         <artifactId>usher</artifactId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
+        <version>2.1.0.2.usher</version>
     </parent>
 
     <modules>

@@ -1,9 +1,5 @@
 package team.opentech.usher.log.filter.controller;
 
-import team.opentech.usher.context.MyTraceIdContext;
-import team.opentech.usher.enums.LogTypeEnum;
-import team.opentech.usher.util.IpUtil;
-import team.opentech.usher.util.LogUtil;
 import java.io.IOException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -12,6 +8,11 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import team.opentech.usher.context.MyTraceIdContext;
+import team.opentech.usher.enums.LogTypeEnum;
+import team.opentech.usher.util.IpUtil;
+import team.opentech.usher.util.LogUtil;
 
 
 /**
@@ -59,7 +60,9 @@ public class ControllerLogFilter implements Filter {
         MyTraceIdContext.clean();
         MyTraceIdContext.onlyOnePrintLogInfo(LogTypeEnum.CONTROLLER, () -> {
             try {
+                ((HttpServletResponse) servletResponse).addHeader("trace", MyTraceIdContext.getRpcIdStr());
                 filterChain.doFilter(servletRequest, servletResponse);
+
             } catch (IOException | ServletException e) {
                 LogUtil.error(e);
             }

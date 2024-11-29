@@ -5,10 +5,10 @@
 
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>team.opentech.usher</groupId>
+    <groupId>top.uhyils.usher</groupId>
 
     <artifactId>usher-out-inside-package</artifactId>
-    <version>2.1.0.0.usher-SNAPSHOT</version>
+    <version>2.1.0.2.usher</version>
     <description>usher-out 内部项目版本控制</description>
     <packaging>pom</packaging>
 
@@ -24,7 +24,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-out-parse</artifactId>
                 <version>${project.version}</version>
             </dependency>

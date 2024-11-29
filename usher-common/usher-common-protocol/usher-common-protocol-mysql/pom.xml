@@ -3,13 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>team.opentech.usher</groupId>
-        <artifactId>usher-common-protocol</artifactId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
-    </parent>
-
     <artifactId>usher-common-protocol-mysql</artifactId>
+
+    <name>usher-common-protocol-mysql</name>
+
+
+    <description>
+        mysql协议模拟收发模块
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-common/usher-common-protocol-mysql</url>
+    <parent>
+        <groupId>top.uhyils.usher</groupId>
+        <artifactId>usher-common-protocol</artifactId>
+        <version>2.1.0.2.usher</version>
+    </parent>
 
     <dependencies>
         <dependency>
@@ -33,11 +40,11 @@
 
 
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-util-obj-pool</artifactId>
         </dependency>
         <dependency>

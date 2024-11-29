@@ -1,5 +1,9 @@
 package team.opentech.usher.service.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.SoftwareAssembler;
 import team.opentech.usher.enums.ReadWriteTypeEnum;
@@ -20,14 +24,9 @@ import team.opentech.usher.pojo.cqe.query.KeyQuery;
 import team.opentech.usher.pojo.entity.Software;
 import team.opentech.usher.pojo.entity.software.RedisSoftware;
 import team.opentech.usher.pojo.entity.software.RedisSoftwareInterface;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ServerRepository;
 import team.opentech.usher.repository.SoftwareRepository;
 import team.opentech.usher.service.SoftwareService;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * 中间件表(Software)表 内部服务实现类
@@ -56,8 +55,7 @@ public class SoftwareServiceImpl extends AbstractDoService<SoftwareDO, Software,
         // 获取基础信息,例如version
         software.initBaseInfo();
         software.close();
-        Identifier id = software.saveSelf(rep);
-        return id.getId();
+        return software.saveSelf(rep);
     }
 
     @Override
@@ -103,7 +101,7 @@ public class SoftwareServiceImpl extends AbstractDoService<SoftwareDO, Software,
 
     @Override
     public Boolean deleteManyRedis(IdsCommand request) {
-        Identifier[] identifiers = request.getIds().stream().map(Identifier::new).toArray(Identifier[]::new);
+        Long[] identifiers = request.getIds().stream().toArray(Long[]::new);
         rep.remove(identifiers);
         return true;
     }

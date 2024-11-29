@@ -1,5 +1,7 @@
 package team.opentech.usher.protocol.rpc.impl;
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import team.opentech.usher.annotation.NoLogin;
 import team.opentech.usher.annotation.Public;
 import team.opentech.usher.pojo.DO.base.TokenInfo;
@@ -15,7 +17,6 @@ import team.opentech.usher.pojo.cqe.command.IdCommand;
 import team.opentech.usher.pojo.cqe.query.IdQuery;
 import team.opentech.usher.pojo.cqe.query.IdsQuery;
 import team.opentech.usher.pojo.entity.Token;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.Password;
 import team.opentech.usher.pojo.entity.type.UserName;
 import team.opentech.usher.protocol.rpc.UserProvider;
@@ -23,9 +24,6 @@ import team.opentech.usher.protocol.rpc.base.BaseDefaultProvider;
 import team.opentech.usher.rpc.annotation.RpcService;
 import team.opentech.usher.service.BaseDoService;
 import team.opentech.usher.service.UserService;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -41,14 +39,12 @@ public class UserProviderImpl extends BaseDefaultProvider<UserDTO> implements Us
 
     @Override
     public UserDTO getUserById(IdQuery request) {
-        Identifier userId = new Identifier(request.getId());
-        return service.getUserById(userId);
+        return service.getUserById(request.getId());
     }
 
     @Override
     public String getUserToken(IdQuery request) {
-        Identifier userId = new Identifier(request.getId());
-        return service.getUserToken(userId);
+        return service.getUserToken(request.getId());
     }
 
     @Override
@@ -95,14 +91,12 @@ public class UserProviderImpl extends BaseDefaultProvider<UserDTO> implements Us
 
     @Override
     public String getNameById(IdQuery request) {
-        Identifier userId = new Identifier(request.getId());
-        return service.getNameById(userId);
+        return service.getNameById(request.getId());
     }
 
     @Override
     public List<UserDTO> getSampleUserByIds(IdsQuery request) {
-        List<Identifier> userIds = request.getIds().stream().map(Identifier::new).collect(Collectors.toList());
-        return service.getSampleUserByIds(userIds);
+        return service.getSampleUserByIds(request.getIds());
     }
 
     @Override
@@ -113,12 +107,12 @@ public class UserProviderImpl extends BaseDefaultProvider<UserDTO> implements Us
 
     @Override
     public Boolean passApply(IdCommand request) {
-        return service.passApply(new Identifier(request.getId()));
+        return service.passApply(request.getId());
     }
 
     @Override
     public Boolean stopUser(IdCommand request) {
-        return service.stopUser(new Identifier(request.getId()));
+        return service.stopUser(request.getId());
     }
 
     @Override

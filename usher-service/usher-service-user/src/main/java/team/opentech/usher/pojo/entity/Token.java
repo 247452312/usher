@@ -1,16 +1,15 @@
 package team.opentech.usher.pojo.entity;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import team.opentech.usher.context.UsherContext;
 import team.opentech.usher.enums.UserTypeEnum;
 import team.opentech.usher.pojo.DO.base.TokenInfo;
 import team.opentech.usher.pojo.entity.base.AbstractEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.UserRepository;
 import team.opentech.usher.util.AESUtil;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.SpringUtil;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * token本身
@@ -24,10 +23,10 @@ public class Token extends AbstractEntity<String> {
     /**
      * 这个token对应的id
      */
-    private final Identifier id;
+    private final Long id;
 
     public Token(Long id, String token) {
-        this.id = new Identifier(id);
+        this.id = id;
         this.unique = token;
 
     }
@@ -46,7 +45,7 @@ public class Token extends AbstractEntity<String> {
         return UserTypeEnum.getByCode(this.unique.substring(0, 2)).orElse(null);
     }
 
-    public Identifier getId() {
+    public Long getId() {
         return id;
     }
 
@@ -97,7 +96,7 @@ public class Token extends AbstractEntity<String> {
         return tokenInfo;
     }
 
-    private Identifier parseTokenToId(String token) {
+    private Long parseTokenToId(String token) {
         UserTypeEnum userTypeEnum = tokenUserType();
         Asserts.assertTrue(userTypeEnum == UserTypeEnum.USER, "token不是用户类型");
         String salt = SpringUtil.getProperty("token.salt");
@@ -106,7 +105,6 @@ public class Token extends AbstractEntity<String> {
         assert encodeRules != null;
         String tokenInfoString = AESUtil.AESDecode(encodeRules, token);
         assert tokenInfoString != null;
-        long id = Long.parseLong(tokenInfoString.substring(10, tokenInfoString.length() - 1 - salt.length()));
-        return new Identifier(id);
+        return Long.parseLong(tokenInfoString.substring(10, tokenInfoString.length() - 1 - salt.length()));
     }
 }

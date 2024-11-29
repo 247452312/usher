@@ -70,7 +70,6 @@ public class Asserts {
         if (e instanceof AssertException) {
             throw (AssertException) e;
         }
-        LogUtil.error(e);
         assertTrue(false, 3, e.getMessage());
     }
 
@@ -126,7 +125,7 @@ public class Asserts {
     }
 
     /**
-     * 断言异常
+     * 断言这里会发生异常
      *
      * @param runnable
      */
@@ -140,7 +139,6 @@ public class Asserts {
         }
         AssertException assertException = new AssertException("没有异常的异常!");
         removeExceptionTrace(assertException, 2);
-        LogUtil.error(assertException);
         throw assertException;
     }
 
@@ -153,7 +151,6 @@ public class Asserts {
         try {
             runnable.run();
         } catch (Throwable e) {
-            LogUtil.error(e);
             throw e;
         }
 
@@ -222,7 +219,6 @@ public class Asserts {
             msg = MessageFormatter.arrayFormat(msg, params).getMessage();
             AssertException assertException = new AssertException("断言异常: " + msg);
             removeExceptionTrace(assertException, removeLayerCount);
-            LogUtil.error(assertException);
             throw assertException;
         }
     }

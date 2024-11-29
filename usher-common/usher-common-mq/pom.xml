@@ -3,13 +3,20 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <artifactId>usher-common-mq</artifactId>
+
+    <name>usher-common-mq</name>
+
+    <description>
+        MQ相关模块
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-common/usher-common-mq</url>
     <parent>
-        <groupId>team.opentech.usher</groupId>
+        <groupId>top.uhyils.usher</groupId>
         <artifactId>usher-common</artifactId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
+        <version>2.1.0.2.usher</version>
     </parent>
 
-    <artifactId>usher-common-mq</artifactId>
     <dependencies>
 
         <!--引入AOP依赖-->
@@ -19,12 +26,17 @@
         </dependency>
 
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-log</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>top.uhyils.usher</groupId>
+            <artifactId>usher-common-elegant</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

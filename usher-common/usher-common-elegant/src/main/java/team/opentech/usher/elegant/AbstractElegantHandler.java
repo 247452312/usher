@@ -55,14 +55,16 @@ public abstract class AbstractElegantHandler implements ElegantHandler {
     /**
      * 新请求
      */
-    protected void newRequest() {
+    @Override
+    public void newRequest() {
         onlineCount.getAndIncrement();
     }
 
     /**
      * 请求结束
      */
-    protected void requestOver() {
+    @Override
+    public void requestOver() {
         onlineCount.getAndDecrement();
     }
 

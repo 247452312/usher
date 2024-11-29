@@ -3,14 +3,19 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>team.opentech.usher</groupId>
-        <artifactId>usher-common</artifactId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
-    </parent>
-
     <artifactId>usher-common-log</artifactId>
 
+    <name>usher-common-log</name>
+
+    <description>
+        日志管理模块
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-common/usher-common-log</url>
+    <parent>
+        <groupId>top.uhyils.usher</groupId>
+        <artifactId>usher-common</artifactId>
+        <version>2.1.0.2.usher</version>
+    </parent>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -18,11 +23,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-rpc-spring-start</artifactId>
         </dependency>
         <dependency>

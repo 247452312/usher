@@ -1,21 +1,20 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.pojo.DO.OrderBaseInfoDO;
 import team.opentech.usher.pojo.DO.OrderBaseNodeFieldDO;
 import team.opentech.usher.pojo.DO.OrderBaseNodeResultTypeDO;
 import team.opentech.usher.pojo.DO.OrderBaseNodeRouteDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.OrderBaseNodeFieldRepository;
 import team.opentech.usher.repository.OrderBaseNodeRepository;
 import team.opentech.usher.repository.OrderBaseNodeResultTypeRepository;
 import team.opentech.usher.repository.OrderBaseNodeRouteRepository;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 工单基础信息样例表(OrderBaseInfo)表 数据库实体类
@@ -64,7 +63,7 @@ public class OrderBaseInfo extends AbstractDoEntity<OrderBaseInfoDO> {
         List<OrderBaseNodeField> fields = fieldRepository.findNodeFieldByNodes(this.nodes.stream().map(t -> t.getUnique().orElseThrow(Asserts::throwOptionalException)).collect(Collectors.toList()));
         Map<Long, List<OrderBaseNodeField>> nodeIdFieldMap = fields.stream().collect(Collectors.groupingBy(t -> t.toData().map(OrderBaseNodeFieldDO::getBaseOrderId).orElseThrow(Asserts::throwOptionalException)));
         for (OrderBaseNode node : this.nodes) {
-            Long id = node.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException);
+            Long id = node.getUnique().orElseThrow(Asserts::throwOptionalException);
             List<OrderBaseNodeField> fieldList = nodeIdFieldMap.get(id);
             node.fillFields(fieldList);
         }
@@ -74,7 +73,7 @@ public class OrderBaseInfo extends AbstractDoEntity<OrderBaseInfoDO> {
         List<OrderBaseNodeResultType> resultTypes = resultTypeRepository.findNodeResultTypeByNodes(this.nodes.stream().map(t -> t.getUnique().orElseThrow(Asserts::throwOptionalException)).collect(Collectors.toList()));
         Map<Long, List<OrderBaseNodeResultType>> nodeIdResultTypeMap = resultTypes.stream().collect(Collectors.groupingBy(t -> t.toData().map(OrderBaseNodeResultTypeDO::getBaseNodeId).orElseThrow(Asserts::throwOptionalException)));
         for (OrderBaseNode node : this.nodes) {
-            Long id = node.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException);
+            Long id = node.getUnique().orElseThrow(Asserts::throwOptionalException);
             List<OrderBaseNodeResultType> orderBaseNodeResultTypes = nodeIdResultTypeMap.get(id);
             node.fillResultTypes(orderBaseNodeResultTypes);
         }
@@ -84,7 +83,7 @@ public class OrderBaseInfo extends AbstractDoEntity<OrderBaseInfoDO> {
         List<OrderBaseNodeRoute> routes = routeRepository.findNodeRouteByNodes(this.nodes.stream().map(t -> t.getUnique().orElseThrow(Asserts::throwOptionalException)).collect(Collectors.toList()));
         Map<Long, List<OrderBaseNodeRoute>> nodeIdRouteMap = routes.stream().collect(Collectors.groupingBy(t -> t.toData().map(OrderBaseNodeRouteDO::getPrevNodeId).orElseThrow(Asserts::throwOptionalException)));
         for (OrderBaseNode node : this.nodes) {
-            Long id = node.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException);
+            Long id = node.getUnique().orElseThrow(Asserts::throwOptionalException);
             List<OrderBaseNodeRoute> orderBaseNodeRoutes = nodeIdRouteMap.get(id);
             node.fillRoutes(orderBaseNodeRoutes);
         }

@@ -3,7 +3,6 @@ package team.opentech.usher.pojo.entity;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.pojo.DO.OutApiDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.OutApiRepository;
 
 /**
@@ -19,16 +18,13 @@ public class OutApi extends AbstractDoEntity<OutApiDO> {
         super(data);
     }
 
-    public OutApi(Long id) {
-        super(id, new OutApiDO());
-    }
 
     public OutApi(Long id, OutApiRepository rep) {
         super(id, new OutApiDO());
         completion(rep);
     }
 
-    public OutApi(Identifier id) {
+    public OutApi(Long id) {
         super(id, new OutApiDO());
     }
 

@@ -8,7 +8,6 @@ import team.opentech.usher.enums.OrderNodeStatusEnum;
 import team.opentech.usher.pojo.DO.OrderNodeDO;
 import team.opentech.usher.pojo.DTO.OrderNodeDTO;
 import team.opentech.usher.pojo.entity.OrderNode;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.OrderNodeRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 import team.opentech.usher.util.Asserts;
@@ -36,7 +35,7 @@ public class OrderNodeRepositoryImpl extends AbstractRepository<OrderNode, Order
 
     @Override
     public OrderNode findNext(OrderNode orderNode) {
-        OrderNodeDO nextNodeByNodeAndResult = dao.getNextNodeByNodeAndResult(orderNode.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException), orderNode.toData().map(OrderNodeDO::getResultId).orElseThrow(Asserts::throwOptionalException));
+        OrderNodeDO nextNodeByNodeAndResult = dao.getNextNodeByNodeAndResult(orderNode.getUnique().orElseThrow(Asserts::throwOptionalException), orderNode.toData().map(OrderNodeDO::getResultId).orElseThrow(Asserts::throwOptionalException));
         return assembler.toEntity(nextNodeByNodeAndResult);
     }
 

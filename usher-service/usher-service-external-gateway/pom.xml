@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>usher-service-external-gateway</artifactId>
+
+    <name>usher-service-external-gateway</name>
+
+
+    <description>
+        三方网关
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-service/usher-service-external-gateway</url>
+    <parent>
+        <artifactId>usher-service</artifactId>
+        <groupId>top.uhyils.usher</groupId>
+        <version>2.1.0.2.usher</version>
+    </parent>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>top.uhyils.usher</groupId>
+            <artifactId>usher-common-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.uhyils.usher</groupId>
+            <artifactId>usher-api-provider-gateway</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.uhyils.usher</groupId>
+            <artifactId>usher-api-provider-gateway-sdk</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>top.uhyils.usher</groupId>
+            <artifactId>usher-common-protocol-mysql</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

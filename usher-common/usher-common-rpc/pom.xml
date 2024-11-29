@@ -3,51 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <parent>
-        <groupId>team.opentech.usher</groupId>
-        <artifactId>usher-common</artifactId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
-    </parent>
-
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>usher-common-rpc</artifactId>
-
-    <name>usher-common-rpc</name>
-    <description>a rpc for no spring</description>
-
-    <packaging>pom</packaging>
-
-
-    <properties>
-        <commons-lang3.version>3.12.0</commons-lang3.version>
-        <fastjson.version>1.2.69</fastjson.version>
-        <java.version>1.8</java.version>
-        <junit.version>4.13</junit.version>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <mockito.version>2.23.4</mockito.version>
-        <nacos.version>2.4.3</nacos.version>
-        <netty.version>4.1.54.Final</netty.version>
-        <powermock.version>2.0.2</powermock.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <slf4j-api.version>1.7.31</slf4j-api.version>
-        <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
-        <maven.complier.plugin.version>3.8.1</maven.complier.plugin.version>
-    </properties>
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>https://opensource.org/licenses/MIT</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-base</artifactId>
-                <version>2.1.0.0.usher-SNAPSHOT</version>
+                <version>2.1.0.2.usher</version>
             </dependency>
             <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
             <dependency>
@@ -63,37 +24,37 @@
             </dependency>
 
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-exchange</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-netty</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-cluster</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-registry</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-proxy</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-spring-start</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -178,6 +139,45 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>usher-common-rpc</artifactId>
+
+    <name>usher-common-rpc</name>
+    <description>a rpc for no spring</description>
+
+    <packaging>pom</packaging>
+
+
+    <properties>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
+        <fastjson.version>1.2.69</fastjson.version>
+        <java.version>1.8</java.version>
+        <junit.version>4.13</junit.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <mockito.version>2.23.4</mockito.version>
+        <nacos.version>2.4.3</nacos.version>
+        <netty.version>4.1.54.Final</netty.version>
+        <powermock.version>2.0.2</powermock.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <slf4j-api.version>1.7.31</slf4j-api.version>
+        <spring-boot.version>2.2.5.RELEASE</spring-boot.version>
+        <maven.complier.plugin.version>3.8.1</maven.complier.plugin.version>
+    </properties>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <parent>
+        <groupId>top.uhyils.usher</groupId>
+        <artifactId>usher-common</artifactId>
+        <version>2.1.0.2.usher</version>
+    </parent>
 
 
     <build>

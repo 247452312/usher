@@ -1,14 +1,13 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.DeptDO;
 import team.opentech.usher.pojo.DTO.response.GetAllPowerWithHaveMarkDTO;
 import team.opentech.usher.pojo.DTO.response.GetDeptsByMenuIdDTO;
 import team.opentech.usher.pojo.entity.Dept;
 import team.opentech.usher.pojo.entity.Menu;
 import team.opentech.usher.pojo.entity.Power;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
-import java.util.List;
 
 /**
  * 角色仓库
@@ -26,7 +25,7 @@ public interface DeptRepository extends BaseEntityRepository<DeptDO, Dept> {
      *
      * @return
      */
-    List<Dept> findByRoleId(Identifier roleId);
+    List<Dept> findByRoleId(Long roleId);
 
     /**
      * 添加新power

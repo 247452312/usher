@@ -1,5 +1,10 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.assembler.MenuAssembler;
 import team.opentech.usher.pojo.DO.MenuDO;
@@ -7,14 +12,8 @@ import team.opentech.usher.pojo.DTO.MenuDTO;
 import team.opentech.usher.pojo.DTO.MenuTreeBuilder;
 import team.opentech.usher.pojo.DTO.response.info.MenuTreeDTO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.MenuIframe;
 import team.opentech.usher.repository.MenuRepository;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 /**
@@ -34,10 +33,6 @@ public class Menu extends AbstractDoEntity<MenuDO> {
     }
 
     public Menu(Long id) {
-        super(id, new MenuDO());
-    }
-
-    public Menu(Identifier id) {
         super(id, new MenuDO());
     }
 

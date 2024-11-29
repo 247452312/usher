@@ -2,15 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>usher-common-util</artifactId>
-        <groupId>team.opentech.usher</groupId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
-    </parent>
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>usher-common-util-trace-executor</artifactId>
 
+    <name>usher-common-util-trace-executor</name>
+
+    <description>
+        可跨域的线程池和threadLocal
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-common/usher-common-util/usher-common-util-trace-executor</url>
+    <parent>
+        <artifactId>usher-common-util</artifactId>
+        <groupId>top.uhyils.usher</groupId>
+        <version>2.1.0.2.usher</version>
+    </parent>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

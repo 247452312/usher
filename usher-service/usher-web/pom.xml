@@ -2,17 +2,20 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <artifactId>usher-service</artifactId>
-        <groupId>team.opentech.usher</groupId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
-    </parent>
+    <version>2.1.0.2.usher</version>
     <artifactId>usher-web</artifactId>
     <packaging>jar</packaging>
-    <version>2.1.0.0.usher-SNAPSHOT</version>
     <name>usher-web</name>
-    <description>Demo project for Spring Boot</description>
+    <description>
+        http网关
+    </description>
 
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-service/usher-web</url>
+    <parent>
+        <artifactId>usher-service</artifactId>
+        <groupId>top.uhyils.usher</groupId>
+        <version>2.1.0.2.usher</version>
+    </parent>
 
     <dependencyManagement>
         <dependencies>
@@ -29,52 +32,56 @@
 
     <dependencies>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-mq</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-user</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-log</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-software</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-distribute</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-push</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-mongo</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-algorithm</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-work-orders</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
+            <artifactId>usher-api-provider-ai-control</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-hot-spot</artifactId>
         </dependency>
 
@@ -124,7 +131,7 @@
 
         <!-- https://mvnrepository.com/artifact/team.opentech.usher/usher-rpc-spring-start -->
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-rpc-spring-start</artifactId>
         </dependency>
 

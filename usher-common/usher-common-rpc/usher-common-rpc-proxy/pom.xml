@@ -3,21 +3,26 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>team.opentech.usher</groupId>
-        <artifactId>usher-common-rpc</artifactId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
-    </parent>
-
     <artifactId>usher-common-rpc-proxy</artifactId>
 
+    <name>usher-common-rpc-proxy</name>
+
+    <description>
+        rpc代理模块
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-common/usher-common-rpc/usher-common-rpc-proxy</url>
+    <parent>
+        <groupId>top.uhyils.usher</groupId>
+        <artifactId>usher-common-rpc</artifactId>
+        <version>2.1.0.2.usher</version>
+    </parent>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-rpc-registry</artifactId>
         </dependency>
     </dependencies>

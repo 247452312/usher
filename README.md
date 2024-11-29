@@ -7,10 +7,9 @@ usher is a Java project for many technologies.
 
 ## 项目简介
 
-* 基于docker的中间件: nacos(rpc注册中心) mysql redis MongoDB rocketMQ
 * 基于DDD项目架构
-* [应用内事件发布框架](usher-common/usher-common-event-bus)
 * [基于usher-rpc的微服务架构](usher-common/usher-common-rpc)
+* [应用内事件发布框架](usher-common/usher-common-event-bus)
 * [基于usher-rpc SPI的Filter熔断(Hystrix)](usher-service/usher-web/src/main/java/team/opentech/usher/filter/HystrixFilter.java)
 * [基于redis的分布式锁 + 热点自动发现技术](usher-common/usher-common-hot-spot)
 * 基于rocketMQ的分布式事务
@@ -29,10 +28,8 @@ usher is a Java project for many technologies.
 * 基于mybatis-plus的orm映射
 * [在线服务降级](usher-common/usher-common-service/src/main/java/team/opentech/usher/aop/ServiceTemporarilyDisabledAop.java)
 * [java调用python模块](usher-common/usher-common-base/src/main/java/team/opentech/usher/util/PythonCellUtil.java)
+* 基于docker的中间件: nacos(rpc注册中心) mysql redis MongoDB rocketMQ
 * 后期加了很多很多东西,自己探索吧
-
-## Related projects(相关项目)
-上述 usher-rpc  项目见: [地址](https://github.com/247452312/usher-rpc)
 
 ## Usage(如何使用项目)
 
@@ -44,6 +41,12 @@ usher is a Java project for many technologies.
 * redis
 * rocketMq
 * 本地启动时需要加入 --spring.profiles.active=dev命令
+
+#### 最小化运行:
+
+* java
+* nacos(配置中心,注册中心)
+* mysql
 
 ### 依次运行下列项目
 user-log-web 即可最小化运行

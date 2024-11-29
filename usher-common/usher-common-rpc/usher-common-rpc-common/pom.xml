@@ -3,13 +3,20 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <artifactId>usher-common-rpc-common</artifactId>
+
+    <name>usher-common-rpc-common</name>
+
+    <description>
+        rpc基础模块
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-common/usher-common-rpc/usher-common-rpc-common</url>
     <parent>
-        <groupId>team.opentech.usher</groupId>
+        <groupId>top.uhyils.usher</groupId>
         <artifactId>usher-common-rpc</artifactId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
+        <version>2.1.0.2.usher</version>
     </parent>
 
-    <artifactId>usher-common-rpc-common</artifactId>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -17,7 +24,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
         <dependency>

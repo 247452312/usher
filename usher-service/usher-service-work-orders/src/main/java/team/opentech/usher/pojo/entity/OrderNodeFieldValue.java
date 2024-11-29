@@ -6,7 +6,6 @@ import team.opentech.usher.enums.OrderNodeFieldValueTypeEnum;
 import team.opentech.usher.pojo.DO.OrderNodeFieldDO;
 import team.opentech.usher.pojo.DO.OrderNodeFieldValueDO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.util.Asserts;
 
 /**
@@ -35,7 +34,7 @@ public class OrderNodeFieldValue extends AbstractDoEntity<OrderNodeFieldValueDO>
 
     private static OrderNodeFieldValueDO parseToNodeFieldValue(OrderNodeField field, String realValue) {
         OrderNodeFieldValueDO orderNodeFieldValueDO = new OrderNodeFieldValueDO();
-        orderNodeFieldValueDO.setNodeFieldId(field.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException));
+        orderNodeFieldValueDO.setNodeFieldId(field.getUnique().orElseThrow(Asserts::throwOptionalException));
         orderNodeFieldValueDO.setRealValue(realValue);
         return orderNodeFieldValueDO;
     }

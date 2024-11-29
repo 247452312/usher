@@ -1,5 +1,8 @@
 package team.opentech.usher.repository.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.DictItemAssembler;
 import team.opentech.usher.dao.DictItemDao;
@@ -11,13 +14,9 @@ import team.opentech.usher.pojo.cqe.query.demo.Limit;
 import team.opentech.usher.pojo.cqe.query.demo.Order;
 import team.opentech.usher.pojo.entity.Dict;
 import team.opentech.usher.pojo.entity.DictItem;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.DictItemRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 import team.opentech.usher.util.Asserts;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -37,7 +36,7 @@ public class DictItemRepositoryImpl extends AbstractRepository<DictItem, DictIte
 
     @Override
     public List<DictItem> findItemByDictId(Dict dictId) {
-        ArrayList<DictItemDO> byDictId = dao.getByDictId(dictId.getUnique().map(Identifier::getId).orElseThrow(() -> Asserts.makeException("字典项查询失败")));
+        ArrayList<DictItemDO> byDictId = dao.getByDictId(dictId.getUnique().orElseThrow(() -> Asserts.makeException("字典项查询失败")));
         return byDictId.stream().map(assembler::toEntity).collect(Collectors.toList());
     }
 
@@ -48,7 +47,7 @@ public class DictItemRepositoryImpl extends AbstractRepository<DictItem, DictIte
     }
 
     @Override
-    public Page<DictItem> find(Identifier dictId, List<Arg> args, Order order, Limit limit) {
+    public Page<DictItem> find(Long dictId, List<Arg> args, Order order, Limit limit) {
         return null;
     }
 

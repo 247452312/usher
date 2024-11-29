@@ -2,17 +2,6 @@ package team.opentech.usher.pojo.entity;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import team.opentech.usher.annotation.Default;
-import team.opentech.usher.enums.LanguageTypeEnum;
-import team.opentech.usher.exception.AlgorithmException;
-import team.opentech.usher.pojo.DO.AlgorithmDO;
-import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
-import team.opentech.usher.repository.AlgorithmRepository;
-import team.opentech.usher.util.Asserts;
-import team.opentech.usher.util.LogUtil;
-import team.opentech.usher.util.compiler.JavaStringCompiler;
-import team.opentech.usher.util.python.PythonUtil;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -21,6 +10,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
+import team.opentech.usher.annotation.Default;
+import team.opentech.usher.enums.LanguageTypeEnum;
+import team.opentech.usher.exception.AlgorithmException;
+import team.opentech.usher.pojo.DO.AlgorithmDO;
+import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
+import team.opentech.usher.repository.AlgorithmRepository;
+import team.opentech.usher.util.Asserts;
+import team.opentech.usher.util.LogUtil;
+import team.opentech.usher.util.compiler.JavaStringCompiler;
+import team.opentech.usher.util.python.PythonUtil;
 
 /**
  * 算法表(Algorithm)表 数据库实体类
@@ -52,10 +51,6 @@ public class Algorithm extends AbstractDoEntity<AlgorithmDO> {
     public Algorithm(Long id, AlgorithmRepository rep) {
         super(id, new AlgorithmDO());
         completion(rep);
-    }
-
-    public Algorithm(Identifier id) {
-        super(id, new AlgorithmDO());
     }
 
     /**

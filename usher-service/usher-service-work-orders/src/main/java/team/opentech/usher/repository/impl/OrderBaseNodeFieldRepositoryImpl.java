@@ -1,16 +1,15 @@
 package team.opentech.usher.repository.impl;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.OrderBaseNodeFieldAssembler;
 import team.opentech.usher.dao.OrderBaseNodeFieldDao;
 import team.opentech.usher.pojo.DO.OrderBaseNodeFieldDO;
 import team.opentech.usher.pojo.DTO.OrderBaseNodeFieldDTO;
 import team.opentech.usher.pojo.entity.OrderBaseNodeField;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.OrderBaseNodeFieldRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -29,8 +28,8 @@ public class OrderBaseNodeFieldRepositoryImpl extends AbstractRepository<OrderBa
 
 
     @Override
-    public List<OrderBaseNodeField> findNodeFieldByNodes(List<Identifier> nodeIds) {
-        List<OrderBaseNodeFieldDO> byOrderNodeIds = dao.getByOrderNodeIds(nodeIds.stream().map(Identifier::getId).collect(Collectors.toList()));
+    public List<OrderBaseNodeField> findNodeFieldByNodes(List<Long> nodeIds) {
+        List<OrderBaseNodeFieldDO> byOrderNodeIds = dao.getByOrderNodeIds(nodeIds.stream().collect(Collectors.toList()));
         return assembler.listToEntity(byOrderNodeIds);
     }
 }

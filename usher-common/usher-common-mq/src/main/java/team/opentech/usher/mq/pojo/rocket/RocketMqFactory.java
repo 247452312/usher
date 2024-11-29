@@ -12,8 +12,7 @@ import org.apache.rocketmq.client.producer.TransactionListener;
 import org.apache.rocketmq.client.producer.TransactionMQProducer;
 import org.apache.rocketmq.remoting.RPCHook;
 import team.opentech.usher.annotation.NotNull;
-import team.opentech.usher.protocol.mq.base.AbstractRocketMqConsumer;
-import team.opentech.usher.protocol.mq.base.BaseMqConsumer;
+import team.opentech.usher.mq.core.BaseMqConsumer;
 
 /**
  * rocketMq连接创建工厂
@@ -38,10 +37,12 @@ public class RocketMqFactory {
             rpcHook = new AclClientRPCHook(new SessionCredentials(mqConfig.getAccessKey(), mqConfig.getSecretKey()));
         }
         DefaultMQPushConsumer defaultMQPushConsumer = new DefaultMQPushConsumer(consumer.group(), rpcHook);
+        defaultMQPushConsumer.setNamesrvAddr(mqConfig.getNamesrvAddr());
         String join = String.join("||", consumer.tags());
         defaultMQPushConsumer.subscribe(consumer.topic(), join);
         consumer.setPushConsumer(defaultMQPushConsumer);
-        ((AbstractRocketMqConsumer) consumer).registerMessageListener();
+        consumer.registerMessageListener();
+        consumer.suspend();
         consumer.start();
     }
 

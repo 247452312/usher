@@ -1,5 +1,7 @@
 package team.opentech.usher.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.PushMsgAssembler;
 import team.opentech.usher.enums.PushTypeEnum;
@@ -12,7 +14,6 @@ import team.opentech.usher.pojo.DTO.request.PushMsgToSomeoneRequest;
 import team.opentech.usher.pojo.entity.AllApiGroup;
 import team.opentech.usher.pojo.entity.ApiSubscribe;
 import team.opentech.usher.pojo.entity.PushMsg;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ApiGroupRepository;
 import team.opentech.usher.repository.ApiRepository;
 import team.opentech.usher.repository.ApiSubscribeRepository;
@@ -20,8 +21,6 @@ import team.opentech.usher.repository.PushMsgRepository;
 import team.opentech.usher.service.PushMsgService;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.LogUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * 推送日志表(PushMsg)表 内部服务实现类
@@ -70,7 +69,7 @@ public class PushMsgServiceImpl extends AbstractDoService<PushMsgDO, PushMsg, Pu
     public Boolean pushMsgToSomeone(PushMsgToSomeoneRequest request) {
         PushTypeEnum type = PushTypeEnum.prase(request.getType());
         Asserts.assertTrue(type != null, "类型不正确");
-        UserDTO user = userFacade.getById(new Identifier(request.getUserId()));
+        UserDTO user = userFacade.getById(request.getUserId());
         ApiSubscribe apiSubscribe = new ApiSubscribe();
         PushMsgDTO pushMsgDTO = apiSubscribe.sendMsg(user, request.getTitle(), request.getMsg(), type);
         PushMsg pushMsg = msgAssembler.toEntity(pushMsgDTO);

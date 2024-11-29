@@ -1,16 +1,14 @@
 package team.opentech.usher.repository.impl;
 
+import java.util.List;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.OrderBaseNodeResultTypeAssembler;
 import team.opentech.usher.dao.OrderBaseNodeResultTypeDao;
 import team.opentech.usher.pojo.DO.OrderBaseNodeResultTypeDO;
 import team.opentech.usher.pojo.DTO.OrderBaseNodeResultTypeDTO;
 import team.opentech.usher.pojo.entity.OrderBaseNodeResultType;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.OrderBaseNodeResultTypeRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -29,8 +27,8 @@ public class OrderBaseNodeResultTypeRepositoryImpl extends AbstractRepository<Or
 
 
     @Override
-    public List<OrderBaseNodeResultType> findNodeResultTypeByNodes(List<Identifier> nodeIds) {
-        List<OrderBaseNodeResultTypeDO> byOrderNodeIds = dao.getByOrderNodeIds(nodeIds.stream().map(Identifier::getId).collect(Collectors.toList()));
+    public List<OrderBaseNodeResultType> findNodeResultTypeByNodes(List<Long> nodeIds) {
+        List<OrderBaseNodeResultTypeDO> byOrderNodeIds = dao.getByOrderNodeIds(nodeIds);
         return assembler.listToEntity(byOrderNodeIds);
     }
 }

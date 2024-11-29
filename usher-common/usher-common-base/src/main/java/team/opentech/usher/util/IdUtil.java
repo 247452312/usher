@@ -1,9 +1,9 @@
 package team.opentech.usher.util;
 
-import team.opentech.usher.context.UsherContext;
 import java.util.concurrent.atomic.AtomicLong;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import team.opentech.usher.context.UsherContext;
 
 /**
  * 本项目id生产规则
@@ -21,7 +21,7 @@ public class IdUtil {
      */
     private final AtomicLong sequence = new AtomicLong(0L);
 
-    // todo 这个code在RPC初始化时需要从nacos中获取这个应用在整个应用中的index
+
     @Value("${id.organization.code:-1}")
     private Long code;
 
@@ -30,11 +30,15 @@ public class IdUtil {
      */
     private volatile Long lastTime = 0L;
 
-    public void setCode(Long code) {
-        this.code = code;
-    }
 
     public synchronized long newId() {
+        return newId(this.code);
+    }
+
+    public synchronized long newId(Long code) {
+        if (code == null) {
+            code = 1L;
+        }
         // 生成时间
         long time = System.currentTimeMillis();
         Asserts.assertTrue(time >= lastTime, "系统时间不正确");

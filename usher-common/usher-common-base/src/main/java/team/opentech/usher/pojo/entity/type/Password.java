@@ -1,5 +1,6 @@
 package team.opentech.usher.pojo.entity.type;
 
+import java.io.Serializable;
 import team.opentech.usher.util.AESUtil;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.SpringUtil;
@@ -12,7 +13,7 @@ import team.opentech.usher.util.StringUtil;
  * @version 1.0
  * @date 文件创建日期 2021年08月24日 17时34分
  */
-public class Password implements BaseType {
+public class Password implements Serializable {
 
     private final String password;
 

@@ -3,17 +3,26 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>team.opentech.usher</groupId>
-        <artifactId>usher-api</artifactId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
-    </parent>
+    <version>2.1.0.2.usher</version>
     <artifactId>usher-api-provider-push</artifactId>
-    <version>2.1.0.0.usher-SNAPSHOT</version>
+    <name>usher-api-provider-push</name>
+    <description>
+        外界api应用二方包
+    </description>
+
+
     <packaging>jar</packaging>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-api/usher-api-provider-push</url>
+    <parent>
+        <groupId>top.uhyils.usher</groupId>
+        <artifactId>usher-api</artifactId>
+        <version>2.1.0.2.usher</version>
+    </parent>
+
+
     <dependencies>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
     </dependencies>

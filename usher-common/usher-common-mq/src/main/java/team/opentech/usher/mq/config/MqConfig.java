@@ -3,6 +3,8 @@ package team.opentech.usher.mq.config;
 import org.apache.rocketmq.client.producer.MQProducer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import team.opentech.usher.mq.elegant.ElegantMqFinder;
+import team.opentech.usher.mq.elegant.ElegantMqHandler;
 import team.opentech.usher.mq.pojo.rocket.RocketMqConfigInfo;
 import team.opentech.usher.mq.pojo.rocket.RocketMqFactory;
 
@@ -23,6 +25,16 @@ public class MqConfig {
     @Bean
     public MQProducer makeMqProducer(RocketMqFactory mqFactory) {
         return mqFactory.getProducer();
+    }
+
+    @Bean
+    public ElegantMqHandler elegantMqHandler() {
+        return new ElegantMqHandler();
+    }
+
+    @Bean
+    public ElegantMqFinder elegantMqFilterFinder() {
+        return new ElegantMqFinder();
     }
 
 }

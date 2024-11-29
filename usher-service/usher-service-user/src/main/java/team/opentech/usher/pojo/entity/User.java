@@ -19,7 +19,6 @@ import team.opentech.usher.pojo.DO.UserDO;
 import team.opentech.usher.pojo.DO.base.BaseIdDO;
 import team.opentech.usher.pojo.cqe.query.demo.Arg;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.Password;
 import team.opentech.usher.pojo.entity.type.PowerInfo;
 import team.opentech.usher.pojo.entity.type.UserName;
@@ -56,16 +55,12 @@ public class User extends AbstractDoEntity<UserDO> {
     }
 
 
-    public User(Identifier userId) {
+    public User(Long userId) {
         super(userId, new UserDO());
     }
 
     public User(UserName userName, Password password) {
         super(parseUserNamePasswordToDO(userName, password));
-    }
-
-    public User(Long id) {
-        super(id, new UserDO());
     }
 
     public User(UserDO userDO, RoleDO roleDO) {
@@ -80,24 +75,23 @@ public class User extends AbstractDoEntity<UserDO> {
      * @param password
      * @param roleId
      */
-    public User(UserName username, Password password, Identifier roleId) {
+    public User(UserName username, Password password, Long roleId) {
         super(parseUserNamePasswordToDO(username, password));
         Optional<UserDO> userDOOpt = this.toData();
         Asserts.assertTrue(userDOOpt.isPresent(), "用户信息不存在");
         UserDO userDO = userDOOpt.get();
-        userDO.setRoleId(roleId.getId());
+        userDO.setRoleId(roleId);
         /*token和缓存都需要使用id*/
         long id = String.format("%s&%s", data.getUsername(), data.getPassword()).hashCode();
-        this.setUnique(new Identifier(id));
+        this.setUnique(id);
         userDO.setId(id);
     }
 
     public static void batchInitRole(List<User> all, RoleRepository roleRepository, DeptRepository deptRepository, PowerRepository powerRepository, MenuRepository menuRepository) {
-        List<Identifier> roleIds = all.stream()
+        List<Long> roleIds = all.stream()
                                       .filter(t -> t.role == null)
                                       .map(t -> t.toData().map(UserDO::getRoleId).orElse(null))
                                       .distinct()
-                                      .map(Identifier::new)
                                       .collect(Collectors.toList());
         List<Role> roles = roleRepository.find(roleIds);
         Map<Long, Role> idRoleMap = roles.stream().collect(Collectors.toMap(t -> t.toData().map(BaseIdDO::getId).orElse(null), t -> t));
@@ -154,7 +148,7 @@ public class User extends AbstractDoEntity<UserDO> {
         if (role != null) {
             return;
         }
-        Role role = roleRepository.find(new Identifier(data.getRoleId()));
+        Role role = roleRepository.find(data.getRoleId());
         role.initDept(deptRepository, powerRepository, menuRepository);
         this.role = role;
 
@@ -206,10 +200,9 @@ public class User extends AbstractDoEntity<UserDO> {
         sb.append(randomNum);
 
         // 用户id 17位
-        Optional<Identifier> uniqueOpt = getUnique();
+        Optional<Long> uniqueOpt = getUnique();
         Asserts.assertTrue(uniqueOpt.isPresent(), "唯一标示不存在,生成token失败");
-        Identifier identifier = uniqueOpt.get();
-        String str = identifier.toString();
+        String str = uniqueOpt.get().toString();
         long i = 17L - str.length();
         // long 最大17位 如果不够 最高位补0
         StringBuilder sbTemp = new StringBuilder(17);
@@ -221,7 +214,7 @@ public class User extends AbstractDoEntity<UserDO> {
         //盐 x位
         sb.append(salt);
 
-        return new Token(identifier.getId(), AESUtil.AESEncode(encodeRules, sb.toString()));
+        return new Token(uniqueOpt.get(), AESUtil.AESEncode(encodeRules, sb.toString()));
     }
 
     public UserName username() {
@@ -286,7 +279,7 @@ public class User extends AbstractDoEntity<UserDO> {
      *
      * @return
      */
-    public Identifier apply(UserRepository userRepository) {
+    public Long apply(UserRepository userRepository) {
         // 校验用户名
         Asserts.assertTrue(!userRepository.checkUserNameRepeat(this), "用户名重复");
         changeStatus(UserStatusEnum.APPLYING);
@@ -301,7 +294,7 @@ public class User extends AbstractDoEntity<UserDO> {
     public void passApply(UserRepository userRepository) {
         // 修改状态
         this.changeStatus(UserStatusEnum.USING);
-        userRepository.change(this, Collections.singletonList(Arg.as(UserDO::getId, Symbol.EQ, this.unique.getId())));
+        userRepository.change(this, Collections.singletonList(Arg.as(UserDO::getId, Symbol.EQ, this.unique)));
     }
 
     /**
@@ -312,7 +305,7 @@ public class User extends AbstractDoEntity<UserDO> {
     public void stopUser(UserRepository userRepository) {
         //修改状态
         this.changeStatus(UserStatusEnum.STOPED);
-        userRepository.change(this, Collections.singletonList(Arg.as(UserDO::getId, Symbol.EQ, this.unique.getId())));
+        userRepository.change(this, Collections.singletonList(Arg.as(UserDO::getId, Symbol.EQ, this.unique)));
     }
 
     @Override

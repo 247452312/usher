@@ -1,11 +1,10 @@
 package team.opentech.usher.service;
 
 
+import java.util.List;
 import team.opentech.usher.pojo.DTO.PowerDTO;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.InterfaceName;
 import team.opentech.usher.pojo.entity.type.MethodName;
-import java.util.List;
 
 /**
  * 权限(Power)表 内部服务接口
@@ -32,14 +31,14 @@ public interface PowerService extends BaseDoService<PowerDTO> {
      *
      * @return 是否存在
      */
-    Boolean checkUserHavePower(InterfaceName interfaceName, MethodName methodName, Identifier userId);
+    Boolean checkUserHavePower(InterfaceName interfaceName, MethodName methodName, Long userId);
 
     /**
      * 删除权限->包括连接表
      *
      * @return
      */
-    Boolean deletePower(Identifier powerId);
+    Boolean deletePower(Long powerId);
 
 
     /**

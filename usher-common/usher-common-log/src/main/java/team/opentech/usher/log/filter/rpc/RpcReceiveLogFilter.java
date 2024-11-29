@@ -1,6 +1,7 @@
 package team.opentech.usher.log.filter.rpc;
 
 import com.alibaba.fastjson.JSON;
+import java.util.List;
 import team.opentech.usher.context.MyTraceIdContext;
 import team.opentech.usher.pojo.other.RpcTraceInfo;
 import team.opentech.usher.rpc.annotation.RpcSpi;
@@ -10,7 +11,6 @@ import team.opentech.usher.rpc.exchange.pojo.head.RpcHeader;
 import team.opentech.usher.rpc.netty.spi.filter.FilterContext;
 import team.opentech.usher.rpc.netty.spi.filter.filter.ProviderFilter;
 import team.opentech.usher.rpc.netty.spi.filter.invoker.RpcInvoker;
-import java.util.List;
 
 
 /**
@@ -31,7 +31,7 @@ public class RpcReceiveLogFilter implements ProviderFilter {
         if (traceInfo != null) {
             RpcTraceInfo rpcTraceInfo = JSON.parseObject(traceInfo.getValue(), RpcTraceInfo.class);
             List<Integer> rpcIds = rpcTraceInfo.getRpcIds();
-            MyTraceIdContext.setTraceId(rpcIds);
+            MyTraceIdContext.setRpcId(rpcIds);
             MyTraceIdContext.setThraceId(rpcTraceInfo.getTraceId());
         }
         try {

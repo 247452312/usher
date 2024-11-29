@@ -1,6 +1,10 @@
 package team.opentech.usher.assembler;
 
 
+import java.util.HashMap;
+import java.util.List;
+import org.mapstruct.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import team.opentech.usher.enums.OrderNodeTypeEnum;
 import team.opentech.usher.pojo.DO.OrderInfoDO;
 import team.opentech.usher.pojo.DO.OrderNodeDO;
@@ -11,12 +15,7 @@ import team.opentech.usher.pojo.DTO.OrderNodeDTO;
 import team.opentech.usher.pojo.DTO.OrderNodeFieldDTO;
 import team.opentech.usher.pojo.entity.OrderInfo;
 import team.opentech.usher.pojo.entity.OrderNode;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.util.Asserts;
-import java.util.HashMap;
-import java.util.List;
-import org.mapstruct.Mapper;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 工单基础信息样例表(OrderInfo)表 entity,DO,DTO转换工具
@@ -69,7 +68,7 @@ public abstract class OrderInfoAssembler extends AbstractAssembler<OrderInfoDO, 
             noticeUserIds.put(orderNodeDO.getId(), orderNodeDO.getNoticeUserId());
         }
 
-        return InitOrderDTO.build(orderInfo.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException), orderNodeField, orderInfoDO.getMonitorUserId(), dealUserIds, noticeUserIds);
+        return InitOrderDTO.build(orderInfo.getUnique().orElseThrow(Asserts::throwOptionalException), orderNodeField, orderInfoDO.getMonitorUserId(), dealUserIds, noticeUserIds);
     }
 }
 

@@ -9,17 +9,17 @@ import java.util.List;
  */
 public class Identifiers implements BaseType, Comparable<Identifiers> {
 
-    private List<Identifier> ids;
+    private List<Long> ids;
 
-    public Identifiers(List<Identifier> ids) {
+    public Identifiers(List<Long> ids) {
         this.ids = ids;
     }
 
-    public List<Identifier> getIds() {
+    public List<Long> getIds() {
         return ids;
     }
 
-    public void setIds(List<Identifier> ids) {
+    public void setIds(List<Long> ids) {
         this.ids = ids;
     }
 
@@ -33,8 +33,8 @@ public class Identifiers implements BaseType, Comparable<Identifiers> {
         } else if (ids.size() < o.ids.size()) {
             return -1;
         } else {
-            long sum = ids.stream().mapToLong(Identifier::getId).sum();
-            long oSum = o.ids.stream().mapToLong(Identifier::getId).sum();
+            long sum = ids.stream().mapToLong(t -> t).sum();
+            long oSum = o.ids.stream().mapToLong(t -> t).sum();
             return Long.compare(sum, oSum);
         }
 

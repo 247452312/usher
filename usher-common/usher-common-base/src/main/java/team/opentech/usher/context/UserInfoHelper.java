@@ -1,10 +1,10 @@
 package team.opentech.usher.context;
 
+import java.util.Optional;
 import team.opentech.usher.UsherThreadLocal;
 import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.cqe.DefaultCQE;
 import team.opentech.usher.util.DefaultCQEBuildUtil;
-import java.util.Optional;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -75,6 +75,19 @@ public class UserInfoHelper {
         defaultCQE.setUser(userDTO);
         defaultCQE.setToken(token);
         return defaultCQE;
+    }
+
+    /**
+     * 填充一个cqe来用
+     *
+     * @return
+     */
+    public static <T extends DefaultCQE> T fillCQE(T request) {
+        UserDTO userDTO = doGet();
+        String token = getToken().orElse(null);
+        request.setUser(userDTO);
+        request.setToken(token);
+        return request;
     }
 
     public static UserDTO doGet() {

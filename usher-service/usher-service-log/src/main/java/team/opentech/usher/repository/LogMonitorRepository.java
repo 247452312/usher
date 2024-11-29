@@ -1,12 +1,11 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.mq.pojo.mqinfo.JvmUniqueMark;
 import team.opentech.usher.pojo.DO.LogMonitorDO;
 import team.opentech.usher.pojo.entity.LogMonitor;
 import team.opentech.usher.pojo.entity.LogMonitorJvmStatus;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
-import java.util.List;
 
 /**
  * JVM日志表(LogMonitor)表 数据仓库层
@@ -57,5 +56,5 @@ public interface LogMonitorRepository extends BaseEntityRepository<LogMonitorDO,
      *
      * @return
      */
-    Identifier getIdByUnique(JvmUniqueMark unique);
+    Long getIdByUnique(JvmUniqueMark unique);
 }

@@ -1,10 +1,9 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.OrderBaseNodeFieldDO;
 import team.opentech.usher.pojo.entity.OrderBaseNodeField;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
-import java.util.List;
 
 /**
  * 工单节点属性样例表(OrderBaseNodeField)表 数据仓库层
@@ -23,5 +22,5 @@ public interface OrderBaseNodeFieldRepository extends BaseEntityRepository<Order
      *
      * @return
      */
-    List<OrderBaseNodeField> findNodeFieldByNodes(List<Identifier> nodeIds);
+    List<OrderBaseNodeField> findNodeFieldByNodes(List<Long> nodeIds);
 }

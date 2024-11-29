@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+    "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="team.opentech.usher.dao.AiDeviceDao">
+    <resultMap type="team.opentech.usher.pojo.DO.AiDeviceDO" id="AiDeviceMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="createDate" column="create_date" jdbcType="BIGINT"/>
+        <result property="createUser" column="create_user" jdbcType="BIGINT"/>
+        <result property="deleteFlag" column="delete_flag" jdbcType="BIT"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="updateDate" column="update_date" jdbcType="BIGINT"/>
+        <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+        <result property="deviceNo" column="device_no" jdbcType="VARCHAR"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="subspaceId" column="subspace_id" jdbcType="BIGINT"/>
+        <result property="type" column="type" jdbcType="INTEGER"/>
+        <result property="subtype" column="subtype" jdbcType="INTEGER"/>
+        <result property="position" column="position" jdbcType="VARCHAR"/>
+        <result property="angle" column="angle" jdbcType="VARCHAR"/>
+        <result property="rotate" column="rotate" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--批量通过主键修改数据-->
+    <update id="updateBatch"
+            parameterType="team.opentech.usher.pojo.DO.AiDeviceDO">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update sys_ai_device
+            set update_date = #{item.updateDate}
+            ,update_user = #{item.updateUser}
+            <if test="id != null">
+                ,id = #{id}
+            </if>
+            <if test="createDate != null">
+                ,create_date = #{createDate}
+            </if>
+            <if test="createUser != null">
+                ,create_user = #{createUser}
+            </if>
+            <if test="deleteFlag != null">
+                ,delete_flag = #{deleteFlag}
+            </if>
+            <if test="remark != null and remark != ''">
+                ,remark = #{remark}
+            </if>
+            <if test="updateDate != null">
+                ,update_date = #{updateDate}
+            </if>
+            <if test="updateUser != null">
+                ,update_user = #{updateUser}
+            </if>
+            <if test="deviceNo != null and deviceNo != ''">
+                ,device_no = #{deviceNo}
+            </if>
+            <if test="name != null and name != ''">
+                ,name = #{name}
+            </if>
+            <if test="subspaceId != null">
+                ,subspace_id = #{subspaceId}
+            </if>
+            <if test="type != null">
+                ,type = #{type}
+            </if>
+            <if test="subtype != null">
+                ,subtype = #{subtype}
+            </if>
+            <if test="position != null">
+                ,position = #{position}
+            </if>
+            <if test="angle != null">
+                ,angle = #{angle}
+            </if>
+            <if test="rotate != null">
+                ,rotate = #{rotate}
+            </if>
+            where ${pkColumn.name} = #{${pkColumn.smallName}}
+        </foreach>
+    </update>
+    <select id="findSubSpaceIdById" resultType="java.lang.Long">
+        select subspace_id
+        from sys_ai_device
+        where id = #{deviceId}
+    </select>
+</mapper>

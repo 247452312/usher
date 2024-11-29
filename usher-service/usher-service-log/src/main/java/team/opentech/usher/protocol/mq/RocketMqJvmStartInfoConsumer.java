@@ -1,16 +1,15 @@
 package team.opentech.usher.protocol.mq;
 
 import com.alibaba.fastjson.JSONObject;
+import java.nio.charset.StandardCharsets;
 import org.springframework.context.ApplicationContext;
 import team.opentech.usher.annotation.UsherMq;
 import team.opentech.usher.mq.content.RocketMqContent;
+import team.opentech.usher.mq.core.AbstractRocketMqConsumer;
+import team.opentech.usher.mq.core.RocketMqMessageResEnum;
 import team.opentech.usher.mq.pojo.mqinfo.JvmStartInfoCommand;
-import team.opentech.usher.protocol.mq.base.AbstractRocketMqConsumer;
-import team.opentech.usher.protocol.mq.base.RocketMqMessageResEnum;
 import team.opentech.usher.service.LogMonitorService;
 import team.opentech.usher.util.LogUtil;
-
-import java.nio.charset.StandardCharsets;
 
 /**
  * 监听JVM启动消息
@@ -18,7 +17,7 @@ import java.nio.charset.StandardCharsets;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2020年06月19日 11时33分
  */
-@UsherMq(topic = RocketMqContent.JVM_TOPIC_NAME, tags = {RocketMqContent.JVM_START_TAG_NAME}, group = RocketMqContent.JVM_GROUP_NAME, isOrder = false)
+@UsherMq(topic = RocketMqContent.JVM_START_TOPIC_NAME, tags = {RocketMqContent.JVM_START_TAG_NAME}, group = RocketMqContent.JVM_GROUP_NAME, isOrder = false)
 public class RocketMqJvmStartInfoConsumer extends AbstractRocketMqConsumer {
 
     private LogMonitorService logMonitorService;
@@ -33,12 +32,17 @@ public class RocketMqJvmStartInfoConsumer extends AbstractRocketMqConsumer {
 
 
     @Override
-    public RocketMqMessageResEnum onMessage(byte[] bytes) {
-        String message = new String(bytes, StandardCharsets.UTF_8);
-        JvmStartInfoCommand jvmStartInfo = JSONObject.parseObject(message, JvmStartInfoCommand.class);
-        LogUtil.info(this, "接收到JVM启动信息");
-        LogUtil.info(this, message);
-        logMonitorService.receiveJvmStartInfo(jvmStartInfo);
-        return RocketMqMessageResEnum.SUCCESS;
+    public RocketMqMessageResEnum doOnMessage(byte[] bytes) {
+        try {
+            String message = new String(bytes, StandardCharsets.UTF_8);
+            JvmStartInfoCommand jvmStartInfo = JSONObject.parseObject(message, JvmStartInfoCommand.class);
+            LogUtil.info(this, "接收到JVM启动信息");
+            LogUtil.info(this, message);
+            logMonitorService.receiveJvmStartInfo(jvmStartInfo);
+            return RocketMqMessageResEnum.SUCCESS;
+        } catch (Exception e) {
+            LogUtil.error(this, e);
+            throw e;
+        }
     }
 }

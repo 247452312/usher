@@ -1,10 +1,9 @@
 package team.opentech.usher.repository;
 
+import java.util.List;
 import team.opentech.usher.pojo.DO.OrderBaseNodeRouteDO;
 import team.opentech.usher.pojo.entity.OrderBaseNodeRoute;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
-import java.util.List;
 
 /**
  * 节点间关联路由样例表(OrderBaseNodeRoute)表 数据仓库层
@@ -23,5 +22,5 @@ public interface OrderBaseNodeRouteRepository extends BaseEntityRepository<Order
      *
      * @return
      */
-    List<OrderBaseNodeRoute> findNodeRouteByNodes(List<Identifier> nodeIds);
+    List<OrderBaseNodeRoute> findNodeRouteByNodes(List<Long> nodeIds);
 }

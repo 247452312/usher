@@ -1,5 +1,12 @@
 package team.opentech.usher.pojo.entity;
 
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import team.opentech.usher.BaseTest;
 import team.opentech.usher.enums.OrderSymbolEnum;
 import team.opentech.usher.pojo.DO.DeptDO;
@@ -11,19 +18,11 @@ import team.opentech.usher.pojo.cqe.query.demo.Column;
 import team.opentech.usher.pojo.cqe.query.demo.ColumnName;
 import team.opentech.usher.pojo.cqe.query.demo.Limit;
 import team.opentech.usher.pojo.cqe.query.demo.Order;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.DeptRepository;
 import team.opentech.usher.repository.MenuRepository;
 import team.opentech.usher.repository.PowerRepository;
 import team.opentech.usher.repository.RoleRepository;
 import team.opentech.usher.util.Asserts;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -91,10 +90,10 @@ public class DeptTest extends BaseTest {
         Power power = new Power(powerDO);
         powerRepository.save(power);
 
-        roleId = role.getUnique().map(Identifier::getId).orElse(null);
-        deptId = dept.getUnique().map(Identifier::getId).orElse(null);
-        menuId = menu.getUnique().map(Identifier::getId).orElse(null);
-        powerId = power.getUnique().map(Identifier::getId).orElse(null);
+        roleId = role.getUnique().orElse(null);
+        deptId = dept.getUnique().orElse(null);
+        menuId = menu.getUnique().orElse(null);
+        powerId = power.getUnique().orElse(null);
 
         Dept dept1 = new Dept(Arrays.asList(menu), deptDO);
         Dept dept2 = new Dept(deptDO, Arrays.asList(power));
@@ -110,7 +109,7 @@ public class DeptTest extends BaseTest {
 
     @Test
     public void addPower() throws Exception {
-        Dept dept = new Dept(new Identifier(deptId));
+        Dept dept = new Dept(deptId);
         dept.completion(deptRepository);
         Power power = new Power(powerId);
         power.completion(powerRepository);
@@ -123,14 +122,14 @@ public class DeptTest extends BaseTest {
         List<Power> o2 = (List<Power>) powers.get(dept);
         Asserts.assertTrue(o2 != null);
         Asserts.assertTrue(o2.size() == 1);
-        Asserts.assertTrue(o2.get(0).getUnique().get().getId().equals(powerId));
+        Asserts.assertTrue(o2.get(0).getUnique().get().equals(powerId));
         Dept deptTest = new Dept(deptId);
         deptTest.completion(deptRepository);
         deptTest.initPower(powerRepository);
         List<Power> o = (List<Power>) powers.get(deptTest);
         Asserts.assertTrue(o != null);
         Asserts.assertTrue(o.size() == 1);
-        Asserts.assertTrue(o.get(0).getUnique().get().getId().equals(powerId));
+        Asserts.assertTrue(o.get(0).getUnique().get().equals(powerId));
 
     }
 
@@ -151,7 +150,7 @@ public class DeptTest extends BaseTest {
         List<Power> o2 = (List<Power>) powers.get(dept);
         Asserts.assertTrue(o2 != null);
         Asserts.assertTrue(o2.size() == 1);
-        Asserts.assertTrue(o2.get(0).getUnique().get().getId().equals(powerId));
+        Asserts.assertTrue(o2.get(0).getUnique().get().equals(powerId));
 
         // 第二次添加. 数量应该相同
         dept.addPower(Collections.singletonList(power), deptRepository);
@@ -159,7 +158,7 @@ public class DeptTest extends BaseTest {
         List<Power> o = (List<Power>) powers.get(dept);
         Asserts.assertTrue(o != null);
         Asserts.assertTrue(o.size() == 1);
-        Asserts.assertTrue(o.get(0).getUnique().get().getId().equals(powerId));
+        Asserts.assertTrue(o.get(0).getUnique().get().equals(powerId));
     }
 
     @Test
@@ -179,7 +178,7 @@ public class DeptTest extends BaseTest {
         List<Power> powerList = (List<Power>) powers.get(dept);
         Asserts.assertTrue(powerList != null);
         Asserts.assertTrue(powerList.size() == 1);
-        Asserts.assertTrue(powerList.get(0).getUnique().get().getId().equals(powerId));
+        Asserts.assertTrue(powerList.get(0).getUnique().get().equals(powerId));
 
         dept.cleanPower(deptRepository);
         List<Power> powerList2 = (List<Power>) powers.get(dept);
@@ -207,7 +206,7 @@ public class DeptTest extends BaseTest {
         List<Menu> menuList = (List<Menu>) menus.get(dept);
         Asserts.assertTrue(menuList != null);
         Asserts.assertTrue(menuList.size() == 1);
-        Asserts.assertTrue(menuList.get(0).getUnique().get().getId().equals(menuId));
+        Asserts.assertTrue(menuList.get(0).getUnique().get().equals(menuId));
 
         dept.cleanMenu(deptRepository);
         List<Menu> powerList2 = (List<Menu>) menus.get(dept);
@@ -238,7 +237,7 @@ public class DeptTest extends BaseTest {
         List<Menu> powerList2 = (List<Menu>) menus.get(dept);
         Asserts.assertTrue(powerList2 != null);
         Asserts.assertTrue(powerList2.size() == 1);
-        Asserts.assertTrue(powerList2.get(0).getUnique().get().getId().equals(menuId));
+        Asserts.assertTrue(powerList2.get(0).getUnique().get().equals(menuId));
 
         Dept dept2 = new Dept(deptId);
         dept2.completion(deptRepository);
@@ -246,7 +245,7 @@ public class DeptTest extends BaseTest {
         List<Menu> powerList3 = (List<Menu>) menus.get(dept2);
         Asserts.assertTrue(powerList3 != null);
         Asserts.assertTrue(powerList3.size() == 1);
-        Asserts.assertTrue(powerList3.get(0).getUnique().get().getId().equals(menuId));
+        Asserts.assertTrue(powerList3.get(0).getUnique().get().equals(menuId));
 
 
     }
@@ -267,7 +266,7 @@ public class DeptTest extends BaseTest {
         List<Power> powerList = (List<Power>) powerField.get(dept1);
         Asserts.assertTrue(powerList != null);
         Asserts.assertTrue(powerList.size() == 1);
-        Asserts.assertTrue(powerList.get(0).getUnique().get().getId().equals(powerId));
+        Asserts.assertTrue(powerList.get(0).getUnique().get().equals(powerId));
 
     }
 
@@ -287,7 +286,7 @@ public class DeptTest extends BaseTest {
         List<Menu> powerList = (List<Menu>) powerField.get(dept1);
         Asserts.assertTrue(powerList != null);
         Asserts.assertTrue(powerList.size() == 1);
-        Asserts.assertTrue(powerList.get(0).getUnique().get().getId().equals(menuId));
+        Asserts.assertTrue(powerList.get(0).getUnique().get().equals(menuId));
 
     }
 
@@ -302,7 +301,7 @@ public class DeptTest extends BaseTest {
         List<Menu> menus = dept1.menus();
         Asserts.assertTrue(menus != null);
         Asserts.assertTrue(menus.size() == 1);
-        Asserts.assertTrue(menus.get(0).getUnique().get().getId().equals(menuId));
+        Asserts.assertTrue(menus.get(0).getUnique().get().equals(menuId));
     }
 
     @Test
@@ -312,7 +311,7 @@ public class DeptTest extends BaseTest {
         List<Menu> menus = dept.menus();
         Asserts.assertTrue(menus != null);
         Asserts.assertTrue(menus.size() == 1);
-        Asserts.assertTrue(menus.get(0).getUnique().get().getId().equals(menuId));
+        Asserts.assertTrue(menus.get(0).getUnique().get().equals(menuId));
 
         dept.removeMenuLink(deptRepository);
         dept.removeMenuLink(deptRepository);
@@ -335,7 +334,7 @@ public class DeptTest extends BaseTest {
         List<Power> menus = dept.powers();
         Asserts.assertTrue(menus != null);
         Asserts.assertTrue(menus.size() == 1);
-        Asserts.assertTrue(menus.get(0).getUnique().get().getId().equals(powerId));
+        Asserts.assertTrue(menus.get(0).getUnique().get().equals(powerId));
 
         dept.removePowerLink(deptRepository);
         dept.removePowerLink(deptRepository);
@@ -364,7 +363,7 @@ public class DeptTest extends BaseTest {
         List<Dept> depts1 = (List<Dept>) depts.get(role);
         Asserts.assertTrue(depts1 != null);
         Asserts.assertTrue(depts1.size() == 1);
-        Asserts.assertTrue(depts1.get(0).getUnique().get().getId().equals(deptId));
+        Asserts.assertTrue(depts1.get(0).getUnique().get().equals(deptId));
 
         dept.removeRoleLink(deptRepository);
 
@@ -405,7 +404,7 @@ public class DeptTest extends BaseTest {
 
     @Test
     public void testMybatisCache() {
-        Identifier id = new Identifier(1685466876918890528L);
+        Long id = 1685466876918890528L;
         DeptDO deptDO = deptRepository.find(id).toData().get();
         DeptDO deptDO1 = deptRepository.find(id).toData().get();
         Asserts.assertTrue(deptDO1 == deptDO, "一级缓存失效");

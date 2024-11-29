@@ -1,5 +1,6 @@
 package team.opentech.usher.repository.impl;
 
+import java.util.List;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.ApiAssembler;
 import team.opentech.usher.dao.ApiDao;
@@ -8,11 +9,9 @@ import team.opentech.usher.pojo.DO.ApiGroupDO;
 import team.opentech.usher.pojo.DTO.ApiDTO;
 import team.opentech.usher.pojo.entity.Api;
 import team.opentech.usher.pojo.entity.ApiGroup;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ApiRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 import team.opentech.usher.util.Asserts;
-import java.util.List;
 
 
 /**
@@ -31,8 +30,8 @@ public class ApiRepositoryImpl extends AbstractRepository<Api, ApiDO, ApiDao, Ap
 
 
     @Override
-    public List<Api> findByGroupId(Identifier groupId) {
-        List<ApiDO> groupByGroupId = dao.getGroupByGroupId(groupId.getId());
+    public List<Api> findByGroupId(Long groupId) {
+        List<ApiDO> groupByGroupId = dao.getGroupByGroupId(groupId);
         return assembler.listToEntity(groupByGroupId);
     }
 

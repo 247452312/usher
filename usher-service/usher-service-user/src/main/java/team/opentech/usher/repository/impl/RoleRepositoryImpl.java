@@ -1,5 +1,8 @@
 package team.opentech.usher.repository.impl;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.RoleAssembler;
 import team.opentech.usher.dao.RoleDao;
@@ -9,13 +12,9 @@ import team.opentech.usher.pojo.DTO.RoleDTO;
 import team.opentech.usher.pojo.DTO.response.GetAllDeptWithHaveMarkDTO;
 import team.opentech.usher.pojo.entity.Dept;
 import team.opentech.usher.pojo.entity.Role;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.RoleRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 import team.opentech.usher.util.Asserts;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 /**
@@ -35,17 +34,17 @@ public class RoleRepositoryImpl extends AbstractRepository<Role, RoleDO, RoleDao
 
     @Override
     public void cleanDeptLink(Role roleId) {
-        dao.deleteRoleDeptMiddleByRoleId(roleId.getUnique().map(t -> t.getId()).orElseThrow(() -> Asserts.makeException("角色id不存在")));
+        dao.deleteRoleDeptMiddleByRoleId(roleId.getUnique().orElseThrow(() -> Asserts.makeException("角色id不存在")));
     }
 
     @Override
     public void addRoleDeptLink(Role roleId, List<Dept> deptIds) {
         RoleDeptDO roleDeptDO = new RoleDeptDO();
-        roleDeptDO.setRoleId(roleId.getUnique().map(Identifier::getId).orElseThrow(() -> Asserts.makeException("roleId不存在")));
+        roleDeptDO.setRoleId(roleId.getUnique().orElseThrow(() -> Asserts.makeException("roleId不存在")));
         for (Dept deptId : deptIds) {
-            Optional<Identifier> unique = deptId.getUnique();
+            Optional<Long> unique = deptId.getUnique();
             unique.ifPresent(identifier -> {
-                roleDeptDO.setDeptId(identifier.getId());
+                roleDeptDO.setDeptId(identifier);
                 roleDeptDO.preInsert();
                 dao.insertRoleDept(roleDeptDO);
             });
@@ -66,13 +65,13 @@ public class RoleRepositoryImpl extends AbstractRepository<Role, RoleDO, RoleDao
 
     @Override
     public List<Role> findRoleDeptLinkByRoleId(Role roleId) {
-        List<RoleDeptDO> roleDeptDOS = dao.getRoleDeptLinkByRoleId(roleId.getUnique().map(Identifier::getId).orElseThrow(() -> Asserts.makeException("未找到roleId")));
+        List<RoleDeptDO> roleDeptDOS = dao.getRoleDeptLinkByRoleId(roleId.getUnique().orElseThrow(() -> Asserts.makeException("未找到roleId")));
         return roleDeptDOS.stream().map(assembler::RoleDeptToEntity).collect(Collectors.toList());
     }
 
     @Override
     public List<GetAllDeptWithHaveMarkDTO> findDeptWithHaveMark(Role roleId) {
-        return dao.getAllDeptWithHaveMark(roleId.getUnique().map(Identifier::getId).orElseThrow(() -> Asserts.makeException("roleId不存在")));
+        return dao.getAllDeptWithHaveMark(roleId.getUnique().orElseThrow(() -> Asserts.makeException("roleId不存在")));
     }
 
 

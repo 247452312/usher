@@ -1,5 +1,10 @@
 package team.opentech.usher.pojo.entity;
 
+import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.assembler.OrderInfoAssembler;
 import team.opentech.usher.enums.OrderStatusEnum;
@@ -10,7 +15,6 @@ import team.opentech.usher.pojo.DO.OrderNodeDO;
 import team.opentech.usher.pojo.DTO.OrderInfoDTO;
 import team.opentech.usher.pojo.IdMapping;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.OrderInfoRepository;
 import team.opentech.usher.repository.OrderNodeFieldRepository;
 import team.opentech.usher.repository.OrderNodeRepository;
@@ -18,11 +22,6 @@ import team.opentech.usher.repository.OrderNodeResultTypeRepository;
 import team.opentech.usher.repository.OrderNodeRouteRepository;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
-import java.text.MessageFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 /**
  * 工单基础信息样例表(OrderInfo)表 数据库实体类
@@ -125,7 +124,7 @@ public class OrderInfo extends AbstractDoEntity<OrderInfoDO> {
         }
         for (OrderNode node : nodes) {
             OrderNodeDO orderNodeDO = node.toData().orElseThrow(Asserts::throwOptionalException);
-            orderNodeDO.setBaseInfoId(getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException));
+            orderNodeDO.setBaseInfoId(getUnique().orElseThrow(Asserts::throwOptionalException));
         }
     }
 }

@@ -1,5 +1,8 @@
 package team.opentech.usher.service.impl;
 
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import team.opentech.usher.annotation.ReadWriteMark;
 import team.opentech.usher.assembler.ApiGroupAssembler;
 import team.opentech.usher.pojo.DO.ApiGroupDO;
@@ -7,13 +10,9 @@ import team.opentech.usher.pojo.DTO.ApiGroupDTO;
 import team.opentech.usher.pojo.cqe.DefaultCQE;
 import team.opentech.usher.pojo.cqe.query.IdQuery;
 import team.opentech.usher.pojo.entity.ApiGroup;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ApiGroupRepository;
 import team.opentech.usher.repository.ApiRepository;
 import team.opentech.usher.service.ApiGroupService;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * api组表(ApiGroup)表 内部服务实现类
@@ -47,8 +46,8 @@ public class ApiGroupServiceImpl extends AbstractDoService<ApiGroupDO, ApiGroup,
     }
 
     @Override
-    public Integer remove(Identifier id) {
-        ApiGroup apiGroup = new ApiGroup(id.getId());
+    public Integer remove(Long id) {
+        ApiGroup apiGroup = new ApiGroup(id);
         apiGroup.removeSelf(rep);
         return apiGroup.removeApis(apiRepository);
     }

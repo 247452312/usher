@@ -1,18 +1,17 @@
 package team.opentech.usher.pojo.entity.base;
 
+import java.util.Optional;
 import team.opentech.usher.pojo.DO.base.BaseDO;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.base.BaseEntityRepository;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.BeanUtil;
-import java.util.Optional;
 
 /**
  * @author uhyils <247452312@qq.com>
  * @version 1.0
  * @date 文件创建日期 2021年08月24日 17时59分
  */
-public abstract class AbstractDoEntity<T extends BaseDO> extends AbstractEntity<Identifier> implements DoEntity<T> {
+public abstract class AbstractDoEntity<T extends BaseDO> extends AbstractEntity<Long> implements DoEntity<T> {
 
     /**
      * 对应数据库DO
@@ -25,7 +24,7 @@ public abstract class AbstractDoEntity<T extends BaseDO> extends AbstractEntity<
     private boolean canUpdate;
 
     protected AbstractDoEntity(T t) {
-        super(new Identifier(t.getId()));
+        super(t.getId());
         this.data = t;
         this.canUpdate = false;
     }
@@ -34,17 +33,12 @@ public abstract class AbstractDoEntity<T extends BaseDO> extends AbstractEntity<
         super();
     }
 
-    protected AbstractDoEntity(Identifier id, T t) {
-        super(id);
-        this.data = t;
-        this.data.setId(id.getId());
-    }
-
     protected AbstractDoEntity(Long id, T t) {
-        super(new Identifier(id));
+        super(id);
         this.data = t;
         this.data.setId(id);
     }
+
 
     public <DO extends T, EN extends AbstractDoEntity<DO>> void completion(BaseEntityRepository<DO, EN> repository) {
         Asserts.assertTrue(this.unique != null, "数据库id不存在 不能补全");
@@ -53,7 +47,7 @@ public abstract class AbstractDoEntity<T extends BaseDO> extends AbstractEntity<
         Optional<DO> dataOptional = dictItem.toData();
         dataOptional.ifPresent(t -> {
             this.data = t;
-            setUnique(new Identifier(t.getId()));
+            setUnique(t.getId());
         });
     }
 
@@ -83,12 +77,27 @@ public abstract class AbstractDoEntity<T extends BaseDO> extends AbstractEntity<
      */
     public void upId() {
         T dataAndValidate = toDataAndValidate();
-        this.unique = new Identifier(dataAndValidate.getId());
+        this.unique = dataAndValidate.getId();
+    }
+
+    /**
+     * 清空所有id
+     */
+    public void removeId() {
+        T dataAndValidate = toDataAndValidate();
+        dataAndValidate.setId(null);
+        this.unique = null;
     }
 
     public <EN extends AbstractDoEntity<T>> void saveSelf(BaseEntityRepository<T, EN> repository) {
         repository.save((EN) this);
     }
+
+
+    public <EN extends AbstractDoEntity<T>> void removeSelf(BaseEntityRepository<T, EN> repository) {
+        repository.remove((EN) this);
+    }
+
 
     public boolean canUpdate() {
         return canUpdate;
@@ -108,7 +117,7 @@ public abstract class AbstractDoEntity<T extends BaseDO> extends AbstractEntity<
 
     @Override
     public boolean haveId() {
-        return unique != null && unique.getId() != null && unique.getId() > 0;
+        return unique != null && unique != null && unique > 0;
     }
 
     @Override
@@ -124,7 +133,7 @@ public abstract class AbstractDoEntity<T extends BaseDO> extends AbstractEntity<
     protected void copyOf(DoEntity<T> entity) {
         Optional<T> target = entity.toData();
         target.ifPresent(t -> BeanUtil.copyProperties(t, this.data));
-        Optional<Identifier> unique = entity.getUnique();
+        Optional<Long> unique = entity.getUnique();
         unique.ifPresent(t -> this.unique = t);
     }
 

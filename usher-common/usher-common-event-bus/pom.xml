@@ -2,14 +2,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>usher-common-event-bus</artifactId>
+
+    <name>usher-common-event-bus</name>
+    <description>
+        事件总线模块
+    </description>
+
+
+    <packaging>jar</packaging>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-common/usher-common-event-bus</url>
     <parent>
         <artifactId>usher-common</artifactId>
-        <groupId>team.opentech.usher</groupId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
+        <groupId>top.uhyils.usher</groupId>
+        <version>2.1.0.2.usher</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>usher-common-event-bus</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -18,16 +26,16 @@
 
     <dependencies>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-mq</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-log</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -44,5 +52,4 @@
             <version>3.36.0.3</version>
         </dependency>
     </dependencies>
-
 </project>

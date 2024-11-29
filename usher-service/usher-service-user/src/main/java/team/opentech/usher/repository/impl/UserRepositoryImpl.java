@@ -16,7 +16,6 @@ import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.cqe.query.demo.Arg;
 import team.opentech.usher.pojo.entity.Token;
 import team.opentech.usher.pojo.entity.User;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.Password;
 import team.opentech.usher.redis.RedisPoolHandle;
 import team.opentech.usher.repository.UserRepository;
@@ -66,8 +65,8 @@ public class UserRepositoryImpl extends AbstractRepository<User, UserDO, UserDao
     }
 
     @Override
-    public User findUserByIdInRedis(Identifier userId) {
-        UserDTO user = redisPoolHandle.getUser(userId.getId());
+    public User findUserByIdInRedis(Long userId) {
+        UserDTO user = redisPoolHandle.getUser(userId);
         return assembler.toEntity(user);
     }
 
@@ -89,14 +88,14 @@ public class UserRepositoryImpl extends AbstractRepository<User, UserDO, UserDao
 
     @Override
     public Boolean checkCacheUserId(User userId) {
-        Optional<Long> aLong = userId.getUnique().map(Identifier::getId);
+        Optional<Long> aLong = userId.getUnique();
         return aLong.map(redisPoolHandle::haveUserId).orElse(false);
     }
 
     @Override
     public boolean removeUserInCacheById(User userId) {
-        Optional<Identifier> unique = userId.getUnique();
-        return unique.map(t -> redisPoolHandle.removeUserById(t.getId())).orElse(false);
+        Optional<Long> unique = userId.getUnique();
+        return unique.map(t -> redisPoolHandle.removeUserById(t)).orElse(false);
     }
 
     @Override
@@ -113,8 +112,8 @@ public class UserRepositoryImpl extends AbstractRepository<User, UserDO, UserDao
 
     @Override
     public void checkPassword(User user, Password password) {
-        Optional<Identifier> unique = user.getUnique();
-        Integer integer = unique.map(t -> dao.checkUserPassword(t.getId(), password.encode())).orElse(0);
+        Optional<Long> unique = user.getUnique();
+        Integer integer = unique.map(t -> dao.checkUserPassword(t, password.encode())).orElse(0);
         Asserts.assertTrue(integer == 1, "密码错误");
     }
 

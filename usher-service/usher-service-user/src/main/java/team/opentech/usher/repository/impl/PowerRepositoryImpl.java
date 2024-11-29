@@ -1,5 +1,8 @@
 package team.opentech.usher.repository.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import team.opentech.usher.annotation.Repository;
 import team.opentech.usher.assembler.PowerAssembler;
 import team.opentech.usher.dao.PowerDao;
@@ -7,16 +10,12 @@ import team.opentech.usher.pojo.DO.PowerDO;
 import team.opentech.usher.pojo.DTO.PowerDTO;
 import team.opentech.usher.pojo.entity.Power;
 import team.opentech.usher.pojo.entity.User;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.pojo.entity.type.InterfaceName;
 import team.opentech.usher.pojo.entity.type.MethodName;
 import team.opentech.usher.pojo.entity.type.PowerInfo;
 import team.opentech.usher.repository.PowerRepository;
 import team.opentech.usher.repository.base.AbstractRepository;
 import team.opentech.usher.util.Asserts;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -35,8 +34,8 @@ public class PowerRepositoryImpl extends AbstractRepository<Power, PowerDO, Powe
     }
 
     @Override
-    public List<Power> findByDeptId(Identifier deptId) {
-        List<PowerDO> powerDOS = dao.getByDept(deptId.getId());
+    public List<Power> findByDeptId(Long deptId) {
+        List<PowerDO> powerDOS = dao.getByDept(deptId);
         return assembler.listToEntity(powerDOS);
     }
 
@@ -49,7 +48,7 @@ public class PowerRepositoryImpl extends AbstractRepository<Power, PowerDO, Powe
     @Override
     public Boolean havePower(User userId, PowerInfo powerInfo) {
         return dao.checkUserHavePower(
-            userId.getUnique().map(Identifier::getId).orElseThrow(() -> Asserts.makeException("未找到用户id")),
+            userId.getUnique().orElseThrow(() -> Asserts.makeException("未找到用户id")),
             powerInfo.getInterfaceName(),
             powerInfo.getMethodName())
                != 0;
@@ -57,7 +56,7 @@ public class PowerRepositoryImpl extends AbstractRepository<Power, PowerDO, Powe
 
     @Override
     public void removeDeptPowerByPowerId(Power powerId) {
-        dao.deleteDeptPowerMiddleByPowerId(powerId.getUnique().map(Identifier::getId).orElseThrow(() -> Asserts.makeException("未找到权限id")));
+        dao.deleteDeptPowerMiddleByPowerId(powerId.getUnique().orElseThrow(() -> Asserts.makeException("未找到权限id")));
     }
 
     @Override

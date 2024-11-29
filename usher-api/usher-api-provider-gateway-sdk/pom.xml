@@ -2,11 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>usher-api</artifactId>
-        <groupId>team.opentech.usher</groupId>
-        <version>2.1.0.0.usher-SNAPSHOT</version>
-    </parent>
+    <name>usher-api-provider-gateway-sdk</name>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>usher-api-provider-gateway-sdk</artifactId>
@@ -16,9 +12,18 @@
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
 
+    <description>
+        对外网关应用三方包
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-api/usher-api-provider-gateway-sdk</url>
+    <parent>
+        <groupId>top.uhyils.usher</groupId>
+        <artifactId>usher-api</artifactId>
+        <version>2.1.0.2.usher</version>
+    </parent>
     <dependencies>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
     </dependencies>

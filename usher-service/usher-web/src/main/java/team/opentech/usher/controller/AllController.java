@@ -3,6 +3,20 @@ package team.opentech.usher.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import team.opentech.usher.context.MyTraceIdContext;
 import team.opentech.usher.context.UserInfoHelper;
 import team.opentech.usher.enums.ServiceCode;
 import team.opentech.usher.pojo.DTO.request.Action;
@@ -14,18 +28,6 @@ import team.opentech.usher.util.LogUtil;
 import team.opentech.usher.util.RpcApiUtil;
 import team.opentech.usher.util.StringUtil;
 import team.opentech.usher.util.WebExceptionHandler;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -64,10 +66,10 @@ public class AllController {
      * @return 向界面返回的值
      */
     @PostMapping("action")
-    public WebResponse action(@RequestBody Action action, HttpServletRequest httpServletRequest) {
+    public WebResponse action(@RequestBody Action action, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
         // 服务返回信息
         Object data;
-
+        httpServletResponse.setHeader("trace", MyTraceIdContext.getThraceId().toString());
         // 发送前处理
         dealActionBeforeCall(action);
 

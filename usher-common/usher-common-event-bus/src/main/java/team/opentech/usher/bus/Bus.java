@@ -3,26 +3,29 @@ package team.opentech.usher.bus;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import team.opentech.usher.UsherThreadLocal;
 import team.opentech.usher.annotation.UsherMq;
+import team.opentech.usher.mq.core.AbstractRocketMqConsumer;
+import team.opentech.usher.mq.core.RocketMqMessageResEnum;
 import team.opentech.usher.mq.util.MqUtil;
 import team.opentech.usher.pojo.cqe.event.base.BaseEvent;
 import team.opentech.usher.pojo.cqe.event.base.BaseParentEvent;
 import team.opentech.usher.pojo.cqe.event.base.PackageEvent;
-import team.opentech.usher.protocol.mq.base.AbstractRocketMqConsumer;
-import team.opentech.usher.protocol.mq.base.RocketMqMessageResEnum;
 import team.opentech.usher.protocol.register.base.Register;
 import team.opentech.usher.util.Asserts;
 import team.opentech.usher.util.CollectionUtil;
 import team.opentech.usher.util.EventUtil;
-
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import team.opentech.usher.util.LogUtil;
+import team.opentech.usher.util.SpringUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -39,63 +42,38 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
 
     public UsherThreadLocal<List<BaseEvent>> events = new UsherThreadLocal<>();
 
+    /**
+     * 缓存事件和注册者之间的映射, 优化事件发布时的遍历消耗
+     */
+    private Map<BaseEvent, List<Register>> eventRegisterCacheMap = new HashMap<>();
+
     public Bus(List<Register> registers) {
         events.set(new ArrayList<>());
         this.registers = registers;
     }
 
-    @Override
-    public RocketMqMessageResEnum onMessage(byte[] message) {
-        BaseEvent event = JSONObject.parseObject(new String(message, StandardCharsets.UTF_8), BaseEvent.class);
-        Asserts.assertTrue(event != null);
-        // 解析事件(打包,父类事件转为子类事件)
-        List<BaseEvent> trans = EventUtil.trans(event);
-        doPublishEvent(trans);
-        return RocketMqMessageResEnum.SUCCESS;
-    }
-
     /**
-     * 发布事件
+     * 拿到唯一的自己
      *
-     * @param events
-     */
-    private void doPublishEvent(List<BaseEvent> events) {
-        Iterator<BaseEvent> iterator = events.iterator();
-        while (iterator.hasNext()) {
-            BaseEvent next = iterator.next();
-            // 遍历所有的监听者
-            for (Register register : registers) {
-                List<Class<? extends BaseEvent>> classes = register.targetEvent();
-                Asserts.assertTrue(CollectionUtil.isNotEmpty(classes), "监听者监听的事件不能为空");
-                // 遍历所有的待发布事件
-                if (matchingEvent(register, next)) {
-                    register.onEvent(next);
-                }
-            }
-            // 发布后删除事件
-            iterator.remove();
-        }
-    }
-
-    /**
-     * 是否可以匹配到事件
-     * 发布父类事件子类不能收到,但是发布子类事件父类可以监听到
-     * 例: 跑步运动员监听跑步发令枪,游泳运动员监听游泳发令枪, 发布发令枪事件时无反应,因为不知道是不是自己的发令枪, 但是监听发令枪的计时事件不关心是哪一个发令枪,所以两个发令枪都可以使计时事件开始
-     *
-     * @param register  事件监听器
-     * @param baseEvent 事件
      * @return
      */
-    private boolean matchingEvent(Register register, BaseEvent baseEvent) {
-        // 遍历所有这个监听者监听的事件类型
-        for (Class<? extends BaseEvent> eventClass : register.targetEvent()) {
-            // 父类.isAssignableFrom(子类)
-            if (eventClass.isAssignableFrom(baseEvent.getClass())) {
-                // 一个监听者只能监听一个事件一次
-                return true;
-            }
+    public static BusInterface single() {
+        return SpringUtil.getBean(BusInterface.class);
+    }
+
+    @Override
+    public RocketMqMessageResEnum doOnMessage(byte[] message) {
+        try {
+            BaseEvent event = JSONObject.parseObject(new String(message, StandardCharsets.UTF_8), BaseEvent.class);
+            Asserts.assertTrue(event != null);
+            // 解析事件(打包,父类事件转为子类事件)
+            List<BaseEvent> trans = EventUtil.trans(event);
+            doPublishEvent(trans);
+            return RocketMqMessageResEnum.SUCCESS;
+        } catch (Exception e) {
+            LogUtil.error(this, e);
+            throw e;
         }
-        return false;
     }
 
     /**
@@ -106,15 +84,10 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
     @Override
     public void commit(BaseParentEvent event) {
         List<BaseEvent> baseEvents = this.events.get();
-        // 打包事件不进行分解
-        if (event instanceof PackageEvent) {
-            baseEvents.add(event);
-        } else {
-            // 其他父类事件进行分解
-            baseEvents.addAll(event.transToBaseEvent());
-        }
+        List<BaseEvent> trans = EventUtil.trans(event);
+        // 父类事件进行分解
+        baseEvents.addAll(trans);
     }
-
 
     /**
      * 提交事件
@@ -180,9 +153,7 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
         if (CollectionUtil.isEmpty(baseEvents)) {
             return;
         }
-        // 父类事件(打包事件)转化为子类事件
-        List<BaseEvent> trans = EventUtil.trans(baseEvents);
-        doPublishEvent(trans);
+        doPublishEvent(baseEvents);
     }
 
     /**
@@ -267,6 +238,7 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
      * 移除还没有发布的事件
      *
      * @param baseEventClass 事件的类型
+     *
      * @return 被移除的事件
      */
     @Override
@@ -290,6 +262,7 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
      * 精准移除还没有发布的事件
      *
      * @param baseEventClass 事件的类型
+     *
      * @return 被移除的事件
      */
     @Override
@@ -311,6 +284,7 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
      * 精准获取还没有发布的事件
      *
      * @param baseEventClass
+     *
      * @return 还没有发布的指定事件
      */
     @Override
@@ -329,6 +303,7 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
      * 精准获取还没有发布的事件
      *
      * @param baseEventClass
+     *
      * @return 还没有发布的指定事件
      */
     @Override
@@ -343,6 +318,64 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
         return result;
     }
 
+    /**
+     * 发布事件
+     *
+     * @param events
+     */
+    private void doPublishEvent(List<BaseEvent> events) {
+        Iterator<BaseEvent> iterator = events.iterator();
+        while (iterator.hasNext()) {
+            BaseEvent next = iterator.next();
+            List<Register> doRegisters = eventRegisterCacheMap.getOrPutAndGet(next, () -> findAllRegisters(next));
+            doRegisters.forEach(register -> register.onEvent(next));
+            // 发布后删除事件
+            iterator.remove();
+        }
+    }
+
+    /**
+     * 获取所有的监听指定事件的监听者
+     *
+     * @param next
+     *
+     * @return
+     */
+    private List<Register> findAllRegisters(BaseEvent next) {
+        List<Register> doRegisters = new ArrayList<>();
+        // 遍历所有的监听者
+        for (Register register : registers) {
+            List<Class<? extends BaseEvent>> classes = register.targetEvent();
+            Asserts.assertTrue(CollectionUtil.isNotEmpty(classes), "监听者监听的事件不能为空");
+            // 遍历所有的待发布事件
+            if (matchingEvent(register, next)) {
+                doRegisters.add(register);
+            }
+        }
+        return doRegisters;
+    }
+
+    /**
+     * 是否可以匹配到事件
+     * 发布父类事件子类不能收到,但是发布子类事件父类可以监听到
+     * 例: 跑步运动员监听跑步发令枪,游泳运动员监听游泳发令枪, 发布发令枪事件时无反应,因为不知道是不是自己的发令枪, 但是监听发令枪的计时事件不关心是哪一个发令枪,所以两个发令枪都可以使计时事件开始
+     *
+     * @param register  事件监听器
+     * @param baseEvent 事件
+     *
+     * @return
+     */
+    private boolean matchingEvent(Register register, BaseEvent baseEvent) {
+        // 遍历所有这个监听者监听的事件类型
+        for (Class<? extends BaseEvent> eventClass : register.targetEvent()) {
+            // 父类.isAssignableFrom(子类)
+            if (eventClass.isAssignableFrom(baseEvent.getClass())) {
+                // 一个监听者只能监听一个事件一次
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * 异步发布事件
@@ -354,10 +387,8 @@ public class Bus extends AbstractRocketMqConsumer implements BusInterface {
         while (iterator.hasNext()) {
             BaseEvent next = iterator.next();
             String msg = JSON.toJSONString(next, SerializerFeature.WriteClassName);
-            MqUtil.sendMsg(BUS_EVENT_TOPIC_NAME, BUS_EVENT_TAG_NAME, msg);
+            MqUtil.sendMsg(topic(), tags(), msg);
             iterator.remove();
         }
     }
-
-
 }

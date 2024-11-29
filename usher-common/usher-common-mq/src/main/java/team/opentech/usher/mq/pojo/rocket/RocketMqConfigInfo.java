@@ -48,6 +48,7 @@ public class RocketMqConfigInfo {
     private List<String> namesrvAddrs = new ArrayList<>();
 
     private List<String> proxyAddrs = new ArrayList<>();
+
     /**
      * 消息发布者名称
      */
@@ -112,7 +113,7 @@ public class RocketMqConfigInfo {
 
     public boolean isACLEnabled() {
         return !(StringUtils.isAnyBlank(this.accessKey, this.secretKey) ||
-                StringUtils.isAnyEmpty(this.accessKey, this.secretKey));
+                 StringUtils.isAnyEmpty(this.accessKey, this.secretKey));
     }
 
     public String getRocketMqDashboardDataPath() {

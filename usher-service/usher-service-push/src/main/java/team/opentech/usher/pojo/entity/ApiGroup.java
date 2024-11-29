@@ -1,5 +1,10 @@
 package team.opentech.usher.pojo.entity;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import team.opentech.usher.annotation.Default;
 import team.opentech.usher.context.UserInfoHelper;
 import team.opentech.usher.facade.UserFacade;
@@ -9,17 +14,11 @@ import team.opentech.usher.pojo.DTO.PushMsgDTO;
 import team.opentech.usher.pojo.DTO.UserDTO;
 import team.opentech.usher.pojo.DTO.base.IdDTO;
 import team.opentech.usher.pojo.entity.base.AbstractDoEntity;
-import team.opentech.usher.pojo.entity.type.Identifier;
 import team.opentech.usher.repository.ApiGroupRepository;
 import team.opentech.usher.repository.ApiRepository;
 import team.opentech.usher.repository.ApiSubscribeRepository;
 import team.opentech.usher.util.ApiUtils;
 import team.opentech.usher.util.Asserts;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * api组表(ApiGroup)表 数据库实体类
@@ -94,7 +93,7 @@ public class ApiGroup extends AbstractDoEntity<ApiGroupDO> {
 
     public List<PushMsgDTO> sendMsgToUser(UserFacade userFacade) {
         Asserts.assertTrue(subscribes != null, "没有初始化订阅用户");
-        List<UserDTO> byIds = userFacade.getByIds(subscribes.stream().map(t -> t.getUnique().map(Identifier::getId).orElseThrow(Asserts::throwOptionalException)).collect(Collectors.toList()));
+        List<UserDTO> byIds = userFacade.getByIds(subscribes.stream().map(t -> t.getUnique().orElseThrow(Asserts::throwOptionalException)).collect(Collectors.toList()));
         return sendMsgToUser(byIds);
     }
 

@@ -1,9 +1,9 @@
 package team.opentech.usher.mq.pojo.mqinfo;
 
-import team.opentech.usher.mq.content.RocketMqContent;
 import java.io.Serializable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import team.opentech.usher.mq.content.RocketMqContent;
 
 /**
  * jvm唯一标示
@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class JvmUniqueMark implements Serializable {
-
-    private static JvmUniqueMark jvmUniqueMark;
 
     /**
      * 服务名称
@@ -37,16 +35,6 @@ public class JvmUniqueMark implements Serializable {
         this.time = RocketMqContent.START_TIME;
     }
 
-    public static JvmUniqueMark getInstance() {
-        if (null == jvmUniqueMark) {
-            synchronized (JvmUniqueMark.class) {
-                if (null == jvmUniqueMark) {
-                    jvmUniqueMark = new JvmUniqueMark();
-                }
-            }
-        }
-        return jvmUniqueMark;
-    }
 
     public String getServiceName() {
         return serviceName;
