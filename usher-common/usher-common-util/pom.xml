@@ -6,9 +6,9 @@
     <packaging>pom</packaging>
     <modules>
         <module>usher-common-util-obj-pool</module>
-        <module>usher-common-util-ast</module>
         <module>usher-common-util-trace-executor</module>
         <module>usher-common-util-scenario</module>
+        <module>usher-common-util-ustream</module>
     </modules>
     <parent>
         <groupId>top.uhyils.usher</groupId>
@@ -22,6 +22,5 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
-
 
 </project>

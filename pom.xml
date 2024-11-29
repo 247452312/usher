@@ -5,12 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
 
 
+    <description>一个伟大的项目, 包含各个方面</description>
+
     <groupId>top.uhyils.usher</groupId>
     <artifactId>usher</artifactId>
     <version>2.1.0.2.usher</version>
-    <description>
-        一个伟大的项目, 包含各个方面
-    </description>
     <name>usher</name>
 
     <packaging>pom</packaging>
@@ -59,7 +58,7 @@
         <httpcore.version>4.4.13</httpcore.version>
         <javax.validation.version>2.0.1.Final</javax.validation.version>
         <tencentcloud.version>3.1.99</tencentcloud.version>
-        <poi.version>4.1.2</poi.version>
+        <poi.version>5.3.0</poi.version>
         <asr.version>1.0</asr.version>
         <sentinel.version>1.8.4</sentinel.version>
         <es.version>7.9.1</es.version>
@@ -80,25 +79,12 @@
         <nacos.config.spring.version>0.3.0-RC</nacos.config.spring.version>
     </properties>
 
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>https://opensource.org/license/mit</url>
-        </license>
-    </licenses>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-inside-package</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>top.uhyils.usher</groupId>
-                <artifactId>usher-out-inside-package</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -457,6 +443,14 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/license/mit</url>
+        </license>
+    </licenses>
+
+
     <build>
         <plugins>
             <plugin>
@@ -530,11 +524,15 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>-->
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.2.5</version>
+                <version>1.6</version>
+                <configuration>
+                    &lt;!&ndash; 改成你自己的路径 &ndash;&gt;
+                    <executable>C:/Program Files (x86)/GnuPG/bin/gpg.exe</executable>
+                </configuration>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -545,57 +543,23 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- 发布插件 -->
+            &lt;!&ndash; 发布插件 &ndash;&gt;
             <plugin>
                 <groupId>org.sonatype.central</groupId>
                 <artifactId>central-publishing-maven-plugin</artifactId>
                 <version>0.5.0</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <publishingServerId>central</publishingServerId>
-                    <!--<tokenAuth>true</tokenAuth>-->
-                    <!-- 若要自动发布，添加以下配置 -->
-                    <!--<autoPublish>true</autoPublish>-->
-                    <!-- 一直等到发布完成 -->
+                    <publishingServerId>usher</publishingServerId>
+                    <tokenAuth>true</tokenAuth>
+                    &lt;!&ndash; 若要自动发布，添加以下配置 &ndash;&gt;
+                    <autoPublish>true</autoPublish>
+                    &lt;!&ndash; 一直等到发布完成 &ndash;&gt;
                     <waitUntil>published</waitUntil>
                 </configuration>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
-    <!-- profile配置 -->
-    <developers>
-        <!--某个项目开发者的信息-->
-        <developer>
-            <!--SCM里项目开发者的唯一标识符-->
-            <name>uhyils</name>
-            <!--项目开发者的全名-->
-            <id>uhyils</id>
-            <!--项目开发者的email-->
-            <email>uhyils@qq.com</email>
-
-            <!--项目开发者所在时区， -11到12范围内的整数。-->
-            <timezone>8</timezone>
-        </developer>
-    </developers>
-
-
-    <modules>
-        <module>usher-api</module>
-        <module>usher-service</module>
-        <module>usher-common</module>
-        <module>usher-out</module>
-    </modules>
-
-    <distributionManagement>
-        <snapshotRepository>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <id>ossrh</id>
-        </snapshotRepository>
-        <repository>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-            <id>ossrh</id>
-        </repository>
-    </distributionManagement>
     <profiles>
         <!--增加一个配置，解决 JDK1.8 环境下发布出现的问题-->
         <profile>
@@ -650,4 +614,32 @@
         <connection>scm:git:git://gitee.com/opentech_usher/usher.git</connection>
         <developerConnection>scm:git:ssh://gitee.com/opentech_usher/usher.git</developerConnection>
     </scm>
+    <!-- profile配置 -->
+    <distributionManagement>
+        <snapshotRepository>
+            <url>https://central.sonatype.com</url>
+            <id>usher</id>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <modules>
+        <module>usher-api</module>
+        <module>usher-service</module>
+        <module>usher-common</module>
+    </modules>
+
+    <developers>
+        <!--某个项目开发者的信息-->
+        <developer>
+            <!--SCM里项目开发者的唯一标识符-->
+            <name>uhyils</name>
+            <!--项目开发者的全名-->
+            <id>uhyils</id>
+            <!--项目开发者的email-->
+            <email>uhyils@qq.com</email>
+
+            <!--项目开发者所在时区， -11到12范围内的整数。-->
+            <timezone>8</timezone>
+        </developer>
+    </developers>
 </project>
