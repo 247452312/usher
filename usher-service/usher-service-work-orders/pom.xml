@@ -6,12 +6,19 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>usher-service-work-orders</artifactId>
+    <name>usher-service-work-orders</name>
+    <description>
+        订单模块
+    </description>
+
+    <packaging>jar</packaging>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-service/usher-service-work-orders</url>
     <parent>
         <artifactId>usher-service</artifactId>
-        <groupId>team.opentech.usher</groupId>
+        <groupId>top.uhyils.usher</groupId>
         <version>2.1.0.1.usher-SNAPSHOT</version>
     </parent>
-    <packaging>jar</packaging>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -28,28 +35,28 @@
     <dependencies>
 
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-mq</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-work-orders</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-user</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-push</artifactId>
         </dependency>
 
@@ -79,7 +86,7 @@
 
         <!-- https://mvnrepository.com/artifact/team.opentech.usher/usher-rpc-spring-start -->
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-rpc-spring-start</artifactId>
         </dependency>
 

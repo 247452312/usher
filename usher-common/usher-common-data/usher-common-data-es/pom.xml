@@ -3,14 +3,20 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <artifactId>usher-common-data-es</artifactId>
+
+    <name>usher-common-data-es</name>
+
+
+    <description>
+        elasticsearch 工具包
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-common/usher-common-data/usher-common-data-es</url>
     <parent>
-        <groupId>team.opentech.usher</groupId>
+        <groupId>top.uhyils.usher</groupId>
         <artifactId>usher-common-data</artifactId>
         <version>2.1.0.1.usher-SNAPSHOT</version>
     </parent>
-
-    <artifactId>usher-common-data-es</artifactId>
-
 
     <dependencies>
         <!-- es -->

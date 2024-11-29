@@ -6,7 +6,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-base</artifactId>
                 <version>2.1.0.1.usher-SNAPSHOT</version>
             </dependency>
@@ -24,37 +24,37 @@
             </dependency>
 
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-exchange</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-netty</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-cluster</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-registry</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-proxy</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-rpc-spring-start</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -174,7 +174,7 @@
         </license>
     </licenses>
     <parent>
-        <groupId>team.opentech.usher</groupId>
+        <groupId>top.uhyils.usher</groupId>
         <artifactId>usher-common</artifactId>
         <version>2.1.0.1.usher-SNAPSHOT</version>
     </parent>

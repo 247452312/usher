@@ -12,7 +12,7 @@ import team.opentech.usher.ustream.UStream;
 @Extension
 public class ListExt {
 
-    public static <T> UStream<T> ustream(@This List<T> list) {
+    public static <E> UStream<E> ustream(@This List<E> list) {
         return UStream.of(list);
     }
 }

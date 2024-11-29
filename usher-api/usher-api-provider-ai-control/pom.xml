@@ -3,18 +3,24 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <artifactId>usher-api-provider-ai-control</artifactId>
+
+    <name>usher-api-provider-ai-control</name>
+
+
+    <description>
+        场景识别应用二方包
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-api/usher-api-provider-ai-control</url>
     <parent>
-        <groupId>team.opentech.usher</groupId>
+        <groupId>top.uhyils.usher</groupId>
         <artifactId>usher-api</artifactId>
         <version>2.1.0.1.usher-SNAPSHOT</version>
     </parent>
 
-    <artifactId>usher-api-provider-ai-control</artifactId>
-
-
     <dependencies>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
     </dependencies>

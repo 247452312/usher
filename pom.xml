@@ -5,12 +5,15 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <groupId>team.opentech.usher</groupId>
+    <groupId>top.uhyils.usher</groupId>
     <artifactId>usher</artifactId>
     <version>2.1.0.1.usher-SNAPSHOT</version>
+    <description>
+        一个伟大的项目, 包含各个方面
+    </description>
     <name>usher</name>
-    <packaging>pom</packaging>
 
+    <packaging>pom</packaging>
     <url>https://gitee.com/opentech_usher/usher</url>
 
     <!--项目开发者列表-->
@@ -25,6 +28,7 @@
         <!--        <org.dubbo.version>2.7.3</org.dubbo.version>-->
         <druid.version>1.1.22</druid.version>
         <maven.compiler.plugin.version>3.10.0</maven.compiler.plugin.version>
+        <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
         <!--        <org.apache.dubbo.nacos.version>1.2.1</org.apache.dubbo.nacos.version>-->
         <commons-lang3.version>3.12.0</commons-lang3.version>
         <fastjson.version>1.2.69</fastjson.version>
@@ -76,17 +80,24 @@
         <nacos.config.spring.version>0.3.0-RC</nacos.config.spring.version>
     </properties>
 
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/license/mit</url>
+        </license>
+    </licenses>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-common-inside-package</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-out-inside-package</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
@@ -446,7 +457,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
     <build>
         <plugins>
             <plugin>
@@ -483,6 +493,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
@@ -493,9 +504,49 @@
                 </configuration>
             </plugin>
 
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
-
     <!-- profile配置 -->
     <developers>
         <!--某个项目开发者的信息-->
@@ -520,7 +571,27 @@
         <module>usher-out</module>
     </modules>
 
+    <distributionManagement>
+        <snapshotRepository>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>ossrh</id>
+        </snapshotRepository>
+        <repository>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+            <id>ossrh</id>
+        </repository>
+    </distributionManagement>
     <profiles>
+        <!--增加一个配置，解决 JDK1.8 环境下发布出现的问题-->
+        <profile>
+            <properties>
+                <additionalparam>-Xdoclint:none</additionalparam>
+            </properties>
+            <id>disable-javadoc-doclint</id>
+            <activation>
+                <jdk>[1.8,)</jdk>
+            </activation>
+        </profile>
         <profile>
             <!-- 本地开发环境 -->
             <properties>
@@ -559,33 +630,9 @@
         </profile>
     </profiles>
 
-
-    <!--这里留着这个写法.. 万一以后用到了. 不用再上网找了-->
-    <!--    <distributionManagement>-->
-    <!--        <repository>-->
-    <!--            <id>releases</id>-->
-    <!--            <name>maven-usher-releases</name>-->
-    <!--            <url>http://xx.xx.xx.xx:8081/repository/maven-usher-releases/</url>-->
-    <!--        </repository>-->
-    <!--        <snapshotRepository>-->
-    <!--            <id>snapshots</id> &lt;!&ndash; 选择settings文件中的快照版本的id&ndash;&gt;-->
-    <!--            <name>maven-usher-snapshots</name>-->
-    <!--            <url>http://xx.xx.xx.xx:8081/repository/maven-usher-snapshots/</url>&lt;!&ndash; 私服地址&ndash;&gt;-->
-    <!--        </snapshotRepository>-->
-    <!--    </distributionManagement>-->
-
-    <!--    &lt;!&ndash; 仓库地址 组&ndash;&gt;-->
-    <!--    <repositories>-->
-    <!--        <repository>-->
-    <!--            <id>nexus</id>-->
-    <!--            <name>nexus-usher</name>-->
-    <!--            <url>http://xx.xx.xx.xx:8081/repository/nexus-usher/</url>-->
-    <!--            <releases>-->
-    <!--                <enabled>true</enabled>-->
-    <!--            </releases>-->
-    <!--            <snapshots>-->
-    <!--                <enabled>true</enabled>-->
-    <!--            </snapshots>-->
-    <!--        </repository>-->
-    <!--    </repositories>-->
+    <scm>
+        <url>https://gitee.com/opentech_usher/usher</url>
+        <connection>scm:git:git://gitee.com/opentech_usher/usher.git</connection>
+        <developerConnection>scm:git:ssh://gitee.com/opentech_usher/usher.git</developerConnection>
+    </scm>
 </project>

@@ -11,8 +11,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+
+    <name>usher-common-util-ustream</name>
+    <description>
+        自定义stream流, 添加takeWhile等java8没有的能力
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-common/usher-common-util/usher-common-util-ustream</url>
+
     <parent>
-        <groupId>team.opentech.usher</groupId>
+        <groupId>top.uhyils.usher</groupId>
         <artifactId>usher-common-util</artifactId>
         <version>2.1.0.1.usher-SNAPSHOT</version>
     </parent>

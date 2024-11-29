@@ -3,13 +3,20 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <artifactId>usher-common-hot-spot</artifactId>
+
+    <name>usher-common-hot-spot</name>
+
+    <description>
+        热点自动发现模块
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-common/usher-common-hot-spot</url>
     <parent>
-        <groupId>team.opentech.usher</groupId>
+        <groupId>top.uhyils.usher</groupId>
         <artifactId>usher-common</artifactId>
         <version>2.1.0.1.usher-SNAPSHOT</version>
     </parent>
 
-    <artifactId>usher-common-hot-spot</artifactId>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/redis.clients/jedis -->
         <dependency>
@@ -17,11 +24,11 @@
             <artifactId>jedis</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-data-redis</artifactId>
         </dependency>
         <!--引入AOP依赖-->
@@ -39,9 +46,9 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/team.opentech.usher/usher-rpc-spring-start -->
+        <!-- https://mvnrepository.com/artifact/top.uhyils.usher/usher-rpc-spring-start -->
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-rpc-spring-start</artifactId>
         </dependency>
 

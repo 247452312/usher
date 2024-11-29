@@ -5,19 +5,28 @@
     <modelVersion>4.0.0</modelVersion>
     <version>2.1.0.1.usher-SNAPSHOT</version>
     <artifactId>usher-api-provider-log</artifactId>
+    <name>usher-api-provider-log</name>
+
+
+    <description>
+        日志与操作历史记录应用二方包
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-api/usher-api-provider-log</url>
     <parent>
-        <groupId>team.opentech.usher</groupId>
+        <groupId>top.uhyils.usher</groupId>
         <artifactId>usher-api</artifactId>
         <version>2.1.0.1.usher-SNAPSHOT</version>
     </parent>
+
+
     <dependencies>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-service</artifactId>
         </dependency>
 

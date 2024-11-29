@@ -5,7 +5,7 @@
 
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>team.opentech.usher</groupId>
+    <groupId>top.uhyils.usher</groupId>
 
     <artifactId>usher-out-inside-package</artifactId>
     <version>2.1.0.1.usher-SNAPSHOT</version>
@@ -24,7 +24,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>team.opentech.usher</groupId>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-out-parse</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -3,6 +3,15 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+
+    <name>usher-service-all</name>
+    <description>
+        多项目统一启动服务
+    </description>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-service/usher-service-all</url>
+
+
     <build>
         <finalName>usher-service-all</finalName>
 
@@ -41,7 +50,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>team.opentech.usher</groupId>
+                                    <groupId>top.uhyils.usher</groupId>
                                     <artifactId>usher-web</artifactId>
                                     <version>2.1.0.1.usher-SNAPSHOT</version>
                                     <overWrite>false</overWrite>
@@ -64,7 +73,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>team.opentech.usher</groupId>
+                                    <groupId>top.uhyils.usher</groupId>
                                     <artifactId>usher-service-user</artifactId>
                                     <version>2.1.0.1.usher-SNAPSHOT</version>
                                     <overWrite>false</overWrite>
@@ -86,7 +95,7 @@
                         <configuration>
                             <artifactItems>
                                 <artifactItem>
-                                    <groupId>team.opentech.usher</groupId>
+                                    <groupId>top.uhyils.usher</groupId>
                                     <artifactId>usher-service-log</artifactId>
                                     <version>2.1.0.1.usher-SNAPSHOT</version>
                                     <overWrite>false</overWrite>
@@ -117,13 +126,13 @@
             <artifactId>asm</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
     </dependencies>
 
     <parent>
-        <groupId>team.opentech.usher</groupId>
+        <groupId>top.uhyils.usher</groupId>
         <artifactId>usher-service</artifactId>
         <version>2.1.0.1.usher-SNAPSHOT</version>
     </parent>

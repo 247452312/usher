@@ -6,13 +6,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>usher-service-push</artifactId>
+    <name>usher-service-push</name>
+    <description>
+        外界api调用服务
+    </description>
+
+    <packaging>jar</packaging>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-service/usher-service-push</url>
     <parent>
         <artifactId>usher-service</artifactId>
-        <groupId>team.opentech.usher</groupId>
+        <groupId>top.uhyils.usher</groupId>
         <version>2.1.0.1.usher-SNAPSHOT</version>
     </parent>
-    <packaging>jar</packaging>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -29,24 +34,24 @@
     <dependencies>
 
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-base</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-service</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-mq</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-push</artifactId>
         </dependency>
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-user</artifactId>
         </dependency>
 
@@ -87,7 +92,7 @@
 
         <!-- https://mvnrepository.com/artifact/team.opentech.usher/usher-rpc-spring-start -->
         <dependency>
-            <groupId>team.opentech.usher</groupId>
+            <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-rpc-spring-start</artifactId>
         </dependency>
 
