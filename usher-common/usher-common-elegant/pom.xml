@@ -15,7 +15,7 @@
     <parent>
         <artifactId>usher-common</artifactId>
         <groupId>top.uhyils.usher</groupId>
-        <version>2.1.0.1.usher-SNAPSHOT</version>
+        <version>2.1.0.2.usher</version>
     </parent>
 
     <properties>
