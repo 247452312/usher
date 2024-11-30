@@ -1,0 +1,2 @@
+default_consumer=top.uhyils.usher.rpc.registry.ConsumerRegistryImpl
+default_provider=top.uhyils.usher.rpc.registry.ProviderRegistryImpl

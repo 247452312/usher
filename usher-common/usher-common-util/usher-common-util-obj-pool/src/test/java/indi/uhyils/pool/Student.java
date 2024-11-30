@@ -1,4 +1,4 @@
-package team.opentech.usher.pool;
+package top.uhyils.usher.pool;
 
 /**
  * @author uhyils <247452312@qq.com>

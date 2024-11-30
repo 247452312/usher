@@ -1,7 +1,7 @@
-package team.opentech.usher.builder;
+package top.uhyils.usher.builder;
 
 
-import team.opentech.usher.pojo.DTO.BlackListDTO;
+import top.uhyils.usher.pojo.DTO.BlackListDTO;
 
 /**
  * @author uhyils <247452312@qq.com>

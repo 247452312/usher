@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  team.opentech.usher.rpc.spring.RpcConfigAutoInitConfiguration
+  top.uhyils.usher.rpc.spring.RpcConfigAutoInitConfiguration

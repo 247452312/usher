@@ -1,6 +1,6 @@
-package team.opentech.usher.utils;
+package top.uhyils.usher.utils;
 
-import team.opentech.usher.pojo.DO.MongoDO;
+import top.uhyils.usher.pojo.DO.MongoDO;
 
 /**
  * @author uhyils <247452312@qq.com>

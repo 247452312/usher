@@ -82,7 +82,7 @@
                         obj.powerIds.push(getData[i].value);
                     }
                     obj.deptId = deptId;
-                    obj.class = 'team.opentech.usher.pojo.request.PutPowersToDeptRequest';
+                    obj.class = 'top.uhyils.usher.pojo.request.PutPowersToDeptRequest';
                     pushRequest("DeptProvider", "putPowersToDept", obj, function (data) {
                         layer.msg("成功");
                         var iframeIndex = parent.layer.getFrameIndex(window.name);

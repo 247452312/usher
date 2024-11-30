@@ -112,7 +112,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>team.opentech.usher.LogApplication</mainClass>
+                    <mainClass>top.uhyils.usher.LogApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

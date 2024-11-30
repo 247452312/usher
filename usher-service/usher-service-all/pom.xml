@@ -32,7 +32,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>team.opentech.usher.MyRunner</mainClass>
+                            <mainClass>top.uhyils.usher.MyRunner</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

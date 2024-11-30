@@ -22,7 +22,7 @@ rpc:
     name: test-event-bus
 logging:
   level:
-    team.opentech.usher.dao: INFO
+    top.uhyils.usher.dao: INFO
 token:
   salt: usher
   encodeRules: usher

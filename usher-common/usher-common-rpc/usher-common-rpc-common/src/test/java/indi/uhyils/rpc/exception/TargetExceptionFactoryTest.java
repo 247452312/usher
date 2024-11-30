@@ -1,7 +1,7 @@
-//package team.opentech.usher.rpc.exception;
+//package top.uhyils.usher.rpc.exception;
 //
-//import team.opentech.usher.rpc.util.ExceptionUtil;
-//import team.opentech.usher.util.Asserts;
+//import top.uhyils.usher.rpc.util.ExceptionUtil;
+//import top.uhyils.usher.util.Asserts;
 //import org.junit.jupiter.api.Test;
 //
 ///**

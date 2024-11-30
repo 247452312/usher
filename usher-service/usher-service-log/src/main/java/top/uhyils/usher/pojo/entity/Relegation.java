@@ -1,0 +1,120 @@
+package top.uhyils.usher.pojo.entity;
+
+import java.util.Optional;
+import top.uhyils.usher.annotation.Default;
+import top.uhyils.usher.enums.LogTypeEnum;
+import top.uhyils.usher.facade.ServiceControlFacade;
+import top.uhyils.usher.pojo.DO.RelegationDO;
+import top.uhyils.usher.pojo.entity.base.AbstractDoEntity;
+import top.uhyils.usher.repository.RelegationRepository;
+import top.uhyils.usher.util.Asserts;
+import top.uhyils.usher.util.StringUtil;
+
+/**
+ * 接口降级策略(Relegation)表 数据库实体类
+ *
+ * @author uhyils <247452312@qq.com>
+ * @date 文件创建日期 2021年09月27日 09时33分23秒
+ */
+public class Relegation extends AbstractDoEntity<RelegationDO> {
+
+    /**
+     * 默认入参个数
+     */
+    private static final Integer DEFAULT_PARAM_LENGTH = 1;
+
+    /**
+     * 日志类型
+     */
+    private LogTypeEnum logTypeEnum;
+
+    @Default
+    public Relegation(RelegationDO data) {
+        super(data);
+    }
+
+    public Relegation(String serviceName, String methodName) {
+        super(new RelegationDO());
+        Optional<RelegationDO> relegationDO = toData();
+        relegationDO.ifPresent(dO -> {
+            dO.setServiceName(serviceName);
+            dO.setMethodName(methodName);
+        });
+
+    }
+
+    public Relegation(Long id) {
+        super(id, new RelegationDO());
+    }
+
+    public Relegation(Long id, RelegationRepository rep) {
+        super(id, new RelegationDO());
+        completion(rep);
+    }
+
+
+    public Relegation(Integer type, String serviceName, String methodName) {
+        super(new RelegationDO());
+        Optional<RelegationDO> relegationDO = toData();
+        relegationDO.ifPresent(dO -> {
+            this.logTypeEnum = LogTypeEnum.parse(type).get();
+            dO.setServiceName(serviceName);
+            dO.setMethodName(methodName);
+        });
+    }
+
+    /**
+     * 检查是否合理
+     *
+     * @return
+     */
+    public void validate() {
+        Asserts.assertTrue(logTypeEnum == LogTypeEnum.RPC, "非RPC,不是接口");
+        RelegationDO relegationDO = toData().orElseThrow(() -> Asserts.makeException("没有查到接口信息"));
+        Asserts.assertTrue(StringUtil.isNotEmpty(relegationDO.getServiceName()) && StringUtil.isNotEmpty(relegationDO.getMethodName()));
+    }
+
+    /**
+     * 检查是否重复
+     *
+     * @param rep
+     */
+    public boolean checkRepeat(RelegationRepository rep) {
+        return rep.checkRepeat(this);
+    }
+
+    /**
+     * 设置默认值
+     */
+    public void initDefault() {
+        RelegationDO relegationDO = toData().orElseThrow(() -> Asserts.makeException("未找到降级接口"));
+        Integer paramLength = relegationDO.getParamLength();
+        if (paramLength == null) {
+            relegationDO.setParamLength(DEFAULT_PARAM_LENGTH);
+        }
+    }
+
+    /**
+     * 降级
+     *
+     * @param facade
+     *
+     * @return
+     */
+    public boolean demotion(ServiceControlFacade facade) {
+        RelegationDO dO = this.toData().orElseThrow(() -> Asserts.makeException("未找到降级接口"));
+        return facade.demotion(dO.getServiceName(), dO.getMethodName());
+    }
+
+    /**
+     * 服务恢复
+     *
+     * @param facade
+     *
+     * @return
+     */
+    public boolean recover(ServiceControlFacade facade) {
+        RelegationDO dO = this.toData().orElseThrow(() -> Asserts.makeException("未找到降级接口"));
+        return facade.recover(dO.getServiceName(), dO.getMethodName());
+    }
+}

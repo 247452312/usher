@@ -38,7 +38,7 @@
 
     <!--2. 输出到文档-->
     <!-- 2.1 level为 DEBUG 日志，时间滚动输出  -->
-    <appender name="DEBUG_FILE" class="team.opentech.usher.mq.log.MyLogAppender">
+    <appender name="DEBUG_FILE" class="top.uhyils.usher.mq.log.MyLogAppender">
         <!-- 正在记录的日志文档的路径及文档名 -->
         <file>${log.path}/${log.dir.name}/debug.log</file>
         <!--日志文档输出格式-->
@@ -65,7 +65,7 @@
     </appender>
 
     <!-- 2.2 level为 INFO 日志，时间滚动输出  -->
-    <appender name="INFO_FILE" class="team.opentech.usher.mq.log.MyLogAppender">
+    <appender name="INFO_FILE" class="top.uhyils.usher.mq.log.MyLogAppender">
         <!-- 正在记录的日志文档的路径及文档名 -->
         <file>${log.path}/${log.dir.name}/info.log</file>
         <!--日志文档输出格式-->
@@ -92,7 +92,7 @@
     </appender>
 
     <!-- 2.3 level为 WARN 日志，时间滚动输出  -->
-    <appender name="WARN_FILE" class="team.opentech.usher.mq.log.MyLogAppender">
+    <appender name="WARN_FILE" class="top.uhyils.usher.mq.log.MyLogAppender">
         <!-- 正在记录的日志文档的路径及文档名 -->
         <file>${log.path}/${log.dir.name}/warn.log</file>
         <!--日志文档输出格式-->
@@ -118,7 +118,7 @@
     </appender>
 
     <!-- 2.4 level为 ERROR 日志，时间滚动输出  -->
-    <appender name="ERROR_FILE" class="team.opentech.usher.mq.log.MyLogAppender">
+    <appender name="ERROR_FILE" class="top.uhyils.usher.mq.log.MyLogAppender">
         <!-- 正在记录的日志文档的路径及文档名 -->
         <file>${log.path}/${log.dir.name}/error.log</file>
         <!--日志文档输出格式-->
@@ -145,7 +145,7 @@
 
 
     <!--     link_log       -->
-    <appender name="LINK_FILE" class="team.opentech.usher.mq.log.MyLogAppender">
+    <appender name="LINK_FILE" class="top.uhyils.usher.mq.log.MyLogAppender">
         <encoder>
             <pattern>%msg%n</pattern>
             <charset>UTF-8</charset>
@@ -167,7 +167,7 @@
 
 
     <!--     sql_log       -->
-    <appender name="SQL_FILE" class="team.opentech.usher.mq.log.MyLogAppender">
+    <appender name="SQL_FILE" class="top.uhyils.usher.mq.log.MyLogAppender">
         <encoder>
             <pattern>%msg%n</pattern>
             <charset>UTF-8</charset>
@@ -187,7 +187,7 @@
         <appender-ref ref="SQL_FILE"/>
     </logger>
     <!--     mq_log       -->
-    <appender name="MQ_FILE" class="team.opentech.usher.mq.log.MyLogAppender">
+    <appender name="MQ_FILE" class="top.uhyils.usher.mq.log.MyLogAppender">
         <encoder>
             <pattern>%msg%n</pattern>
             <charset>UTF-8</charset>
@@ -208,7 +208,7 @@
     </logger>
 
     <!--     rpc_log       -->
-    <appender name="RPC_FILE" class="team.opentech.usher.mq.log.MyLogAppender">
+    <appender name="RPC_FILE" class="top.uhyils.usher.mq.log.MyLogAppender">
         <encoder>
             <pattern>%msg%n</pattern>
             <charset>UTF-8</charset>
@@ -229,7 +229,7 @@
     </logger>
 
     <!--     task_log       -->
-    <appender name="TASK_FILE" class="team.opentech.usher.mq.log.MyLogAppender">
+    <appender name="TASK_FILE" class="top.uhyils.usher.mq.log.MyLogAppender">
         <encoder>
             <pattern>%msg%n</pattern>
             <charset>UTF-8</charset>
@@ -249,7 +249,7 @@
         <appender-ref ref="TASK_FILE"/>
     </logger>
     <!--     controller_log       -->
-    <appender name="CONTROLLER_FILE" class="team.opentech.usher.mq.log.MyLogAppender">
+    <appender name="CONTROLLER_FILE" class="top.uhyils.usher.mq.log.MyLogAppender">
         <encoder>
             <pattern>%msg%n</pattern>
             <charset>UTF-8</charset>
@@ -272,7 +272,7 @@
     <!-- 4. 最终的策略 -->
     <!-- 4.1 开发环境:打印控制台-->
     <springProfile name="dev">
-        <logger name="team.opentech.usher" level="${log.level}"/>
+        <logger name="top.uhyils.usher" level="${log.level}"/>
     </springProfile>
 
     <root level="${log.level}">

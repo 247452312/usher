@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="team.opentech.usher.dao.OutApiDao">
-    <resultMap type="team.opentech.usher.pojo.DO.OutApiDO" id="OutApiMap">
+<mapper namespace="top.uhyils.usher.dao.OutApiDao">
+    <resultMap type="top.uhyils.usher.pojo.DO.OutApiDO" id="OutApiMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="createDate" column="create_date" jdbcType="INTEGER"/>
         <result property="createUser" column="create_user" jdbcType="INTEGER"/>
@@ -15,7 +15,7 @@
     </resultMap>
 
     <!--批量通过主键修改数据-->
-    <update id="updateBatch" parameterType="team.opentech.usher.pojo.DO.OutApiDO">
+    <update id="updateBatch" parameterType="top.uhyils.usher.pojo.DO.OutApiDO">
         <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
             update sys_out_api set
             update_date = #{item.updateDate}

@@ -120,14 +120,32 @@ CREATE TABLE `sys_job`  (
 -- ----------------------------
 -- Records of sys_job
 -- ----------------------------
-INSERT INTO `sys_job` VALUES (0, 1593473870, 0, b'0', NULL, 1593473870, 0, '0 30 17 * * ?', 'PushService', 'push', '订阅推送-晚上5:30', 'team.opentech.usher.pojo.request.CronRequest', '{\"cron\":\"0 30 17 * * ?\"}', b'0');
-INSERT INTO `sys_job` VALUES (1, 1593391369, 0, b'0', NULL, 1593395040, 0, '0 0 6 * * ? ', 'PushService', 'push', '订阅推送-早6:00', 'team.opentech.usher.pojo.request.CronRequest', '{\"cron\":\"0 0 6 * * * ?\"}', b'0');
-INSERT INTO `sys_job` VALUES (2, 1593473771, 0, b'0', NULL, 1593480150, 0, '0 0 12 * * ?', 'PushService', 'push', '订阅推送-中午12:00', 'team.opentech.usher.pojo.request.CronRequest', '{\"cron\":\"0 0 12 * * * ?\"}', b'0');
-INSERT INTO `sys_job` VALUES (3, 1593217767, 0, b'1', NULL, 1593219990, 0, '0/10 * * * * ?', 'RoleService', 'getById', '测试-角色接口-getRoleByRoleId', 'team.opentech.usher.pojo.request.base.IdRequest', '{\"id\":\"0f2ab23bbb1cd11e\"}', b'1');
-INSERT INTO `sys_job` VALUES (4, 1593473816, 0, b'0', NULL, 1593473816, 0, '0 30 13 * * ?', 'PushService', 'push', '订阅推送-下午1:30', 'team.opentech.usher.pojo.request.CronRequest', '{\"cron\":\"0 30 13 * * ?\"}', b'0');
-INSERT INTO `sys_job` VALUES (5, 1593473710, 0, b'0', NULL, 1593473735, 0, '0 0 5 * * ?', 'PushService', 'push', '订阅推送-早5:00', 'team.opentech.usher.pojo.request.CronRequest', '{\"cron\":\"0 0 5 * * * ?\"}', b'0');
-INSERT INTO `sys_job` VALUES (6, 1593473916, 0, b'0', NULL, 1593473916, 0, '0 0 18 * * ?', 'PushService', 'push', '订阅推送-晚上6:00', 'team.opentech.usher.pojo.request.CronRequest', '{\"cron\":\"0 0 18 * * ?\"}', b'0');
-INSERT INTO `sys_job` VALUES (7, 1593230549, 0, b'1', NULL, 1593391374, 0, '0/10 * * * * ?', 'RoleService', 'getById', '测试-角色接口-getRoleByRoleId', 'team.opentech.usher.pojo.request.base.IdRequest', '{\"id\":\"0f2ab23bbb1cd11e\"}', b'1');
+INSERT INTO `sys_job`
+VALUES (0, 1593473870, 0, b'0', NULL, 1593473870, 0, '0 30 17 * * ?', 'PushService', 'push', '订阅推送-晚上5:30',
+        'top.uhyils.usher.pojo.request.CronRequest', '{\"cron\":\"0 30 17 * * ?\"}', b'0');
+INSERT INTO `sys_job`
+VALUES (1, 1593391369, 0, b'0', NULL, 1593395040, 0, '0 0 6 * * ? ', 'PushService', 'push', '订阅推送-早6:00',
+        'top.uhyils.usher.pojo.request.CronRequest', '{\"cron\":\"0 0 6 * * * ?\"}', b'0');
+INSERT INTO `sys_job`
+VALUES (2, 1593473771, 0, b'0', NULL, 1593480150, 0, '0 0 12 * * ?', 'PushService', 'push', '订阅推送-中午12:00',
+        'top.uhyils.usher.pojo.request.CronRequest', '{\"cron\":\"0 0 12 * * * ?\"}', b'0');
+INSERT INTO `sys_job`
+VALUES (3, 1593217767, 0, b'1', NULL, 1593219990, 0, '0/10 * * * * ?', 'RoleService', 'getById',
+        '测试-角色接口-getRoleByRoleId', 'top.uhyils.usher.pojo.request.base.IdRequest',
+        '{\"id\":\"0f2ab23bbb1cd11e\"}', b'1');
+INSERT INTO `sys_job`
+VALUES (4, 1593473816, 0, b'0', NULL, 1593473816, 0, '0 30 13 * * ?', 'PushService', 'push', '订阅推送-下午1:30',
+        'top.uhyils.usher.pojo.request.CronRequest', '{\"cron\":\"0 30 13 * * ?\"}', b'0');
+INSERT INTO `sys_job`
+VALUES (5, 1593473710, 0, b'0', NULL, 1593473735, 0, '0 0 5 * * ?', 'PushService', 'push', '订阅推送-早5:00',
+        'top.uhyils.usher.pojo.request.CronRequest', '{\"cron\":\"0 0 5 * * * ?\"}', b'0');
+INSERT INTO `sys_job`
+VALUES (6, 1593473916, 0, b'0', NULL, 1593473916, 0, '0 0 18 * * ?', 'PushService', 'push', '订阅推送-晚上6:00',
+        'top.uhyils.usher.pojo.request.CronRequest', '{\"cron\":\"0 0 18 * * ?\"}', b'0');
+INSERT INTO `sys_job`
+VALUES (7, 1593230549, 0, b'1', NULL, 1593391374, 0, '0/10 * * * * ?', 'RoleService', 'getById',
+        '测试-角色接口-getRoleByRoleId', 'top.uhyils.usher.pojo.request.base.IdRequest',
+        '{\"id\":\"0f2ab23bbb1cd11e\"}', b'1');
 
 -- ----------------------------
 -- Table structure for sys_push_msg

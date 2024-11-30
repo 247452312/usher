@@ -1,8 +1,8 @@
-package team.opentech.usher;
+package top.uhyils.usher;
 
-import team.opentech.usher.rpc.config.RpcConfigFactory;
-import team.opentech.usher.rpc.netty.function.FunctionOneInterface;
-import team.opentech.usher.rpc.proxy.RpcProxyFactory;
+import top.uhyils.usher.rpc.config.RpcConfigFactory;
+import top.uhyils.usher.rpc.netty.function.FunctionOneInterface;
+import top.uhyils.usher.rpc.proxy.RpcProxyFactory;
 
 /**
  * @author uhyils <247452312@qq.com>

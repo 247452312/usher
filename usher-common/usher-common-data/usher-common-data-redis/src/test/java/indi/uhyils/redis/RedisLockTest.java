@@ -1,7 +1,5 @@
-package team.opentech.usher.redis;
+package top.uhyils.usher.redis;
 
-import team.opentech.usher.util.Asserts;
-import team.opentech.usher.util.LogUtil;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -19,6 +17,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import top.uhyils.usher.util.Asserts;
+import top.uhyils.usher.util.LogUtil;
 
 /**
  * @author uhyils <247452312@qq.com>

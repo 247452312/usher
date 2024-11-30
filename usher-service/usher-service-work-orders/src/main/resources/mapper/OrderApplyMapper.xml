@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="team.opentech.usher.dao.OrderApplyDao">
-    <resultMap type="team.opentech.usher.pojo.DO.OrderApplyDO" id="OrderApplyMap">
+<mapper namespace="top.uhyils.usher.dao.OrderApplyDao">
+    <resultMap type="top.uhyils.usher.pojo.DO.OrderApplyDO" id="OrderApplyMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="createDate" column="create_date" jdbcType="INTEGER"/>
         <result property="createUser" column="create_user" jdbcType="INTEGER"/>
@@ -19,7 +19,7 @@
     </resultMap>
 
     <!--批量通过主键修改数据-->
-    <update id="updateBatch" parameterType="team.opentech.usher.pojo.DO.OrderApplyDO">
+    <update id="updateBatch" parameterType="top.uhyils.usher.pojo.DO.OrderApplyDO">
         <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
             update sys_order_apply set
             update_date = #{item.updateDate}

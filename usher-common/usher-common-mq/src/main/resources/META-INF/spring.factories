@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  team.opentech.usher.mq.pojo.rocket.RocketMqConfigInfo
+  top.uhyils.usher.mq.pojo.rocket.RocketMqConfigInfo

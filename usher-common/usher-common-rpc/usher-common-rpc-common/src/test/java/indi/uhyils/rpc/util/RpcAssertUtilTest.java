@@ -1,4 +1,4 @@
-package team.opentech.usher.rpc.util;
+package top.uhyils.usher.rpc.util;
 
 import org.junit.jupiter.api.Test;
 

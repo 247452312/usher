@@ -1,2 +1,0 @@
-PROVIDER_NETTY_DEFAULT_NAME=team.opentech.usher.rpc.netty.core.RpcNettyNormalProvider
-CONSUMER_NETTY_DEFAULT_NAME=team.opentech.usher.rpc.netty.core.RpcNettyNormalConsumer

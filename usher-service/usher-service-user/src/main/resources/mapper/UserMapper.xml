@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="team.opentech.usher.dao.UserDao">
+<mapper namespace="top.uhyils.usher.dao.UserDao">
 
     <sql id="columnList">
         a.id,
@@ -55,7 +55,7 @@
         a.level
     </sql>
 
-    <resultMap type="team.opentech.usher.pojo.DO.UserDO" id="UserMap">
+    <resultMap type="top.uhyils.usher.pojo.DO.UserDO" id="UserMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="createDate" column="create_date" jdbcType="INTEGER"/>
         <result property="createUser" column="create_user" jdbcType="INTEGER"/>
@@ -74,7 +74,7 @@
     </resultMap>
 
     <!--批量通过主键修改数据-->
-    <update id="updateBatch" parameterType="team.opentech.usher.pojo.DO.UserDO">
+    <update id="updateBatch" parameterType="top.uhyils.usher.pojo.DO.UserDO">
         <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
             update sys_user set
             update_date = #{item.updateDate}
@@ -126,7 +126,7 @@
     </update>
 
 
-    <select id="getUserRoleById" resultType="team.opentech.usher.pojo.DO.RoleDO">
+    <select id="getUserRoleById" resultType="top.uhyils.usher.pojo.DO.RoleDO">
         select
         <include refid="roleColumnList"/>
         from sys_role a
@@ -134,19 +134,19 @@
         id = #{roleId}
     </select>
 
-    <select id="getUserDeptsByRoleId" resultType="team.opentech.usher.pojo.DO.DeptDO">
+    <select id="getUserDeptsByRoleId" resultType="top.uhyils.usher.pojo.DO.DeptDO">
         select
         <include refid="deptColumnList"/>
         from sys_dept a right join sys_role_dept b on a.id = b.dept_id where b.role_id = #{roleId}
     </select>
 
-    <select id="getUserPowerByDeptId" resultType="team.opentech.usher.pojo.DO.PowerDO">
+    <select id="getUserPowerByDeptId" resultType="top.uhyils.usher.pojo.DO.PowerDO">
         select
         <include refid="powerColumnList"/>
         from sys_power a right join sys_dept_power b on a.id = b.power_id where b.dept_id = #{deptId}
     </select>
 
-    <select id="getAll" resultType="team.opentech.usher.pojo.DO.UserDO">
+    <select id="getAll" resultType="top.uhyils.usher.pojo.DO.UserDO">
         select
         <include refid="columnList"/>
         from sys_user a

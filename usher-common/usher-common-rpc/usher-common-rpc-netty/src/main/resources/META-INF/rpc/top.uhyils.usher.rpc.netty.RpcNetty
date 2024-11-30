@@ -1,0 +1,2 @@
+PROVIDER_NETTY_DEFAULT_NAME=top.uhyils.usher.rpc.netty.core.RpcNettyNormalProvider
+CONSUMER_NETTY_DEFAULT_NAME=top.uhyils.usher.rpc.netty.core.RpcNettyNormalConsumer

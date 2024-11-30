@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="team.opentech.usher.dao.RoleDao">
-    <resultMap type="team.opentech.usher.pojo.DO.RoleDO" id="RoleMap">
+<mapper namespace="top.uhyils.usher.dao.RoleDao">
+    <resultMap type="top.uhyils.usher.pojo.DO.RoleDO" id="RoleMap">
         <result property="id" column="id" jdbcType="VARCHAR"/>
         <result property="createDate" column="create_date" jdbcType="INTEGER"/>
         <result property="createUser" column="create_user" jdbcType="VARCHAR"/>
@@ -14,7 +14,7 @@
     </resultMap>
 
     <!--批量通过主键修改数据-->
-    <update id="updateBatch" parameterType="team.opentech.usher.pojo.DO.RoleDO">
+    <update id="updateBatch" parameterType="top.uhyils.usher.pojo.DO.RoleDO">
         <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
             update sys_role set
             update_date = #{item.updateDate}
@@ -46,7 +46,7 @@
             where id = #{item.id}
         </foreach>
     </update>
-    <insert id="insertRoleDept" parameterType="team.opentech.usher.pojo.DO.RoleDeptDO">
+    <insert id="insertRoleDept" parameterType="top.uhyils.usher.pojo.DO.RoleDeptDO">
         insert into sys_role_dept(id, dept_id, role_id)
         values (#{id}, #{deptId}, #{roleId})
     </insert>
@@ -73,7 +73,7 @@
         where delete_flag = 0
     </select>
 
-    <select id="getAllDeptWithHaveMark" resultType="team.opentech.usher.pojo.DTO.response.GetAllDeptWithHaveMarkDTO">
+    <select id="getAllDeptWithHaveMark" resultType="top.uhyils.usher.pojo.DTO.response.GetAllDeptWithHaveMarkDTO">
         select a.id                                                                                 deptId,
         a.name                                                                               deptName,
         (select count(*) = 1 from sys_role_dept where role_id = #{id} and dept_id = a.id) as mark
@@ -93,7 +93,7 @@
         where role_id = #{id}
     </update>
 
-    <select id="getRoleDeptLinkByRoleId" resultType="team.opentech.usher.pojo.DO.RoleDeptDO">
+    <select id="getRoleDeptLinkByRoleId" resultType="top.uhyils.usher.pojo.DO.RoleDeptDO">
         select a.id, a.dept_id as deptId, a.role_id as roleId
         from sys_role_dept a
         where a.role_id = #{roleIdValue}

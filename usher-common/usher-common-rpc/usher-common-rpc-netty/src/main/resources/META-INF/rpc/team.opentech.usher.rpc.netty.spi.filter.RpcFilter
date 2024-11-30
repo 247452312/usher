@@ -1,5 +1,0 @@
-# consumerTimeoutFilter=team.opentech.usher.rpc.netty.spi.filter.timeout.ConsumerTimeOutFilter
-# providerTimeoutFilter=team.opentech.usher.rpc.netty.spi.filter.timeout.ProviderTimeOutFilter
-retryFilter=team.opentech.usher.rpc.netty.spi.filter.retry.RetryFilter
-headerProviderFilter=team.opentech.usher.rpc.netty.spi.filter.header.HeaderProviderFilter
-exceptionOutLogFilter=team.opentech.usher.rpc.netty.spi.filter.exception.ExceptionLogTransRespFilter

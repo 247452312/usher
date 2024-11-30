@@ -13,7 +13,7 @@ nacos:
     # 配置文件类型,对应nacos配置页面的配置格式，默认是properties
     type: yaml
     # nacos服务器地址
-    server-addr: nacos.usher
+    server-addr: nacos.uhyils.top
     # 开启自动刷新nacos配置
     auto-refresh: true
     # 针对配置项同名的情况，是否允许nacos的配置覆盖本地的配置

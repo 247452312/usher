@@ -1,0 +1,2 @@
+default_provider_name=top.uhyils.usher.rpc.cluster.provider.impl.ProviderDefaultCluster
+default_consumer_name=top.uhyils.usher.rpc.cluster.consumer.impl.ConsumerDefaultCluster

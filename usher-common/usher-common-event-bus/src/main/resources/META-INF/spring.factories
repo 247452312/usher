@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=team.opentech.usher.config.BugConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=top.uhyils.usher.config.BugConfig

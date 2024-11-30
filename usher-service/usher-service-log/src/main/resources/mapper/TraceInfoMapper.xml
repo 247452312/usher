@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="team.opentech.usher.dao.TraceInfoDao">
-    <resultMap type="team.opentech.usher.pojo.DO.TraceInfoDO" id="TraceInfoMap">
+<mapper namespace="top.uhyils.usher.dao.TraceInfoDao">
+    <resultMap type="top.uhyils.usher.pojo.DO.TraceInfoDO" id="TraceInfoMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="loggerName" column="logger_name" jdbcType="VARCHAR"/>
         <result property="level" column="level" jdbcType="VARCHAR"/>
@@ -46,7 +46,7 @@
     </sql>
 
     <!--批量通过主键修改数据-->
-    <update id="updateBatch" parameterType="team.opentech.usher.pojo.DO.TraceInfoDO">
+    <update id="updateBatch" parameterType="top.uhyils.usher.pojo.DO.TraceInfoDO">
         <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
             update sys_trace_info set
             update_date = #{item.updateDate}
@@ -123,7 +123,7 @@
         select count(*)
         from v_sys_trace_detail_statistics a
     </select>
-    <select id="getTraceStatistics" resultType="team.opentech.usher.pojo.DO.TraceDetailStatisticsView">
+    <select id="getTraceStatistics" resultType="top.uhyils.usher.pojo.DO.TraceDetailStatisticsView">
         select a.time,
         a.type,
         a.type_name as typeName,
@@ -152,7 +152,7 @@
         </if>
     </select>
 
-    <select id="getLinkByTraceIdAndRpcIdPrefix" resultType="team.opentech.usher.pojo.DO.TraceInfoDO">
+    <select id="getLinkByTraceIdAndRpcIdPrefix" resultType="top.uhyils.usher.pojo.DO.TraceInfoDO">
         select
         <include refid="columnList"/>
         from sys_trace_info a
@@ -161,7 +161,7 @@
         and (rpc_id like '${rpcId}.%' or rpc_id = #{rpcId})
     </select>
 
-    <select id="getTraceInfoByTraceId" resultType="team.opentech.usher.pojo.DO.TraceInfoDO">
+    <select id="getTraceInfoByTraceId" resultType="top.uhyils.usher.pojo.DO.TraceInfoDO">
         select
         <include refid="columnList"/>
         from sys_trace_info a

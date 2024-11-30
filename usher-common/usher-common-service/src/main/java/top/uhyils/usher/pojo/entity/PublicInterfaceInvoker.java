@@ -1,0 +1,52 @@
+package top.uhyils.usher.pojo.entity;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
+import org.aspectj.lang.reflect.MethodSignature;
+import top.uhyils.usher.annotation.Public;
+import top.uhyils.usher.pojo.DTO.base.ServiceResult;
+import top.uhyils.usher.util.CollectionUtil;
+
+/**
+ * @author uhyils <247452312@qq.com>
+ * @date 文件创建日期 2022年06月20日 11时04分
+ */
+public class PublicInterfaceInvoker extends AbstractAnnotationInterfaceInvoker {
+
+
+    public PublicInterfaceInvoker(ProceedingJoinPoint pjp) {
+        super(pjp);
+    }
+
+
+    /**
+     * 检查是否是公开接口
+     *
+     * @param pjp
+     *
+     * @return
+     */
+    public static boolean checkAnnotation(ProceedingJoinPoint pjp) {
+        Class<?> targetClass = pjp.getTarget().getClass();
+        Signature signature = pjp.getSignature();
+        Public[] methodNoLoginAnnotation = ((MethodSignature) signature).getMethod().getAnnotationsByType(Public.class);
+        Public[] classNoLoginAnnotation = targetClass.getAnnotationsByType(Public.class);
+        return CollectionUtil.isNotEmpty(methodNoLoginAnnotation) || CollectionUtil.isNotEmpty(classNoLoginAnnotation);
+    }
+
+    public static PublicInterfaceInvoker create(ProceedingJoinPoint pjp) {
+        return new PublicInterfaceInvoker(pjp);
+    }
+
+
+    @Override
+    public Object invoke() throws Throwable {
+        ServiceResult<Long> result = checkIp();
+        if (result != null) {
+            return result;
+        }
+        return pjp.proceed();
+    }
+
+
+}

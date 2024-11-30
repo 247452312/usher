@@ -82,7 +82,7 @@
                         obj.menuIds.push(getData[i].value);
                     }
                     obj.deptId = deptId;
-                    obj.class = 'team.opentech.usher.pojo.request.PutMenusToDeptsRequest';
+                    obj.class = 'top.uhyils.usher.pojo.request.PutMenusToDeptsRequest';
                     pushRequest("DeptProvider", "putMenusToDept", obj, function (data) {
                         layer.msg("成功");
                         var iframeIndex = parent.layer.getFrameIndex(window.name);

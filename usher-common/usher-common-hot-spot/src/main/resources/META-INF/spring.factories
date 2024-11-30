@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=team.opentech.usher.redis.config.HotSpotConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=top.uhyils.usher.redis.config.HotSpotConfiguration

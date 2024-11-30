@@ -66,10 +66,10 @@ rpc:
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: team.opentech.usher.dao
+  type-aliases-package: top.uhyils.usher.dao
 logging:
   level:
-    team.opentech.usher.dao: INFO
+    top.uhyils.usher.dao: INFO
 token:
   salt: usher
   encodeRules: usher
