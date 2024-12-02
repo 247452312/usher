@@ -1,5 +1,6 @@
 package top.uhyils.usher.pojo.entity;
 
+import com.alibaba.fastjson.JSON;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import top.uhyils.usher.repository.LogMonitorJvmStatusRepository;
 import top.uhyils.usher.repository.LogMonitorRepository;
 import top.uhyils.usher.util.Asserts;
 import top.uhyils.usher.util.CollectionUtil;
+import top.uhyils.usher.util.LogUtil;
 
 /**
  * JVM日志表(LogMonitor)表 数据库实体类
@@ -229,9 +231,14 @@ public class LogMonitor extends AbstractDoEntity<LogMonitorDO> {
         return list;
     }
 
-    public void checkMonitorRepeat(LogMonitorRepository rep) {
+    public boolean checkMonitorRepeat(LogMonitorRepository rep) {
         Integer i = rep.checkMonitorRepeat(unique);
-        Asserts.assertTrue(i == 0, "此服务已存在,不能重复启动");
+        if (i == 0) {
+            return true;
+        } else {
+            LogUtil.error("此服务已存在,不能重复启动,{}", JSON.toJSONString(unique));
+            return false;
+        }
     }
 
     /**

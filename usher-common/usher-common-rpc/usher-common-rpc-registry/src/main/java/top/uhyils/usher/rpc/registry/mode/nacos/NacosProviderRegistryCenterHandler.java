@@ -59,8 +59,10 @@ public class NacosProviderRegistryCenterHandler extends AbstractProviderRegistry
         try {
             RpcConfig rpcConfig = RpcConfigFactory.getInstance();
             RegistryConfig registry = rpcConfig.getRegistry();
-            this.serverAddr = registry.getHost() + ":" + registry.getPort();
-
+            this.serverAddr = registry.getHost();
+            if (registry.getPort() != null) {
+                this.serverAddr = this.serverAddr + ":" + registry.getPort();
+            }
             Properties properties = new Properties();
             properties.put("serverAddr", this.serverAddr);
             if (StringUtils.isNotBlank(registry.getUsername())) {

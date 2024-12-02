@@ -65,8 +65,10 @@ public class LogMonitorServiceImpl extends AbstractDoService<LogMonitorDO, LogMo
     @Override
     public void receiveJvmStartInfo(JvmStartInfoCommand jvmStartInfo) {
         LogMonitor logMonitor = assem.jvmStartInfoToLogMonitor(jvmStartInfo);
-
-        logMonitor.checkMonitorRepeat(rep);
+        // 接收到jvm启动信息: 如果已经启动了,则代表重复接收 直接返回 注意 这里的重复一定是重复接收,因为判断重复的时候用的是启动时的时间戳. 不存在重复的情况. 如果启动信息重复, 说明状态信息也是重复的. 不再接收
+        if (logMonitor.checkMonitorRepeat(rep)) {
+            return;
+        }
 
         /*查询有没有同样ip 且同样服务名称的,如果有,将endtime设置为现在,表示发现停止的时间*/
         logMonitor.changeMonitorThatRepeatByIpAndName(rep);
