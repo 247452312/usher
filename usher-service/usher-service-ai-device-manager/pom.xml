@@ -3,7 +3,7 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>Usher-service-ai-device-manager</artifactId>
+    <artifactId>usher-service-ai-device-manager</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -21,6 +21,14 @@
         <dependency>
             <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.uhyils.usher</groupId>
+            <artifactId>usher-api-provider-ai-device-manager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.uhyils.usher</groupId>
+            <artifactId>usher-api-provider-ai-control</artifactId>
         </dependency>
     </dependencies>
 

@@ -17,4 +17,11 @@
         <version>2.1.0.2.usher-SNAPSHOT</version>
     </parent>
 
+
+    <dependencies>
+        <dependency>
+            <groupId>top.uhyils.usher</groupId>
+            <artifactId>usher-common-base</artifactId>
+        </dependency>
+    </dependencies>
 </project>
