@@ -17,6 +17,6 @@ public interface DeviceManageProvider extends BaseProvider {
      *
      * @return
      */
-    Boolean executeInstruction(ExecuteInstructionCommand command);
+    Object executeInstruction(ExecuteInstructionCommand command);
 
 }

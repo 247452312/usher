@@ -17,7 +17,7 @@ public class DeviceManageProviderImpl implements DeviceManageProvider {
     private DeviceManageService service;
 
     @Override
-    public Boolean executeInstruction(ExecuteInstructionCommand command) {
+    public Object executeInstruction(ExecuteInstructionCommand command) {
         return service.executeInstruction(command);
     }
 }

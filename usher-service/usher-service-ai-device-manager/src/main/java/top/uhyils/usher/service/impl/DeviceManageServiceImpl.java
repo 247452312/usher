@@ -3,8 +3,11 @@ package top.uhyils.usher.service.impl;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import top.uhyils.usher.pojo.cqe.ExecuteInstructionCommand;
-import top.uhyils.usher.repository.DeviceFactoryImpl;
+import top.uhyils.usher.pojo.entity.ControlDevice;
+import top.uhyils.usher.pojo.entity.Device;
+import top.uhyils.usher.repository.DeviceFactory;
 import top.uhyils.usher.service.DeviceManageService;
+import top.uhyils.usher.util.Asserts;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -14,10 +17,12 @@ import top.uhyils.usher.service.DeviceManageService;
 public class DeviceManageServiceImpl implements DeviceManageService {
 
     @Resource
-    private DeviceFactoryImpl deviceFactory;
+    private DeviceFactory deviceFactory;
 
     @Override
-    public Boolean executeInstruction(ExecuteInstructionCommand command) {
-        return null;
+    public Object executeInstruction(ExecuteInstructionCommand command) {
+        Device device = deviceFactory.getDevice(command.getDeviceId());
+        Asserts.assertTrue(device instanceof ControlDevice, "设备不是控制器 不能接受指令");
+        return ((ControlDevice) device).control(command.getContext());
     }
 }

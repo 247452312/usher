@@ -15,5 +15,5 @@ public interface DeviceManageService extends BaseService {
      *
      * @return
      */
-    Boolean executeInstruction(ExecuteInstructionCommand command);
+    Object executeInstruction(ExecuteInstructionCommand command);
 }
