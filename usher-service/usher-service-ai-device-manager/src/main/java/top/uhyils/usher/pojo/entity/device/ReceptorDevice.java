@@ -1,4 +1,4 @@
-package top.uhyils.usher.pojo.entity;
+package top.uhyils.usher.pojo.entity.device;
 
 /**
  * 感受器本身可以主动向系统推送状态, 也可以由系统主动获取

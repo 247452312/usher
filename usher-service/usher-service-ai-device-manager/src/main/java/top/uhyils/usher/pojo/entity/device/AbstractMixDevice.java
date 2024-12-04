@@ -1,4 +1,4 @@
-package top.uhyils.usher.pojo.entity;
+package top.uhyils.usher.pojo.entity.device;
 
 /**
  * 混合设备, 既有控制器又有接收器

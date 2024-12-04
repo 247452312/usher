@@ -1,6 +1,6 @@
 package top.uhyils.usher.repository;
 
-import top.uhyils.usher.pojo.entity.Device;
+import top.uhyils.usher.pojo.entity.device.Device;
 
 /**
  * @author uhyils <247452312@qq.com>

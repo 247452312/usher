@@ -1,4 +1,4 @@
-package top.uhyils.usher.pojo.entity;
+package top.uhyils.usher.pojo.entity.device;
 
 /**
  * 控制器, 控制器可以接收指令,并回应相应的消息或者不回应
