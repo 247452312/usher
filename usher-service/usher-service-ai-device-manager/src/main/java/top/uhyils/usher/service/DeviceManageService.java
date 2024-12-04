@@ -1,6 +1,7 @@
 package top.uhyils.usher.service;
 
 import top.uhyils.usher.pojo.cqe.ExecuteInstructionCommand;
+import top.uhyils.usher.pojo.cqe.FindMsgCommand;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -16,4 +17,13 @@ public interface DeviceManageService extends BaseService {
      * @return
      */
     Object executeInstruction(ExecuteInstructionCommand command);
+
+    /**
+     * 主动从某个传感器上获取数据
+     *
+     * @param command
+     *
+     * @return
+     */
+    Object findMsg(FindMsgCommand command);
 }

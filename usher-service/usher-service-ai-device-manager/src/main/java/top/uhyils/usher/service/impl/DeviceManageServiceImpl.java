@@ -3,8 +3,10 @@ package top.uhyils.usher.service.impl;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import top.uhyils.usher.pojo.cqe.ExecuteInstructionCommand;
+import top.uhyils.usher.pojo.cqe.FindMsgCommand;
 import top.uhyils.usher.pojo.entity.ControlDevice;
 import top.uhyils.usher.pojo.entity.Device;
+import top.uhyils.usher.pojo.entity.ReceptorDevice;
 import top.uhyils.usher.repository.DeviceFactory;
 import top.uhyils.usher.service.DeviceManageService;
 import top.uhyils.usher.util.Asserts;
@@ -21,8 +23,17 @@ public class DeviceManageServiceImpl implements DeviceManageService {
 
     @Override
     public Object executeInstruction(ExecuteInstructionCommand command) {
-        Device device = deviceFactory.getDevice(command.getDeviceId());
+        Device device = deviceFactory.getDevice(command.getUniqueMark());
+        Asserts.assertTrue(device != null, "设备未找到");
         Asserts.assertTrue(device instanceof ControlDevice, "设备不是控制器 不能接受指令");
         return ((ControlDevice) device).control(command.getContext());
+    }
+
+    @Override
+    public Object findMsg(FindMsgCommand command) {
+        Device device = deviceFactory.getDevice(command.getUniqueMark());
+        Asserts.assertTrue(device != null, "设备未找到");
+        Asserts.assertTrue(device instanceof ReceptorDevice, "设备不是感受器, 不能获取信息");
+        return ((ReceptorDevice) device).findMsg(command.getRequest());
     }
 }

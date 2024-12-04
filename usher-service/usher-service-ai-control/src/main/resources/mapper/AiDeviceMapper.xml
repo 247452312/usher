@@ -12,6 +12,7 @@
         <result property="updateDate" column="update_date" jdbcType="BIGINT"/>
         <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
         <result property="deviceNo" column="device_no" jdbcType="VARCHAR"/>
+        <result property="uniqueMark" column="unique_mark" jdbcType="VARCHAR"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="subspaceId" column="subspace_id" jdbcType="BIGINT"/>
         <result property="type" column="type" jdbcType="INTEGER"/>
@@ -51,6 +52,9 @@
             </if>
             <if test="deviceNo != null and deviceNo != ''">
                 ,device_no = #{deviceNo}
+            </if>
+            <if test="uniqueMark != null and uniqueMark != ''">
+                ,unique_mark = #{uniqueMark}
             </if>
             <if test="name != null and name != ''">
                 ,name = #{name}

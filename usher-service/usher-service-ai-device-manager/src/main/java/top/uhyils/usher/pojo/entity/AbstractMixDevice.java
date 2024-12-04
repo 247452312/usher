@@ -8,4 +8,7 @@ package top.uhyils.usher.pojo.entity;
  */
 public abstract class AbstractMixDevice extends AbstractDevice implements ControlDevice, ReceptorDevice {
 
+    public AbstractMixDevice() {
+        super();
+    }
 }

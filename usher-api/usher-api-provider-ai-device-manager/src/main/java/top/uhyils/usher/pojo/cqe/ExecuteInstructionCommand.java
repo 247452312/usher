@@ -19,9 +19,9 @@ public class ExecuteInstructionCommand extends AbstractCommand {
     private String context;
 
     /**
-     * 所属设备
+     * 唯一标示
      */
-    private Long deviceId;
+    private String uniqueMark;
 
     public String getDeviceInstructionNo() {
         return deviceInstructionNo;
@@ -39,11 +39,11 @@ public class ExecuteInstructionCommand extends AbstractCommand {
         this.context = context;
     }
 
-    public Long getDeviceId() {
-        return deviceId;
+    public String getUniqueMark() {
+        return uniqueMark;
     }
 
-    public void setDeviceId(Long deviceId) {
-        this.deviceId = deviceId;
+    public void setUniqueMark(String uniqueMark) {
+        this.uniqueMark = uniqueMark;
     }
 }

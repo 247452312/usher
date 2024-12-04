@@ -8,6 +8,7 @@ import top.uhyils.usher.pojo.cqe.ChangePositionCommand;
 import top.uhyils.usher.pojo.cqe.CreateDeviceCommand;
 import top.uhyils.usher.pojo.cqe.command.IdCommand;
 import top.uhyils.usher.pojo.cqe.command.IdsCommand;
+import top.uhyils.usher.pojo.cqe.command.StringCommand;
 import top.uhyils.usher.pojo.cqe.query.IdQuery;
 import top.uhyils.usher.pojo.event.DeviceCleanEvent;
 import top.uhyils.usher.pojo.event.DeviceInstructionCleanEvent;
@@ -110,6 +111,16 @@ public interface AiDeviceService extends BaseDoService<AiDeviceDTO> {
      * @return
      */
     List<AiDeviceDTO> findDeviceBySpaceId(IdQuery query);
+
+    /**
+     * 根据唯一标示获取设备
+     *
+     * @param command
+     *
+     * @return
+     */
+    AiDeviceDTO findByUniqueMark(StringCommand command);
+
 
 
 }

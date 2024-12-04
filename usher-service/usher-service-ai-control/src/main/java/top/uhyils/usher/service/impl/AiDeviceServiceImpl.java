@@ -13,6 +13,7 @@ import top.uhyils.usher.pojo.cqe.ChangePositionCommand;
 import top.uhyils.usher.pojo.cqe.CreateDeviceCommand;
 import top.uhyils.usher.pojo.cqe.command.IdCommand;
 import top.uhyils.usher.pojo.cqe.command.IdsCommand;
+import top.uhyils.usher.pojo.cqe.command.StringCommand;
 import top.uhyils.usher.pojo.cqe.query.IdQuery;
 import top.uhyils.usher.pojo.entity.AiDevice;
 import top.uhyils.usher.pojo.entity.AiSubspace;
@@ -104,9 +105,9 @@ public class AiDeviceServiceImpl extends AbstractDoService<AiDeviceDO, AiDevice,
     @Override
     public Boolean changeDevice(ChangeDeviceCommand command) {
         AiDevice aiDevice = rep.find(command.getId());
-        aiDevice.name(command.getName());
-        aiDevice.type(command.getType(), command.getSubtype());
-        aiDevice.subSpace(command.getSubspaceId());
+        aiDevice.changeName(command.getName());
+        aiDevice.changeType(command.getType(), command.getSubtype());
+        aiDevice.changeSubSpace(command.getSubspaceId());
         aiDevice.saveSelf(rep);
         return Boolean.TRUE;
     }
@@ -117,5 +118,11 @@ public class AiDeviceServiceImpl extends AbstractDoService<AiDeviceDO, AiDevice,
         List<Long> subSpaceIds = bySpaceId.stream().map(t -> t.unique).collect(Collectors.toList());
         List<AiDevice> devices = rep.findBySubSpaceIds(subSpaceIds);
         return assem.listEntityToDTO(devices);
+    }
+
+    @Override
+    public AiDeviceDTO findByUniqueMark(StringCommand command) {
+        AiDevice deviceDTO = rep.findByUniqueMark(command.getValue());
+        return assem.toDTO(deviceDTO);
     }
 }

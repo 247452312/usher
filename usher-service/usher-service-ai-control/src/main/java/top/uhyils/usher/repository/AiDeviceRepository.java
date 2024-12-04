@@ -48,4 +48,13 @@ public interface AiDeviceRepository extends BaseEntityRepository<AiDeviceDO, AiD
      * @return
      */
     AiSubspace findSubSpaceById(Long deviceId);
+
+    /**
+     * 根据设备唯一标示获取设备
+     *
+     * @param value
+     *
+     * @return
+     */
+    AiDevice findByUniqueMark(String value);
 }

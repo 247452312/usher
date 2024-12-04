@@ -26,10 +26,13 @@ import top.uhyils.usher.repository.base.AbstractRepository;
 @Repository
 public class AiDeviceRepositoryImpl extends AbstractRepository<AiDevice, AiDeviceDO, AiDeviceDao, AiDeviceDTO, AiDeviceAssembler> implements AiDeviceRepository {
 
+    @Resource
+    private AiSubspaceRepository subspaceRepository;
+
+
     protected AiDeviceRepositoryImpl(AiDeviceAssembler convert, AiDeviceDao dao) {
         super(convert, dao);
     }
-
 
     @Override
     public List<AiDevice> findBySubSpaceId(Long subspaceId) {
@@ -55,12 +58,17 @@ public class AiDeviceRepositoryImpl extends AbstractRepository<AiDevice, AiDevic
         return assembler.listToEntity(list);
     }
 
-    @Resource
-    private AiSubspaceRepository subspaceRepository;
-
     @Override
     public AiSubspace findSubSpaceById(Long deviceId) {
         Long subSpaceId = dao.findSubSpaceIdById(deviceId);
         return subspaceRepository.find(subSpaceId);
+    }
+
+    @Override
+    public AiDevice findByUniqueMark(String value) {
+        LambdaQueryChainWrapper<AiDeviceDO> wrapper = lambdaQuery();
+        wrapper.eq(AiDeviceDO::getUniqueMark, value);
+        AiDeviceDO one = wrapper.one();
+        return assembler.toEntity(one);
     }
 }

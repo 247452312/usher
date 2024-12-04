@@ -23,6 +23,13 @@ public class AiDeviceDO extends BaseDO {
     @TableField
     private String deviceNo;
 
+
+    /**
+     * 设备唯一标示
+     */
+    @TableField
+    private String uniqueMark;
+
     /**
      * 设备名称
      */
@@ -64,6 +71,14 @@ public class AiDeviceDO extends BaseDO {
      */
     @TableField
     private String rotate;
+
+    public String getUniqueMark() {
+        return uniqueMark;
+    }
+
+    public void setUniqueMark(String uniqueMark) {
+        this.uniqueMark = uniqueMark;
+    }
 
     public String getPosition() {
         return position;

@@ -8,6 +8,7 @@ import top.uhyils.usher.pojo.cqe.ChangePositionCommand;
 import top.uhyils.usher.pojo.cqe.CreateDeviceCommand;
 import top.uhyils.usher.pojo.cqe.command.IdCommand;
 import top.uhyils.usher.pojo.cqe.command.IdsCommand;
+import top.uhyils.usher.pojo.cqe.command.StringCommand;
 import top.uhyils.usher.pojo.cqe.query.IdQuery;
 import top.uhyils.usher.protocol.rpc.AiDeviceProvider;
 import top.uhyils.usher.protocol.rpc.base.BaseDefaultProvider;
@@ -67,6 +68,11 @@ public class AiDeviceProviderImpl extends BaseDefaultProvider<AiDeviceDTO> imple
     @Override
     public List<AiDeviceDTO> findDeviceBySpaceId(IdQuery query) {
         return service.findDeviceBySpaceId(query);
+    }
+
+    @Override
+    public AiDeviceDTO findByUniqueMark(StringCommand command) {
+        return service.findByUniqueMark(command);
     }
 
 

@@ -9,11 +9,11 @@ import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
 public interface AiDeviceFacade extends BaseFacade {
 
     /**
-     * 获取设备信息
+     * 根据唯一标示获取设备信息
      *
-     * @param deviceId
+     * @param uniqueMark
      *
      * @return
      */
-    AiDeviceDTO find(Long deviceId);
+    AiDeviceDTO findByUniqueMark(String uniqueMark);
 }

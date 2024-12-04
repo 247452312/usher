@@ -3,6 +3,7 @@ package top.uhyils.usher.pojo.entity;
 import com.alibaba.fastjson.JSON;
 import top.uhyils.usher.annotation.Default;
 import top.uhyils.usher.bus.Bus;
+import top.uhyils.usher.enums.AiDeviceStatusEnum;
 import top.uhyils.usher.pojo.DO.AiDeviceDO;
 import top.uhyils.usher.pojo.DTO.Point3D;
 import top.uhyils.usher.pojo.entity.base.AbstractDoEntity;
@@ -47,22 +48,31 @@ public class AiDevice extends AbstractDoEntity<AiDeviceDO> {
         onUpdate();
     }
 
-    public void name(String name) {
+    public void changeName(String name) {
         AiDeviceDO data = toDataAndValidate();
         data.setName(name);
         onUpdate();
     }
 
-    public void type(Integer type, Integer subtype) {
+    public void changeType(Integer type, Integer subtype) {
         AiDeviceDO data = toDataAndValidate();
         data.setType(type);
         data.setSubtype(subtype);
         onUpdate();
     }
 
-    public void subSpace(Long subspaceId) {
+    public void changeSubSpace(Long subspaceId) {
         AiDeviceDO data = toDataAndValidate();
         data.setSubspaceId(subspaceId);
         onUpdate();
+    }
+
+    /**
+     * 设备类型
+     *
+     * @return
+     */
+    public AiDeviceStatusEnum type() {
+        return AiDeviceStatusEnum.getByCode(toDataAndValidate().getType());
     }
 }

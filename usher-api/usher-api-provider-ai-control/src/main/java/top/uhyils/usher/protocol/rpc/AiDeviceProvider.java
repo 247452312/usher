@@ -1,12 +1,14 @@
 package top.uhyils.usher.protocol.rpc;
 
 import java.util.List;
+import top.uhyils.usher.annotation.Nullable;
 import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
 import top.uhyils.usher.pojo.cqe.ChangeDeviceCommand;
 import top.uhyils.usher.pojo.cqe.ChangePositionCommand;
 import top.uhyils.usher.pojo.cqe.CreateDeviceCommand;
 import top.uhyils.usher.pojo.cqe.command.IdCommand;
 import top.uhyils.usher.pojo.cqe.command.IdsCommand;
+import top.uhyils.usher.pojo.cqe.command.StringCommand;
 import top.uhyils.usher.pojo.cqe.query.IdQuery;
 import top.uhyils.usher.protocol.rpc.base.DTOProvider;
 
@@ -95,4 +97,13 @@ public interface AiDeviceProvider extends DTOProvider<AiDeviceDTO> {
      */
     List<AiDeviceDTO> findDeviceBySpaceId(IdQuery query);
 
+    /**
+     * 根据唯一标示获取设备
+     *
+     * @param command
+     *
+     * @return
+     */
+    @Nullable
+    AiDeviceDTO findByUniqueMark(StringCommand command);
 }

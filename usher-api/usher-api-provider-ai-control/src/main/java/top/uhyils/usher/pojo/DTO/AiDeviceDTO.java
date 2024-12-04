@@ -20,6 +20,11 @@ public class AiDeviceDTO extends IdDTO {
     private String deviceNo;
 
     /**
+     * 设备唯一标示
+     */
+    private String uniqueMark;
+
+    /**
      * 设备名称
      */
     private String name;
@@ -53,6 +58,14 @@ public class AiDeviceDTO extends IdDTO {
      * 相对主轴旋转角度
      */
     private String rotate;
+
+    public String getUniqueMark() {
+        return uniqueMark;
+    }
+
+    public void setUniqueMark(String uniqueMark) {
+        this.uniqueMark = uniqueMark;
+    }
 
     public Point3D getPosition() {
         return position;
