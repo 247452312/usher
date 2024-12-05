@@ -2,7 +2,6 @@ package top.uhyils.usher.rpc.netty.core;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jetbrains.annotations.NotNull;
 import top.uhyils.usher.rpc.exchange.pojo.data.RpcData;
 import top.uhyils.usher.rpc.factory.RpcBeanFactory;
 import top.uhyils.usher.rpc.netty.callback.RpcCallBackFactory;
@@ -103,23 +102,6 @@ public class RpcSelfNetty<T> implements RpcNettyConsumer {
         return RpcConsumerHandler.invokeResponseBytes(invoke, consumerResponseByteFilters, consumerResponseDataFilters, RpcCallBackFactory.createResponseCallBack());
     }
 
-    @Override
-    public boolean sendMsg(byte[] bytes) {
-        // 调用本体不会用到这个方法
-        return false;
-    }
-
-    @NotNull
-    @Override
-    public RpcData wait(Long unique) {
-        // 调用本体不会用到这个方法
-        return null;
-    }
-
-    @Override
-    public void put(RpcData rpcData) {
-        // 调用本体不会用到这个方法
-    }
 
     @Override
     public boolean isActive() {

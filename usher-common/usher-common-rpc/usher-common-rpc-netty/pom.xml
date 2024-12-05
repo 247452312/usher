@@ -34,6 +34,10 @@
             <artifactId>usher-common-rpc-exchange</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>top.uhyils.usher</groupId>
+            <artifactId>usher-common-util-thread-sync</artifactId>
+        </dependency>
         <!-- 单元测试 -->
         <!--junit-->
         <dependency>

@@ -9,6 +9,7 @@
         <module>usher-common-util-trace-executor</module>
         <module>usher-common-util-scenario</module>
         <module>usher-common-util-ustream</module>
+        <module>usher-common-util-thread-sync</module>
     </modules>
     <parent>
         <groupId>top.uhyils.usher</groupId>

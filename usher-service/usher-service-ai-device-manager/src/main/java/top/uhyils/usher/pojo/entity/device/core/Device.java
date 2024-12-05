@@ -1,4 +1,4 @@
-package top.uhyils.usher.pojo.entity.device;
+package top.uhyils.usher.pojo.entity.device.core;
 
 import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
 

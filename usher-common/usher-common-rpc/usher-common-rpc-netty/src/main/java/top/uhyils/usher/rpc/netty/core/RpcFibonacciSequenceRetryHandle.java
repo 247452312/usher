@@ -82,8 +82,8 @@ public class RpcFibonacciSequenceRetryHandle extends ChannelInboundHandlerAdapte
                 int count = this.currentRetryCount;
 
                 NettyInitDto nettyInitDto = rpcNettyNormalConsumerObv.getNettyInitDto();
-                rpcNettyNormalConsumerObv.channelFuture = rpcNettyNormalConsumerObv.client.connect(nettyInitDto.getHost(), nettyInitDto.getPort());
-                rpcNettyNormalConsumerObv.channelFuture.addListener(future -> {
+                rpcNettyNormalConsumerObv.sendClient = new RpcNettySendClient(rpcNettyNormalConsumerObv.client.connect(nettyInitDto.getHost(), nettyInitDto.getPort()));
+                rpcNettyNormalConsumerObv.sendClient.channelFuture().addListener(future -> {
                     // 触发事件
                     boolean futureSuccess = future.isSuccess();
                     // 失败后重调递归调
@@ -98,7 +98,7 @@ public class RpcFibonacciSequenceRetryHandle extends ChannelInboundHandlerAdapte
                     }
                     LogUtil.info("重连, 当前次数:{}, 当前延迟重试间隔:{}秒, 重试结果:{}", count, delay, futureSuccess);
                 });
-                rpcNettyNormalConsumerObv.channelFuture.sync();
+                rpcNettyNormalConsumerObv.sendClient.channelFuture().sync();
             } catch (Exception e) {
                 LogUtil.error("重连失败, 原因: ", e);
             }

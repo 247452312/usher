@@ -1,4 +1,6 @@
-package top.uhyils.usher.pojo.entity.device;
+package top.uhyils.usher.pojo.entity.device.control;
+
+import top.uhyils.usher.pojo.entity.device.core.Device;
 
 /**
  * 控制器, 控制器可以接收指令,并回应相应的消息或者不回应

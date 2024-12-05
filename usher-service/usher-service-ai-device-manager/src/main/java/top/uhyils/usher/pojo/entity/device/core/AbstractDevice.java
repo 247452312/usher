@@ -1,4 +1,4 @@
-package top.uhyils.usher.pojo.entity.device;
+package top.uhyils.usher.pojo.entity.device.core;
 
 import java.util.Map;
 import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
@@ -15,6 +15,7 @@ public abstract class AbstractDevice implements Device {
      * 观察者
      */
     private final Map<String, Device> obvDeviceMap;
+
 
     /**
      * 设备id,从控制层获取, 如果没有,则临时生成一个,等到设备创建成功后,再设置
@@ -43,7 +44,7 @@ public abstract class AbstractDevice implements Device {
         this(obvDeviceMap, unique, false, null);
     }
 
-    private AbstractDevice(Map<String, Device> obvDeviceMap, String uniqueMark, Boolean aiDevice, AiDeviceDTO deviceDTO) {
+    protected AbstractDevice(Map<String, Device> obvDeviceMap, String uniqueMark, Boolean aiDevice, AiDeviceDTO deviceDTO) {
         this.obvDeviceMap = obvDeviceMap;
         this.uniqueMark = uniqueMark;
         this.aiDevice = aiDevice;

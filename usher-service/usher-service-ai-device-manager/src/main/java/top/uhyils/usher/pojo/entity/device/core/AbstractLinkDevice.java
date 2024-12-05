@@ -1,0 +1,44 @@
+package top.uhyils.usher.pojo.entity.device.core;
+
+import java.util.Map;
+import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
+import top.uhyils.usher.pojo.entity.link.Link;
+import top.uhyils.usher.util.IdUtil;
+import top.uhyils.usher.util.SpringUtil;
+
+/**
+ * @author uhyils <247452312@qq.com>
+ * @date 文件创建日期 2024年12月05日 08时47分
+ */
+public abstract class AbstractLinkDevice extends AbstractDevice {
+
+
+    private final Link link;
+
+    public AbstractLinkDevice(Map<String, Device> obvDeviceMap, AiDeviceDTO deviceDTO, Link link) {
+        this(obvDeviceMap, deviceDTO.getUniqueMark(), true, deviceDTO, link);
+    }
+
+    public AbstractLinkDevice(Map<String, Device> obvDeviceMap, Link link) {
+        this(obvDeviceMap, Long.toString(SpringUtil.getBean(IdUtil.class).newId()), link);
+    }
+
+    public AbstractLinkDevice(Map<String, Device> obvDeviceMap, String unique, Link link) {
+        this(obvDeviceMap, unique, false, null, link);
+    }
+
+    protected AbstractLinkDevice(Map<String, Device> obvDeviceMap, String uniqueMark, Boolean aiDevice, AiDeviceDTO deviceDTO, Link link) {
+        super(obvDeviceMap, uniqueMark, aiDevice, deviceDTO);
+        this.link = link;
+    }
+
+    @Override
+    public void start() {
+        link.tryLink();
+    }
+
+    @Override
+    public String ip() {
+        return link.ip();
+    }
+}

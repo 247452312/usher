@@ -1,8 +1,9 @@
 package top.uhyils.usher.rpc.netty.spi.filter.invoker;
 
+import java.util.concurrent.TimeoutException;
 import top.uhyils.usher.rpc.exception.RpcNetException;
 import top.uhyils.usher.rpc.exchange.pojo.data.RpcData;
-import top.uhyils.usher.rpc.netty.core.RpcNettyConsumer;
+import top.uhyils.usher.rpc.netty.core.RpcNettySendClient;
 import top.uhyils.usher.rpc.netty.spi.filter.FilterContext;
 import top.uhyils.usher.util.LogUtil;
 
@@ -15,19 +16,20 @@ public class LastConsumerInvoker implements RpcInvoker {
     /**
      * netty
      */
-    private RpcNettyConsumer netty;
+    private RpcNettySendClient client;
 
-    public LastConsumerInvoker(RpcNettyConsumer netty) {
-        this.netty = netty;
+    public LastConsumerInvoker(RpcNettySendClient client) {
+        this.client = client;
     }
 
     @Override
     public RpcData invoke(FilterContext context) {
         RpcData request = context.getRequestData();
         LogUtil.debug("请求唯一标示:{},方法:{}", request.unique().toString(), request.content().contentString());
-
-        if (netty.sendMsg(request.toBytes())) {
-            return netty.wait(request.unique());
+        try {
+            return client.send(request);
+        } catch (InterruptedException | TimeoutException e) {
+            LogUtil.error(this, e);
         }
         throw new RpcNetException();
     }

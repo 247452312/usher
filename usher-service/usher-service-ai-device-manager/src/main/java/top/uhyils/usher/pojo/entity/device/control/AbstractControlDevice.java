@@ -1,7 +1,9 @@
-package top.uhyils.usher.pojo.entity.device;
+package top.uhyils.usher.pojo.entity.device.control;
 
 import java.util.Map;
 import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
+import top.uhyils.usher.pojo.entity.device.core.AbstractDevice;
+import top.uhyils.usher.pojo.entity.device.core.Device;
 
 /**
  * @author uhyils <247452312@qq.com>

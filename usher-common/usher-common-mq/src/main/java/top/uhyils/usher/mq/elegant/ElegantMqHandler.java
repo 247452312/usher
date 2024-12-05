@@ -23,8 +23,8 @@ public class ElegantMqHandler extends AbstractElegantHandler {
     public void addConsumer(BaseMqConsumer consumer) {
         String join = String.join("||", consumer.tags());
         String name = consumer.topic() + " " + join;
-        consumers.put(name, consumer);
         synchronized (consumers) {
+            consumers.put(name, consumer);
             if (canPublish()) {
                 consumer.resume();
             }

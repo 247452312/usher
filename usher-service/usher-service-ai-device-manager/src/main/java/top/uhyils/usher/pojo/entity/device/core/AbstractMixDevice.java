@@ -1,4 +1,7 @@
-package top.uhyils.usher.pojo.entity.device;
+package top.uhyils.usher.pojo.entity.device.core;
+
+import top.uhyils.usher.pojo.entity.device.control.ControlDevice;
+import top.uhyils.usher.pojo.entity.device.receptor.ReceptorDevice;
 
 /**
  * 混合设备, 既有控制器又有接收器

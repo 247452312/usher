@@ -7,9 +7,9 @@ import top.uhyils.usher.annotation.Repository;
 import top.uhyils.usher.enums.AiDeviceStatusEnum;
 import top.uhyils.usher.facade.AiDeviceFacade;
 import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
-import top.uhyils.usher.pojo.entity.device.ControlDeviceImpl;
-import top.uhyils.usher.pojo.entity.device.Device;
-import top.uhyils.usher.pojo.entity.device.ReceptorDeviceImpl;
+import top.uhyils.usher.pojo.entity.device.control.ControlDeviceImpl;
+import top.uhyils.usher.pojo.entity.device.core.Device;
+import top.uhyils.usher.pojo.entity.device.receptor.ReceptorDeviceImpl;
 import top.uhyils.usher.util.Asserts;
 
 /**

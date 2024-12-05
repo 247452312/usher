@@ -1,7 +1,5 @@
 package top.uhyils.usher.rpc.netty.core;
 
-import top.uhyils.usher.annotation.NotNull;
-import top.uhyils.usher.rpc.exchange.pojo.data.RpcData;
 import top.uhyils.usher.rpc.netty.RpcNetty;
 
 /**
@@ -13,35 +11,11 @@ import top.uhyils.usher.rpc.netty.RpcNetty;
 public interface RpcNettyConsumer extends RpcNetty {
 
     /**
-     * 发送信息到服务端
-     *
-     * @param bytes 发送的信息
-     *
-     * @return 是否发送成功
-     */
-    boolean sendMsg(byte[] bytes);
-
-    /**
-     * 等待返回
-     *
-     * @param unique 请求的唯一标识
-     *
-     * @return 返回值
-     */
-    @NotNull
-    RpcData wait(Long unique);
-
-    /**
-     * 服务端返回时使用,将返回值通知等待返回端
-     *
-     * @param rpcData 返回值的内容
-     */
-    void put(RpcData rpcData);
-
-    /**
      * 是否活着
      *
      * @return
      */
     boolean isActive();
+
+
 }

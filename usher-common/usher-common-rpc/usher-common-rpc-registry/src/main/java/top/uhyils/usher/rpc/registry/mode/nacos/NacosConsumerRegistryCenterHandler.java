@@ -63,7 +63,10 @@ public class NacosConsumerRegistryCenterHandler extends AbstractConsumerRegistry
         try {
             RpcConfig rpcConfig = RpcConfigFactory.getInstance();
             RegistryConfig registry = rpcConfig.getRegistry();
-            this.serverAddr = registry.getHost() + ":" + registry.getPort();
+            this.serverAddr = registry.getHost();
+            if (registry.getPort() != null) {
+                this.serverAddr += ":" + registry.getPort();
+            }
 
             Properties properties = new Properties();
             properties.put("serverAddr", this.serverAddr);
@@ -107,38 +110,6 @@ public class NacosConsumerRegistryCenterHandler extends AbstractConsumerRegistry
         } else {
             LogUtil.error("注册中心事件未响应" + event.getClass().getName());
         }
-    }
-
-    /**
-     * service的event
-     *
-     * @param event
-     */
-    private void doServiceEvent(NamingEvent event) {
-        List<Instance> instances = event.getInstances();
-        RegistryEvent registryEvent = new RegistryEvent();
-        // key-> 集群名称 value -> netty信息
-        Map<String, List<NettyInitDto>> nettyInfos = new HashMap<>(instances.size());
-        // 处理新增和修改
-        for (int i = 0; i < instances.size(); i++) {
-            Instance instance = instances.get(i);
-            if (!instance.isEnabled() || !instance.isHealthy()) {
-                continue;
-            }
-            NettyInitDto nettyInfo = new NettyInitDto();
-            nettyInfo.setIndexInColony(i);
-            nettyInfo.setHost(instance.getIp());
-            nettyInfo.setPort(instance.getPort());
-            nettyInfo.setWeight((int) instance.getWeight());
-            String clusterName = instance.getClusterName();
-            if (!nettyInfos.containsKey(clusterName)) {
-                nettyInfos.put(clusterName, new ArrayList<>());
-            }
-            nettyInfos.get(clusterName).add(nettyInfo);
-        }
-        registryEvent.setRegistryNettyInfoMap(nettyInfos);
-        onEvent(registryEvent);
-
     }
 
     @Override
@@ -185,5 +156,37 @@ public class NacosConsumerRegistryCenterHandler extends AbstractConsumerRegistry
         } catch (NacosException e) {
             throw new RpcException(e);
         }
+    }
+
+    /**
+     * service的event
+     *
+     * @param event
+     */
+    private void doServiceEvent(NamingEvent event) {
+        List<Instance> instances = event.getInstances();
+        RegistryEvent registryEvent = new RegistryEvent();
+        // key-> 集群名称 value -> netty信息
+        Map<String, List<NettyInitDto>> nettyInfos = new HashMap<>(instances.size());
+        // 处理新增和修改
+        for (int i = 0; i < instances.size(); i++) {
+            Instance instance = instances.get(i);
+            if (!instance.isEnabled() || !instance.isHealthy()) {
+                continue;
+            }
+            NettyInitDto nettyInfo = new NettyInitDto();
+            nettyInfo.setIndexInColony(i);
+            nettyInfo.setHost(instance.getIp());
+            nettyInfo.setPort(instance.getPort());
+            nettyInfo.setWeight((int) instance.getWeight());
+            String clusterName = instance.getClusterName();
+            if (!nettyInfos.containsKey(clusterName)) {
+                nettyInfos.put(clusterName, new ArrayList<>());
+            }
+            nettyInfos.get(clusterName).add(nettyInfo);
+        }
+        registryEvent.setRegistryNettyInfoMap(nettyInfos);
+        onEvent(registryEvent);
+
     }
 }

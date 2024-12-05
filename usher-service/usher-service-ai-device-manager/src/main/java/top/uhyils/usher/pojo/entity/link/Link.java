@@ -23,4 +23,25 @@ public interface Link {
      * @param request
      */
     void request(Object request);
+
+    /**
+     * 发送请求,同步
+     *
+     * @param request
+     */
+    Object requestSync(Object request);
+
+
+    /**
+     * 设备所在的ip
+     *
+     * @return 设备所在的ip, 网络设备则返回对应的网络ip
+     */
+    String ip();
+
+
+    /**
+     * 尝试连接
+     */
+    void tryLink();
 }
