@@ -31,30 +31,26 @@ public abstract class AbstractSendClient<T, R> implements SendClient<T, R> {
 
     @Override
     public R send(T request) throws InterruptedException, TimeoutException {
-        boolean success = doSend(request);
-        if (!success) {
-            throw new RuntimeException("发送消息失败");
-        }
+        // 优先创建CountDownLatch
         Serializable unique = findUniqueFromRequest(request);
-        // 请求第一次
-        if (rpcResponseMap.containsKey(unique)) {
-            R rpcData = rpcResponseMap.get(unique);
-            rpcResponseMap.remove(unique);
-            return rpcData;
-        }
-        // 等待第一次
         CountDownLatch value = new CountDownLatch(1);
         waitLock.put(unique, value);
+        boolean success = doSend(request);
+        if (!success) {
+            waitLock.remove(unique);
+            throw new RuntimeException("发送消息失败");
+        }
         //阻塞
         value.await(50000L, TimeUnit.MILLISECONDS);
 
-        //查询第二次是否存在
+        waitLock.remove(unique);
         if (rpcResponseMap.containsKey(unique)) {
             R rpcData = rpcResponseMap.get(unique);
             rpcResponseMap.remove(unique);
             return rpcData;
         }
         timeOutUnique.add(unique);
+        waitLock.remove(unique);
         throw new TimeoutException("client超出最大等待时间");
     }
 
@@ -72,7 +68,10 @@ public abstract class AbstractSendClient<T, R> implements SendClient<T, R> {
         }
         rpcResponseMap.put(unique, response);
         // 尝试唤醒
-        awaken(unique);
+        if (!awaken(unique)) {
+            // 唤醒失败, 说明超时了 刚好并发没有判断到超时记录中存在当前返回值,那就移除返回值
+            rpcResponseMap.remove(unique);
+        }
     }
 
     /**
@@ -103,22 +102,14 @@ public abstract class AbstractSendClient<T, R> implements SendClient<T, R> {
      *
      * @param unique
      */
-    private void awaken(Serializable unique) {
-        try {
-            // 重复等待waitLock 直到等待线程将key置入
-            while (!waitLock.containsKey(unique)) {
-                // 如果responseMap中不存在结果,说明已经被拿走.可以直接结束线程
-                if (!rpcResponseMap.containsKey(unique)) {
-                    return;
-                }
-                Thread.sleep(100L);
-            }
-        } catch (InterruptedException e) {
-        }
+    private boolean awaken(Serializable unique) {
         CountDownLatch countDownLatch = waitLock.get(unique);
-        waitLock.remove(unique);
+        if (countDownLatch == null) {
+            return false;
+        }
         //唤醒
         countDownLatch.countDown();
+        return true;
 
 
     }
