@@ -4,13 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Resource;
 import top.uhyils.usher.annotation.Repository;
-import top.uhyils.usher.enums.AiDeviceStatusEnum;
 import top.uhyils.usher.facade.AiDeviceFacade;
 import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
-import top.uhyils.usher.pojo.entity.device.control.ControlDeviceImpl;
 import top.uhyils.usher.pojo.entity.device.core.Device;
-import top.uhyils.usher.pojo.entity.device.receptor.ReceptorDeviceImpl;
-import top.uhyils.usher.util.Asserts;
+import top.uhyils.usher.pojo.entity.device.demo.SingleDevice;
+import top.uhyils.usher.pojo.entity.link.http.HttpLink;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -32,19 +30,18 @@ public class DeviceFactoryImpl implements DeviceFactory {
         if (deviceMap.containsKey(uniqueMark)) {
             return deviceMap.get(uniqueMark);
         }
-        AiDeviceDTO aiDeviceDTO = deviceFacade.findByUniqueMark(uniqueMark);
-        if (aiDeviceDTO == null) {
-            return null;
-        }
-        Integer type = aiDeviceDTO.getType();
-        AiDeviceStatusEnum statusEnum = AiDeviceStatusEnum.getByCode(type);
-        if (AiDeviceStatusEnum.RECEPTOR.equals(statusEnum)) {
-            return new ReceptorDeviceImpl(deviceMap, aiDeviceDTO);
-        } else if (AiDeviceStatusEnum.CONTROL.equals(statusEnum)) {
-            return new ControlDeviceImpl(deviceMap, aiDeviceDTO);
-        } else {
-            Asserts.throwException("未找到对应的设备,标识:{}", uniqueMark);
-            return null;
+        synchronized (deviceMap) {
+            if (deviceMap.containsKey(uniqueMark)) {
+                return deviceMap.get(uniqueMark);
+            }
+            AiDeviceDTO aiDeviceDTO = deviceFacade.findByUniqueMark(uniqueMark);
+            if (aiDeviceDTO == null) {
+                return null;
+            }
+            // todo 设备表需要添加连接信息,这里想完美解决可能需要低代码帮助
+            Device singleDevice = SingleDevice.buildAiDeviceSingleDevice(deviceMap, aiDeviceDTO, new HttpLink(null));
+            deviceMap.put(uniqueMark, singleDevice);
+            return singleDevice;
         }
     }
 }

@@ -30,6 +30,7 @@ public abstract class AbstractLinkDevice extends AbstractDevice {
     protected AbstractLinkDevice(Map<String, Device> obvDeviceMap, String uniqueMark, Boolean aiDevice, AiDeviceDTO deviceDTO, Link link) {
         super(obvDeviceMap, uniqueMark, aiDevice, deviceDTO);
         this.link = link;
+        this.link.onMessage(this::onMessage);
     }
 
     @Override
@@ -41,4 +42,21 @@ public abstract class AbstractLinkDevice extends AbstractDevice {
     public String ip() {
         return link.ip();
     }
+
+    @Override
+    public void request(Object request) {
+        link.request(request);
+    }
+
+    @Override
+    public Object requestSync(Object request) {
+        return link.requestSync(request);
+    }
+
+    /**
+     * 消息来临时接收
+     *
+     * @param msg
+     */
+    protected abstract void onMessage(Object msg);
 }

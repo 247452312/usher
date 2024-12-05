@@ -12,6 +12,7 @@ public enum AiDeviceStatusEnum {
      */
     RECEPTOR(1, "传感器"),
     CONTROL(2, "控制器"),
+    MIX(3, "控制器+传感器"),
     ;
 
     private final Integer code;

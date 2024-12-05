@@ -2,6 +2,8 @@ package top.uhyils.usher.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -351,6 +353,11 @@ public final class HttpUtil {
             }
         }
         return null;
+    }
+
+    public static boolean ping(String ip) throws IOException {
+        InetAddress inet = InetAddress.getByName(ip);
+        return inet.isReachable(5000);
     }
 
     /**

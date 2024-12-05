@@ -35,7 +35,7 @@ public class AiDeviceDTO extends IdDTO {
     private Long subspaceId;
 
     /**
-     * 设备类型 1-传感器 2-控制器
+     * 设备类型 1-传感器 2-控制器 3-混合
      */
     private Integer type;
 

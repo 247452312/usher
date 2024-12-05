@@ -8,28 +8,28 @@ import java.util.function.Consumer;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年12月04日 19时58分
  */
-public interface Link {
+public interface Link<T, R> {
 
     /**
      * 连接相应与回调
      *
      * @param consumer
      */
-    <T> void callBack(Consumer<T> consumer);
+    void onMessage(Consumer<R> consumer);
 
     /**
      * 发送请求,异步
      *
      * @param request
      */
-    void request(Object request);
+    void request(T request);
 
     /**
      * 发送请求,同步
      *
      * @param request
      */
-    Object requestSync(Object request);
+    R requestSync(T request);
 
 
     /**

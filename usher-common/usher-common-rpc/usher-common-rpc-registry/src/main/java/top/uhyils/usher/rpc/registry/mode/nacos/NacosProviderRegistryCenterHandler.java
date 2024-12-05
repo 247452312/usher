@@ -85,7 +85,7 @@ public class NacosProviderRegistryCenterHandler extends AbstractProviderRegistry
             LogUtil.error(this, e);
             throw new RpcException(e);
         }
-        LogUtil.info("rpc生产者关闭:{}", serviceClass.getName());
+        LogUtil.debug("rpc生产者关闭:{}", serviceClass.getName());
     }
 
     @Override

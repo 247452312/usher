@@ -31,7 +31,6 @@ public interface Device {
      */
     void changeByDevice(AiDeviceDTO deviceDTO);
 
-
     /**
      * 停止连接
      */
@@ -41,6 +40,20 @@ public interface Device {
      * 开始连接
      */
     void start();
+
+    /**
+     * 发送请求,异步
+     *
+     * @param request
+     */
+    void request(Object request);
+
+    /**
+     * 发送请求,同步
+     *
+     * @param request
+     */
+    Object requestSync(Object request);
 
     /**
      * 获取设备, 如果isAiDevice() 返回为false,则此方法返回null
