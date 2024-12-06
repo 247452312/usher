@@ -2,7 +2,6 @@ package top.uhyils.usher.pojo.DO;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import top.uhyils.usher.pojo.DO.base.BaseDO;
 
 /**
@@ -36,53 +35,54 @@ public class AiDeviceInstructionDO extends BaseDO {
     private Long deviceId;
 
     /**
+     * 指令唯一标识
+     */
+    @TableField
+    private String uniqueMark;
+
+    /**
      * 指令注释
      */
     @TableField
     private String notes;
 
-
-    public void setDeviceInstructionNo(String deviceInstructionNo) {
-        this.deviceInstructionNo = deviceInstructionNo;
-    }
-
     public String getDeviceInstructionNo() {
         return deviceInstructionNo;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setDeviceInstructionNo(String deviceInstructionNo) {
+        this.deviceInstructionNo = deviceInstructionNo;
     }
 
     public String getContext() {
         return context;
     }
 
-    public void setDeviceId(Long deviceId) {
-        this.deviceId = deviceId;
+    public void setContext(String context) {
+        this.context = context;
     }
 
     public Long getDeviceId() {
         return deviceId;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
+    public void setDeviceId(Long deviceId) {
+        this.deviceId = deviceId;
     }
 
     public String getNotes() {
         return notes;
     }
 
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("id", getId())
-            .append("deviceInstructionNo", getDeviceInstructionNo())
-            .append("context", getContext())
-            .append("deviceId", getDeviceId())
-            .append("notes", getNotes())
-            .toString();
+    public String getUniqueMark() {
+        return uniqueMark;
+    }
+
+    public void setUniqueMark(String uniqueMark) {
+        this.uniqueMark = uniqueMark;
     }
 }

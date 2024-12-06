@@ -49,28 +49,17 @@ public class AiDeviceDO extends BaseDO {
     private Integer type;
 
     /**
-     * 子类型 详情见枚举
+     * 链接类型 具体见枚举
      */
     @TableField
-    private Integer subtype;
+    private Integer linkType;
 
     /**
-     * 相对子空间位置
+     * 链接所需内容
      */
     @TableField
-    private String position;
+    private String linkContent;
 
-    /**
-     * 相对子空间角度
-     */
-    @TableField
-    private String angle;
-
-    /**
-     * 相对主轴旋转角度
-     */
-    @TableField
-    private String rotate;
 
     public String getUniqueMark() {
         return uniqueMark;
@@ -80,29 +69,6 @@ public class AiDeviceDO extends BaseDO {
         this.uniqueMark = uniqueMark;
     }
 
-    public String getPosition() {
-        return position;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public String getAngle() {
-        return angle;
-    }
-
-    public void setAngle(String angle) {
-        this.angle = angle;
-    }
-
-    public String getRotate() {
-        return rotate;
-    }
-
-    public void setRotate(String rotate) {
-        this.rotate = rotate;
-    }
 
     public String getDeviceNo() {
         return deviceNo;
@@ -136,12 +102,20 @@ public class AiDeviceDO extends BaseDO {
         this.type = type;
     }
 
-    public Integer getSubtype() {
-        return subtype;
+    public Integer getLinkType() {
+        return linkType;
     }
 
-    public void setSubtype(Integer subtype) {
-        this.subtype = subtype;
+    public void setLinkType(Integer linkType) {
+        this.linkType = linkType;
+    }
+
+    public String getLinkContent() {
+        return linkContent;
+    }
+
+    public void setLinkContent(String linkContent) {
+        this.linkContent = linkContent;
     }
 
     @Override
@@ -152,7 +126,6 @@ public class AiDeviceDO extends BaseDO {
             .append("name", getName())
             .append("subspaceId", getSubspaceId())
             .append("type", getType())
-            .append("subtype", getSubtype())
             .toString();
     }
 }

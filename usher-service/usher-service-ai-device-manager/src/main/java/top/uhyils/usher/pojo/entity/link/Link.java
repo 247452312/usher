@@ -8,28 +8,22 @@ import java.util.function.Consumer;
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年12月04日 19时58分
  */
-public interface Link<T, R> {
+public interface Link {
 
-    /**
-     * 连接相应与回调
-     *
-     * @param consumer
-     */
-    void onMessage(Consumer<R> consumer);
 
     /**
      * 发送请求,异步
      *
      * @param request
      */
-    void request(T request);
+    void request(String request);
 
     /**
      * 发送请求,同步
      *
      * @param request
      */
-    R requestSync(T request);
+    String requestSync(String request);
 
 
     /**
@@ -44,4 +38,11 @@ public interface Link<T, R> {
      * 尝试连接
      */
     void tryLink();
+
+    /**
+     * 设置消息接收回调
+     *
+     * @param onMessage
+     */
+    void setOnMessageFunction(Consumer<String> onMessage);
 }

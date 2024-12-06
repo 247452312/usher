@@ -3,7 +3,7 @@ package top.uhyils.usher.pojo.entity.device.core;
 import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
 
 /**
- * 设备本身
+ * 设备抽象类,包含了设备本身的功能
  *
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年12月02日 17时29分
@@ -46,14 +46,14 @@ public interface Device {
      *
      * @param request
      */
-    void request(Object request);
+    void request(String request);
 
     /**
      * 发送请求,同步
      *
      * @param request
      */
-    Object requestSync(Object request);
+    String requestSync(String request);
 
     /**
      * 获取设备, 如果isAiDevice() 返回为false,则此方法返回null

@@ -1,6 +1,7 @@
 package top.uhyils.usher.pojo.entity;
 
 import top.uhyils.usher.annotation.Default;
+import top.uhyils.usher.facade.DeviceManageFacade;
 import top.uhyils.usher.pojo.DO.AiDeviceInstructionDO;
 import top.uhyils.usher.pojo.entity.base.AbstractDoEntity;
 import top.uhyils.usher.util.IdUtil;
@@ -30,12 +31,22 @@ public class AiDeviceInstruction extends AbstractDoEntity<AiDeviceInstructionDO>
     }
 
     /**
-     * 生成设备编号
+     * 生成设备指令编号
      */
     public void generateNo() {
         IdUtil idUtil = SpringUtil.getBean(IdUtil.class);
         AiDeviceInstructionDO data = toDataAndValidate();
         data.setDeviceInstructionNo(idUtil.newId() + "");
         onUpdate();
+    }
+
+    public Object executeInstruction(DeviceManageFacade deviceManageFacade) {
+        AiDeviceInstructionDO data = toDataAndValidate();
+        return deviceManageFacade.executeInstruction(data.getDeviceInstructionNo(), data.getContext(), data.getUniqueMark());
+    }
+
+    public void fillUniqueMark(String uniqueMark) {
+        AiDeviceInstructionDO dataAndValidate = toDataAndValidate();
+        dataAndValidate.setUniqueMark(uniqueMark);
     }
 }

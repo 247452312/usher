@@ -7,18 +7,22 @@ import org.springframework.stereotype.Service;
 import top.uhyils.usher.annotation.ReadWriteMark;
 import top.uhyils.usher.assembler.AiDeviceInstructionAssembler;
 import top.uhyils.usher.assembler.AiSubspaceAssembler;
+import top.uhyils.usher.facade.DeviceManageFacade;
 import top.uhyils.usher.pojo.DO.AiDeviceInstructionDO;
 import top.uhyils.usher.pojo.DTO.AiDeviceInstructionDTO;
 import top.uhyils.usher.pojo.DTO.AiSubspaceDTO;
 import top.uhyils.usher.pojo.cqe.CopyInstructionsByDeviceIdCommand;
 import top.uhyils.usher.pojo.cqe.CreateDeviceInstructionCommand;
 import top.uhyils.usher.pojo.cqe.command.IdCommand;
+import top.uhyils.usher.pojo.cqe.command.StringCommand;
 import top.uhyils.usher.pojo.cqe.query.IdQuery;
+import top.uhyils.usher.pojo.entity.AiDevice;
 import top.uhyils.usher.pojo.entity.AiDeviceInstruction;
 import top.uhyils.usher.pojo.entity.AiSpace;
 import top.uhyils.usher.pojo.entity.AiSubspace;
 import top.uhyils.usher.pojo.entity.base.AbstractDoEntity;
 import top.uhyils.usher.repository.AiDeviceInstructionRepository;
+import top.uhyils.usher.repository.AiDeviceRepository;
 import top.uhyils.usher.repository.AiSpaceRepository;
 import top.uhyils.usher.repository.AiSubspaceRepository;
 import top.uhyils.usher.service.AiDeviceInstructionService;
@@ -44,13 +48,21 @@ public class AiDeviceInstructionServiceImpl extends AbstractDoService<AiDeviceIn
     @Resource
     private AiSubspaceAssembler aiSubspaceAssembler;
 
+    @Resource
+    private DeviceManageFacade deviceManageFacade;
+
+    @Resource
+    private AiDeviceRepository deviceRepository;
+
     public AiDeviceInstructionServiceImpl(AiDeviceInstructionAssembler assembler, AiDeviceInstructionRepository repository) {
         super(assembler, repository);
     }
 
     @Override
     public Boolean createDeviceInstruction(CreateDeviceInstructionCommand command) {
+        AiDevice aiDevice = deviceRepository.find(command.getDeviceId());
         AiDeviceInstruction entity = assem.toEntity(command);
+        entity.fillUniqueMark(aiDevice.uniqueMark());
         entity.generateNo();
         entity.saveSelf(rep);
         return Boolean.TRUE;
@@ -87,7 +99,9 @@ public class AiDeviceInstructionServiceImpl extends AbstractDoService<AiDeviceIn
     }
 
     @Override
-    public Boolean executeInstruction(IdCommand command) {
-        return null;
+    public Object executeInstruction(StringCommand command) {
+        AiDeviceInstruction aiDeviceInstruction = rep.findByNo(command.getValue());
+        return aiDeviceInstruction.executeInstruction(deviceManageFacade);
+
     }
 }

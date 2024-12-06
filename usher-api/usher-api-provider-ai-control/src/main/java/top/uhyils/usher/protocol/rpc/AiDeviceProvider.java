@@ -1,15 +1,14 @@
 package top.uhyils.usher.protocol.rpc;
 
 import java.util.List;
-import top.uhyils.usher.annotation.Nullable;
+import top.uhyils.usher.pojo.DTO.AiDeviceAndRealTimeDTO;
 import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
 import top.uhyils.usher.pojo.cqe.ChangeDeviceCommand;
-import top.uhyils.usher.pojo.cqe.ChangePositionCommand;
 import top.uhyils.usher.pojo.cqe.CreateDeviceCommand;
 import top.uhyils.usher.pojo.cqe.command.IdCommand;
 import top.uhyils.usher.pojo.cqe.command.IdsCommand;
-import top.uhyils.usher.pojo.cqe.command.StringCommand;
 import top.uhyils.usher.pojo.cqe.query.IdQuery;
+import top.uhyils.usher.pojo.cqe.query.StringQuery;
 import top.uhyils.usher.protocol.rpc.base.DTOProvider;
 
 /**
@@ -58,17 +57,6 @@ public interface AiDeviceProvider extends DTOProvider<AiDeviceDTO> {
      */
     Boolean removeDeviceBySubSpaceId(IdCommand command);
 
-
-    /**
-     * 修改设备位置(某个设备换位置了)
-     *
-     * @param command
-     *
-     * @return
-     */
-    Boolean changePosition(ChangePositionCommand command);
-
-
     /**
      * 修改设备名称
      *
@@ -104,6 +92,15 @@ public interface AiDeviceProvider extends DTOProvider<AiDeviceDTO> {
      *
      * @return
      */
-    @Nullable
-    AiDeviceDTO findByUniqueMark(StringCommand command);
+    AiDeviceDTO findByUniqueMark(StringQuery command);
+
+    /**
+     * 根据唯一标示获取设备信息以及实时信息
+     *
+     * @param query
+     *
+     * @return
+     */
+    AiDeviceAndRealTimeDTO findDeviceAndRealTimeByUniqueMark(StringQuery query);
+
 }

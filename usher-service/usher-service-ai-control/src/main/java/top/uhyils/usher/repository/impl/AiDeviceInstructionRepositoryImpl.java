@@ -42,4 +42,12 @@ public class AiDeviceInstructionRepositoryImpl extends AbstractRepository<AiDevi
         wrapper.eq(AiDeviceInstructionDO::getDeviceId, deviceId);
         wrapper.remove();
     }
+
+    @Override
+    public AiDeviceInstruction findByNo(String value) {
+        LambdaQueryChainWrapper<AiDeviceInstructionDO> wrapper = lambdaQuery();
+        wrapper.eq(AiDeviceInstructionDO::getDeviceInstructionNo, value);
+        AiDeviceInstructionDO one = wrapper.one();
+        return assembler.toEntity(one);
+    }
 }

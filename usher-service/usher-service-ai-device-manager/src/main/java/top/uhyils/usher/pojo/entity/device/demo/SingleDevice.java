@@ -38,9 +38,8 @@ public class SingleDevice extends AbstractLinkDevice {
         return new SingleDevice(obvDeviceMap, unique, link);
     }
 
-
     @Override
-    protected void onMessage(Object msg) {
+    protected void onMessage(String msg) {
 
     }
 }

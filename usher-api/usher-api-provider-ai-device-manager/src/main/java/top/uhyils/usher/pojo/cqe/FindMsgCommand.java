@@ -16,7 +16,7 @@ public class FindMsgCommand extends AbstractCommand {
     /**
      * 获取信息时携带的入参
      */
-    private Object request;
+    private String request;
 
     public String getUniqueMark() {
         return uniqueMark;
@@ -26,11 +26,11 @@ public class FindMsgCommand extends AbstractCommand {
         this.uniqueMark = uniqueMark;
     }
 
-    public Object getRequest() {
+    public String getRequest() {
         return request;
     }
 
-    public void setRequest(Object request) {
+    public void setRequest(String request) {
         this.request = request;
     }
 }

@@ -12,10 +12,6 @@ public interface DeviceManageProvider extends BaseProvider {
 
     /**
      * 执行指令
-     *
-     * @param command
-     *
-     * @return
      */
     Object executeInstruction(ExecuteInstructionCommand command);
 

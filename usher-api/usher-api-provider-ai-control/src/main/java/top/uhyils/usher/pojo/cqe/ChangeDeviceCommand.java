@@ -26,11 +26,6 @@ public class ChangeDeviceCommand extends AbstractCommand {
      */
     private Integer type;
 
-    /**
-     * 子类型 详情见枚举
-     */
-    private Integer subtype;
-
 
     public Long getId() {
         return id;
@@ -64,11 +59,4 @@ public class ChangeDeviceCommand extends AbstractCommand {
         this.type = type;
     }
 
-    public Integer getSubtype() {
-        return subtype;
-    }
-
-    public void setSubtype(Integer subtype) {
-        this.subtype = subtype;
-    }
 }

@@ -81,6 +81,16 @@ public final class ClassUtil {
         return getRealObj(result);
     }
 
+    public static <T> Class<T> findTargetClass(Class<?> sourceClass, Class<T> targetClass) {
+        if (Objects.equals(sourceClass, Object.class)) {
+            return null;
+        }
+        if (Objects.equals(sourceClass.getName(), targetClass.getName())) {
+            return (Class<T>) sourceClass;
+        }
+        return findTargetClass(sourceClass.getSuperclass(), targetClass);
+    }
+
     /**
      * JDK动态代理方式被代理类的获取
      *

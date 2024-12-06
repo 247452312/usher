@@ -7,19 +7,22 @@ import org.springframework.stereotype.Service;
 import top.uhyils.usher.annotation.ReadWriteMark;
 import top.uhyils.usher.assembler.AiDeviceAssembler;
 import top.uhyils.usher.pojo.DO.AiDeviceDO;
+import top.uhyils.usher.pojo.DTO.AiDeviceAndRealTimeDTO;
 import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
 import top.uhyils.usher.pojo.cqe.ChangeDeviceCommand;
-import top.uhyils.usher.pojo.cqe.ChangePositionCommand;
 import top.uhyils.usher.pojo.cqe.CreateDeviceCommand;
 import top.uhyils.usher.pojo.cqe.command.IdCommand;
 import top.uhyils.usher.pojo.cqe.command.IdsCommand;
-import top.uhyils.usher.pojo.cqe.command.StringCommand;
 import top.uhyils.usher.pojo.cqe.query.IdQuery;
+import top.uhyils.usher.pojo.cqe.query.StringQuery;
 import top.uhyils.usher.pojo.entity.AiDevice;
+import top.uhyils.usher.pojo.entity.AiDeviceRealTime;
 import top.uhyils.usher.pojo.entity.AiSubspace;
 import top.uhyils.usher.pojo.event.DeviceCleanEvent;
 import top.uhyils.usher.pojo.event.DeviceInstructionCleanEvent;
+import top.uhyils.usher.pojo.event.DeviceRealTimeCleanEvent;
 import top.uhyils.usher.repository.AiDeviceInstructionRepository;
+import top.uhyils.usher.repository.AiDeviceRealTimeRepository;
 import top.uhyils.usher.repository.AiDeviceRepository;
 import top.uhyils.usher.repository.AiSpaceRepository;
 import top.uhyils.usher.repository.AiSubspaceRepository;
@@ -45,6 +48,9 @@ public class AiDeviceServiceImpl extends AbstractDoService<AiDeviceDO, AiDevice,
     @Resource
     private AiSpaceRepository spaceRepository;
 
+    @Resource
+    private AiDeviceRealTimeRepository realTimeRepository;
+
     public AiDeviceServiceImpl(AiDeviceAssembler assembler, AiDeviceRepository repository) {
         super(assembler, repository);
     }
@@ -55,7 +61,6 @@ public class AiDeviceServiceImpl extends AbstractDoService<AiDeviceDO, AiDevice,
         for (AiDevice aiDevice : aiDevices) {
             aiDevice.removeSelf(rep);
         }
-
     }
 
     @Override
@@ -78,27 +83,25 @@ public class AiDeviceServiceImpl extends AbstractDoService<AiDeviceDO, AiDevice,
 
     @Override
     public Boolean removeDevice(IdCommand command) {
-        int remove = rep.remove(command.getId());
-        return remove == 1;
+        AiDevice aiDevice = rep.find(command.getId());
+        if (aiDevice == null) {
+            return Boolean.FALSE;
+        }
+        aiDevice.removeSelf(rep);
+        return Boolean.TRUE;
     }
 
     @Override
     public Boolean removeDevices(IdsCommand command) {
-        int i = rep.removeByIds(command.getIds());
+        List<AiDevice> aiDevices = rep.find(command.getIds());
+        aiDevices.forEach(t -> t.removeSelf(rep));
         return Boolean.TRUE;
     }
 
     @Override
     public Boolean removeDeviceBySubSpaceId(IdCommand command) {
-        rep.removeBySubSpaceId(command.getId());
-        return Boolean.TRUE;
-    }
-
-    @Override
-    public Boolean changePosition(ChangePositionCommand command) {
-        AiDevice aiDevice = rep.find(command.getId());
-        aiDevice.changePosition(command.getPosition(), command.getAngle(), command.getRotate());
-        aiDevice.saveSelf(rep);
+        List<AiDevice> bySubSpaceId = rep.findBySubSpaceId(command.getId());
+        bySubSpaceId.forEach(t -> t.removeSelf(rep));
         return Boolean.TRUE;
     }
 
@@ -106,7 +109,7 @@ public class AiDeviceServiceImpl extends AbstractDoService<AiDeviceDO, AiDevice,
     public Boolean changeDevice(ChangeDeviceCommand command) {
         AiDevice aiDevice = rep.find(command.getId());
         aiDevice.changeName(command.getName());
-        aiDevice.changeType(command.getType(), command.getSubtype());
+        aiDevice.changeType(command.getType());
         aiDevice.changeSubSpace(command.getSubspaceId());
         aiDevice.saveSelf(rep);
         return Boolean.TRUE;
@@ -121,8 +124,21 @@ public class AiDeviceServiceImpl extends AbstractDoService<AiDeviceDO, AiDevice,
     }
 
     @Override
-    public AiDeviceDTO findByUniqueMark(StringCommand command) {
+    public AiDeviceDTO findByUniqueMark(StringQuery command) {
         AiDevice deviceDTO = rep.findByUniqueMark(command.getValue());
         return assem.toDTO(deviceDTO);
+    }
+
+    @Override
+    public void deviceRealTimeCleanEvent(DeviceRealTimeCleanEvent event) {
+        AiDeviceRealTime realTime = realTimeRepository.findByDevice(event.getDeviceId());
+        realTime.removeSelf(realTimeRepository);
+    }
+
+    @Override
+    public AiDeviceAndRealTimeDTO findDeviceAndRealTimeByUniqueMark(StringQuery query) {
+        AiDevice byUniqueMark = rep.findByUniqueMark(query.getValue());
+        AiDeviceRealTime realTime = realTimeRepository.findByUnique(query.getValue());
+        return assem.toDTO(byUniqueMark, realTime);
     }
 }

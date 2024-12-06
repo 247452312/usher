@@ -25,6 +25,11 @@ public class AiDeviceInstructionDTO extends IdDTO {
     private String context;
 
     /**
+     * 指令唯一标识
+     */
+    private String uniqueMark;
+
+    /**
      * 所属设备
      */
     private Long deviceId;
@@ -34,38 +39,45 @@ public class AiDeviceInstructionDTO extends IdDTO {
      */
     private String notes;
 
-    public void setDeviceInstructionNo(String deviceInstructionNo) {
-        this.deviceInstructionNo = deviceInstructionNo;
+    public String getUniqueMark() {
+        return uniqueMark;
+    }
+
+    public void setUniqueMark(String uniqueMark) {
+        this.uniqueMark = uniqueMark;
     }
 
     public String getDeviceInstructionNo() {
         return deviceInstructionNo;
     }
 
-    public void setContext(String context) {
-        this.context = context;
+    public void setDeviceInstructionNo(String deviceInstructionNo) {
+        this.deviceInstructionNo = deviceInstructionNo;
     }
 
     public String getContext() {
         return context;
     }
 
-    public void setDeviceId(Long deviceId) {
-        this.deviceId = deviceId;
+    public void setContext(String context) {
+        this.context = context;
     }
 
     public Long getDeviceId() {
         return deviceId;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
+    public void setDeviceId(Long deviceId) {
+        this.deviceId = deviceId;
     }
 
     public String getNotes() {
         return notes;
     }
 
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 
     @Override
     public String toString() {

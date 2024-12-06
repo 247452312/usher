@@ -79,4 +79,6 @@ public abstract class AbstractDevice implements Device {
     public AiDeviceDTO aiDevice() {
         return deviceDTO;
     }
+
+
 }

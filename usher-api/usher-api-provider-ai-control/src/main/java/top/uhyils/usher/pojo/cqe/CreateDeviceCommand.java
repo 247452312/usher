@@ -30,11 +30,6 @@ public class CreateDeviceCommand extends AbstractCommand {
     private Integer type;
 
     /**
-     * 子类型 详情见枚举
-     */
-    private Integer subtype;
-
-    /**
      * 相对子空间位置
      */
     private Point3D position;
@@ -48,6 +43,11 @@ public class CreateDeviceCommand extends AbstractCommand {
      * 相对主轴旋转角度
      */
     private String rotate;
+
+    /**
+     * 设备连接地址
+     */
+    private String address;
 
     public String getDeviceNo() {
         return deviceNo;
@@ -81,13 +81,6 @@ public class CreateDeviceCommand extends AbstractCommand {
         this.type = type;
     }
 
-    public Integer getSubtype() {
-        return subtype;
-    }
-
-    public void setSubtype(Integer subtype) {
-        this.subtype = subtype;
-    }
 
     public Point3D getPosition() {
         return position;
@@ -111,5 +104,14 @@ public class CreateDeviceCommand extends AbstractCommand {
 
     public void setRotate(String rotate) {
         this.rotate = rotate;
+    }
+
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

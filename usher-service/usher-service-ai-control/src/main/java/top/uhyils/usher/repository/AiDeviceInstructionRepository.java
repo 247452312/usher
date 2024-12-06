@@ -29,4 +29,13 @@ public interface AiDeviceInstructionRepository extends BaseEntityRepository<AiDe
      * @param deviceId
      */
     void removeByDeviceId(Long deviceId);
+
+    /**
+     * 根据编号查询
+     *
+     * @param value
+     *
+     * @return
+     */
+    AiDeviceInstruction findByNo(String value);
 }

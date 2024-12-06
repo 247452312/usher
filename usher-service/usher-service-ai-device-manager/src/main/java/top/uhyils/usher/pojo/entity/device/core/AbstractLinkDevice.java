@@ -1,5 +1,6 @@
 package top.uhyils.usher.pojo.entity.device.core;
 
+import com.alibaba.fastjson.JSON;
 import java.util.Map;
 import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
 import top.uhyils.usher.pojo.entity.link.Link;
@@ -7,6 +8,8 @@ import top.uhyils.usher.util.IdUtil;
 import top.uhyils.usher.util.SpringUtil;
 
 /**
+ * 持有远程链接的设备模板, 设备信息和链接两方面构成了一个设备实例
+ *
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2024年12月05日 08时47分
  */
@@ -30,7 +33,7 @@ public abstract class AbstractLinkDevice extends AbstractDevice {
     protected AbstractLinkDevice(Map<String, Device> obvDeviceMap, String uniqueMark, Boolean aiDevice, AiDeviceDTO deviceDTO, Link link) {
         super(obvDeviceMap, uniqueMark, aiDevice, deviceDTO);
         this.link = link;
-        this.link.onMessage(this::onMessage);
+        this.link.setOnMessageFunction(this::onMessage);
     }
 
     @Override
@@ -44,13 +47,14 @@ public abstract class AbstractLinkDevice extends AbstractDevice {
     }
 
     @Override
-    public void request(Object request) {
+    public void request(String request) {
         link.request(request);
     }
 
     @Override
-    public Object requestSync(Object request) {
-        return link.requestSync(request);
+    public String requestSync(String request) {
+        Object res = link.requestSync(request);
+        return JSON.toJSONString(res);
     }
 
     /**
@@ -58,5 +62,5 @@ public abstract class AbstractLinkDevice extends AbstractDevice {
      *
      * @param msg
      */
-    protected abstract void onMessage(Object msg);
+    protected abstract void onMessage(String msg);
 }

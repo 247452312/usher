@@ -2,8 +2,8 @@ package top.uhyils.usher.facade.impl;
 
 import top.uhyils.usher.annotation.Facade;
 import top.uhyils.usher.facade.AiDeviceFacade;
-import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
-import top.uhyils.usher.pojo.cqe.command.StringCommand;
+import top.uhyils.usher.pojo.DTO.AiDeviceAndRealTimeDTO;
+import top.uhyils.usher.pojo.cqe.query.StringQuery;
 import top.uhyils.usher.protocol.rpc.AiDeviceProvider;
 import top.uhyils.usher.rpc.annotation.RpcReference;
 
@@ -18,7 +18,7 @@ public class AiDeviceFacadeImpl implements AiDeviceFacade {
     private AiDeviceProvider aiDeviceProvider;
 
     @Override
-    public AiDeviceDTO findByUniqueMark(String uniqueMark) {
-        return aiDeviceProvider.findByUniqueMark(StringCommand.build(uniqueMark));
+    public AiDeviceAndRealTimeDTO findByUniqueMark(String uniqueMark) {
+        return aiDeviceProvider.findDeviceAndRealTimeByUniqueMark(StringQuery.build(uniqueMark));
     }
 }

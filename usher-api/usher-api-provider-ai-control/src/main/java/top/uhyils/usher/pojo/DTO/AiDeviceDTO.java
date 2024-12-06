@@ -40,24 +40,14 @@ public class AiDeviceDTO extends IdDTO {
     private Integer type;
 
     /**
-     * 子类型 详情见枚举
+     * 链接类型 具体见枚举
      */
-    private Integer subtype;
+    private Integer linkType;
 
     /**
-     * 相对子空间位置
+     * 链接所需内容
      */
-    private Point3D position;
-
-    /**
-     * 相对子空间角度
-     */
-    private Point3D angle;
-
-    /**
-     * 相对主轴旋转角度
-     */
-    private String rotate;
+    private String linkContent;
 
     public String getUniqueMark() {
         return uniqueMark;
@@ -65,30 +55,6 @@ public class AiDeviceDTO extends IdDTO {
 
     public void setUniqueMark(String uniqueMark) {
         this.uniqueMark = uniqueMark;
-    }
-
-    public Point3D getPosition() {
-        return position;
-    }
-
-    public void setPosition(Point3D position) {
-        this.position = position;
-    }
-
-    public Point3D getAngle() {
-        return angle;
-    }
-
-    public void setAngle(Point3D angle) {
-        this.angle = angle;
-    }
-
-    public String getRotate() {
-        return rotate;
-    }
-
-    public void setRotate(String rotate) {
-        this.rotate = rotate;
     }
 
     public String getDeviceNo() {
@@ -123,12 +89,20 @@ public class AiDeviceDTO extends IdDTO {
         this.type = type;
     }
 
-    public Integer getSubtype() {
-        return subtype;
+    public Integer getLinkType() {
+        return linkType;
     }
 
-    public void setSubtype(Integer subtype) {
-        this.subtype = subtype;
+    public void setLinkType(Integer linkType) {
+        this.linkType = linkType;
+    }
+
+    public String getLinkContent() {
+        return linkContent;
+    }
+
+    public void setLinkContent(String linkContent) {
+        this.linkContent = linkContent;
     }
 
     @Override
@@ -139,7 +113,6 @@ public class AiDeviceDTO extends IdDTO {
             .append("name", getName())
             .append("subspaceId", getSubspaceId())
             .append("type", getType())
-            .append("subtype", getSubtype())
             .toString();
     }
 

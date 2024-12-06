@@ -2,14 +2,14 @@ package top.uhyils.usher.protocol.rpc.impl;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import top.uhyils.usher.pojo.DTO.AiDeviceAndRealTimeDTO;
 import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
 import top.uhyils.usher.pojo.cqe.ChangeDeviceCommand;
-import top.uhyils.usher.pojo.cqe.ChangePositionCommand;
 import top.uhyils.usher.pojo.cqe.CreateDeviceCommand;
 import top.uhyils.usher.pojo.cqe.command.IdCommand;
 import top.uhyils.usher.pojo.cqe.command.IdsCommand;
-import top.uhyils.usher.pojo.cqe.command.StringCommand;
 import top.uhyils.usher.pojo.cqe.query.IdQuery;
+import top.uhyils.usher.pojo.cqe.query.StringQuery;
 import top.uhyils.usher.protocol.rpc.AiDeviceProvider;
 import top.uhyils.usher.protocol.rpc.base.BaseDefaultProvider;
 import top.uhyils.usher.rpc.annotation.RpcService;
@@ -51,11 +51,6 @@ public class AiDeviceProviderImpl extends BaseDefaultProvider<AiDeviceDTO> imple
     }
 
     @Override
-    public Boolean changePosition(ChangePositionCommand command) {
-        return service.changePosition(command);
-    }
-
-    @Override
     public Boolean changeDevice(ChangeDeviceCommand command) {
         return service.changeDevice(command);
     }
@@ -71,8 +66,13 @@ public class AiDeviceProviderImpl extends BaseDefaultProvider<AiDeviceDTO> imple
     }
 
     @Override
-    public AiDeviceDTO findByUniqueMark(StringCommand command) {
+    public AiDeviceDTO findByUniqueMark(StringQuery command) {
         return service.findByUniqueMark(command);
+    }
+
+    @Override
+    public AiDeviceAndRealTimeDTO findDeviceAndRealTimeByUniqueMark(StringQuery query) {
+        return service.findDeviceAndRealTimeByUniqueMark(query);
     }
 
 

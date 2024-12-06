@@ -1,6 +1,6 @@
 package top.uhyils.usher.facade;
 
-import top.uhyils.usher.pojo.DTO.AiDeviceDTO;
+import top.uhyils.usher.pojo.DTO.AiDeviceAndRealTimeDTO;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -15,5 +15,5 @@ public interface AiDeviceFacade extends BaseFacade {
      *
      * @return
      */
-    AiDeviceDTO findByUniqueMark(String uniqueMark);
+    AiDeviceAndRealTimeDTO findByUniqueMark(String uniqueMark);
 }

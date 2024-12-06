@@ -7,6 +7,7 @@ import top.uhyils.usher.pojo.DTO.AiSubspaceDTO;
 import top.uhyils.usher.pojo.cqe.CopyInstructionsByDeviceIdCommand;
 import top.uhyils.usher.pojo.cqe.CreateDeviceInstructionCommand;
 import top.uhyils.usher.pojo.cqe.command.IdCommand;
+import top.uhyils.usher.pojo.cqe.command.StringCommand;
 import top.uhyils.usher.pojo.cqe.query.IdQuery;
 import top.uhyils.usher.protocol.rpc.AiDeviceInstructionProvider;
 import top.uhyils.usher.protocol.rpc.base.BaseDefaultProvider;
@@ -54,7 +55,7 @@ public class AiDeviceInstructionProviderImpl extends BaseDefaultProvider<AiDevic
     }
 
     @Override
-    public Boolean executeInstruction(IdCommand command) {
+    public Object executeInstruction(StringCommand command) {
         return service.executeInstruction(command);
     }
 

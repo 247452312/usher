@@ -16,10 +16,8 @@
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="subspaceId" column="subspace_id" jdbcType="BIGINT"/>
         <result property="type" column="type" jdbcType="INTEGER"/>
-        <result property="subtype" column="subtype" jdbcType="INTEGER"/>
-        <result property="position" column="position" jdbcType="VARCHAR"/>
-        <result property="angle" column="angle" jdbcType="VARCHAR"/>
-        <result property="rotate" column="rotate" jdbcType="VARCHAR"/>
+        <result property="linkType" column="link_type" jdbcType="INTEGER"/>
+        <result property="linkContent" column="link_content" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--批量通过主键修改数据-->
@@ -76,6 +74,12 @@
             </if>
             <if test="rotate != null">
                 ,rotate = #{rotate}
+            </if>
+            <if test="linkType != null">
+                ,link_type = #{linkType}
+            </if>
+            <if test="linkContent != null">
+                ,link_content = #{linkContent}
             </if>
             where ${pkColumn.name} = #{${pkColumn.smallName}}
         </foreach>

@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import top.uhyils.usher.pojo.cqe.event.base.BaseEvent;
 import top.uhyils.usher.pojo.event.DeviceCleanEvent;
 import top.uhyils.usher.pojo.event.DeviceInstructionCleanEvent;
+import top.uhyils.usher.pojo.event.DeviceRealTimeCleanEvent;
 import top.uhyils.usher.protocol.register.base.Register;
 import top.uhyils.usher.service.AiDeviceService;
 
@@ -22,7 +23,7 @@ public class DeviceRegister implements Register {
 
     @Override
     public List<Class<? extends BaseEvent>> targetEvent() {
-        return Arrays.asList(DeviceCleanEvent.class, DeviceInstructionCleanEvent.class);
+        return Arrays.asList(DeviceCleanEvent.class, DeviceInstructionCleanEvent.class, DeviceRealTimeCleanEvent.class);
     }
 
     @Override
@@ -31,6 +32,8 @@ public class DeviceRegister implements Register {
             service.deviceCleanEvent((DeviceCleanEvent) event);
         } else if (event instanceof DeviceInstructionCleanEvent) {
             service.deviceInstructionCleanEvent((DeviceInstructionCleanEvent) event);
+        } else if (event instanceof DeviceRealTimeCleanEvent) {
+            service.deviceRealTimeCleanEvent((DeviceRealTimeCleanEvent) event);
         }
     }
 }

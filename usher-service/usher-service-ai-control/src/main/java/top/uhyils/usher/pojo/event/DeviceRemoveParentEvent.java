@@ -26,6 +26,8 @@ public class DeviceRemoveParentEvent extends AbstractParentEvent {
         List<BaseEvent> baseEvents = new ArrayList<>();
         // 1.清空相关指令
         baseEvents.add(new DeviceInstructionCleanEvent(deviceDTO.getId()));
+        // 2.清空实时状态
+        baseEvents.add(new DeviceRealTimeCleanEvent(deviceDTO.getId()));
         return baseEvents;
     }
 }
