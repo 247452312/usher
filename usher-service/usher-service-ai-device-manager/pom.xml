@@ -22,6 +22,11 @@
             <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-common-service</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>QLExpress</artifactId>
+        </dependency>
         <dependency>
             <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-ai-device-manager</artifactId>
@@ -29,6 +34,17 @@
         <dependency>
             <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-ai-control</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>top.uhyils.usher</groupId>
+            <artifactId>usher-common-util-ustream</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

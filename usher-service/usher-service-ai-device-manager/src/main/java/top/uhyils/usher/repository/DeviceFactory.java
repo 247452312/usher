@@ -10,10 +10,6 @@ public interface DeviceFactory {
 
     /**
      * 获取设备,如果没有,就去根据控制中心获取一个
-     *
-     * @param uniqueMark
-     *
-     * @return
      */
     Device getDevice(String uniqueMark);
 }

@@ -3,6 +3,7 @@ package top.uhyils.usher.pojo.entity.link.http;
 import java.util.function.Consumer;
 import top.uhyils.usher.pojo.cqe.HttpRequestInfo;
 import top.uhyils.usher.pojo.entity.link.AbstractLink;
+import top.uhyils.usher.util.HttpUtil;
 import top.uhyils.usher.util.LogUtil;
 import top.uhyils.usher.util.StringUtil;
 

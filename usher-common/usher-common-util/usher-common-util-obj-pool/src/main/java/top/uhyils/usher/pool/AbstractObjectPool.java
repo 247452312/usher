@@ -11,7 +11,7 @@ import java.util.Queue;
 import top.uhyils.usher.util.LogUtil;
 
 /**
- * 实例池模板
+ * 实例池模板(多应用共享的实例??? 我当时这是什么疯狂的想法)
  *
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年03月31日 14时39分
