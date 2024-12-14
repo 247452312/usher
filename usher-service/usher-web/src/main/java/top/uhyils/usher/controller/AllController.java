@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import top.uhyils.usher.context.MyTraceIdContext;
 import top.uhyils.usher.context.UserInfoHelper;
@@ -111,11 +112,11 @@ public class AllController {
 
 
     @GetMapping("/session")
-    public Object getSession(@RequestBody SessionRequest sessionRequest, HttpServletRequest request) {
-        LogUtil.info(this, "getSession: " + sessionRequest.getAttrName());
+    public Object getSession(@RequestParam("attrName") String attrName, HttpServletRequest request) {
+        LogUtil.info(this, "getSession: " + attrName);
         HttpSession session = request.getSession();
-        LogUtil.info(this, "result: " + session.getAttribute(sessionRequest.getAttrName()));
-        return session.getAttribute(sessionRequest.getAttrName());
+        LogUtil.info(this, "result: " + session.getAttribute(attrName));
+        return session.getAttribute(attrName);
     }
 
     @PostMapping("/session")
