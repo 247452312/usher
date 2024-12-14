@@ -81,9 +81,9 @@ function getAttrBySession(attrName) {
     type: "GET",
     async: false,
     xhrFields: {withCredentials: true},
-    data: JSON.stringify({
+    data: {
       "attrName": attrName
-    }),
+    },
     async: false,
     contentType: "application/json;charset=UTF-8",
     success: function (data) {
