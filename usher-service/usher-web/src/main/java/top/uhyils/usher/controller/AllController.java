@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -109,7 +110,7 @@ public class AllController {
     }
 
 
-    @PostMapping("/getSession")
+    @GetMapping("/session")
     public Object getSession(@RequestBody SessionRequest sessionRequest, HttpServletRequest request) {
         LogUtil.info(this, "getSession: " + sessionRequest.getAttrName());
         HttpSession session = request.getSession();
@@ -117,7 +118,7 @@ public class AllController {
         return session.getAttribute(sessionRequest.getAttrName());
     }
 
-    @PostMapping("/setSession")
+    @PostMapping("/session")
     public boolean setSession(@RequestBody SessionRequest sessionRequest, HttpServletRequest request) {
         LogUtil.info(this, "setSession: " + sessionRequest.getAttrName());
         LogUtil.info(this, "sessionData : " + sessionRequest.getData());

@@ -77,8 +77,8 @@ function getAttrBySession(attrName) {
   //     return cookie;
   // }
   $.ajax({
-    url: "/getSession",
-    type: "POST",
+    url: "/session",
+    type: "GET",
     async: false,
     xhrFields: {withCredentials: true},
     data: JSON.stringify({
@@ -101,7 +101,7 @@ function setAttrBySession(attrName, data) {
   console.log('attrName:  ' + attrName);
   console.log('data:  ' + data);
   $.ajax({
-    url: "/setSession",
+    url: "/session",
     type: "POST",
     xhrFields: {withCredentials: true},
     data: JSON.stringify({
