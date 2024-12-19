@@ -1,7 +1,7 @@
 package top.uhyils.usher.protocol.rpc.impl;
 
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import top.uhyils.usher.annotation.NoLogin;
 import top.uhyils.usher.annotation.Public;
 import top.uhyils.usher.pojo.DO.base.TokenInfo;
@@ -34,7 +34,7 @@ import top.uhyils.usher.service.UserService;
 public class UserProviderImpl extends BaseDefaultProvider<UserDTO> implements UserProvider {
 
 
-    @Autowired
+    @Resource
     private UserService service;
 
     @Override

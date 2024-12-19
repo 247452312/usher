@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import top.uhyils.usher.annotation.Facade;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.enums.ReadWriteTypeEnum;
 import top.uhyils.usher.facade.ServiceControlFacade;
 import top.uhyils.usher.pojo.DTO.MethodDisableDTO;
@@ -42,7 +42,7 @@ public class ServiceControlFacadeImpl implements ServiceControlFacade {
 
     @Override
     public void fillDisable(List<RelegationDTO> dtos) {
-        List<MethodDisableDTO> result = provider.getAllMethodDisable(UserInfoHelper.makeCQE());
+        List<MethodDisableDTO> result = provider.getAllMethodDisable(LoginInfoHelper.makeCQE());
         for (RelegationDTO dto : dtos) {
             for (MethodDisableDTO disableDTO : result) {
                 String className = disableDTO.getClassName();

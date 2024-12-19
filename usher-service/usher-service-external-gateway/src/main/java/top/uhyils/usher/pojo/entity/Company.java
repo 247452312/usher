@@ -4,7 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import org.apache.commons.codec.binary.Base64;
 import top.uhyils.usher.annotation.Default;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.mysql.content.MysqlContent;
 import top.uhyils.usher.mysql.pojo.cqe.impl.MysqlAuthCommand;
 import top.uhyils.usher.mysql.pojo.entity.MysqlTcpLink;
@@ -87,7 +87,7 @@ public class Company extends AbstractDoEntity<CompanyDO> {
     public UserDTO mysqlLogin() {
         MysqlTcpLink mysqlTcpLink = MysqlContent.MYSQL_TCP_INFO.get();
         String ip = mysqlTcpLink.findLocalAddress().getAddress().getHostName();
-        UserInfoHelper.setIp(ip);
+        LoginInfoHelper.setIp(ip);
         CompanyDO dataAndValidate = toDataAndValidate();
         UserDTO userDTO = new UserDTO();
         userDTO.setNickName(dataAndValidate.getPersonName());
@@ -96,7 +96,7 @@ public class Company extends AbstractDoEntity<CompanyDO> {
         userDTO.setStatus(1);
         userDTO.setIp(ip);
         userDTO.setId(getUnique().get());
-        UserInfoHelper.setUser(userDTO);
+        LoginInfoHelper.setUser(userDTO);
         return userDTO;
 
     }

@@ -3,6 +3,7 @@ package top.uhyils.usher.service;
 import java.util.List;
 import top.uhyils.usher.pojo.DO.base.TokenInfo;
 import top.uhyils.usher.pojo.DTO.LoginDTO;
+import top.uhyils.usher.pojo.DTO.UserAccessTokenDTO;
 import top.uhyils.usher.pojo.DTO.UserDTO;
 import top.uhyils.usher.pojo.DTO.request.FindUserByNameQuery;
 import top.uhyils.usher.pojo.entity.Token;
@@ -152,5 +153,15 @@ public interface UserService extends BaseDoService<UserDTO> {
      * @return
      */
     LoginDTO visiterLogin();
+
+
+    /**
+     * 口令登录
+     *
+     * @param dto
+     *
+     * @return
+     */
+    LoginDTO login(UserAccessTokenDTO dto);
 
 }

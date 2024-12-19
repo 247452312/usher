@@ -31,10 +31,6 @@
             <groupId>top.uhyils.usher</groupId>
             <artifactId>usher-api-provider-ai-control</artifactId>
         </dependency>
-        <dependency>
-            <groupId>top.uhyils.usher</groupId>
-            <artifactId>usher-api-provider-ai-device-manager</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

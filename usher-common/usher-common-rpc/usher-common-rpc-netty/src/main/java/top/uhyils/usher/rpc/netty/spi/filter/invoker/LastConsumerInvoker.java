@@ -25,7 +25,7 @@ public class LastConsumerInvoker implements RpcInvoker {
     @Override
     public RpcData invoke(FilterContext context) {
         RpcData request = context.getRequestData();
-        LogUtil.debug("请求唯一标示:{},方法:{}", request.unique().toString(), request.content().contentString());
+        LogUtil.debug("请求唯一标示:{},方法:{}", () -> new String[]{request.unique().toString(), request.content().contentString()});
         try {
             return client.send(request);
         } catch (InterruptedException | TimeoutException e) {

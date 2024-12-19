@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.mysql.content.MysqlGlobalVariables;
 import top.uhyils.usher.mysql.enums.FieldTypeEnum;
 import top.uhyils.usher.mysql.pojo.DTO.FieldInfo;
@@ -45,7 +45,7 @@ public class PGlobalVariables extends AbstractSysTable {
     @Override
     public NodeInvokeResult doGetResultNoParams() {
 
-        Optional<UserDTO> userOptional = UserInfoHelper.get();
+        Optional<UserDTO> userOptional = LoginInfoHelper.get();
         if (!userOptional.isPresent()) {
             throw Asserts.makeException("未登录");
         }

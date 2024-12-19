@@ -7,7 +7,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
 import org.aspectj.lang.reflect.MethodSignature;
 import top.uhyils.usher.annotation.NoLogin;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.pojo.DTO.LoginDTO;
 import top.uhyils.usher.pojo.cqe.DefaultCQE;
 import top.uhyils.usher.pojo.cqe.command.BlankCommand;
@@ -16,6 +16,8 @@ import top.uhyils.usher.util.CollectionUtil;
 import top.uhyils.usher.util.RpcApiUtil;
 
 /**
+ * 不需要登录的接口请求
+ *
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年06月21日 08时19分
  */
@@ -56,12 +58,12 @@ public class NoTokenInterfaceInvoker extends AbstractAnnotationInterfaceInvoker 
         // 未登录,判断为游客第一次访问,生成token
         if (StringUtils.isEmpty(token) && arg.getUser() == null) {
             LoginDTO loginDTO = visiterLogin();
-            UserInfoHelper.setUser(loginDTO.getUserEntity());
-            UserInfoHelper.setToken(loginDTO.getToken());
+            LoginInfoHelper.setUser(loginDTO.getUserEntity());
+            LoginInfoHelper.setToken(loginDTO.getToken());
         } else if (arg.getUser() != null) {
-            UserInfoHelper.setUser(arg.getUser());
+            LoginInfoHelper.setUser(arg.getUser());
         } else if (StringUtils.isNotEmpty(token)) {
-            UserInfoHelper.setToken(token);
+            LoginInfoHelper.setToken(token);
         }
         return pjp.proceed();
 

@@ -1,7 +1,7 @@
 package top.uhyils.usher.rpc.filter.ip;
 
 import java.util.Optional;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.rpc.annotation.RpcSpi;
 import top.uhyils.usher.rpc.exchange.pojo.data.AbstractRpcData;
 import top.uhyils.usher.rpc.exchange.pojo.data.RpcData;
@@ -22,11 +22,11 @@ public class IpConsumerFilter implements ConsumerFilter {
 
     @Override
     public RpcData invoke(RpcInvoker invoker, FilterContext invokerContext) throws InterruptedException {
-        Optional<String> ipOpt = UserInfoHelper.getUserIp();
+        Optional<String> ipOpt = LoginInfoHelper.getUserIp();
         ipOpt.ifPresent(ip -> {
             AbstractRpcData requestData = (AbstractRpcData) invokerContext.getRequestData();
             RpcHeader[] rpcHeaders = requestData.rpcHeaders();
-            rpcHeaders = CollectionUtil.arrayAdd(rpcHeaders, RpcHeaderFactory.newHeader(UserInfoHelper.USER_IP_RPC_KEY, ip));
+            rpcHeaders = CollectionUtil.arrayAdd(rpcHeaders, RpcHeaderFactory.newHeader(LoginInfoHelper.USER_IP_RPC_KEY, ip));
             requestData.setHeaders(rpcHeaders);
         });
         return invoker.invoke(invokerContext);

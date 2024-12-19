@@ -3,7 +3,7 @@ package top.uhyils.usher.pojo.DO.base;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.util.Objects;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.pojo.DTO.UserDTO;
 import top.uhyils.usher.pojo.cqe.DefaultCQE;
 import top.uhyils.usher.util.IdUtil;
@@ -51,7 +51,7 @@ public abstract class BaseIdDO implements BaseDbSaveable {
      */
     @Override
     public void preInsert() {
-        preInsert(UserInfoHelper.doGet());
+        preInsert(LoginInfoHelper.doGet());
     }
 
     @Override

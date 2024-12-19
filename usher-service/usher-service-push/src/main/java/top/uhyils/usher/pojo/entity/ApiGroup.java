@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import top.uhyils.usher.annotation.Default;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.facade.UserFacade;
 import top.uhyils.usher.pojo.DO.ApiGroupDO;
 import top.uhyils.usher.pojo.DO.ApiSubscribeDO;
@@ -71,7 +71,7 @@ public class ApiGroup extends AbstractDoEntity<ApiGroupDO> {
     }
 
     public String callApi() {
-        return callApi(UserInfoHelper.doGet());
+        return callApi(LoginInfoHelper.doGet());
     }
 
     public String callApi(UserDTO user) {

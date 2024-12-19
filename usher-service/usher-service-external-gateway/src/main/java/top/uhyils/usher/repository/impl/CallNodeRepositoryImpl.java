@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import top.uhyils.usher.annotation.NotNull;
 import top.uhyils.usher.annotation.Repository;
 import top.uhyils.usher.assembler.CallNodeAssembler;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.dao.CallNodeDao;
 import top.uhyils.usher.enums.InvokeTypeEnum;
 import top.uhyils.usher.mysql.content.MysqlContent;
@@ -57,7 +57,7 @@ public class CallNodeRepositoryImpl extends AbstractRepository<CallNode, CallNod
     @NotNull
     @Override
     public CallNode findNodeByDatabaseAndTable(String database, String table, InvokeTypeEnum invokeType) {
-        Long companyId = UserInfoHelper.get().map(IdDTO::getId).orElse(null);
+        Long companyId = LoginInfoHelper.get().map(IdDTO::getId).orElse(null);
         Asserts.assertTrue(companyId != null, "用户未登录");
         LambdaQueryWrapper<CallNodeDO> queryWrapper = Wrappers.lambdaQuery();
         Asserts.assertTrue(StringUtil.isNotEmpty(database), "数据库名称不能为空");

@@ -231,6 +231,29 @@ public interface UStream<T> {
     }
 
     /**
+     * 顺序返回符合条件的值,一旦条件不符合立即停止继续判断
+     *
+     * @return
+     */
+    default UStream<T> takeWhile(BiFunction<Integer, T, Boolean> function) {
+        return t -> {
+            AtomicBoolean atomicBoolean = new AtomicBoolean(true);
+            AtomicInteger integer = new AtomicInteger(0);
+            consumeTillStop(e -> {
+                if (!atomicBoolean.get()) {
+                    stop();
+                }
+                int andIncrement = integer.getAndIncrement();
+                if (Boolean.FALSE.equals(function.apply(andIncrement, e))) {
+                    atomicBoolean.set(Boolean.FALSE);
+                    return;
+                }
+                t.accept(e);
+            });
+        };
+    }
+
+    /**
      * 顺序删除符合条件的元素,一旦条件不符合立即停止删除,并返回剩余的元素
      *
      * @return
@@ -603,6 +626,15 @@ public interface UStream<T> {
      */
     default String join(CharSequence charSequence) {
         return join(charSequence, T::toString);
+    }
+
+    /**
+     * join
+     *
+     * @return
+     */
+    default String join() {
+        return join("", T::toString);
     }
 
     /**

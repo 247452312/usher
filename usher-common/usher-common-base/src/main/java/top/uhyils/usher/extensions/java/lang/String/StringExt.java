@@ -3,6 +3,7 @@ package top.uhyils.usher.extensions.java.lang.String;
 import manifold.ext.rt.api.Extension;
 import manifold.ext.rt.api.This;
 import org.apache.commons.lang3.StringUtils;
+import top.uhyils.usher.ustream.UStream;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -13,6 +14,14 @@ public class StringExt {
 
     public static String[] splitt(@This String str, String separator) {
         return StringUtils.split(str, separator);
+    }
+
+    public static UStream<Character> stream(@This String str) {
+        return t -> {
+            for (int i = 0; i < str.length(); i++) {
+                t.accept(str.charAt(i));
+            }
+        };
     }
 
     public static void main(String[] args) {

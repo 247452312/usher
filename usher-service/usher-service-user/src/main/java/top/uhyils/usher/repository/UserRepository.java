@@ -116,4 +116,5 @@ public interface UserRepository extends BaseEntityRepository<UserDO, User> {
      * @return
      */
     List<User> findUserByUsername(String name);
+
 }

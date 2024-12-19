@@ -1,7 +1,7 @@
 package top.uhyils.usher.facade.impl;
 
 import top.uhyils.usher.annotation.Facade;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.facade.JvmFacade;
 import top.uhyils.usher.pojo.DTO.response.JvmDataStatisticsDTO;
 import top.uhyils.usher.pojo.DTO.response.JvmInfoLogDTO;
@@ -23,13 +23,13 @@ public class JvmFacadeImpl implements JvmFacade {
 
     @Override
     public JvmDataStatisticsDTO jvmStatisticDate() {
-        DefaultCQE request = UserInfoHelper.makeCQE();
+        DefaultCQE request = LoginInfoHelper.makeCQE();
         return jvmProvider.getJvmDataStatisticsResponse(request);
     }
 
     @Override
     public JvmInfoLogDTO jvmInfoLog() {
-        DefaultCQE request = UserInfoHelper.makeCQE();
+        DefaultCQE request = LoginInfoHelper.makeCQE();
         return jvmProvider.getJvmInfoLogResponse(request);
     }
 }

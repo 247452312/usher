@@ -1,7 +1,7 @@
 package top.uhyils.usher.facade.impl;
 
 import top.uhyils.usher.annotation.Facade;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.facade.DictFacade;
 import top.uhyils.usher.pojo.DTO.response.LastPlanDTO;
 import top.uhyils.usher.pojo.DTO.response.QuickStartDTO;
@@ -23,17 +23,17 @@ public class DictFacadeImpl implements DictFacade {
 
     @Override
     public QuickStartDTO quickStartInfo() {
-        return provider.getQuickStartResponse(UserInfoHelper.makeCQE());
+        return provider.getQuickStartResponse(LoginInfoHelper.makeCQE());
     }
 
     @Override
     public VersionInfoDTO versionInfo() {
-        return provider.getVersionInfoResponse(UserInfoHelper.makeCQE());
+        return provider.getVersionInfoResponse(LoginInfoHelper.makeCQE());
     }
 
     @Override
     public LastPlanDTO lastPlan() {
-        return provider.getLastPlanResponse(UserInfoHelper.makeCQE());
+        return provider.getLastPlanResponse(LoginInfoHelper.makeCQE());
     }
 
 }

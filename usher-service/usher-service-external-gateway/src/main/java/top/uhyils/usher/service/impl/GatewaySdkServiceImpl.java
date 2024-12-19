@@ -8,7 +8,7 @@ import top.uhyils.usher.annotation.NotNull;
 import top.uhyils.usher.annotation.Public;
 import top.uhyils.usher.assembler.CallNodeAssembler;
 import top.uhyils.usher.assembler.CompanyAssembler;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.enums.InvokeTypeEnum;
 import top.uhyils.usher.mysql.pojo.DTO.NodeInvokeResult;
 import top.uhyils.usher.pojo.DTO.CallNodeDTO;
@@ -92,7 +92,7 @@ public class GatewaySdkServiceImpl implements GatewaySdkService {
 
     @Override
     public List<CallNodeDTO> queryCallNode(CallNodeQuery callNodeQuery) {
-        UserDTO userDTO = UserInfoHelper.doGet();
+        UserDTO userDTO = LoginInfoHelper.doGet();
         List<CallNode> callNodes = callNodeRepository.query(userDTO.getId(), callNodeQuery);
         return callNodeAssembler.listEntityToDTO(callNodes);
     }

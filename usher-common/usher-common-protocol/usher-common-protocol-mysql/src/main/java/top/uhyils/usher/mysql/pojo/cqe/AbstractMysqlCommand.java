@@ -1,6 +1,6 @@
 package top.uhyils.usher.mysql.pojo.cqe;
 
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.mysql.content.MysqlContent;
 import top.uhyils.usher.mysql.pojo.entity.MysqlTcpLink;
 import top.uhyils.usher.pojo.DTO.UserDTO;
@@ -23,8 +23,8 @@ public abstract class AbstractMysqlCommand extends AbstractCommand implements My
         UserDTO userInfo = mysqlTcpLink.findUserDTO();
         if (userInfo != null) {
             String token = userInfo.findToken();
-            UserInfoHelper.setToken(token);
-            UserInfoHelper.setUser(userInfo);
+            LoginInfoHelper.setToken(token);
+            LoginInfoHelper.setUser(userInfo);
         }
         this.mysqlBytes = mysqlBytes;
         load();

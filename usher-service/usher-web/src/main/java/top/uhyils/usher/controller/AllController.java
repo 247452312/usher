@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.context.MyTraceIdContext;
-import top.uhyils.usher.context.UserInfoHelper;
 import top.uhyils.usher.enums.ServiceCode;
 import top.uhyils.usher.pojo.DTO.request.Action;
 import top.uhyils.usher.pojo.DTO.request.SessionRequest;
@@ -27,6 +27,7 @@ import top.uhyils.usher.pojo.DTO.response.WebResponse;
 import top.uhyils.usher.rpc.content.ClusterNameContext;
 import top.uhyils.usher.util.IpUtil;
 import top.uhyils.usher.util.LogUtil;
+import top.uhyils.usher.util.ReflactUtil;
 import top.uhyils.usher.util.RpcApiUtil;
 import top.uhyils.usher.util.StringUtil;
 import top.uhyils.usher.util.WebExceptionHandler;
@@ -39,15 +40,6 @@ import top.uhyils.usher.util.WebExceptionHandler;
 @CrossOrigin
 public class AllController {
 
-    /**
-     * 用户登录时携带的token的名称
-     */
-    private static final String TOKEN = "token";
-
-    /**
-     * 保证请求幂等性, 不会在前一个相同幂等id执行结束前执行方法
-     */
-    private static final String UNIQUE = "unique";
 
     /**
      * 调用集群名称的header
@@ -77,6 +69,7 @@ public class AllController {
 
         // 获取有价值的headers
         Map<String, String> headers = findHeaders(httpServletRequest);
+        // 如果有指定集群,则调用指定集群
         String header = httpServletRequest.getHeader(CLUSTER_NAME_HEADER);
         if (StringUtil.isNotEmpty(header)) {
             ClusterNameContext.add(header);
@@ -187,7 +180,9 @@ public class AllController {
     private void dealActionBeforeCall(Action action) {
         LogUtil.info(this, "param: " + JSON.toJSONString(action));
         // token修改到arg中
-        action.getArgs().put(TOKEN, action.getToken());
+        action.getArgs().put(ReflactUtil.transSFunction(Action::getToken), action.getToken());
+        action.getArgs().put(ReflactUtil.transSFunction(Action::getAccessToken), action.getAccessToken());
+        action.getArgs().put(ReflactUtil.transSFunction(Action::getUnique), action.getUnique());
     }
 
     private Object call(Action action, Map<String, String> headers, HttpServletRequest httpServletRequest) throws Exception {
@@ -203,7 +198,7 @@ public class AllController {
 
     private void pushIp(HttpServletRequest httpServletRequest) {
         String ip = IpUtil.getServletIP(httpServletRequest);
-        UserInfoHelper.setIp(ip);
+        LoginInfoHelper.setIp(ip);
     }
 
 }

@@ -1,7 +1,7 @@
 package top.uhyils.usher.redis.param;
 
 import java.util.Optional;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.pojo.DTO.UserDTO;
 import top.uhyils.usher.redis.RedisPool;
 import top.uhyils.usher.redis.Redisable;
@@ -110,7 +110,7 @@ public enum SysParamEnum {
      * @return
      */
     protected String findUserValue(RedisPool redisPool, SystemParamNotFoundCallBack callBack) {
-        Optional<UserDTO> userDTO = UserInfoHelper.get();
+        Optional<UserDTO> userDTO = LoginInfoHelper.get();
         if (userDTO.isPresent()) {
             return findValue(userDTO.get().getId(), redisPool, callBack);
         } else {

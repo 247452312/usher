@@ -25,7 +25,6 @@
         <module>usher-service-all</module>
         <module>usher-service-external-gateway</module>
         <module>usher-service-ai-control</module>
-        <module>usher-service-ai-device-manager</module>
     </modules>
 
 </project>

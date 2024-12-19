@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import top.uhyils.usher.assembler.GatewayAssembler;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.mysql.content.MysqlContent;
 import top.uhyils.usher.mysql.enums.SqlTypeEnum;
 import top.uhyils.usher.mysql.handler.MysqlServiceHandler;
@@ -72,7 +72,7 @@ public class MysqlServiceHandlerImpl implements MysqlServiceHandler {
 
     @Override
     public List<DatabaseInfo> getAllDatabaseInfo(BlackQuery blackQuery) {
-        UserDTO userDTO = UserInfoHelper.get().orElseThrow(() -> Asserts.makeException("未登录"));
+        UserDTO userDTO = LoginInfoHelper.get().orElseThrow(() -> Asserts.makeException("未登录"));
         Asserts.assertTrue(userDTO != null, "未登录");
         List<CallNode> callNodes = callNodeRepository.findByUser(userDTO);
         return new ArrayList<>(callNodes.stream()

@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.enums.Symbol;
 import top.uhyils.usher.mysql.enums.FieldTypeEnum;
 import top.uhyils.usher.mysql.pojo.DTO.ColumnsInfo;
@@ -49,7 +49,7 @@ public class IColumns extends AbstractSysTable {
     public NodeInvokeResult doGetResultNoParams() {
         Object schemaName = params.get("schema_name");
         ArrayList<Arg> args = new ArrayList<>();
-        Optional<UserDTO> userOptional = UserInfoHelper.get();
+        Optional<UserDTO> userOptional = LoginInfoHelper.get();
         if (!userOptional.isPresent()) {
             throw Asserts.makeException("未登录");
         }

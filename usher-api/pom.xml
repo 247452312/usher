@@ -23,7 +23,6 @@
         <module>usher-api-provider-gateway</module>
         <module>usher-api-provider-gateway-sdk</module>
         <module>usher-api-provider-ai-control</module>
-        <module>usher-api-provider-ai-device-manager</module>
     </modules>
 
 

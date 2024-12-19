@@ -3,7 +3,7 @@ package top.uhyils.usher.pojo.entity;
 import top.uhyils.usher.annotation.Default;
 import top.uhyils.usher.assembler.AiSpaceUserLinkAssembler;
 import top.uhyils.usher.bus.Bus;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.pojo.DO.AiSpaceDO;
 import top.uhyils.usher.pojo.DTO.UserDTO;
 import top.uhyils.usher.pojo.cqe.UpdateSpaceInfoCommand;
@@ -62,7 +62,7 @@ public class AiSpace extends AbstractDoEntity<AiSpaceDO> {
      * @param userId 用户id
      */
     public Boolean removeUser(AiSpaceUserLinkRepository userLinkRepository, Long userId) {
-        checkUserPower(UserInfoHelper.doGet());
+        checkUserPower(LoginInfoHelper.doGet());
         return userLinkRepository.removeUser(unique, userId);
     }
 
@@ -74,7 +74,7 @@ public class AiSpace extends AbstractDoEntity<AiSpaceDO> {
     @Override
     public <EN extends AbstractDoEntity<AiSpaceDO>> void removeSelf(BaseEntityRepository<AiSpaceDO, EN> repository) {
         // 判断登录用户是否是管理员
-        checkUserPower(UserInfoHelper.doGet());
+        checkUserPower(LoginInfoHelper.doGet());
         Bus.single().commitAndPush(new SpaceRemoveParentEvent(this));
         super.removeSelf(repository);
     }

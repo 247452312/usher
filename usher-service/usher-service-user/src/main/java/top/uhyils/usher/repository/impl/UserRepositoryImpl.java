@@ -136,4 +136,5 @@ public class UserRepositoryImpl extends AbstractRepository<User, UserDO, UserDao
         List<UserDO> userDOS = dao.selectList(queryWrapper);
         return assembler.listToEntity(userDOS);
     }
+
 }

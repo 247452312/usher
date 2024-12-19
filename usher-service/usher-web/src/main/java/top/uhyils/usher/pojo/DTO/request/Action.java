@@ -33,6 +33,11 @@ public class Action {
     private String token;
 
     /**
+     * 用户令牌
+     */
+    private String accessToken;
+
+    /**
      * 保证请求幂等性, 不会在前一个相同幂等id执行结束前执行方法
      */
     private Long unique;
@@ -81,5 +86,13 @@ public class Action {
 
     public void setUnique(Long unique) {
         this.unique = unique;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

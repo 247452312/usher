@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.stereotype.Component;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.pojo.DTO.UserDTO;
 import top.uhyils.usher.pojo.entity.InsertSql;
 import top.uhyils.usher.pojo.entity.SelectSql;
@@ -67,7 +67,7 @@ public class StandardFilter extends FilterEventAdapter {
     }
 
     private Long getUserId() {
-        UserDTO userDTO = UserInfoHelper.doGet();
+        UserDTO userDTO = LoginInfoHelper.doGet();
         Long userId;
         if (userDTO != null) {
             userId = userDTO.getId();

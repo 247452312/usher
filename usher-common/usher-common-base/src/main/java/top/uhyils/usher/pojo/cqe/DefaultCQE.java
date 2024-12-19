@@ -1,7 +1,7 @@
 package top.uhyils.usher.pojo.cqe;
 
 
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.pojo.DTO.UserDTO;
 
 /**
@@ -15,6 +15,11 @@ public class DefaultCQE implements BaseCQE {
      * token
      */
     private String token;
+
+    /**
+     * 令牌登录
+     */
+    private String accessToken;
 
     /**
      * 请求时如果携带则代表已经有了,不需要解析token
@@ -32,12 +37,13 @@ public class DefaultCQE implements BaseCQE {
         this.token = request.token;
         this.user = request.user;
         this.unique = request.unique;
+        this.accessToken = request.accessToken;
     }
 
     public DefaultCQE() {
         // 默认是没有用户登录的
-        UserInfoHelper.getToken().ifPresent(this::setToken);
-        UserInfoHelper.get().ifPresent(this::setUser);
+        LoginInfoHelper.getToken().ifPresent(this::setToken);
+        LoginInfoHelper.get().ifPresent(this::setUser);
     }
 
     public String getToken() {
@@ -64,10 +70,19 @@ public class DefaultCQE implements BaseCQE {
         this.unique = unique;
     }
 
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
     public void copyOf(DefaultCQE defaultCQE) {
         this.setUser(defaultCQE.user);
         this.setToken(defaultCQE.token);
         this.setUnique(defaultCQE.unique);
+        this.setAccessToken(defaultCQE.accessToken);
     }
 
 }

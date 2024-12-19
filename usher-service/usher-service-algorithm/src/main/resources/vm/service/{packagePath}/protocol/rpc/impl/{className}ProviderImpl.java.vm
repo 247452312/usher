@@ -9,20 +9,20 @@ import ${package}.service.${className}Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
-* ${tableComment}(${className})表 RPC对外访问实现
-*
-* @author ${author}
-* @version 1.0
-* @date 文件创建日期 ${dateTime}
-*/
+ * ${tableComment}(${className})表 RPC对外访问实现
+ *
+ * @author ${author}
+ * @version 1.0
+ * @date 文件创建日期 ${dateTime}
+ */
 @RpcService
 public class ${className}ProviderImpl extends BaseDefaultProvider<${className}DTO> implements ${className}Provider {
 
 
     @Autowired
     private ${className}Service service;
-    
-    
+
+
     @Override
     protected BaseDoService<${className}DTO> getService() {
         return service;

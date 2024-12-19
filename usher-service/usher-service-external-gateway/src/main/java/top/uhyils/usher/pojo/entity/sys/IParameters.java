@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.mysql.enums.FieldTypeEnum;
 import top.uhyils.usher.mysql.pojo.DTO.FieldInfo;
 import top.uhyils.usher.mysql.pojo.DTO.NodeInvokeResult;
@@ -26,7 +26,7 @@ public class IParameters extends AbstractSysTable {
 
     @Override
     public NodeInvokeResult doGetResultNoParams() {
-        Optional<UserDTO> userOptional = UserInfoHelper.get();
+        Optional<UserDTO> userOptional = LoginInfoHelper.get();
         if (!userOptional.isPresent()) {
             throw Asserts.makeException("未登录");
         }

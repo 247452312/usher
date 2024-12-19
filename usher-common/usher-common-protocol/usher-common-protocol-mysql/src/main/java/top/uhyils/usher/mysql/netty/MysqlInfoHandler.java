@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.jetbrains.annotations.Nullable;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.exception.AssertException;
 import top.uhyils.usher.mysql.content.MysqlContent;
 import top.uhyils.usher.mysql.decode.MysqlDecoder;
@@ -147,7 +147,7 @@ public class MysqlInfoHandler extends ChannelInboundHandlerAdapter implements Ch
             sendResponse(ErrResponse.build(e.getLocalizedMessage()));
             closeOnFlush();
         } finally {
-            UserInfoHelper.clean();
+            LoginInfoHelper.clean();
         }
     }
 
@@ -184,8 +184,8 @@ public class MysqlInfoHandler extends ChannelInboundHandlerAdapter implements Ch
                 break;
             case PASSED:
                 // 其他状态,正确接收请求
-                UserInfoHelper.setUser(mysqlTcpLink.findUserDTO());
-                UserInfoHelper.setIp(mysqlTcpLink.findLocalAddress().getAddress().getHostAddress());
+                LoginInfoHelper.setUser(mysqlTcpLink.findUserDTO());
+                LoginInfoHelper.setIp(mysqlTcpLink.findLocalAddress().getAddress().getHostAddress());
                 mysqlCommand = parseForCommand(mysqlBytes);
                 break;
             case OVER:

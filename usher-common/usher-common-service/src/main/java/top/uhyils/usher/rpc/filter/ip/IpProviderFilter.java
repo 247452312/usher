@@ -1,6 +1,6 @@
 package top.uhyils.usher.rpc.filter.ip;
 
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.rpc.annotation.RpcSpi;
 import top.uhyils.usher.rpc.exchange.pojo.data.AbstractRpcData;
 import top.uhyils.usher.rpc.exchange.pojo.data.RpcData;
@@ -19,15 +19,15 @@ public class IpProviderFilter implements ProviderFilter {
     @Override
     public RpcData invoke(RpcInvoker invoker, FilterContext invokerContext) throws InterruptedException {
         AbstractRpcData requestData = (AbstractRpcData) invokerContext.getRequestData();
-        RpcHeader header = requestData.getHeader(UserInfoHelper.USER_IP_RPC_KEY);
+        RpcHeader header = requestData.getHeader(LoginInfoHelper.USER_IP_RPC_KEY);
 
         try {
             if (header != null) {
-                UserInfoHelper.setIp(header.getValue());
+                LoginInfoHelper.setIp(header.getValue());
             }
             return invoker.invoke(invokerContext);
         } finally {
-            UserInfoHelper.cleanIp();
+            LoginInfoHelper.cleanIp();
         }
     }
 }

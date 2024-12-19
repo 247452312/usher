@@ -6,15 +6,15 @@ import ${package}.pojo.DO.base.BaseDO;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
-* ${tableComment}(${className})表 数据库实体类
-*
-* @author ${author}
-* @version 1.0
-* @date 文件创建日期 ${dateTime}
-*/
+ * ${tableComment}(${className})表 数据库实体类
+ *
+ * @author ${author}
+ * @version 1.0
+ * @date 文件创建日期 ${dateTime}
+ */
 @TableName(value = "${tableName}")
 public class ${className}DO extends BaseDO {
-    
+
     private static final long serialVersionUID = -1L;
 
 #foreach ($column in $columns)
@@ -39,7 +39,7 @@ public class ${className}DO extends BaseDO {
         return $column.smallName;
     }
     #end
-    
+
 #end
 
     @Override

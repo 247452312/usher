@@ -3,8 +3,8 @@ package top.uhyils.usher.pojo.entity;
 import java.util.Optional;
 import org.aspectj.lang.ProceedingJoinPoint;
 import top.uhyils.usher.annotation.Nullable;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.context.SpiderContext;
-import top.uhyils.usher.context.UserInfoHelper;
 import top.uhyils.usher.enums.ServiceCode;
 import top.uhyils.usher.pojo.DTO.base.ServiceResult;
 import top.uhyils.usher.redis.RedisPool;
@@ -40,7 +40,7 @@ public abstract class AbstractAnnotationInterfaceInvoker {
 
     @Nullable
     protected ServiceResult<Long> checkIp() {
-        Optional<String> userIp = UserInfoHelper.getUserIp();
+        Optional<String> userIp = LoginInfoHelper.getUserIp();
         if (userIp.isPresent()) {
             String ip = userIp.get();
             try (final Redisable jedis = redisPool.getJedis()) {

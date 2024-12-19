@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import top.uhyils.usher.annotation.ReadWriteMark;
 import top.uhyils.usher.assembler.JobAssembler;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.pojo.DO.JobDO;
 import top.uhyils.usher.pojo.DTO.JobDTO;
 import top.uhyils.usher.pojo.cqe.query.IdQuery;
@@ -32,7 +32,7 @@ public class JobServiceImpl extends AbstractDoService<JobDO, Job, JobDTO, JobRep
     public Long add(JobDTO dto) {
         Job job = assem.toEntity(dto);
         rep.save(job);
-        job.fillUser(UserInfoHelper.doGet());
+        job.fillUser(LoginInfoHelper.doGet());
         job.addSelfToJob();
         return 1L;
     }
@@ -42,7 +42,7 @@ public class JobServiceImpl extends AbstractDoService<JobDO, Job, JobDTO, JobRep
         Job job = assem.toEntity(dto);
         rep.change(job, args);
 
-        job.fillUser(UserInfoHelper.doGet());
+        job.fillUser(LoginInfoHelper.doGet());
         job.delJob();
         job.addSelfToJob();
         return 1;

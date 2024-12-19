@@ -136,11 +136,6 @@
             </dependency>
             <dependency>
                 <groupId>top.uhyils.usher</groupId>
-                <artifactId>usher-api-provider-ai-device-manager</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-api-provider-algorithm</artifactId>
                 <version>${project.version}</version>
             </dependency>

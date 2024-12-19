@@ -1,7 +1,7 @@
 package top.uhyils.usher.pojo.DO.base;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.pojo.DTO.UserDTO;
 
 /**
@@ -68,7 +68,7 @@ public abstract class BaseDO extends BaseIdDO {
 
     @Override
     public void preUpdate() {
-        preUpdate(UserInfoHelper.doGet());
+        preUpdate(LoginInfoHelper.doGet());
     }
 
     /**
@@ -76,7 +76,7 @@ public abstract class BaseDO extends BaseIdDO {
      */
     @Override
     public void preInsert() {
-        preInsert(UserInfoHelper.doGet());
+        preInsert(LoginInfoHelper.doGet());
     }
 
 

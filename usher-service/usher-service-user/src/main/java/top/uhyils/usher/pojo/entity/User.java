@@ -10,13 +10,15 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import top.uhyils.usher.annotation.Default;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.bus.Bus;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.enums.Symbol;
 import top.uhyils.usher.enums.UserStatusEnum;
 import top.uhyils.usher.enums.UserTypeEnum;
 import top.uhyils.usher.pojo.DO.RoleDO;
 import top.uhyils.usher.pojo.DO.UserDO;
 import top.uhyils.usher.pojo.DO.base.BaseIdDO;
+import top.uhyils.usher.pojo.DTO.cqe.event.UserLoginParentEvent;
 import top.uhyils.usher.pojo.cqe.query.demo.Arg;
 import top.uhyils.usher.pojo.entity.base.AbstractDoEntity;
 import top.uhyils.usher.pojo.entity.type.Password;
@@ -89,10 +91,10 @@ public class User extends AbstractDoEntity<UserDO> {
 
     public static void batchInitRole(List<User> all, RoleRepository roleRepository, DeptRepository deptRepository, PowerRepository powerRepository, MenuRepository menuRepository) {
         List<Long> roleIds = all.stream()
-                                      .filter(t -> t.role == null)
-                                      .map(t -> t.toData().map(UserDO::getRoleId).orElse(null))
-                                      .distinct()
-                                      .collect(Collectors.toList());
+                                .filter(t -> t.role == null)
+                                .map(t -> t.toData().map(UserDO::getRoleId).orElse(null))
+                                .distinct()
+                                .collect(Collectors.toList());
         List<Role> roles = roleRepository.find(roleIds);
         Map<Long, Role> idRoleMap = roles.stream().collect(Collectors.toMap(t -> t.toData().map(BaseIdDO::getId).orElse(null), t -> t));
         for (User user : all) {
@@ -172,7 +174,6 @@ public class User extends AbstractDoEntity<UserDO> {
     public User login(UserRepository userRepository, String salt, String encodeRole) {
         Asserts.assertTrue(data.getUsername() != null);
         Asserts.assertTrue(data.getPassword() != null);
-
         /*查询是否正确*/
         User user = userRepository.checkLogin(this);
         this.copyOf(user);
@@ -180,6 +181,7 @@ public class User extends AbstractDoEntity<UserDO> {
         UserStatusEnum userStatus = UserStatusEnum.parse(toDataAndValidate().getStatus());
         Asserts.assertEqual(userStatus, UserStatusEnum.USING, "用户状态不正确,当前用户状态为:{}", userStatus.getName());
         this.token = user.toToken(salt, encodeRole);
+        Bus.single().commitAndPush(new UserLoginParentEvent(this));
         return this;
     }
 
@@ -328,6 +330,13 @@ public class User extends AbstractDoEntity<UserDO> {
     }
 
     /**
+     * 密码解密
+     */
+    public void decodePassword() {
+        data.setPassword(password().decode());
+    }
+
+    /**
      * 判断此用户是不是系统用户
      *
      * @return
@@ -335,7 +344,7 @@ public class User extends AbstractDoEntity<UserDO> {
     private boolean isSysRole() {
         Optional<UserDO> userDO = toData();
         if (userDO.isPresent()) {
-            return Objects.equals(userDO.get().getRoleId(), UserInfoHelper.MYSQL_ROLE_ID);
+            return Objects.equals(userDO.get().getRoleId(), LoginInfoHelper.MYSQL_ROLE_ID);
         }
         return false;
     }

@@ -2,7 +2,7 @@ package top.uhyils.usher.facade.impl;
 
 import java.util.List;
 import top.uhyils.usher.annotation.Facade;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.facade.UserFacade;
 import top.uhyils.usher.pojo.DTO.UserDTO;
 import top.uhyils.usher.pojo.cqe.query.IdsQuery;
@@ -24,7 +24,7 @@ public class UserFacadeImpl implements UserFacade {
     public List<UserDTO> findByUserIdList(List<Long> userIds) {
         IdsQuery request = new IdsQuery();
         request.setIds(userIds);
-        UserInfoHelper.fillCQE(request);
+        LoginInfoHelper.fillCQE(request);
         return userProvider.getSampleUserByIds(request);
     }
 }

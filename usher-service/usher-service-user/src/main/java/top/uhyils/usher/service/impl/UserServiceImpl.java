@@ -3,14 +3,16 @@ package top.uhyils.usher.service.impl;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Resource;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import top.uhyils.usher.annotation.ReadWriteMark;
 import top.uhyils.usher.assembler.UserAssembler;
-import top.uhyils.usher.context.UserInfoHelper;
+import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.pojo.DO.UserDO;
 import top.uhyils.usher.pojo.DO.base.TokenInfo;
 import top.uhyils.usher.pojo.DTO.LoginDTO;
+import top.uhyils.usher.pojo.DTO.UserAccessTokenDTO;
 import top.uhyils.usher.pojo.DTO.UserDTO;
 import top.uhyils.usher.pojo.DTO.request.FindUserByNameQuery;
 import top.uhyils.usher.pojo.entity.Token;
@@ -81,18 +83,12 @@ public class UserServiceImpl extends AbstractDoService<UserDO, User, UserDTO, Us
     @Override
     public LoginDTO login(UserName userName, Password password) {
         User user = new User(userName, password);
-        user.login(rep, salt, encodeRules);
-
-        //检查是否已经登录,如果已经登录,则将之前已登录的挤下来
-        user.removeUserInRedis(rep);
-        // 登录->加入缓存中
-        user.addUserToRedis(rep);
-        return LoginDTO.buildLoginSuccess(user.tokenValue(), assem.toDTO(user));
+        return checkAndLogin(user);
     }
 
     @Override
     public Boolean logout() {
-        User user = new User(assem.toDo(UserInfoHelper.doGet()));
+        User user = new User(assem.toDo(LoginInfoHelper.doGet()));
         return user.logout(rep);
     }
 
@@ -106,12 +102,12 @@ public class UserServiceImpl extends AbstractDoService<UserDO, User, UserDTO, Us
 
     @Override
     public UserDTO getUserByToken() {
-        return UserInfoHelper.doGet();
+        return LoginInfoHelper.doGet();
     }
 
     @Override
     public String updatePassword(Password oldPassword, Password newPassword) {
-        User user = new User(assem.toDo(UserInfoHelper.doGet()));
+        User user = new User(assem.toDo(LoginInfoHelper.doGet()));
         //检查密码是否正确
         user.checkPassword(oldPassword, rep);
         // 修改到新密码
@@ -130,7 +126,6 @@ public class UserServiceImpl extends AbstractDoService<UserDO, User, UserDTO, Us
         List<User> users = rep.find(userIds);
         return assem.listEntityToDTO(users);
     }
-
 
     @Override
     public Boolean applyUser(UserDTO userDTO) {
@@ -164,7 +159,7 @@ public class UserServiceImpl extends AbstractDoService<UserDO, User, UserDTO, Us
 
     @Override
     public LoginDTO visiterLogin() {
-        Optional<String> userIp = UserInfoHelper.getUserIp();
+        Optional<String> userIp = LoginInfoHelper.getUserIp();
         Asserts.assertTrue(userIp.isPresent(), "获取用户ip失败");
 
         User visiter = new Visiter(userIp.get());
@@ -172,6 +167,24 @@ public class UserServiceImpl extends AbstractDoService<UserDO, User, UserDTO, Us
         // 登录->游客也加入缓存中
         visiter.addUserToRedis(rep);
         return LoginDTO.buildLoginSuccess(visiter.tokenValue(), assem.toDTO(visiter));
+    }
+
+    @Override
+    public LoginDTO login(UserAccessTokenDTO dto) {
+        User user = rep.find(dto.getUserId());
+        user.decodePassword();
+        return checkAndLogin(user);
+    }
+
+    @NotNull
+    private LoginDTO checkAndLogin(User user) {
+        user.login(rep, salt, encodeRules);
+
+        //检查是否已经登录,如果已经登录,则将之前已登录的挤下来
+        user.removeUserInRedis(rep);
+        // 登录->加入缓存中
+        user.addUserToRedis(rep);
+        return LoginDTO.buildLoginSuccess(user.tokenValue(), assem.toDTO(user));
     }
 
 }
