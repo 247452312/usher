@@ -50,7 +50,7 @@ public class ElegantCoreProcessor implements InitializingBean, ApplicationListen
         } catch (InterruptedException e) {
             LogUtil.error(this, e);
         }
-        LogUtil.info("组件业务完成,优雅下线结束, 祝君武运昌隆, 愿君顶峰相见!");
+        LogUtil.info("组件业务完成,优雅下线结束, 每一次结束都是为了更好的重逢!");
     }
 
 
