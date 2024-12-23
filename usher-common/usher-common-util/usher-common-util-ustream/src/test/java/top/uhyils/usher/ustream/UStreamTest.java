@@ -334,9 +334,10 @@ class UStreamTest {
     void groupByT() {
         List<Integer> list = Arrays.asList(1, 4, 2, 3);
         UStream<Integer> integerUStream = UStream.of(list);
-        UGroupStream<Integer, Integer> uObjAndArrayStreams = integerUStream.groupByToUStream(t -> t < 3 ? 1 : 2);
-        UStream<Integer> integerUStream1 = uObjAndArrayStreams.flatMapBySortKey(Integer::compareTo);
-        List<Integer> list1 = integerUStream1.toList();
+        Map<Integer, UStream<Integer>> uObjAndArrayStreams = integerUStream.groupByToUStream(t -> t < 3 ? 1 : 2);
+        List<Integer> keys = new ArrayList<>(uObjAndArrayStreams.keySet());
+        keys.sort(Integer::compareTo);
+        List<Integer> list1 = UStream.of(keys).flatMap(uObjAndArrayStreams::get).toList();
         assert list1.size() == 4;
         assert list1.get(0) == 1;
         assert list1.get(1) == 2;

@@ -2,16 +2,14 @@ package top.uhyils.usher.util.formula.impl.node;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.commons.lang3.math.NumberUtils;
+import top.uhyils.usher.ustream.UStream;
 import top.uhyils.usher.util.Asserts;
 import top.uhyils.usher.util.CollectionUtil;
 import top.uhyils.usher.util.StringUtil;
@@ -104,7 +102,7 @@ public abstract class AbstractFormulaNode implements FormulaNode {
             List<String> allVarName = value.getAllVarName();
             result.addAll(allVarName);
         }
-        return result.stream().filter(t -> !t.startsWith(VAR_NAME_PREX)).distinct().collect(Collectors.toList());
+        return result.ustream().filter(t -> !t.startsWith(VAR_NAME_PREX)).distinct().toList();
     }
 
     protected abstract void init();
@@ -189,11 +187,11 @@ public abstract class AbstractFormulaNode implements FormulaNode {
      * 查询最终的自变量
      */
     protected void findAndFillVarName() {
-        Stream<String> stream = Arrays.stream(new String[]{formula});
+        UStream<String> stream = UStream.of(formula);
         for (String s : SPECIAL_OPERATOR) {
-            stream = stream.map(t -> t.split(s)).flatMap(Arrays::stream).filter(StringUtil::isNotEmpty).distinct();
+            stream = stream.map(t -> t.split(s)).flatMap(UStream::of).filter(StringUtil::isNotEmpty).distinct();
         }
-        varNames = stream.map(String::trim).filter(StringUtil::isNotEmpty).distinct().collect(Collectors.toList());
+        varNames = stream.map(String::trim).filter(StringUtil::isNotEmpty).distinct().toList();
         Iterator<String> iterator = varNames.iterator();
         while (iterator.hasNext()) {
             String varName = iterator.next();
@@ -248,7 +246,7 @@ public abstract class AbstractFormulaNode implements FormulaNode {
      * 替换每一项(+,-)
      */
     protected void replaceTerm() {
-        List<String> formulas = Arrays.stream(formula.split("\\+")).map(t -> t.split("-")).flatMap(Arrays::stream).map(String::trim).collect(Collectors.toList());
+        List<String> formulas = UStream.of(formula.split("\\+")).map(t -> t.split("-")).flatMap(UStream::of).map(String::trim).toList();
         if (formulas.size() == 1) {
             return;
         }

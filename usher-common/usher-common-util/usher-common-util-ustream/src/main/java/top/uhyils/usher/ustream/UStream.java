@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
@@ -37,6 +38,10 @@ public interface UStream<T> {
                 consumer.accept(value);
             }
         };
+    }
+
+    static <E, T> UStream<Entry<E, T>> of(Map<E, T> map) {
+        return consumer -> map.entrySet().forEach(consumer);
     }
 
     static <T> UStream<T> of(List<T> t) {
@@ -436,9 +441,9 @@ public interface UStream<T> {
      * @return
      */
     default UStream<T> cache() {
-        UArrayStream<T> arraySeq = new UArrayStream<>();
+        List<T> arraySeq = new ArrayList<>();
         consume(arraySeq::add);
-        return arraySeq;
+        return UStream.of(arraySeq);
     }
 
     /**
@@ -509,17 +514,26 @@ public interface UStream<T> {
      *
      * @return
      */
-    default <E> UGroupStream<E, T> groupByToUStream(Function<T, E> comparator) {
-        Map<E, UArrayStream<T>> result = new HashMap<>();
+    default <E> Map<E, UStream<T>> groupByToUStream(Function<T, E> function) {
+        Map<E, List<UStream<T>>> consumers = new HashMap<>();
+
         consume(t -> {
-            E key = comparator.apply(t);
-            if (!result.containsKey(key)) {
-                result.put(key, new UArrayStream<>());
+            E key = function.apply(t);
+            if (!consumers.containsKey(key)) {
+                consumers.put(key, new ArrayList<>());
             }
-            result.get(key).add(t);
+            consumers.get(key).add(consumer -> consumer.accept(t));
         });
-        return new UGroupStream<>(result);
+        Map<E, UStream<T>> result = new HashMap<>();
+        for (E key : consumers.keySet()) {
+            List<UStream<T>> uStreams = consumers.get(key);
+            UStream<T> tuStream = UStream.of(uStreams).flatMap(t -> t);
+            result.put(key, tuStream);
+        }
+
+        return result;
     }
+
 
     /**
      * 反向流
