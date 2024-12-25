@@ -244,8 +244,12 @@ public class User extends AbstractDoEntity<UserDO> {
         }
     }
 
-    public void addUserToRedis(UserRepository userRepository) {
-        userRepository.cacheUser(token, this);
+    public void addToRedis(UserRepository userRepository) {
+        userRepository.cacheUser(token.getToken(), this);
+    }
+
+    public void addToRedis(String accessToken, UserRepository userRepository) {
+        userRepository.cacheUser(accessToken, this);
     }
 
     public String tokenValue() {
@@ -335,6 +339,7 @@ public class User extends AbstractDoEntity<UserDO> {
     public void decodePassword() {
         data.setPassword(password().decode());
     }
+
 
     /**
      * 判断此用户是不是系统用户

@@ -1,8 +1,0 @@
-# nacos相关配置
-nacos:
-  config:
-    # 配置ID
-    data-id: usher_web
-spring:
-  application:
-    name: usher_web

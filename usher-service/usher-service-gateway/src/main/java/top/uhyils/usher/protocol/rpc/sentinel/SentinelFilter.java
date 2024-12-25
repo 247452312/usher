@@ -1,4 +1,4 @@
-package top.uhyils.usher.filter.sentinel;
+package top.uhyils.usher.protocol.rpc.sentinel;
 
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;

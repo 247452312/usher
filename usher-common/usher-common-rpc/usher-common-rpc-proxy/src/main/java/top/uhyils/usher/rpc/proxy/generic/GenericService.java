@@ -7,6 +7,8 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import top.uhyils.usher.rpc.content.RpcHeaderContext;
+import top.uhyils.usher.rpc.exception.RpcNetException;
+import top.uhyils.usher.util.Asserts;
 import top.uhyils.usher.util.LogUtil;
 
 /**
@@ -53,6 +55,8 @@ public class GenericService<T> {
             return targetMethod.invoke(service, args);
         } catch (NoSuchMethodException | IllegalAccessException e) {
             LogUtil.error(this, e);
+        } catch (RpcNetException e2) {
+            Asserts.throwException(e2);
         }
         return null;
     }

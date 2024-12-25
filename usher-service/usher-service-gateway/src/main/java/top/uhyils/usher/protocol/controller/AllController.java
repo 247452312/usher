@@ -1,4 +1,4 @@
-package top.uhyils.usher.controller;
+package top.uhyils.usher.protocol.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;

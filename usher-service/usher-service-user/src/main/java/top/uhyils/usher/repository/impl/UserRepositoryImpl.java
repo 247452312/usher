@@ -99,10 +99,10 @@ public class UserRepositoryImpl extends AbstractRepository<User, UserDO, UserDao
     }
 
     @Override
-    public void cacheUser(Token token, User user) {
+    public void cacheUser(String key, User user) {
         UserDTO userDTO = assembler.toDTO(user);
         Asserts.assertTrue(userDTO != null, "没有找到用户信息.无法进行缓存");
-        redisPoolHandle.addUser(token.getToken(), userDTO);
+        redisPoolHandle.addUser(key, userDTO);
     }
 
     @Override

@@ -14,7 +14,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>usher-service-user</module>
-        <module>usher-web</module>
         <module>usher-service-log</module>
         <module>usher-service-software</module>
         <module>usher-service-distribute</module>
@@ -22,9 +21,9 @@
         <module>usher-service-mongo</module>
         <module>usher-service-algorithm</module>
         <module>usher-service-work-orders</module>
-        <module>usher-service-all</module>
-        <module>usher-service-external-gateway</module>
+        <module>usher-service-gateway</module>
         <module>usher-service-ai-control</module>
+        <module>usher-service-all</module>
     </modules>
 
 </project>

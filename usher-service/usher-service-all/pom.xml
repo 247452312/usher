@@ -42,7 +42,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>usher-web</id>
+                        <id>usher-gateway</id>
                         <goals>
                             <goal>copy</goal>
                         </goals>
@@ -51,10 +51,10 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>top.uhyils.usher</groupId>
-                                    <artifactId>usher-web</artifactId>
+                                    <artifactId>usher-service-gateway</artifactId>
                                     <version>2.1.0.2.usher-SNAPSHOT</version>
                                     <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/classes/webapp/usher-web</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/webapp/usher-service-gateway</outputDirectory>
                                     <excludes>
 
                                     </excludes>

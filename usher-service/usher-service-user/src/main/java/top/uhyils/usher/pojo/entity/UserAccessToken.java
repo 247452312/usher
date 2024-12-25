@@ -45,4 +45,13 @@ public class UserAccessToken extends AbstractDoEntity<UserAccessTokenDO> {
         Long expirationDate = dataAndValidate.getExpirationDate();
         return System.currentTimeMillis() > expirationDate;
     }
+
+    /**
+     * 用户id
+     *
+     * @return
+     */
+    public Long userId() {
+        return toDataAndValidate().getUserId();
+    }
 }

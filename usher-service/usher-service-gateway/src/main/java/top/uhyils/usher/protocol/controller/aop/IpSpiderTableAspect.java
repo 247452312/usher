@@ -1,4 +1,4 @@
-package top.uhyils.usher.aop;
+package top.uhyils.usher.protocol.controller.aop;
 
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -63,10 +63,10 @@ public class IpSpiderTableAspect {
     private volatile Boolean canInit = Boolean.TRUE;
 
     /**
-     * 定义切入点，切入点为 {@link top.uhyils.usher.controller.AllController#action(Action, HttpServletRequest)}
+     * 定义切入点，切入点为 {@link top.uhyils.usher.protocol.controller.AllController#action}
      * 通过@Pointcut注解声明频繁使用的切点表达式
      */
-    @Pointcut("execution(public * top.uhyils.usher.controller.AllController.action(..)))")
+    @Pointcut("execution(public * top.uhyils.usher.protocol.controller.AllController.action(..)))")
     public void ipSpiderTableAspectPoint() {
     }
 

@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import top.uhyils.usher.annotation.ReadWriteMark;
 import top.uhyils.usher.assembler.UserAccessTokenAssembler;
+import top.uhyils.usher.assembler.UserAssembler;
 import top.uhyils.usher.enums.UserTokenValidityEnum;
 import top.uhyils.usher.pojo.DO.UserAccessTokenDO;
 import top.uhyils.usher.pojo.DTO.LoginDTO;
@@ -13,10 +14,11 @@ import top.uhyils.usher.pojo.cqe.DefaultCQE;
 import top.uhyils.usher.pojo.cqe.RandomCreateTokenCommand;
 import top.uhyils.usher.pojo.cqe.command.IdCommand;
 import top.uhyils.usher.pojo.cqe.command.StringCommand;
+import top.uhyils.usher.pojo.entity.User;
 import top.uhyils.usher.pojo.entity.UserAccessToken;
 import top.uhyils.usher.repository.UserAccessTokenRepository;
+import top.uhyils.usher.repository.UserRepository;
 import top.uhyils.usher.service.UserAccessTokenService;
-import top.uhyils.usher.service.UserService;
 import top.uhyils.usher.util.AccessTokenUtil;
 import top.uhyils.usher.util.Asserts;
 
@@ -32,7 +34,10 @@ import top.uhyils.usher.util.Asserts;
 public class UserAccessTokenServiceImpl extends AbstractDoService<UserAccessTokenDO, UserAccessToken, UserAccessTokenDTO, UserAccessTokenRepository, UserAccessTokenAssembler> implements UserAccessTokenService {
 
     @Resource
-    private UserService userService;
+    private UserRepository userRepository;
+
+    @Resource
+    private UserAssembler userAssembler;
 
 
     public UserAccessTokenServiceImpl(UserAccessTokenAssembler assembler, UserAccessTokenRepository repository) {
@@ -72,7 +77,9 @@ public class UserAccessTokenServiceImpl extends AbstractDoService<UserAccessToke
         UserAccessToken token = rep.findEnableByAccessToken(accessToken);
         Boolean pass = token.checkExpirationDatePass();
         Asserts.assertTrue(!pass, "token已过期");
-        return userService.login(assem.toDTO(token));
+        User user = userRepository.find(token.userId());
+        user.addToRedis(command.getValue(), userRepository);
+        return LoginDTO.buildLoginSuccess(command.getValue(), userAssembler.toDTO(user));
     }
 
     @Override

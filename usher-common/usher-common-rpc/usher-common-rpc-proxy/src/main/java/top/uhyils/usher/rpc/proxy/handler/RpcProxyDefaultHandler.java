@@ -91,7 +91,11 @@ public class RpcProxyDefaultHandler implements RpcProxyHandlerInterface {
         this.idUtil = new IdUtil();
         // 如果懒加载,那么就不加载
         if (isCheck()) {
-            initRegistry(clazz);
+            try {
+                initRegistry(clazz);
+            } catch (InterruptedException e) {
+                LogUtil.error(this, e);
+            }
         }
         consumerResponseObjectExtensions = RpcSpiManager.createOrGetExtensionListByClassNoInit(RpcStep.class, ConsumerResponseObjectExtension.class);
     }
@@ -130,12 +134,8 @@ public class RpcProxyDefaultHandler implements RpcProxyHandlerInterface {
         return consumer.getCheck();
     }
 
-    private void initRegistry(Class<?> clazz) {
-        try {
-            this.registry = RegistryFactory.createConsumer(clazz);
-        } catch (Exception e) {
-            LogUtil.error(this, e);
-        }
+    private void initRegistry(Class<?> clazz) throws InterruptedException {
+        this.registry = RegistryFactory.createConsumer(clazz);
     }
 
     /**

@@ -57,7 +57,7 @@ public class NoTokenInterfaceInvoker extends AbstractAnnotationInterfaceInvoker 
 
         // 未登录,判断为游客第一次访问,生成token
         if (StringUtils.isEmpty(token) && arg.getUser() == null) {
-            LoginDTO loginDTO = visiterLogin();
+            LoginDTO loginDTO = visitorLogin();
             LoginInfoHelper.setUser(loginDTO.getUserEntity());
             LoginInfoHelper.setToken(loginDTO.getToken());
         } else if (arg.getUser() != null) {
@@ -75,7 +75,7 @@ public class NoTokenInterfaceInvoker extends AbstractAnnotationInterfaceInvoker 
      *
      * @return 登录结果
      */
-    private LoginDTO visiterLogin() throws Throwable {
+    private LoginDTO visitorLogin() throws Throwable {
         BlankCommand build = new BlankCommand();
         ArrayList<Object> args = new ArrayList<>();
         args.add(build);

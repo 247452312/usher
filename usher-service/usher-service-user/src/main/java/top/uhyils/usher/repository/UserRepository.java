@@ -80,7 +80,7 @@ public interface UserRepository extends BaseEntityRepository<UserDO, User> {
      * @param token
      * @param user
      */
-    void cacheUser(Token token, User user);
+    void cacheUser(String token, User user);
 
     /**
      * 清空redis中token信息

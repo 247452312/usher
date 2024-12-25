@@ -68,8 +68,8 @@ public class Visiter extends User {
     }
 
     @Override
-    public void addUserToRedis(UserRepository userRepository) {
-        super.addUserToRedis(userRepository);
+    public void addToRedis(UserRepository userRepository) {
+        super.addToRedis(userRepository);
     }
 
     public String ip() {

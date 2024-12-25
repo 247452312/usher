@@ -39,19 +39,19 @@ public class ShowDocUtil {
         File apiDir = new File(courseFile);
         File[] files = apiDir.listFiles();
         for (File projectDir : files) {
-            top.uhyils.usher.util.LogUtil.info(ShowDocUtil.class, "最外层: " + projectDir.getPath());
+            LogUtil.info(ShowDocUtil.class, "最外层: " + projectDir.getPath());
             if (projectDir.isDirectory()) {
                 String s = projectDir.getPath() + "/src/main/java/top/uhyils/usher/service";
                 File[] services = new File(s).listFiles();
                 for (File service : services) {
-                    top.uhyils.usher.util.LogUtil.info(ShowDocUtil.class, "中层的service: " + service.getPath());
+                    LogUtil.info(ShowDocUtil.class, "中层的service: " + service.getPath());
                     if (service.exists() && service.isFile()) {
                         String path = service.getPath();
                         String substring = path.substring(path.lastIndexOf("\\") + 1, path.lastIndexOf("."));
                         Class<?> aClass = Class.forName("top.uhyils.usher.service." + substring);
                         Method[] declaredMethods = aClass.getDeclaredMethods();
                         for (Method declaredMethod : declaredMethods) {
-                            top.uhyils.usher.util.LogUtil.info(ShowDocUtil.class, "内层的method: " + declaredMethod.getName());
+                            LogUtil.info(ShowDocUtil.class, "内层的method: " + declaredMethod.getName());
                             Class parameterType = declaredMethod.getParameterTypes()[0];
                             // 返回值的属性
                             Class returnClass = declaredMethod.getReturnType();
@@ -163,8 +163,8 @@ public class ShowDocUtil {
         String url = "http://39.98.164.91:4999/server/index.php?s=/api/item/updateByApi";
         HashMap<String, String> head = new HashMap<>(1);
         head.put("ContentType", "application/json");
-        Object o = top.uhyils.usher.util.HttpUtil.sendHttpPost(url, head, data);
-        top.uhyils.usher.util.LogUtil.info(o.toString());
+        Object o = HttpUtil.sendHttpPost(url, head, data);
+        LogUtil.info(o.toString());
     }
 
     /**
@@ -201,8 +201,8 @@ public class ShowDocUtil {
                 list += String.format("| %s | %s | 无 |\n", entry.getKey(), type);
             }
         } catch (Exception e) {
-            top.uhyils.usher.util.LogUtil.info(paramJson);
-            top.uhyils.usher.util.LogUtil.error(ShowDocUtil.class, e);
+            LogUtil.info(paramJson);
+            LogUtil.error(ShowDocUtil.class, e);
         }
 
         return list;
