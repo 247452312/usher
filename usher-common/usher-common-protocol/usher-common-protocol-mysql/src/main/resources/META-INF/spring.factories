@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=top.uhyils.usher.mysql.config.MysqlPlanConfiguration,\
-  top.uhyils.usher.mysql.config.MysqlConfig

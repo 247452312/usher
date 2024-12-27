@@ -1,2 +1,0 @@
-org.springframework.context.ApplicationContextInitializer=top.uhyils.usher.util.SpringUtil
-org.springframework.context.ApplicationListener=top.uhyils.usher.util.SpringUtil

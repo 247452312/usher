@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  top.uhyils.usher.mq.pojo.rocket.RocketMqConfigInfo

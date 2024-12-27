@@ -3,34 +3,35 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>usher-service-ai-control</artifactId>
+    <artifactId>usher-base-swagger</artifactId>
 
-    <name>usher-service-ai-control</name>
+    <name>usher-common-swagger</name>
 
     <description>
-        场景识别应用
+        swagger模块,兼容rpc,http
     </description>
-    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-service/usher-service-ai-control</url>
+    <url>https://gitee.com/opentech_usher/usher/tree/master/usher-common/usher-common-swagger</url>
     <parent>
+        <artifactId>usher-base</artifactId>
         <groupId>top.uhyils.usher</groupId>
-        <artifactId>usher-service</artifactId>
         <version>2.1.0.4.usher-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>top.uhyils.usher</groupId>
-            <artifactId>usher-base-service</artifactId>
+            <artifactId>usher-common-base</artifactId>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/top.uhyils.usher/usher-rpc-spring-start -->
         <dependency>
             <groupId>top.uhyils.usher</groupId>
-            <artifactId>usher-api-provider-user</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>top.uhyils.usher</groupId>
-            <artifactId>usher-api-provider-ai-control</artifactId>
+            <artifactId>usher-common-rpc-spring-start</artifactId>
         </dependency>
     </dependencies>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
 
 </project>
