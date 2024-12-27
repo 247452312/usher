@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>usher-base</artifactId>
-    <version>2.1.0.4.usher</version>
+    <version>2.1.0.5.usher-SNAPSHOT</version>
     <parent>
         <groupId>top.uhyils.usher</groupId>
         <artifactId>usher</artifactId>
-        <version>2.1.0.4.usher</version>
+        <version>2.1.0.5.usher-SNAPSHOT</version>
     </parent>
     <packaging>pom</packaging>
 
