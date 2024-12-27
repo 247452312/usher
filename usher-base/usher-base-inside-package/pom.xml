@@ -7,7 +7,7 @@
     <groupId>top.uhyils.usher</groupId>
 
     <artifactId>usher-base-inside-package</artifactId>
-    <version>2.1.0.4.usher-SNAPSHOT</version>
+    <version>2.1.0.4.usher</version>
     <description>usher 内部项目版本控制</description>
     <packaging>pom</packaging>
 
