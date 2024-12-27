@@ -1,0 +1,26 @@
+spring:
+  profiles:
+    active: dev
+
+nacos:
+  config:
+    bootstrap:
+      #开启系统启动时预读取nacos的配置，用于满足@Value注入数据的场景
+      enable: true
+    # 配置所属命名空间的id,此处我们配置名称为dev的id，可以在命名空间列表查看id的值
+    namespace: cdc6df5f-6762-4a08-864d-fce07ac31ded
+    # 配置所属分组
+    # group: DEFAULT_GROUP
+    # 配置文件类型,对应nacos配置页面的配置格式，默认是properties
+    type: yaml
+    # 开启自动刷新nacos配置
+    auto-refresh: true
+    # 针对配置项同名的情况，是否允许nacos的配置覆盖本地的配置
+    remote-first: true
+    # 使用extension-configs，多个配置加载多个dataId
+    ext-config:
+      - data-ids: global-common,rpc-config,cache-config,mq-config #新建的配置，名称需要完全对应上
+        # 子公共配置空间
+        namespace: 4daf752d-4310-45cf-a9d9-1d1c785a5f54
+        # 配置文件类型,对应nacos配置页面的配置格式，默认是properties
+        type: yaml

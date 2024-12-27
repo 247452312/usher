@@ -1,1 +1,0 @@
-default_exception_extension=team.opentech.usher.rpc.netty.spi.step.template.impl.DefaultProviderResponseExceptionExtensionImpl

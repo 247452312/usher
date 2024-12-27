@@ -1,2 +1,0 @@
-default_consumer=team.opentech.usher.rpc.registry.ConsumerRegistryImpl
-default_provider=team.opentech.usher.rpc.registry.ProviderRegistryImpl

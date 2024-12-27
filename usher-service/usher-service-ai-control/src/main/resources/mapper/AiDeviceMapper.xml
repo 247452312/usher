@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC
     "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="team.opentech.usher.dao.AiDeviceDao">
-    <resultMap type="team.opentech.usher.pojo.DO.AiDeviceDO" id="AiDeviceMap">
+<mapper namespace="top.uhyils.usher.dao.AiDeviceDao">
+    <resultMap type="top.uhyils.usher.pojo.DO.AiDeviceDO" id="AiDeviceMap">
         <result property="id" column="id" jdbcType="BIGINT"/>
         <result property="createDate" column="create_date" jdbcType="BIGINT"/>
         <result property="createUser" column="create_user" jdbcType="BIGINT"/>
@@ -12,18 +12,17 @@
         <result property="updateDate" column="update_date" jdbcType="BIGINT"/>
         <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
         <result property="deviceNo" column="device_no" jdbcType="VARCHAR"/>
+        <result property="uniqueMark" column="unique_mark" jdbcType="VARCHAR"/>
         <result property="name" column="name" jdbcType="VARCHAR"/>
         <result property="subspaceId" column="subspace_id" jdbcType="BIGINT"/>
         <result property="type" column="type" jdbcType="INTEGER"/>
-        <result property="subtype" column="subtype" jdbcType="INTEGER"/>
-        <result property="position" column="position" jdbcType="VARCHAR"/>
-        <result property="angle" column="angle" jdbcType="VARCHAR"/>
-        <result property="rotate" column="rotate" jdbcType="VARCHAR"/>
+        <result property="linkType" column="link_type" jdbcType="INTEGER"/>
+        <result property="linkContent" column="link_content" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!--批量通过主键修改数据-->
     <update id="updateBatch"
-            parameterType="team.opentech.usher.pojo.DO.AiDeviceDO">
+            parameterType="top.uhyils.usher.pojo.DO.AiDeviceDO">
         <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
             update sys_ai_device
             set update_date = #{item.updateDate}
@@ -52,6 +51,9 @@
             <if test="deviceNo != null and deviceNo != ''">
                 ,device_no = #{deviceNo}
             </if>
+            <if test="uniqueMark != null and uniqueMark != ''">
+                ,unique_mark = #{uniqueMark}
+            </if>
             <if test="name != null and name != ''">
                 ,name = #{name}
             </if>
@@ -72,6 +74,12 @@
             </if>
             <if test="rotate != null">
                 ,rotate = #{rotate}
+            </if>
+            <if test="linkType != null">
+                ,link_type = #{linkType}
+            </if>
+            <if test="linkContent != null">
+                ,link_content = #{linkContent}
             </if>
             where ${pkColumn.name} = #{${pkColumn.smallName}}
         </foreach>

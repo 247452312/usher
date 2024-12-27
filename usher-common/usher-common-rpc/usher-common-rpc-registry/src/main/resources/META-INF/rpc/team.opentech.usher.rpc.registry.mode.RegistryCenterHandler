@@ -1,2 +1,0 @@
-default_provider_mode_registry=team.opentech.usher.rpc.registry.mode.nacos.NacosProviderRegistryCenterHandler
-default_consumer_mode_registry=team.opentech.usher.rpc.registry.mode.nacos.NacosConsumerRegistryCenterHandler

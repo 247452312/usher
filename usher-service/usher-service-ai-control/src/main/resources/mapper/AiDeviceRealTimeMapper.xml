@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+    "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.uhyils.usher.dao.AiDeviceRealTimeDao">
+    <resultMap type="top.uhyils.usher.pojo.DO.AiDeviceRealTimeDO" id="AiDeviceRealTimeMap">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="createDate" column="create_date" jdbcType="BIGINT"/>
+        <result property="createUser" column="create_user" jdbcType="BIGINT"/>
+        <result property="deleteFlag" column="delete_flag" jdbcType="BIT"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="updateDate" column="update_date" jdbcType="BIGINT"/>
+        <result property="updateUser" column="update_user" jdbcType="BIGINT"/>
+        <result property="deviceId" column="device_id" jdbcType="BIGINT"/>
+        <result property="uniqueMark" column="unique_mark" jdbcType="VARCHAR"/>
+        <result property="rotate" column="rotate" jdbcType="VARCHAR"/>
+        <result property="angle" column="angle" jdbcType="VARCHAR"/>
+        <result property="position" column="position" jdbcType="VARCHAR"/>
+        <result property="address" column="address" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--批量通过主键修改数据-->
+    <update id="updateBatch"
+            parameterType="top.uhyils.usher.pojo.DO.AiDeviceRealTimeDO">
+        <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
+            update sys_ai_device_real_time
+            set update_date = #{item.updateDate}
+            ,update_user = #{item.updateUser}
+            <if test="id != null">
+                ,id = #{id}
+            </if>
+            <if test="createDate != null">
+                ,create_date = #{createDate}
+            </if>
+            <if test="createUser != null">
+                ,create_user = #{createUser}
+            </if>
+            <if test="deleteFlag != null">
+                ,delete_flag = #{deleteFlag}
+            </if>
+            <if test="remark != null and remark != ''">
+                ,remark = #{remark}
+            </if>
+            <if test="updateDate != null">
+                ,update_date = #{updateDate}
+            </if>
+            <if test="updateUser != null">
+                ,update_user = #{updateUser}
+            </if>
+            <if test="deviceId != null">
+                ,device_id = #{deviceId}
+            </if>
+            <if test="uniqueMark != null and uniqueMark != ''">
+                ,unique_mark = #{uniqueMark}
+            </if>
+            <if test="rotate != null and rotate != ''">
+                ,rotate = #{rotate}
+            </if>
+            <if test="angle != null and angle != ''">
+                ,angle = #{angle}
+            </if>
+            <if test="position != null and position != ''">
+                ,position = #{position}
+            </if>
+            <if test="address != null and address != ''">
+                ,address = #{address}
+            </if>
+            where ${pkColumn.name} = #{${pkColumn.smallName}}
+        </foreach>
+    </update>
+</mapper>

@@ -14,13 +14,13 @@
     <parent>
         <groupId>top.uhyils.usher</groupId>
         <artifactId>usher-service</artifactId>
-        <version>2.1.0.2.usher</version>
+        <version>2.1.0.4.usher-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>top.uhyils.usher</groupId>
-            <artifactId>usher-common-service</artifactId>
+            <artifactId>usher-base-service</artifactId>
         </dependency>
 
         <dependency>

@@ -9,7 +9,7 @@
 
     <groupId>top.uhyils.usher</groupId>
     <artifactId>usher</artifactId>
-    <version>2.1.0.2.usher</version>
+    <version>2.1.0.4.usher-SNAPSHOT</version>
     <name>usher</name>
 
     <packaging>pom</packaging>
@@ -77,6 +77,7 @@
         <commons-io.version>2.11.0</commons-io.version>
         <manifold.version>2024.1.35</manifold.version>
         <nacos.config.spring.version>0.3.0-RC</nacos.config.spring.version>
+        <ql.version>3.3.4</ql.version>
     </properties>
 
 
@@ -84,7 +85,7 @@
         <dependencies>
             <dependency>
                 <groupId>top.uhyils.usher</groupId>
-                <artifactId>usher-common-inside-package</artifactId>
+                <artifactId>usher-base-inside-package</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -153,6 +154,11 @@
                 <groupId>com.alibaba.boot</groupId>
                 <artifactId>velocity-spring-boot-starter</artifactId>
                 <version>0.1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>QLExpress</artifactId>
+                <version>${ql.version}</version>
             </dependency>
 
             <!--编译期重载运算符 manifold-->
@@ -497,8 +503,6 @@
                     </archive>
                 </configuration>
             </plugin>
-
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -512,52 +516,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
-                <configuration>
-                    &lt;!&ndash; 改成你自己的路径 &ndash;&gt;
-                    <executable>C:/Program Files (x86)/GnuPG/bin/gpg.exe</executable>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            &lt;!&ndash; 发布插件 &ndash;&gt;
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.5.0</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>usher</publishingServerId>
-                    <tokenAuth>true</tokenAuth>
-                    &lt;!&ndash; 若要自动发布，添加以下配置 &ndash;&gt;
-                    <autoPublish>true</autoPublish>
-                    &lt;!&ndash; 一直等到发布完成 &ndash;&gt;
-                    <waitUntil>published</waitUntil>
-                </configuration>
-            </plugin>-->
         </plugins>
     </build>
     <profiles>
@@ -625,7 +583,7 @@
     <modules>
         <module>usher-api</module>
         <module>usher-service</module>
-        <module>usher-common</module>
+        <module>usher-base</module>
     </modules>
 
     <developers>

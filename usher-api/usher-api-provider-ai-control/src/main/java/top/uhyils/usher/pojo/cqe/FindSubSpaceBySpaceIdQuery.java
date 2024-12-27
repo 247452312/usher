@@ -1,0 +1,24 @@
+package top.uhyils.usher.pojo.cqe;
+
+import top.uhyils.usher.pojo.cqe.query.base.AbstractQuery;
+
+/**
+ * @author uhyils <247452312@qq.com>
+ * @date 文件创建日期 2024年11月14日 18时33分
+ */
+public class FindSubSpaceBySpaceIdQuery extends AbstractQuery {
+
+
+    /**
+     * 空间id
+     */
+    private Long spaceId;
+
+    public Long getSpaceId() {
+        return spaceId;
+    }
+
+    public void setSpaceId(Long spaceId) {
+        this.spaceId = spaceId;
+    }
+}

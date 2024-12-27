@@ -11,12 +11,12 @@ import ${package}.repository.base.AbstractRepository;
 
 
 /**
-* ${tableComment}(${className})表 仓库实现
-*
-* @author ${author}
-* @version 1.0
-* @date 文件创建日期 ${dateTime}
-*/
+ * ${tableComment}(${className})表 仓库实现
+ *
+ * @author ${author}
+ * @version 1.0
+ * @date 文件创建日期 ${dateTime}
+ */
 @Repository
 public class ${className}RepositoryImpl extends AbstractRepository<${className}, ${className}DO, ${className}Dao, ${className}DTO, ${className}Assembler> implements ${className}Repository {
 

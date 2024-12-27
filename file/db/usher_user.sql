@@ -304,7 +304,9 @@ INSERT INTO `sys_dict_item` VALUES (134, 1592697405, 0, b'0', NULL, 1592697405, 
 INSERT INTO `sys_dict_item` VALUES (135, 1592705677, 0, b'0', NULL, 1592706464, 0, '文件管理快捷入口', 1685467061018427424, 3, '文件管理', '1685590241748975648', NULL);
 INSERT INTO `sys_dict_item` VALUES (136, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-ellipsis-v', 1685467061014233120, 93, 'fa-ellipsis-v', 'fa fa-ellipsis-v', NULL);
 INSERT INTO `sys_dict_item` VALUES (137, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-video-camera', 1685467061014233120, 327, 'fa-video-camera', 'fa fa-video-camera', NULL);
-INSERT INTO `sys_dict_item` VALUES (138, 1593216123, 0, b'0', NULL, 1593216123, 0, '默认请求', 1685467061013184544, 1, 'defaultRequest', 'team.opentech.usher.pojo.request.base.DefaultRequest', NULL);
+INSERT INTO `sys_dict_item`
+VALUES (138, 1593216123, 0, b'0', NULL, 1593216123, 0, '默认请求', 1685467061013184544, 1, 'defaultRequest',
+        'top.uhyils.usher.pojo.request.base.DefaultRequest', NULL);
 INSERT INTO `sys_dict_item` VALUES (139, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-long-arrow-right', 1685467061014233120, 501, 'fa-long-arrow-right', 'fa fa-long-arrow-right', NULL);
 INSERT INTO `sys_dict_item` VALUES (140, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-puzzle-piece', 1685467061014233120, 222, 'fa-puzzle-piece', 'fa fa-puzzle-piece', NULL);
 INSERT INTO `sys_dict_item` VALUES (141, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-skype', 1685467061014233120, 611, 'fa-skype', 'fa fa-skype', NULL);
@@ -367,7 +369,9 @@ INSERT INTO `sys_dict_item` VALUES (197, 1592348628, 0, b'0', NULL, 1592348628, 
 INSERT INTO `sys_dict_item` VALUES (198, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-minus-square', 1685467061014233120, 191, 'fa-minus-square', 'fa fa-minus-square', NULL);
 INSERT INTO `sys_dict_item` VALUES (199, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-wheelchair', 1685467061014233120, 349, 'fa-wheelchair', 'fa fa-wheelchair', NULL);
 INSERT INTO `sys_dict_item` VALUES (200, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-bitbucket-square', 1685467061014233120, 541, 'fa-bitbucket-square', 'fa fa-bitbucket-square', NULL);
-INSERT INTO `sys_dict_item` VALUES (201, 1593391294, 0, b'0', NULL, 1593391294, 0, '推送用', 1685467061013184544, 3, 'CronRequest', 'team.opentech.usher.pojo.request.CronRequest', NULL);
+INSERT INTO `sys_dict_item`
+VALUES (201, 1593391294, 0, b'0', NULL, 1593391294, 0, '推送用', 1685467061013184544, 3, 'CronRequest',
+        'top.uhyils.usher.pojo.request.CronRequest', NULL);
 INSERT INTO `sys_dict_item` VALUES (202, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-cab', 1685467061014233120, 38, 'fa-cab', 'fa fa-cab', NULL);
 INSERT INTO `sys_dict_item` VALUES (203, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-map-marker', 1685467061014233120, 185, 'fa-map-marker', 'fa fa-map-marker', NULL);
 INSERT INTO `sys_dict_item` VALUES (204, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-maxcdn', 1685467061014233120, 589, 'fa-maxcdn', 'fa fa-maxcdn', NULL);
@@ -660,7 +664,9 @@ INSERT INTO `sys_dict_item` VALUES (490, 1593473464, 0, b'0', NULL, 1593473464, 
 INSERT INTO `sys_dict_item` VALUES (491, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-twitter', 1685467061014233120, 627, 'fa-twitter', 'fa fa-twitter', NULL);
 INSERT INTO `sys_dict_item` VALUES (492, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-legal', 1685467061014233120, 167, 'fa-legal', 'fa fa-legal', NULL);
 INSERT INTO `sys_dict_item` VALUES (493, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-pencil-square-o', 1685467061014233120, 208, 'fa-pencil-square-o', 'fa fa-pencil-square-o', NULL);
-INSERT INTO `sys_dict_item` VALUES (494, 1593216158, 0, b'0', NULL, 1593216158, 0, '包含id的请求', 1685467061013184544, 2, 'IdRequest', 'team.opentech.usher.pojo.request.base.IdRequest', NULL);
+INSERT INTO `sys_dict_item`
+VALUES (494, 1593216158, 0, b'0', NULL, 1593216158, 0, '包含id的请求', 1685467061013184544, 2, 'IdRequest',
+        'top.uhyils.usher.pojo.request.base.IdRequest', NULL);
 INSERT INTO `sys_dict_item` VALUES (495, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-toggle-down', 1685467061014233120, 304, 'fa-toggle-down', 'fa fa-toggle-down', NULL);
 INSERT INTO `sys_dict_item` VALUES (496, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-recycle', 1685467061014233120, 229, 'fa-recycle', 'fa fa-recycle', NULL);
 INSERT INTO `sys_dict_item` VALUES (497, 1592348628, 0, b'0', NULL, 1592348628, 0, 'fa-caret-right', 1685467061014233120, 481, 'fa-caret-right', 'fa fa-caret-right', NULL);

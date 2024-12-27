@@ -3,18 +3,17 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <version>2.1.0.2.usher</version>
+    <version>2.1.0.4.usher-SNAPSHOT</version>
     <artifactId>usher-service</artifactId>
 
     <parent>
         <groupId>top.uhyils.usher</groupId>
         <artifactId>usher</artifactId>
-        <version>2.1.0.2.usher</version>
+        <version>2.1.0.4.usher-SNAPSHOT</version>
     </parent>
     <packaging>pom</packaging>
     <modules>
         <module>usher-service-user</module>
-        <module>usher-web</module>
         <module>usher-service-log</module>
         <module>usher-service-software</module>
         <module>usher-service-distribute</module>
@@ -22,9 +21,9 @@
         <module>usher-service-mongo</module>
         <module>usher-service-algorithm</module>
         <module>usher-service-work-orders</module>
-        <module>usher-service-all</module>
-        <module>usher-service-external-gateway</module>
+        <module>usher-service-gateway</module>
         <module>usher-service-ai-control</module>
+        <module>usher-service-all</module>
     </modules>
 
 </project>

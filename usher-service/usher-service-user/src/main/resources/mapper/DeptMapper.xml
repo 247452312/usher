@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="team.opentech.usher.dao.DeptDao">
-    <resultMap type="team.opentech.usher.pojo.DO.DeptDO" id="DeptMap">
+<mapper namespace="top.uhyils.usher.dao.DeptDao">
+    <resultMap type="top.uhyils.usher.pojo.DO.DeptDO" id="DeptMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="createDate" column="create_date" jdbcType="INTEGER"/>
         <result property="createUser" column="create_user" jdbcType="INTEGER"/>
@@ -13,7 +13,7 @@
     </resultMap>
 
     <!--批量通过主键修改数据-->
-    <update id="updateBatch" parameterType="team.opentech.usher.pojo.DO.DeptDO">
+    <update id="updateBatch" parameterType="top.uhyils.usher.pojo.DO.DeptDO">
         <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
             update sys_dept set
             update_date = #{item.updateDate}
@@ -43,7 +43,7 @@
         </foreach>
     </update>
 
-    <insert id="insertDeptPower" parameterType="team.opentech.usher.pojo.DO.DeptPowerDO">
+    <insert id="insertDeptPower" parameterType="top.uhyils.usher.pojo.DO.DeptPowerDO">
         insert into sys_dept_power(id, dept_id, power_id)
         values (#{id}, #{deptId}, #{powerId})
     </insert>
@@ -56,12 +56,12 @@
         </foreach>
     </delete>
 
-    <insert id="insertDeptMenu" parameterType="team.opentech.usher.pojo.DO.DeptMenuDO">
+    <insert id="insertDeptMenu" parameterType="top.uhyils.usher.pojo.DO.DeptMenuDO">
         insert into sys_dept_menu(id, dept_id, menu_id)
         VALUES (#{id}, #{deptId}, #{menuId})
     </insert>
 
-    <select id="getByMenuId" resultType="team.opentech.usher.pojo.DTO.response.GetDeptsByMenuIdDTO">
+    <select id="getByMenuId" resultType="top.uhyils.usher.pojo.DTO.response.GetDeptsByMenuIdDTO">
         select a.id                                                                                 deptId,
         a.name                                                                               deptName,
         (select count(*) = 1 from sys_dept_menu where menu_id = #{id} and dept_id = a.id) as mark
@@ -88,7 +88,7 @@
         where dept_id = #{deptId}
     </delete>
 
-    <select id="getAllPowerWithHaveMark" resultType="team.opentech.usher.pojo.DTO.response.GetAllPowerWithHaveMarkDTO">
+    <select id="getAllPowerWithHaveMark" resultType="top.uhyils.usher.pojo.DTO.response.GetAllPowerWithHaveMarkDTO">
         select a.id                                                                                   powerId,
         a.interface_name                                                                       interfaceName,
         a.method_name                                                                          methodName,

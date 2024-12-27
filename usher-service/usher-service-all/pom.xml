@@ -32,7 +32,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>team.opentech.usher.MyRunner</mainClass>
+                            <mainClass>top.uhyils.usher.MyRunner</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -42,7 +42,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>usher-web</id>
+                        <id>usher-gateway</id>
                         <goals>
                             <goal>copy</goal>
                         </goals>
@@ -51,10 +51,10 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>top.uhyils.usher</groupId>
-                                    <artifactId>usher-web</artifactId>
-                                    <version>2.1.0.2.usher</version>
+                                    <artifactId>usher-service-gateway</artifactId>
+                                    <version>2.1.0.4.usher-SNAPSHOT</version>
                                     <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/classes/webapp/usher-web</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/classes/webapp/usher-service-gateway</outputDirectory>
                                     <excludes>
 
                                     </excludes>
@@ -75,7 +75,7 @@
                                 <artifactItem>
                                     <groupId>top.uhyils.usher</groupId>
                                     <artifactId>usher-service-user</artifactId>
-                                    <version>2.1.0.2.usher</version>
+                                    <version>2.1.0.4.usher-SNAPSHOT</version>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
                                         ${project.build.directory}/classes/webapp/usher-user
@@ -97,7 +97,7 @@
                                 <artifactItem>
                                     <groupId>top.uhyils.usher</groupId>
                                     <artifactId>usher-service-log</artifactId>
-                                    <version>2.1.0.2.usher</version>
+                                    <version>2.1.0.4.usher-SNAPSHOT</version>
                                     <overWrite>false</overWrite>
                                     <outputDirectory>
                                         ${project.build.directory}/classes/webapp/usher-log
@@ -134,6 +134,6 @@
     <parent>
         <groupId>top.uhyils.usher</groupId>
         <artifactId>usher-service</artifactId>
-        <version>2.1.0.2.usher</version>
+        <version>2.1.0.4.usher-SNAPSHOT</version>
     </parent>
 </project>

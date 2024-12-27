@@ -1,0 +1,177 @@
+package top.uhyils.usher.service.impl;
+
+import java.util.List;
+import java.util.Optional;
+import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import top.uhyils.usher.annotation.ReadWriteMark;
+import top.uhyils.usher.assembler.UserAssembler;
+import top.uhyils.usher.context.LoginInfoHelper;
+import top.uhyils.usher.pojo.DO.UserDO;
+import top.uhyils.usher.pojo.DO.base.TokenInfo;
+import top.uhyils.usher.pojo.DTO.LoginDTO;
+import top.uhyils.usher.pojo.DTO.UserDTO;
+import top.uhyils.usher.pojo.DTO.request.FindUserByNameQuery;
+import top.uhyils.usher.pojo.entity.Token;
+import top.uhyils.usher.pojo.entity.User;
+import top.uhyils.usher.pojo.entity.Visiter;
+import top.uhyils.usher.pojo.entity.type.Password;
+import top.uhyils.usher.pojo.entity.type.UserName;
+import top.uhyils.usher.repository.DeptRepository;
+import top.uhyils.usher.repository.MenuRepository;
+import top.uhyils.usher.repository.PowerRepository;
+import top.uhyils.usher.repository.RoleRepository;
+import top.uhyils.usher.repository.UserRepository;
+import top.uhyils.usher.service.UserService;
+import top.uhyils.usher.util.Asserts;
+import top.uhyils.usher.util.CollectionUtil;
+
+
+/**
+ * @author uhyils <247452312@qq.com>
+ * @version 1.0
+ * @date 文件创建日期 2021年08月25日 20时28分
+ */
+@Service
+@ReadWriteMark(tables = {"sys_user"})
+public class UserServiceImpl extends AbstractDoService<UserDO, User, UserDTO, UserRepository, UserAssembler> implements UserService {
+
+    @Value("${token.salt}")
+    private String salt;
+
+    @Value("${token.encodeRules}")
+    private String encodeRules;
+
+    @Resource
+    private RoleRepository roleRepository;
+
+    @Resource
+    private DeptRepository deptRepository;
+
+    @Resource
+    private PowerRepository powerRepository;
+
+    @Resource
+    private MenuRepository menuRepository;
+
+
+    public UserServiceImpl(UserAssembler userAssembler, UserRepository userRepository) {
+        super(userAssembler, userRepository);
+    }
+
+    @Override
+    public UserDTO getUserById(Long userId) {
+        User user = rep.find(userId);
+        return assem.toDTO(user);
+    }
+
+    @Override
+    public String getUserToken(Long userId) {
+        User user = new User(userId);
+        Token token = user.toToken(salt, encodeRules);
+        return token.getToken();
+    }
+
+    @Override
+    public TokenInfo getTokenInfoByToken(Token token) {
+        return token.parseToTokenInfo(encodeRules, salt, rep);
+    }
+
+    @Override
+    public LoginDTO login(UserName userName, Password password) {
+        User user = new User(userName, password);
+        user.login(rep, salt, encodeRules);
+
+        //检查是否已经登录,如果已经登录,则将之前已登录的挤下来
+        user.removeUserInRedis(rep);
+        // 登录->加入缓存中
+        user.addToRedis(rep);
+        return LoginDTO.buildLoginSuccess(user.tokenValue(), assem.toDTO(user));
+    }
+
+    @Override
+    public Boolean logout() {
+        User user = new User(assem.toDo(LoginInfoHelper.doGet()));
+        return user.logout(rep);
+    }
+
+    @Override
+    public List<UserDTO> getUsers() {
+        List<User> all = rep.findAll();
+        // 填充角色
+        User.batchInitRole(all, roleRepository, deptRepository, powerRepository, menuRepository);
+        return assem.listEntityToDTO(all);
+    }
+
+    @Override
+    public UserDTO getUserByToken() {
+        return LoginInfoHelper.doGet();
+    }
+
+    @Override
+    public String updatePassword(Password oldPassword, Password newPassword) {
+        User user = new User(assem.toDo(LoginInfoHelper.doGet()));
+        //检查密码是否正确
+        user.checkPassword(oldPassword, rep);
+        // 修改到新密码
+        user.changeToNewPassword(newPassword, rep);
+        return "true";
+    }
+
+    @Override
+    public String getNameById(Long userId) {
+        User user = rep.find(userId);
+        return user.toData().map(UserDO::getNickName).orElse(null);
+    }
+
+    @Override
+    public List<UserDTO> getSampleUserByIds(List<Long> userIds) {
+        List<User> users = rep.find(userIds);
+        return assem.listEntityToDTO(users);
+    }
+
+    @Override
+    public Boolean applyUser(UserDTO userDTO) {
+        User user = assem.toEntity(userDTO);
+        user.apply(rep);
+        return true;
+    }
+
+    @Override
+    public Boolean passApply(Long request) {
+        User user = new User(request);
+        user.passApply(rep);
+        return true;
+    }
+
+    @Override
+    public Boolean stopUser(Long request) {
+        User user = new User(request);
+        user.stopUser(rep);
+        return true;
+    }
+
+    @Override
+    public UserDTO getUserByUserName(FindUserByNameQuery request) {
+        List<User> users = rep.findUserByUsername(request.getName());
+        Asserts.assertTrue(CollectionUtil.isNotEmpty(users), "用户名不存在");
+        Asserts.assertTrue(users.size() == 1, "同一个用户名只能有一条数据,{}", request.getName());
+        User user = users.get(0);
+        return assem.toDTO(user);
+    }
+
+    @Override
+    public LoginDTO visiterLogin() {
+        Optional<String> userIp = LoginInfoHelper.getUserIp();
+        Asserts.assertTrue(userIp.isPresent(), "获取用户ip失败");
+
+        User visiter = new Visiter(userIp.get());
+        visiter.login(rep, salt, encodeRules);
+        // 登录->游客也加入缓存中
+        visiter.addToRedis(rep);
+        return LoginDTO.buildLoginSuccess(visiter.tokenValue(), assem.toDTO(visiter));
+    }
+
+
+}

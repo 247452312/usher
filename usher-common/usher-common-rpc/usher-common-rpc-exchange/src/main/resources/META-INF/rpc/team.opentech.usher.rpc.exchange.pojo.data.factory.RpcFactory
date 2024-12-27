@@ -1,2 +1,0 @@
-default_rpc_request_factory=team.opentech.usher.rpc.exchange.pojo.data.factory.NormalRpcRequestFactory
-default_rpc_response_factory=team.opentech.usher.rpc.exchange.pojo.data.factory.NormalRpcResponseFactory

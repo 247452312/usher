@@ -10,12 +10,12 @@ import ${package}.service.${className}Service;
 import org.springframework.stereotype.Service;
 
 /**
-* ${tableComment}(${className})表 内部服务实现类
-*
-* @author ${author}
-* @version 1.0
-* @date 文件创建日期 ${dateTime}
-*/
+ * ${tableComment}(${className})表 内部服务实现类
+ *
+ * @author ${author}
+ * @version 1.0
+ * @date 文件创建日期 ${dateTime}
+ */
 @Service
 @ReadWriteMark(tables = {"${tableName}"})
 public class ${className}ServiceImpl extends AbstractDoService<${className}DO, ${className}, ${className}DTO, ${className}Repository, ${className}Assembler> implements ${className}Service {

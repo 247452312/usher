@@ -5,11 +5,11 @@ import ${package}.pojo.DO.${className}DO;
 import ${package}.pojo.entity.base.AbstractDoEntity;
 
 /**
-* ${tableComment}(${className})表 数据库实体类
-*
-* @author ${author}
-* @date 文件创建日期 ${dateTime}
-*/
+ * ${tableComment}(${className})表 数据库实体类
+ *
+ * @author ${author}
+ * @date 文件创建日期 ${dateTime}
+ */
 public class ${className} extends AbstractDoEntity<${className}DO> {
 
   @Default

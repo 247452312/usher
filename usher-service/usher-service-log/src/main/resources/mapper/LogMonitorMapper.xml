@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="team.opentech.usher.dao.LogMonitorDao">
-    <resultMap type="team.opentech.usher.pojo.DO.LogMonitorDO" id="LogMonitorMap">
+<mapper namespace="top.uhyils.usher.dao.LogMonitorDao">
+    <resultMap type="top.uhyils.usher.pojo.DO.LogMonitorDO" id="LogMonitorMap">
         <result property="id" column="id" jdbcType="INTEGER"/>
         <result property="ip" column="ip" jdbcType="VARCHAR"/>
         <result property="serviceName" column="service_name" jdbcType="VARCHAR"/>
@@ -21,7 +21,7 @@
     </resultMap>
 
     <!--批量通过主键修改数据-->
-    <update id="updateBatch" parameterType="team.opentech.usher.pojo.DO.LogMonitorDO">
+    <update id="updateBatch" parameterType="top.uhyils.usher.pojo.DO.LogMonitorDO">
         <foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";">
             update sys_log_monitor set
             update_date = #{item.updateDate}
@@ -81,7 +81,7 @@
         where a.id = #{id}
     </update>
 
-    <select id="getIdByJvmUniqueMark" parameterType="team.opentech.usher.mq.pojo.mqinfo.JvmUniqueMark"
+    <select id="getIdByJvmUniqueMark" parameterType="top.uhyils.usher.mq.pojo.mqinfo.JvmUniqueMark"
             resultType="java.lang.Long">
         select id
         from sys_log_monitor
@@ -90,7 +90,7 @@
         and ip = #{ip}
     </select>
 
-    <select id="checkMonitorRepeat" parameterType="team.opentech.usher.mq.pojo.mqinfo.JvmUniqueMark"
+    <select id="checkMonitorRepeat" parameterType="top.uhyils.usher.mq.pojo.mqinfo.JvmUniqueMark"
             resultType="java.lang.Integer">
         select count(*)
         from sys_log_monitor
