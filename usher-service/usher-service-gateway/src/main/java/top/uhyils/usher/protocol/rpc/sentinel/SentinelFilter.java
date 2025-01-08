@@ -18,7 +18,6 @@ import top.uhyils.usher.rpc.netty.spi.filter.FilterContext;
 import top.uhyils.usher.rpc.netty.spi.filter.filter.ConsumerFilter;
 import top.uhyils.usher.rpc.netty.spi.filter.invoker.RpcInvoker;
 import top.uhyils.usher.util.IdUtil;
-import top.uhyils.usher.util.SpringUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -60,8 +59,7 @@ public class SentinelFilter implements ConsumerFilter {
     private void addUnique(RpcData rpcData) {
         ArrayList list = JSON.parseObject(rpcData.content().getLine(RpcRequestContentEnum.ARG_MAP.getLine()), ArrayList.class, Feature.SupportAutoType);
         DefaultCQE defaultRequest = (DefaultCQE) list.get(0);
-        IdUtil bean = SpringUtil.getBean(IdUtil.class);
-        defaultRequest.setUnique(bean.newId());
+        defaultRequest.setUnique(IdUtil.newId());
         List<DefaultCQE> defaultRequests = Arrays.asList(defaultRequest);
         rpcData.content().contentArray()[RpcRequestContentEnum.ARG_MAP.getLine()] = JSON.toJSONString(defaultRequests);
 

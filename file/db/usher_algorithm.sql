@@ -42,7 +42,7 @@ CREATE TABLE `sys_algorithm`  (
 -- ----------------------------
 INSERT INTO `sys_algorithm`
 VALUES (1, 1, 1, b'0', '1', 1, 1, '测试算法', 0, NULL,
-        '{\r\n    \"H.java\": \"package top.uhyils.usher;\\n public class H {\\n    public int add(int a, int b) {\\n        return a + b;\\n    }\\n}\",\r\n    \"Algorithm.java\": \"import top.uhyils.usher.H;\\nimport top.uhyils.usher.util.IdUtil;\\nimport top.uhyils.usher.util.SpringUtil;\\n public class Algorithm {\\n\\n    public long cell(int a, int b) { IdUtil bean = SpringUtil.getBean(IdUtil.class); long l = bean.newId(); return l; }\\n}\"\r\n}',
+        '{\r\n    \"H.java\": \"package top.uhyils.usher;\\n public class H {\\n    public int add(int a, int b) {\\n        return a + b;\\n    }\\n}\",\r\n    \"Algorithm.java\": \"import top.uhyils.usher.H;\\nimport top.uhyils.usher.util.IdUtil;\\nimport top.uhyils.usher.util.SpringUtil;\\n public class Algorithm {\\n\\n    public long cell(int a, int b) { long l = IdUtil.newId(); return l; }\\n}\"\r\n}',
         NULL);
 INSERT INTO `sys_algorithm`
 VALUES (2, 1, 1, b'0', '1', 1, 1, '遗传算法', 0, NULL,

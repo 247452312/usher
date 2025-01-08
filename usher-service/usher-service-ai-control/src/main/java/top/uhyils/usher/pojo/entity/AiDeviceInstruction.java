@@ -5,7 +5,6 @@ import top.uhyils.usher.facade.DeviceManageFacade;
 import top.uhyils.usher.pojo.DO.AiDeviceInstructionDO;
 import top.uhyils.usher.pojo.entity.base.AbstractDoEntity;
 import top.uhyils.usher.util.IdUtil;
-import top.uhyils.usher.util.SpringUtil;
 
 /**
  * 设备指令表(AiDeviceInstruction)表 数据库实体类
@@ -34,9 +33,8 @@ public class AiDeviceInstruction extends AbstractDoEntity<AiDeviceInstructionDO>
      * 生成设备指令编号
      */
     public void generateNo() {
-        IdUtil idUtil = SpringUtil.getBean(IdUtil.class);
         AiDeviceInstructionDO data = toDataAndValidate();
-        data.setDeviceInstructionNo(idUtil.newId() + "");
+        data.setDeviceInstructionNo(IdUtil.newId() + "");
         onUpdate();
     }
 
