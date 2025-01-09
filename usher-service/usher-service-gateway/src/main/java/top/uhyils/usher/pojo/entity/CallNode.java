@@ -86,7 +86,7 @@ public class CallNode extends AbstractDataNode<CallNodeDO> {
     public void fill(NodeRepository nodeRepository, ProviderInterfaceRepository providerInterfaceRepository) {
         Optional<CallNodeDO> callNodeOptional = toData();
         callNodeOptional.ifPresent(callNodeDO -> {
-            this.node = nodeRepository.find(new CallNode(callNodeDO.getNodeId()));
+            this.node = nodeRepository.find(callNodeDO.getNodeId());
             this.node.fill(nodeRepository, providerInterfaceRepository);
         });
     }

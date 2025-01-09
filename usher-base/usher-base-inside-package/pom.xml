@@ -29,6 +29,11 @@
             </dependency>
             <dependency>
                 <groupId>top.uhyils.usher</groupId>
+                <artifactId>usher-common-base-spring</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>top.uhyils.usher</groupId>
                 <artifactId>usher-base-service</artifactId>
                 <version>${project.version}</version>
             </dependency>

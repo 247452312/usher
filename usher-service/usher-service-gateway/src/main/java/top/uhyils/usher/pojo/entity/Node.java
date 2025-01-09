@@ -46,16 +46,6 @@ public class Node extends AbstractDataNode<NodeDO> {
         super(id, new NodeDO());
     }
 
-    @Override
-    public String databaseName() {
-        return toDataAndValidate().getDatabase();
-    }
-
-    @Override
-    public String tableName() {
-        return toDataAndValidate().getTableName();
-    }
-
     @NotNull
     private static MysqlPlan makeNodePlan(NodeRepository nodeRepository, ProviderInterfaceRepository providerInterfaceRepository, BlockQuerySelectSqlPlan plan, String sql) {
         BlockQuerySelectSqlPlan selectSqlPlan = plan;
@@ -77,6 +67,16 @@ public class Node extends AbstractDataNode<NodeDO> {
         abstractDataNode.fill(nodeRepository, providerInterfaceRepository);
         MysqlPlan nodeInvokePlan = new MysqlNodeInvokePlan(abstractDataNode, selectSqlPlan, sql);
         return nodeInvokePlan;
+    }
+
+    @Override
+    public String databaseName() {
+        return toDataAndValidate().getDatabase();
+    }
+
+    @Override
+    public String tableName() {
+        return toDataAndValidate().getTableName();
     }
 
     /**
@@ -107,7 +107,7 @@ public class Node extends AbstractDataNode<NodeDO> {
     public NodeInvokeResult getResult(Map<String, String> header, Map<String, Object> params) {
         NodeInvokeResult execute = null;
         try {
-            execute = new PlanInvoker(plans).execute();
+            execute = PlanInvoker.execute(plans, params);
         } catch (AssertException e) {
             LogUtil.error(e);
         }
