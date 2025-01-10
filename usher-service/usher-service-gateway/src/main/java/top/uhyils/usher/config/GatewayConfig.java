@@ -2,23 +2,14 @@ package top.uhyils.usher.config;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.lang.reflect.Proxy;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
-import top.uhyils.usher.enums.InvokeTypeEnum;
-import top.uhyils.usher.pojo.cqe.InvokeCommand;
-import top.uhyils.usher.pojo.cqe.InvokeCommandBuilder;
+import top.uhyils.usher.pojo.cqe.SdkSqlInvokeCommand;
 import top.uhyils.usher.protocol.rpc.GatewaySdkProvider;
 import top.uhyils.usher.protocol.rpc.impl.GatewaySdkProviderImpl;
-import top.uhyils.usher.rpc.content.RpcHeaderContext;
 import top.uhyils.usher.util.StringUtil;
 
 /**
@@ -63,21 +54,9 @@ public class GatewayConfig implements BeanPostProcessor {
                 return "GatewaySdk";
             }
             if (Objects.equals(method.getName(), INVOKE)) {
-                return gatewaySdkProvider.invokeRpc((InvokeCommand) args[0]);
+                return gatewaySdkProvider.invokeRpc((SdkSqlInvokeCommand) args[0]);
             }
-            GatewaySdkProvider provider = (GatewaySdkProvider) proxy;
-            InvokeCommandBuilder builder = new InvokeCommandBuilder();
-            builder.addHeader(RpcHeaderContext.get());
-            List<String> argNames = Arrays.stream(method.getParameters()).map(Parameter::getName).collect(Collectors.toList());
-            Map<String, Object> result = new HashMap<>(args.length);
-            for (int i = 0; i < argNames.size(); i++) {
-                String argName = argNames.get(i);
-                Object arg = args[i];
-                result.put(argName, arg);
-            }
-            builder.addArgs(result);
-            builder.setType(InvokeTypeEnum.RPC.getCode());
-            return provider.invokeRpc(builder.build());
+            return method.invoke(proxy, args);
         }
     }
 

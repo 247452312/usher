@@ -1,8 +1,7 @@
 package top.uhyils.usher.protocol.rpc;
 
-import java.util.List;
-import java.util.Map;
-import top.uhyils.usher.pojo.cqe.InvokeCommand;
+import com.alibaba.fastjson.JSONArray;
+import top.uhyils.usher.pojo.cqe.SdkSqlInvokeCommand;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -17,5 +16,5 @@ public interface GatewaySdkProvider {
      *
      * @return
      */
-    List<Map<String, Object>> invokeRpc(InvokeCommand command);
+    JSONArray invokeRpc(SdkSqlInvokeCommand command);
 }

@@ -11,9 +11,12 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import top.uhyils.usher.handler.NodeHandler;
 import top.uhyils.usher.mysql.decode.MysqlDecoder;
+import top.uhyils.usher.mysql.handler.MysqlServiceHandler;
 import top.uhyils.usher.mysql.netty.MysqlInfoHandler;
 import top.uhyils.usher.util.LogUtil;
+import top.uhyils.usher.util.SpringUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -43,8 +46,7 @@ public class MysqlNettyServer extends ChannelInitializer<SocketChannel> {
 
         LogUtil.info("mysql端口开启,端口号:{}", port.toString());
         ServerBootstrap b = new ServerBootstrap();
-        b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
-         .option(ChannelOption.SO_BACKLOG, 1024).childHandler(this);
+        b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).option(ChannelOption.SO_BACKLOG, 1024).childHandler(this);
         ChannelFuture f = b.bind(port).sync();
 
         f.channel().closeFuture();
@@ -53,7 +55,7 @@ public class MysqlNettyServer extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel ch) {
         // 由decoder解析 再交由handler处理
-        ch.pipeline().addLast(new MysqlDecoder(), new MysqlInfoHandler());
+        ch.pipeline().addLast(new MysqlDecoder(), new MysqlInfoHandler(SpringUtil.getBean(NodeHandler.class), SpringUtil.getBean(MysqlServiceHandler.class)));
     }
 
 }

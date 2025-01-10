@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
-import top.uhyils.usher.mysql.enums.FieldTypeEnum;
-import top.uhyils.usher.mysql.pojo.DTO.FieldInfo;
+import top.uhyils.usher.enums.FieldTypeEnum;
 import top.uhyils.usher.mysql.pojo.response.impl.ResultSetResponse;
 import top.uhyils.usher.mysql.util.MysqlUtil;
+import top.uhyils.usher.pojo.FieldInfo;
 import top.uhyils.usher.protocol.mysql.netty.impl.other.MysqlNettyTest;
 import top.uhyils.usher.util.LogUtil;
 

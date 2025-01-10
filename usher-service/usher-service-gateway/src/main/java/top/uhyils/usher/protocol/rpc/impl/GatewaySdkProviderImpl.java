@@ -1,10 +1,11 @@
 package top.uhyils.usher.protocol.rpc.impl;
 
-import java.util.List;
-import java.util.Map;
+import com.alibaba.fastjson.JSONArray;
 import javax.annotation.Resource;
-import top.uhyils.usher.mysql.pojo.DTO.NodeInvokeResult;
-import top.uhyils.usher.pojo.cqe.InvokeCommand;
+import top.uhyils.usher.enums.QuerySqlTypeEnum;
+import top.uhyils.usher.pojo.NodeInvokeResult;
+import top.uhyils.usher.pojo.SqlInvokeCommand;
+import top.uhyils.usher.pojo.cqe.SdkSqlInvokeCommand;
 import top.uhyils.usher.protocol.rpc.GatewaySdkProvider;
 import top.uhyils.usher.rpc.annotation.RpcService;
 import top.uhyils.usher.service.GatewaySdkService;
@@ -22,8 +23,15 @@ public class GatewaySdkProviderImpl implements GatewaySdkProvider {
     private GatewaySdkService service;
 
     @Override
-    public List<Map<String, Object>> invokeRpc(InvokeCommand command) {
-        NodeInvokeResult nodeInvokeResult = service.invokeInterface(command);
+    public JSONArray invokeRpc(SdkSqlInvokeCommand command) {
+        SqlInvokeCommand sqlInvokeCommand = new SqlInvokeCommand();
+        sqlInvokeCommand.setParams(command.getParams());
+        sqlInvokeCommand.setHeader(command.getHeader());
+        sqlInvokeCommand.setDatabase(command.getDatabase());
+        sqlInvokeCommand.setTable(command.getTable());
+        sqlInvokeCommand.setType(QuerySqlTypeEnum.findByName(command.getType()));
+        sqlInvokeCommand.setUpdateItems(command.getUpdateItems());
+        NodeInvokeResult nodeInvokeResult = service.invokeCallNode(sqlInvokeCommand);
         return nodeInvokeResult.getResult();
     }
 

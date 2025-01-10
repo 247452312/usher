@@ -7,14 +7,13 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import top.uhyils.usher.assembler.GatewayAssembler;
+import top.uhyils.usher.assembler.NetNodeInfoAssembler;
 import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.mysql.content.MysqlContent;
 import top.uhyils.usher.mysql.enums.SqlTypeEnum;
 import top.uhyils.usher.mysql.handler.MysqlServiceHandler;
-import top.uhyils.usher.mysql.pojo.DTO.DatabaseInfo;
-import top.uhyils.usher.mysql.pojo.DTO.NodeInvokeResult;
+import top.uhyils.usher.mysql.pojo.DTO.CompanyInfo;
 import top.uhyils.usher.mysql.pojo.DTO.TableDTO;
-import top.uhyils.usher.mysql.pojo.cqe.MysqlInvokeCommand;
 import top.uhyils.usher.mysql.pojo.cqe.TableQuery;
 import top.uhyils.usher.mysql.pojo.cqe.UserQuery;
 import top.uhyils.usher.mysql.pojo.cqe.impl.MysqlAuthCommand;
@@ -22,15 +21,19 @@ import top.uhyils.usher.mysql.pojo.entity.MysqlTcpLink;
 import top.uhyils.usher.mysql.pojo.response.MysqlResponse;
 import top.uhyils.usher.mysql.pojo.response.impl.ErrResponse;
 import top.uhyils.usher.mysql.pojo.response.impl.OkResponse;
-import top.uhyils.usher.pojo.DTO.CallNodeDTO;
+import top.uhyils.usher.node.DatabaseInfo;
+import top.uhyils.usher.node.call.CallNode;
 import top.uhyils.usher.pojo.DTO.CompanyDTO;
+import top.uhyils.usher.pojo.DTO.NetNodeInfoDTO;
 import top.uhyils.usher.pojo.DTO.UserDTO;
-import top.uhyils.usher.pojo.cqe.InvokeCommand;
+import top.uhyils.usher.pojo.NodeInvokeResult;
+import top.uhyils.usher.pojo.SqlGlobalVariables;
+import top.uhyils.usher.pojo.SqlInvokeCommand;
 import top.uhyils.usher.pojo.cqe.query.BlackQuery;
-import top.uhyils.usher.pojo.entity.CallNode;
 import top.uhyils.usher.pojo.entity.Company;
-import top.uhyils.usher.repository.CallNodeRepository;
+import top.uhyils.usher.pojo.entity.NetNodeInfo;
 import top.uhyils.usher.repository.CompanyRepository;
+import top.uhyils.usher.repository.NetNodeInfoRepository;
 import top.uhyils.usher.service.GatewaySdkService;
 import top.uhyils.usher.util.Asserts;
 
@@ -48,7 +51,10 @@ public class MysqlServiceHandlerImpl implements MysqlServiceHandler {
     private CompanyRepository companyRepository;
 
     @Resource
-    private CallNodeRepository callNodeRepository;
+    private NetNodeInfoRepository netNodeInfoRepository;
+
+    @Resource
+    private NetNodeInfoAssembler nodeInfoAssembler;
 
     @Resource
     private GatewayAssembler gatewayAssembler;
@@ -74,8 +80,9 @@ public class MysqlServiceHandlerImpl implements MysqlServiceHandler {
     public List<DatabaseInfo> getAllDatabaseInfo(BlackQuery blackQuery) {
         UserDTO userDTO = LoginInfoHelper.get().orElseThrow(() -> Asserts.makeException("未登录"));
         Asserts.assertTrue(userDTO != null, "未登录");
-        List<CallNode> callNodes = callNodeRepository.findByUser(userDTO);
+        List<NetNodeInfo> callNodes = netNodeInfoRepository.findByUser(userDTO);
         return new ArrayList<>(callNodes.stream()
+                                        .map(t -> t.toCallNode(null))
                                         .map(CallNode::changeToDatabaseInfo)
                                         .filter(Objects::nonNull)
                                         .collect(Collectors.toMap(DatabaseInfo::getSchemaName, t -> t, (key1, key2) -> key2))
@@ -84,26 +91,38 @@ public class MysqlServiceHandlerImpl implements MysqlServiceHandler {
 
 
     @Override
-    public NodeInvokeResult invokeInterface(MysqlInvokeCommand command) {
-        InvokeCommand invokeCommand = gatewayAssembler.toInvoke(command);
-        return gatewaySdkService.invokeInterface(invokeCommand);
-    }
-
-    @Override
-    public NodeInvokeResult invokeSingleQuerySql(MysqlInvokeCommand command) {
-        InvokeCommand invokeCommand = gatewayAssembler.toInvoke(command);
+    public NodeInvokeResult invokeCallNode(SqlInvokeCommand command) {
+        SqlInvokeCommand invokeCommand = gatewayAssembler.toInvoke(command);
         return gatewaySdkService.invokeCallNode(invokeCommand);
     }
 
     @Override
-    public List<UserDTO> queryUser(UserQuery userQuery) {
+    public NodeInvokeResult invokeSingleQuerySql(SqlInvokeCommand command) {
+        SqlInvokeCommand invokeCommand = gatewayAssembler.toInvoke(command);
+        return gatewaySdkService.invokeCallNode(invokeCommand);
+    }
+
+    @Override
+    public List<CompanyInfo> queryUser(UserQuery userQuery) {
         List<CompanyDTO> companyDTOS = gatewaySdkService.queryUser(gatewayAssembler.toUserQuery(userQuery));
         return gatewayAssembler.toUserDTO(companyDTOS);
     }
 
     @Override
     public List<TableDTO> queryTable(TableQuery tableQuery) {
-        List<CallNodeDTO> callNodeDTOS = gatewaySdkService.queryCallNode(gatewayAssembler.toCallNode(tableQuery));
+        List<NetNodeInfoDTO> callNodeDTOS = gatewaySdkService.queryCallNode(gatewayAssembler.toCallNode(tableQuery));
         return gatewayAssembler.toTableDTO(callNodeDTOS);
+    }
+
+    @Override
+    public SqlGlobalVariables findMysqlGlobalVariables() {
+        return new SqlGlobalVariables();
+    }
+
+    @Override
+    public List<TableDTO> findTableByCompanyAndDatabase(Long companyId, String database) {
+        List<NetNodeInfo> nodes = netNodeInfoRepository.findByCompanyIdAndDatabase(companyId, database);
+        List<NetNodeInfoDTO> netNodeInfoDTOS = nodeInfoAssembler.listEntityToDTO(nodes);
+        return gatewayAssembler.toTableDTO(netNodeInfoDTOS);
     }
 }

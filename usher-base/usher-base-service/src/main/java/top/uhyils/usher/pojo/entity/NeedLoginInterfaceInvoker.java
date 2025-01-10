@@ -15,9 +15,9 @@ import top.uhyils.usher.pojo.DTO.UserDTO;
 import top.uhyils.usher.pojo.cqe.DefaultCQE;
 import top.uhyils.usher.pojo.cqe.query.CheckUserHavePowerQuery;
 import top.uhyils.usher.redis.RedisPoolHandle;
+import top.uhyils.usher.rpc.spring.util.RpcApiUtil;
 import top.uhyils.usher.util.AopUtil;
 import top.uhyils.usher.util.Asserts;
-import top.uhyils.usher.util.RpcApiUtil;
 import top.uhyils.usher.util.SpringUtil;
 
 /**

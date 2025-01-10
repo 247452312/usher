@@ -2,16 +2,14 @@ package top.uhyils.usher.assembler;
 
 import java.util.List;
 import org.mapstruct.Mapper;
-import top.uhyils.usher.enums.InvokeTypeEnum;
-import top.uhyils.usher.mysql.content.MysqlContent;
+import top.uhyils.usher.mysql.pojo.DTO.CompanyInfo;
 import top.uhyils.usher.mysql.pojo.DTO.TableDTO;
-import top.uhyils.usher.mysql.pojo.cqe.MysqlInvokeCommand;
 import top.uhyils.usher.mysql.pojo.cqe.TableQuery;
-import top.uhyils.usher.pojo.DTO.CallNodeDTO;
 import top.uhyils.usher.pojo.DTO.CompanyDTO;
+import top.uhyils.usher.pojo.DTO.NetNodeInfoDTO;
 import top.uhyils.usher.pojo.DTO.UserDTO;
+import top.uhyils.usher.pojo.SqlInvokeCommand;
 import top.uhyils.usher.pojo.cqe.CallNodeQuery;
-import top.uhyils.usher.pojo.cqe.InvokeCommand;
 import top.uhyils.usher.pojo.cqe.UserQuery;
 
 /**
@@ -22,14 +20,14 @@ import top.uhyils.usher.pojo.cqe.UserQuery;
 @Mapper(componentModel = "spring")
 public abstract class GatewayAssembler implements BaseAssembler {
 
-    public InvokeCommand toInvoke(MysqlInvokeCommand command) {
-        InvokeCommand invokeCommand = new InvokeCommand();
+    public SqlInvokeCommand toInvoke(SqlInvokeCommand command) {
+        SqlInvokeCommand invokeCommand = new SqlInvokeCommand();
         invokeCommand.copyOf(command);
         invokeCommand.setParams(command.getParams());
         invokeCommand.setHeader(command.getHeader());
-        String path = command.getDatabase() + MysqlContent.PATH_SEPARATOR + command.getTable();
-        invokeCommand.setPath(path);
-        invokeCommand.setInvokeType(InvokeTypeEnum.MYSQL.getCode());
+        invokeCommand.setDatabase(command.getDatabase());
+        invokeCommand.setTable(command.getTable());
+        invokeCommand.setType(command.getType());
         return invokeCommand;
     }
 
@@ -40,7 +38,7 @@ public abstract class GatewayAssembler implements BaseAssembler {
         return result;
     }
 
-    public abstract List<UserDTO> toUserDTO(List<CompanyDTO> companyDTOS);
+    public abstract List<CompanyInfo> toUserDTO(List<CompanyDTO> companyDTOS);
 
     public UserDTO toUserDTO(CompanyDTO companyDTO) {
         UserDTO result = new UserDTO();
@@ -61,13 +59,14 @@ public abstract class GatewayAssembler implements BaseAssembler {
         return invokeCommand;
     }
 
-    public abstract List<TableDTO> toTableDTO(List<CallNodeDTO> callNodeDTOS);
+    public abstract List<TableDTO> toTableDTO(List<NetNodeInfoDTO> callNodeDTOS);
 
-    public TableDTO toTableDTO(CallNodeDTO callNodeDTOS) {
+    public TableDTO toTableDTO(NetNodeInfoDTO callNodeDTOS) {
         TableDTO result = new TableDTO();
         result.setCompanyId(callNodeDTOS.getCompanyId());
-        result.setNodeId(callNodeDTOS.getNodeId());
-        result.setUrl(callNodeDTOS.getUrl());
+        result.setNodeId(callNodeDTOS.getId());
+        result.setDatabase(callNodeDTOS.getDatabase());
+        result.setTable(callNodeDTOS.getTable());
 
         return result;
     }

@@ -16,12 +16,12 @@ class DbInformationTest {
     @Test
     void fillTableInfos() {
         DbInformationDTO dto = new DbInformationDTO();
-        dto.setTables(Arrays.asList("sys_ai_device", "sys_ai_device_instruction"));
-        dto.setDbName("usher_ai_control");
-        dto.setUrl("jdbc:mysql://usher:3306/usher_ai_control?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&autoconnect=true&failOverReadOnly=false");
+        dto.setTables(Arrays.asList("sys_net_node_info", "sys_net_node_info_detail"));
+        dto.setDbName("usher_gateway");
+        dto.setUrl("jdbc:mysql://mysql.uhyils.top/usher_gateway?characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&rewriteBatchedStatements=true&autoconnect=true&failOverReadOnly=false");
         dto.setType(DbTypeEnum.MYSQL.getTypeCode());
         dto.setUserName("root");
-        dto.setPassword("1234");
+        dto.setPassword("Shang1996.");
         dto.setProjectName("usher");
         dto.setPackagePrefix("top.uhyils.usher");
         dto.setPort(3300);

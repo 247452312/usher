@@ -10,12 +10,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import top.uhyils.usher.enums.InvokeTypeEnum;
-import top.uhyils.usher.pojo.cqe.InvokeCommand;
-import top.uhyils.usher.pojo.cqe.InvokeCommandBuilder;
+import top.uhyils.usher.enums.QuerySqlTypeEnum;
+import top.uhyils.usher.pojo.SqlInvokeCommand;
+import top.uhyils.usher.pojo.SqlInvokeCommandBuilder;
 import top.uhyils.usher.service.GatewaySdkService;
 
 /**
@@ -31,6 +31,8 @@ public class GatewayController {
      */
     private static final String INVOKE = "invoke/";
 
+    private static final String REQUEST_TYPE = "invoke-type";
+
     @Autowired
     private GatewaySdkService gatewaySdkService;
 
@@ -42,7 +44,7 @@ public class GatewayController {
      * @return 向界面返回的值
      */
     @ResponseBody
-    @RequestMapping("invoke/**")
+    @PostMapping("invoke/**")
     public Object postInvoke(HttpServletRequest httpServletRequest) throws IOException {
 
         // invoke后面的路径
@@ -53,14 +55,18 @@ public class GatewayController {
         Map<String, String[]> getParams = httpServletRequest.getParameterMap();
         // post参数
         Map<String, Object> postParams = getPostParam(httpServletRequest);
-        InvokeCommandBuilder invokeCommandBuilder = new InvokeCommandBuilder();
-        invokeCommandBuilder.addPostMap(postParams);
-        invokeCommandBuilder.addGetMap(getParams);
-        invokeCommandBuilder.addPath(outPath);
-        invokeCommandBuilder.addHeader(headerParam);
-        invokeCommandBuilder.setType(InvokeTypeEnum.HTTP.getCode());
-        InvokeCommand build = invokeCommandBuilder.build();
-        return gatewaySdkService.invokeInterface(build);
+
+        SqlInvokeCommandBuilder sqlInvokeCommandBuilder = new SqlInvokeCommandBuilder();
+        sqlInvokeCommandBuilder.addPostMap(postParams);
+        sqlInvokeCommandBuilder.addGetMap(getParams);
+        String[] split = outPath.split("/");
+        sqlInvokeCommandBuilder.fillDatabase(split[0]);
+        sqlInvokeCommandBuilder.fillTable(split[1]);
+        sqlInvokeCommandBuilder.addHeader(headerParam);
+        String s = headerParam.getOrDefault(REQUEST_TYPE, "QUERY");
+        sqlInvokeCommandBuilder.type(QuerySqlTypeEnum.findByName(s));
+        SqlInvokeCommand build = sqlInvokeCommandBuilder.build();
+        return gatewaySdkService.invokeCallNode(build);
     }
 
     /**

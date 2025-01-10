@@ -2,11 +2,11 @@ package top.uhyils.usher.service;
 
 import java.util.List;
 import top.uhyils.usher.annotation.NotNull;
-import top.uhyils.usher.mysql.pojo.DTO.NodeInvokeResult;
-import top.uhyils.usher.pojo.DTO.CallNodeDTO;
 import top.uhyils.usher.pojo.DTO.CompanyDTO;
+import top.uhyils.usher.pojo.DTO.NetNodeInfoDTO;
+import top.uhyils.usher.pojo.NodeInvokeResult;
+import top.uhyils.usher.pojo.SqlInvokeCommand;
 import top.uhyils.usher.pojo.cqe.CallNodeQuery;
-import top.uhyils.usher.pojo.cqe.InvokeCommand;
 import top.uhyils.usher.pojo.cqe.UserQuery;
 
 /**
@@ -17,14 +17,6 @@ import top.uhyils.usher.pojo.cqe.UserQuery;
  */
 public interface GatewaySdkService extends BaseService {
 
-    /**
-     * 执行远程请求
-     *
-     * @param command
-     *
-     * @return
-     */
-    NodeInvokeResult invokeInterface(InvokeCommand command);
 
     /**
      * 执行节点
@@ -34,7 +26,7 @@ public interface GatewaySdkService extends BaseService {
      * @return
      */
     @NotNull
-    NodeInvokeResult invokeCallNode(InvokeCommand command);
+    NodeInvokeResult invokeCallNode(SqlInvokeCommand command);
 
 
     /**
@@ -53,5 +45,5 @@ public interface GatewaySdkService extends BaseService {
      *
      * @return
      */
-    List<CallNodeDTO> queryCallNode(CallNodeQuery callNodeQuery);
+    List<NetNodeInfoDTO> queryCallNode(CallNodeQuery callNodeQuery);
 }
