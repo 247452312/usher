@@ -1,4 +1,4 @@
-package top.uhyils.usher.protocol.mysql.handler.impl;
+package top.uhyils.usher.protocol.mysql.handler.net;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import top.uhyils.usher.assembler.GatewayAssembler;
 import top.uhyils.usher.assembler.NetNodeInfoAssembler;
+import top.uhyils.usher.content.CallNodeContent;
 import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.mysql.content.MysqlContent;
 import top.uhyils.usher.mysql.enums.SqlTypeEnum;
@@ -70,7 +71,7 @@ public class MysqlServiceHandlerImpl implements MysqlServiceHandler {
         // 1.判断密码是否正确
         if (company.checkSkByMysqlChallenge(mysqlTcpLink.randomByte(), command.getChallenge())) {
             UserDTO userDTO = company.mysqlLogin();
-            mysqlTcpLink.fillUserDTO(userDTO);
+            CallNodeContent.CALLER_INFO.get().setUserDTO(userDTO);
             return new OkResponse(SqlTypeEnum.NULL);
         }
         return ErrResponse.build("密码错误,密码请使用secretKey");
@@ -111,7 +112,7 @@ public class MysqlServiceHandlerImpl implements MysqlServiceHandler {
     @Override
     public List<TableDTO> queryTable(TableQuery tableQuery) {
         List<NetNodeInfoDTO> callNodeDTOS = gatewaySdkService.queryCallNode(gatewayAssembler.toCallNode(tableQuery));
-        return gatewayAssembler.toTableDTO(callNodeDTOS);
+        return nodeInfoAssembler.toTableDTO(callNodeDTOS);
     }
 
     @Override
@@ -123,6 +124,6 @@ public class MysqlServiceHandlerImpl implements MysqlServiceHandler {
     public List<TableDTO> findTableByCompanyAndDatabase(Long companyId, String database) {
         List<NetNodeInfo> nodes = netNodeInfoRepository.findByCompanyIdAndDatabase(companyId, database);
         List<NetNodeInfoDTO> netNodeInfoDTOS = nodeInfoAssembler.listEntityToDTO(nodes);
-        return gatewayAssembler.toTableDTO(netNodeInfoDTOS);
+        return nodeInfoAssembler.toTableDTO(netNodeInfoDTOS);
     }
 }

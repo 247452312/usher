@@ -3,10 +3,8 @@ package top.uhyils.usher.assembler;
 import java.util.List;
 import org.mapstruct.Mapper;
 import top.uhyils.usher.mysql.pojo.DTO.CompanyInfo;
-import top.uhyils.usher.mysql.pojo.DTO.TableDTO;
 import top.uhyils.usher.mysql.pojo.cqe.TableQuery;
 import top.uhyils.usher.pojo.DTO.CompanyDTO;
-import top.uhyils.usher.pojo.DTO.NetNodeInfoDTO;
 import top.uhyils.usher.pojo.DTO.UserDTO;
 import top.uhyils.usher.pojo.SqlInvokeCommand;
 import top.uhyils.usher.pojo.cqe.CallNodeQuery;
@@ -59,15 +57,4 @@ public abstract class GatewayAssembler implements BaseAssembler {
         return invokeCommand;
     }
 
-    public abstract List<TableDTO> toTableDTO(List<NetNodeInfoDTO> callNodeDTOS);
-
-    public TableDTO toTableDTO(NetNodeInfoDTO callNodeDTOS) {
-        TableDTO result = new TableDTO();
-        result.setCompanyId(callNodeDTOS.getCompanyId());
-        result.setNodeId(callNodeDTOS.getId());
-        result.setDatabase(callNodeDTOS.getDatabase());
-        result.setTable(callNodeDTOS.getTable());
-
-        return result;
-    }
 }

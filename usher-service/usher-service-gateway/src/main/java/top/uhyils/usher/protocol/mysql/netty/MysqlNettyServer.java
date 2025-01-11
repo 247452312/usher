@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import top.uhyils.usher.handler.NodeHandler;
 import top.uhyils.usher.mysql.decode.MysqlDecoder;
 import top.uhyils.usher.mysql.handler.MysqlServiceHandler;
-import top.uhyils.usher.mysql.netty.MysqlInfoHandler;
+import top.uhyils.usher.mysql.netty.MysqlInfoNettyHandler;
 import top.uhyils.usher.util.LogUtil;
 import top.uhyils.usher.util.SpringUtil;
 
@@ -55,7 +55,7 @@ public class MysqlNettyServer extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel ch) {
         // 由decoder解析 再交由handler处理
-        ch.pipeline().addLast(new MysqlDecoder(), new MysqlInfoHandler(SpringUtil.getBean(NodeHandler.class), SpringUtil.getBean(MysqlServiceHandler.class)));
+        ch.pipeline().addLast(new MysqlDecoder(), new MysqlInfoNettyHandler(SpringUtil.getBean(NodeHandler.class), SpringUtil.getBean(MysqlServiceHandler.class)));
     }
 
 }

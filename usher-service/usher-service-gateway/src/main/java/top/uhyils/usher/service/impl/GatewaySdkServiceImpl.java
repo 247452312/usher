@@ -8,6 +8,8 @@ import top.uhyils.usher.assembler.CompanyAssembler;
 import top.uhyils.usher.assembler.GatewayAssembler;
 import top.uhyils.usher.assembler.NetNodeInfoAssembler;
 import top.uhyils.usher.context.LoginInfoHelper;
+import top.uhyils.usher.mysql.handler.MysqlServiceHandler;
+import top.uhyils.usher.mysql.pojo.sys.SysProviderInterface;
 import top.uhyils.usher.node.call.CallNode;
 import top.uhyils.usher.pojo.DTO.CompanyDTO;
 import top.uhyils.usher.pojo.DTO.NetNodeInfoDTO;
@@ -18,10 +20,10 @@ import top.uhyils.usher.pojo.cqe.CallNodeQuery;
 import top.uhyils.usher.pojo.cqe.UserQuery;
 import top.uhyils.usher.pojo.entity.Company;
 import top.uhyils.usher.pojo.entity.NetNodeInfo;
-import top.uhyils.usher.pojo.entity.SysProviderInterface;
 import top.uhyils.usher.repository.CompanyRepository;
 import top.uhyils.usher.repository.NetNodeInfoRepository;
 import top.uhyils.usher.service.GatewaySdkService;
+import top.uhyils.usher.util.SpringUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -52,7 +54,7 @@ public class GatewaySdkServiceImpl implements GatewaySdkService {
         Boolean isSysTable = netNodeInfoRepository.judgeSysTable(command.getDatabase());
         if (isSysTable) {
             // 系统表
-            SysProviderInterface providerInterface = new SysProviderInterface(command.getDatabase(), command.getTable());
+            SysProviderInterface providerInterface = new SysProviderInterface(command.getDatabase(), command.getTable(), SpringUtil.getBean(MysqlServiceHandler.class));
             return providerInterface.getResult(command.getHeader(), command.getParams());
         } else {
             NetNodeInfo node = netNodeInfoRepository.findNodeByDatabaseAndTable(command.getDatabase(), command.getTable());

@@ -42,7 +42,8 @@ public class NetNodeInfo extends AbstractDoEntity<NetNodeInfoDO> {
         tableInfo.setDatabaseName(data.getDatabase());
         tableInfo.setTableName(data.getTable());
         CallInfo callInfo = new CallInfo();
-        UStream<NetNodeInfoDetail> ustream = details().ustream();
+        List<NetNodeInfoDetail> detailsTemp = details();
+        UStream<NetNodeInfoDetail> ustream = detailsTemp.ustream();
         callInfo.setParams(ustream.toMap(NetNodeInfoDetail::type, NetNodeInfoDetail::params));
         callInfo.setSupportSqlTypes(ustream.map(NetNodeInfoDetail::type).toList());
 

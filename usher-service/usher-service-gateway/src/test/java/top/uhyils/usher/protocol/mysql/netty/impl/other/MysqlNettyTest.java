@@ -8,7 +8,10 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import top.uhyils.usher.handler.NodeHandler;
+import top.uhyils.usher.mysql.handler.MysqlServiceHandler;
 import top.uhyils.usher.util.LogUtil;
+import top.uhyils.usher.util.SpringUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
@@ -57,7 +60,7 @@ public class MysqlNettyTest extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel ch) {
         // 由decoder解析 再交由handler处理
-        ch.pipeline().addLast(new MysqlTestDecoder(), new MysqlInfoHandlerTest(mysqlHost, mysqlPort));
+        ch.pipeline().addLast(new MysqlTestDecoder(), new MysqlInfoNettyHandlerTest(SpringUtil.getBean(NodeHandler.class), SpringUtil.getBean(MysqlServiceHandler.class), mysqlHost, mysqlPort));
     }
 
 }

@@ -49,14 +49,14 @@ public class NetNodeInfoRepositoryImpl extends AbstractRepository<NetNodeInfo, N
     public NetNodeInfo findNodeByDatabaseAndTable(String database, String table) {
         Long companyId = LoginInfoHelper.get().map(IdDTO::getId).orElse(null);
         Asserts.assertTrue(companyId != null, "用户未登录");
-        LambdaQueryWrapper<NetNodeInfoDO> queryWrapper = Wrappers.lambdaQuery();
+        LambdaQueryChainWrapper<NetNodeInfoDO> wrapper = lambdaQuery();
         Asserts.assertTrue(StringUtil.isNotEmpty(database), "数据库名称不能为空");
         Asserts.assertTrue(StringUtil.isNotEmpty(table), "表名称不能为空");
 
-        queryWrapper.eq(NetNodeInfoDO::getCompanyId, companyId);
-        queryWrapper.eq(NetNodeInfoDO::getDatabase, database);
-        queryWrapper.eq(NetNodeInfoDO::getTable, table);
-        NetNodeInfoDO dO = dao.selectOne(queryWrapper);
+        wrapper.eq(NetNodeInfoDO::getCompanyId, companyId);
+        wrapper.eq(NetNodeInfoDO::getDatabase, database);
+        wrapper.eq(NetNodeInfoDO::getTable, table);
+        NetNodeInfoDO dO = wrapper.one();
         Asserts.assertTrue(dO != null, "未查询到指定的节点,库:{},表:{}", database, table);
 
         return assembler.toEntity(dO);

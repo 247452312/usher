@@ -6,15 +6,17 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandler;
 import java.net.InetSocketAddress;
+import top.uhyils.usher.handler.NodeHandler;
 import top.uhyils.usher.mysql.decode.MysqlDecoder;
-import top.uhyils.usher.mysql.netty.MysqlInfoHandler;
+import top.uhyils.usher.mysql.handler.MysqlServiceHandler;
+import top.uhyils.usher.mysql.netty.MysqlInfoNettyHandler;
 import top.uhyils.usher.util.LogUtil;
 
 /**
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年08月23日 14时15分
  */
-public class MysqlInfoHandlerTest extends MysqlInfoHandler implements ChannelInboundHandler {
+public class MysqlInfoNettyHandlerTest extends MysqlInfoNettyHandler implements ChannelInboundHandler {
 
 
     private final String mysqlHost;
@@ -28,11 +30,12 @@ public class MysqlInfoHandlerTest extends MysqlInfoHandler implements ChannelInb
      */
     private Channel mysqlChannel;
 
-
-    public MysqlInfoHandlerTest(String mysqlHost, Integer mysqlPort) {
+    public MysqlInfoNettyHandlerTest(NodeHandler handler, MysqlServiceHandler mysqlServiceHandler, String mysqlHost, Integer mysqlPort) {
+        super(handler, mysqlServiceHandler);
         this.mysqlHost = mysqlHost;
         this.mysqlPort = mysqlPort;
     }
+
 
     /**
      * 初始化连接

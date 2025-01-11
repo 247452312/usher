@@ -22,7 +22,7 @@ import top.uhyils.usher.util.LogUtil;
  */
 public class MysqlNettyClientTest {
 
-    private final MysqlInfoHandlerTest mysqlInfoHandlerTest;
+    private final MysqlInfoNettyHandlerTest mysqlInfoHandlerTest;
 
     private final String mysqlHost;
 
@@ -31,7 +31,7 @@ public class MysqlNettyClientTest {
     private ChannelFuture connect;
 
 
-    public MysqlNettyClientTest(MysqlInfoHandlerTest mysqlInfoHandlerTest, String mysqlHost, Integer mysqlPort) {
+    public MysqlNettyClientTest(MysqlInfoNettyHandlerTest mysqlInfoHandlerTest, String mysqlHost, Integer mysqlPort) {
         this.mysqlInfoHandlerTest = mysqlInfoHandlerTest;
         this.mysqlHost = mysqlHost;
         this.mysqlPort = mysqlPort;

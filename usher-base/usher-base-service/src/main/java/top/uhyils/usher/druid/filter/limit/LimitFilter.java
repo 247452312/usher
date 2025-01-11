@@ -56,7 +56,12 @@ public class LimitFilter extends FilterEventAdapter {
 
     @Override
     public ResultSetProxy statement_getResultSet(FilterChain chain, StatementProxy statement) throws SQLException {
-        return new ResultSetWrapperImpl(statement, super.statement_getResultSet(chain, statement), this.druidFilterConfiguration);
+        ResultSetProxy resultSetProxy = super.statement_getResultSet(chain, statement);
+        if (resultSetProxy == null) {
+            LogUtil.info("sql语句拦截错误,未找到resultSet,不能添加limit");
+            return null;
+        }
+        return new ResultSetWrapperImpl(statement, resultSetProxy, this.druidFilterConfiguration);
     }
 
     @Override

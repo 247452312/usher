@@ -1,5 +1,6 @@
 package top.uhyils.usher.pojo.entity;
 
+import com.alibaba.druid.DbType;
 import com.alibaba.druid.sql.ast.SQLExpr;
 import com.alibaba.druid.sql.ast.SQLObject;
 import com.alibaba.druid.sql.ast.SQLStatement;
@@ -161,7 +162,7 @@ public class Sql extends AbstractEntity {
             if (result == null) {
                 result = where;
             } else {
-                SQLBinaryOpExpr temp = new SQLBinaryOpExpr("mysql");
+                SQLBinaryOpExpr temp = new SQLBinaryOpExpr(DbType.mysql);
                 temp.setLeft(result);
                 temp.setOperator(SQLBinaryOperator.BooleanAnd);
                 temp.setRight(where);
@@ -194,7 +195,7 @@ public class Sql extends AbstractEntity {
             return where;
         }
 
-        SQLBinaryOpExpr condition = new SQLBinaryOpExpr("mysql");
+        SQLBinaryOpExpr condition = new SQLBinaryOpExpr(DbType.mysql);
         condition.setLeft(where);
         condition.setOperator(SQLBinaryOperator.BooleanAnd);
         condition.setRight(getCondition(willChange, tableName));
@@ -275,7 +276,7 @@ public class Sql extends AbstractEntity {
      * @return 拼接后的条件
      */
     private SQLBinaryOpExpr getTenantIdCondition(String tableNameInfo, String colName, SQLExpr value) {
-        SQLBinaryOpExpr tenantIdWhere = new SQLBinaryOpExpr("mysql");
+        SQLBinaryOpExpr tenantIdWhere = new SQLBinaryOpExpr(DbType.mysql);
         if (StringUtils.isEmpty(tableNameInfo)) {
             // 拼接新的条件
             tenantIdWhere.setOperator(SQLBinaryOperator.Equality);
@@ -300,7 +301,7 @@ public class Sql extends AbstractEntity {
      * @return 拼接后的条件
      */
     private SQLBinaryOpExpr getCondition(Map<String, SQLExpr> willChange, String... alias) {
-        SQLBinaryOpExpr allCondition = new SQLBinaryOpExpr("mysql");
+        SQLBinaryOpExpr allCondition = new SQLBinaryOpExpr(DbType.mysql);
         for (int i = 0; i < alias.length; i++) {
             SQLBinaryOpExpr where = mergeWhere(willChange, alias[i]);
             // 如果是最后一个且不是第一个则将当期table条件设置为右侧条件
@@ -333,7 +334,7 @@ public class Sql extends AbstractEntity {
      * @return 拼接后的条件
      */
     private SQLBinaryOpExpr getAndCondition(SQLBinaryOpExpr left, SQLBinaryOpExpr right) {
-        SQLBinaryOpExpr condition = new SQLBinaryOpExpr("mysql");
+        SQLBinaryOpExpr condition = new SQLBinaryOpExpr(DbType.mysql);
         condition.setLeft(left);
         condition.setOperator(SQLBinaryOperator.BooleanAnd);
         condition.setRight(right);

@@ -20,19 +20,19 @@ public class NetNodeInfoDO extends BaseDO {
     /**
      * 数据库名
      */
-    @TableField
+    @TableField("`database`")
     private String database;
 
     /**
      * 表名
      */
-    @TableField
+    @TableField("`table`")
     private String table;
 
     /**
      * 类型
      */
-    @TableField
+    @TableField("`type`")
     private String type;
 
 
