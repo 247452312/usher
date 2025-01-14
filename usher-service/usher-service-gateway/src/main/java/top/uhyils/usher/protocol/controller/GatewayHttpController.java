@@ -24,7 +24,7 @@ import top.uhyils.usher.service.GatewaySdkService;
  */
 @RestController
 @CrossOrigin
-public class GatewayController {
+public class GatewayHttpController {
 
     /**
      * 外界http调用的时候的前缀

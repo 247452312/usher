@@ -4,6 +4,8 @@ package top.uhyils.usher.service;
 import java.util.List;
 import top.uhyils.usher.pojo.DTO.NetNodeInfoDTO;
 import top.uhyils.usher.pojo.DTO.NetNodeInfoDetailDTO;
+import top.uhyils.usher.pojo.cqe.NetNodeCreateCommand;
+import top.uhyils.usher.pojo.cqe.command.IdCommand;
 
 /**
  * 网络调用独立可工作节点(NetNodeInfo)表 内部服务接口
@@ -33,4 +35,34 @@ public interface NetNodeInfoService extends BaseDoService<NetNodeInfoDTO> {
      * @return
      */
     List<NetNodeInfoDetailDTO> findDetailById(Long id);
+
+    /**
+     * 根据公司id获取所有节点信息
+     *
+     * @param idCommand
+     *
+     * @return
+     */
+    List<NetNodeInfoDTO> findWithDetailByCompanyId(IdCommand idCommand);
+
+
+    /**
+     * 根据公司id和数据库id获取节点信息
+     *
+     * @param companyId
+     * @param databases
+     *
+     * @return
+     */
+    List<NetNodeInfoDTO> findByCompanyIdAndDatabase(Long companyId, List<String> databases);
+
+    /**
+     * 添加节点信息
+     *
+     * @param command
+     *
+     * @return
+     */
+    Boolean add(NetNodeCreateCommand command);
+
 }

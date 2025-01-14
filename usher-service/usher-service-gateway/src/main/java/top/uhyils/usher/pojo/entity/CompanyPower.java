@@ -21,4 +21,7 @@ public class CompanyPower extends AbstractDoEntity<CompanyPowerDO> {
         super(id, new CompanyPowerDO());
     }
 
+    public Long nodeId() {
+        return toDataAndValidate().getNodeId();
+    }
 }

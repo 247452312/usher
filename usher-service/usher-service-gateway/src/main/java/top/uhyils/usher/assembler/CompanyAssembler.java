@@ -4,6 +4,7 @@ package top.uhyils.usher.assembler;
 import org.mapstruct.Mapper;
 import top.uhyils.usher.pojo.DO.CompanyDO;
 import top.uhyils.usher.pojo.DTO.CompanyDTO;
+import top.uhyils.usher.pojo.cqe.CompanyCreateCommand;
 import top.uhyils.usher.pojo.entity.Company;
 
 /**
@@ -17,4 +18,13 @@ import top.uhyils.usher.pojo.entity.Company;
 public abstract class CompanyAssembler extends AbstractAssembler<CompanyDO, Company, CompanyDTO> {
 
 
+    public Company toEntity(CompanyCreateCommand command) {
+        CompanyDO data = new CompanyDO();
+        data.setName(command.getName());
+        data.setPersonName(command.getPersonName());
+        data.setPersonPhone(command.getPersonPhone());
+        data.setAk(command.getAk());
+        data.setSk(command.getSk());
+        return new Company(data);
+    }
 }

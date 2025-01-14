@@ -2,15 +2,12 @@ package top.uhyils.usher.pojo.entity;
 
 import java.util.List;
 import top.uhyils.usher.annotation.Default;
-import top.uhyils.usher.node.LeafNodeFactory;
-import top.uhyils.usher.node.call.CallNode;
-import top.uhyils.usher.pojo.CallInfo;
+import top.uhyils.usher.assembler.CompanyPowerAssembler;
 import top.uhyils.usher.pojo.DO.NetNodeInfoDO;
-import top.uhyils.usher.pojo.SqlInvokeCommand;
-import top.uhyils.usher.pojo.TableInfo;
 import top.uhyils.usher.pojo.entity.base.AbstractDoEntity;
+import top.uhyils.usher.repository.CompanyPowerRepository;
 import top.uhyils.usher.repository.NetNodeInfoDetailRepository;
-import top.uhyils.usher.ustream.UStream;
+import top.uhyils.usher.repository.NetNodeInfoRepository;
 import top.uhyils.usher.util.SpringUtil;
 
 /**
@@ -35,25 +32,28 @@ public class NetNodeInfo extends AbstractDoEntity<NetNodeInfoDO> {
         super(id, new NetNodeInfoDO());
     }
 
-    public CallNode toCallNode(SqlInvokeCommand invokeCommand) {
-        TableInfo tableInfo = new TableInfo();
-        NetNodeInfoDO data = toDataAndValidate();
-        tableInfo.setNodeId(data.getId());
-        tableInfo.setDatabaseName(data.getDatabase());
-        tableInfo.setTableName(data.getTable());
-        CallInfo callInfo = new CallInfo();
-        List<NetNodeInfoDetail> detailsTemp = details();
-        UStream<NetNodeInfoDetail> ustream = detailsTemp.ustream();
-        callInfo.setParams(ustream.toMap(NetNodeInfoDetail::type, NetNodeInfoDetail::params));
-        callInfo.setSupportSqlTypes(ustream.map(NetNodeInfoDetail::type).toList());
-
-        tableInfo.setCallInfo(callInfo);
-        tableInfo.setType(data.getType());
-
-        return LeafNodeFactory.makeLeafNode(invokeCommand, tableInfo);
+    /**
+     * 保存到指定公司id
+     *
+     * @param rep
+     * @param companyId
+     */
+    public void saveSelfByCompanyId(NetNodeInfoRepository rep, List<NetNodeInfoDetail> details, Long companyId) {
+        saveSelf(rep);
+        NetNodeInfoDetailRepository netNodeInfoDetailRepository = SpringUtil.getBean(NetNodeInfoDetailRepository.class);
+        for (NetNodeInfoDetail detail : details) {
+            detail.fillNodeId(this.unique);
+        }
+        netNodeInfoDetailRepository.save(details);
+        CompanyPowerRepository companyPowerRepository = SpringUtil.getBean(CompanyPowerRepository.class);
+        CompanyPowerAssembler companyPowerAssembler = SpringUtil.getBean(CompanyPowerAssembler.class);
+        // todo 这里状态直接是审核完成,之后需要添加审核流程
+        CompanyPower entity = companyPowerAssembler.toEntity(this.unique, companyId, 1);
+        entity.saveSelf(companyPowerRepository);
     }
 
-    private List<NetNodeInfoDetail> details() {
+
+    public List<NetNodeInfoDetail> details() {
         if (details != null) {
             return details;
         }

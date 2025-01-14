@@ -33,4 +33,15 @@ public class NetNodeInfoDetail extends AbstractDoEntity<NetNodeInfoDetailDO> {
         String params = dataAndValidate.getParams();
         return JSONObject.parseObject(params);
     }
+
+    /**
+     * 填充nodeId
+     *
+     * @param nodeId
+     */
+    public void fillNodeId(Long nodeId) {
+        NetNodeInfoDetailDO dataAndValidate = toDataAndValidate();
+        dataAndValidate.setNodeId(nodeId);
+        onUpdate();
+    }
 }

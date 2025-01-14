@@ -28,5 +28,6 @@ public interface CompanyRepository extends BaseEntityRepository<CompanyDO, Compa
      *
      * @return
      */
-    List<Company> queryUser(String username);
+    List<Company> queryCompany(String username);
+
 }

@@ -1,5 +1,7 @@
 package top.uhyils.usher.repository.impl;
 
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import java.util.List;
 import top.uhyils.usher.annotation.Repository;
 import top.uhyils.usher.assembler.CompanyPowerAssembler;
 import top.uhyils.usher.dao.CompanyPowerDao;
@@ -24,5 +26,13 @@ public class CompanyPowerRepositoryImpl extends AbstractRepository<CompanyPower,
         super(convert, dao);
     }
 
+
+    @Override
+    public List<CompanyPower> findByCompanyId(Long id) {
+        LambdaQueryChainWrapper<CompanyPowerDO> wrapper = lambdaQuery();
+        wrapper.eq(CompanyPowerDO::getCompanyId, id);
+        List<CompanyPowerDO> list = wrapper.list();
+        return assembler.listToEntity(list);
+    }
 
 }

@@ -16,4 +16,11 @@ import top.uhyils.usher.pojo.entity.CompanyPower;
 @Mapper(componentModel = "spring")
 public abstract class CompanyPowerAssembler extends AbstractAssembler<CompanyPowerDO, CompanyPower, CompanyPowerDTO> {
 
+    public CompanyPower toEntity(Long nodeId, Long companyId, Integer status) {
+        CompanyPowerDO data = new CompanyPowerDO();
+        data.setCompanyId(companyId);
+        data.setNodeId(nodeId);
+        data.setStatus(status);
+        return new CompanyPower(data);
+    }
 }

@@ -1,10 +1,8 @@
 package top.uhyils.usher.repository;
 
 import java.util.List;
-import top.uhyils.usher.annotation.NotNull;
 import top.uhyils.usher.pojo.DO.NetNodeInfoDO;
-import top.uhyils.usher.pojo.DTO.UserDTO;
-import top.uhyils.usher.pojo.cqe.CallNodeQuery;
+import top.uhyils.usher.pojo.cqe.command.IdCommand;
 import top.uhyils.usher.pojo.entity.NetNodeInfo;
 import top.uhyils.usher.repository.base.BaseEntityRepository;
 
@@ -17,14 +15,6 @@ import top.uhyils.usher.repository.base.BaseEntityRepository;
  */
 public interface NetNodeInfoRepository extends BaseEntityRepository<NetNodeInfoDO, NetNodeInfo> {
 
-    /**
-     * 获取此人有权限的库
-     *
-     * @param userDTO
-     *
-     * @return
-     */
-    List<NetNodeInfo> findByUser(UserDTO userDTO);
 
     /**
      * @param database
@@ -32,37 +22,21 @@ public interface NetNodeInfoRepository extends BaseEntityRepository<NetNodeInfoD
      *
      * @return
      */
-    @NotNull
-    NetNodeInfo findNodeByDatabaseAndTable(String database, String table);
+    NetNodeInfo findNodeByDatabaseAndTable(Long companyId, String database, String table);
 
-
-    /**
-     * 判断要查询的是否是系统表
-     *
-     * @param database
-     *
-     * @return
-     */
-    Boolean judgeSysTable(String database);
-
-
-    /**
-     * 查询调用节点
-     *
-     * @param userId
-     * @param callNodeQuery
-     *
-     * @return
-     */
-    List<NetNodeInfo> query(Long userId, CallNodeQuery callNodeQuery);
 
     /**
      * 根据公司id和库名查询节点
      *
      * @param companyId
-     * @param database
+     * @param databases
      *
      * @return
      */
-    List<NetNodeInfo> findByCompanyIdAndDatabase(Long companyId, String database);
+    List<NetNodeInfo> findByCompanyIdAndDatabase(Long companyId, List<String> databases);
+
+    /**
+     * 根据公司id查询所有节点
+     */
+    List<NetNodeInfo> findByCompanyId(IdCommand idCommand);
 }

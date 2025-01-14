@@ -27,7 +27,7 @@ public class CompanyPowerDO extends BaseDO {
      * 接口id
      */
     @TableField
-    private Long providerInterfaceId;
+    private Long nodeId;
 
     /**
      * 状态 -1禁用 0申请中 1使用中
@@ -40,7 +40,7 @@ public class CompanyPowerDO extends BaseDO {
         return new ToStringBuilder(this)
             .append("id", getId())
             .append("companyId", getCompanyId())
-            .append("providerInterfaceId", getProviderInterfaceId())
+            .append("nodeId", getNodeId())
             .append("status", getStatus())
             .toString();
     }
@@ -53,12 +53,12 @@ public class CompanyPowerDO extends BaseDO {
         this.companyId = companyId;
     }
 
-    public Long getProviderInterfaceId() {
-        return providerInterfaceId;
+    public Long getNodeId() {
+        return nodeId;
     }
 
-    public void setProviderInterfaceId(Long providerInterfaceId) {
-        this.providerInterfaceId = providerInterfaceId;
+    public void setNodeId(Long nodeId) {
+        this.nodeId = nodeId;
     }
 
     public Integer getStatus() {

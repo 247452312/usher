@@ -1,9 +1,9 @@
 package top.uhyils.usher.protocol.mysql.netty.impl;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 import top.uhyils.usher.enums.FieldTypeEnum;
 import top.uhyils.usher.mysql.pojo.response.impl.ResultSetResponse;
@@ -33,8 +33,8 @@ public class MysqlTransTest {
         short ss = 0;
         fields.add(new FieldInfo("testDB", "sys_table", "sys_table", "id", "id", 100, 1, FieldTypeEnum.FIELD_TYPE_LONG, ss, (byte) 0));
         fields.add(new FieldInfo("testDB", "sys_table", "sys_table", "name", "name", 100, 2, FieldTypeEnum.FIELD_TYPE_STRING, ss, (byte) 0));
-        ArrayList<Map<String, Object>> jsonInfo = new ArrayList<>();
-        HashMap<String, Object> firstLine = new HashMap<>();
+        JSONArray jsonInfo = new JSONArray();
+        JSONObject firstLine = new JSONObject();
         firstLine.put("id", 1L);
         firstLine.put("name", "name1");
         jsonInfo.add(firstLine);

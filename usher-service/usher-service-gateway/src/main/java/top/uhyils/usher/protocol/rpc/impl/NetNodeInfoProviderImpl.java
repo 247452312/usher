@@ -1,7 +1,8 @@
 package top.uhyils.usher.protocol.rpc.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import top.uhyils.usher.pojo.DTO.NetNodeInfoDTO;
+import top.uhyils.usher.pojo.cqe.NetNodeCreateCommand;
 import top.uhyils.usher.protocol.rpc.NetNodeInfoProvider;
 import top.uhyils.usher.protocol.rpc.base.BaseDefaultProvider;
 import top.uhyils.usher.rpc.annotation.RpcService;
@@ -19,8 +20,14 @@ import top.uhyils.usher.service.NetNodeInfoService;
 public class NetNodeInfoProviderImpl extends BaseDefaultProvider<NetNodeInfoDTO> implements NetNodeInfoProvider {
 
 
-    @Autowired
+    @Resource
     private NetNodeInfoService service;
+
+    @Override
+    public Boolean create(NetNodeCreateCommand command) {
+        return service.add(command);
+    }
+
 
 
     @Override

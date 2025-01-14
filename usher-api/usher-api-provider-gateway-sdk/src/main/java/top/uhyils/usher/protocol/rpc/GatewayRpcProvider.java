@@ -1,13 +1,14 @@
 package top.uhyils.usher.protocol.rpc;
 
-import com.alibaba.fastjson.JSONArray;
+import java.util.List;
+import java.util.Map;
 import top.uhyils.usher.pojo.cqe.SdkSqlInvokeCommand;
 
 /**
  * @author uhyils <247452312@qq.com>
  * @date 文件创建日期 2022年08月12日 08时55分
  */
-public interface GatewaySdkProvider {
+public interface GatewayRpcProvider {
 
     /**
      * 执行远程请求
@@ -16,5 +17,5 @@ public interface GatewaySdkProvider {
      *
      * @return
      */
-    JSONArray invokeRpc(SdkSqlInvokeCommand command);
+    List<Map<String, Object>> invokeRpc(SdkSqlInvokeCommand command);
 }

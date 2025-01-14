@@ -40,7 +40,7 @@ public class CompanyRepositoryImpl extends AbstractRepository<Company, CompanyDO
     }
 
     @Override
-    public List<Company> queryUser(String username) {
+    public List<Company> queryCompany(String username) {
         LambdaQueryWrapper<CompanyDO> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.like(StringUtil.isNotEmpty(username), CompanyDO::getName, username);
         List<CompanyDO> companyDOS = dao.selectList(queryWrapper);

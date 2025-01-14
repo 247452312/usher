@@ -1,9 +1,7 @@
 package top.uhyils.usher.protocol.mysql.handler.net;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import top.uhyils.usher.assembler.GatewayAssembler;
@@ -22,20 +20,16 @@ import top.uhyils.usher.mysql.pojo.entity.MysqlTcpLink;
 import top.uhyils.usher.mysql.pojo.response.MysqlResponse;
 import top.uhyils.usher.mysql.pojo.response.impl.ErrResponse;
 import top.uhyils.usher.mysql.pojo.response.impl.OkResponse;
+import top.uhyils.usher.mysql.util.MysqlUtil;
 import top.uhyils.usher.node.DatabaseInfo;
-import top.uhyils.usher.node.call.CallNode;
 import top.uhyils.usher.pojo.DTO.CompanyDTO;
 import top.uhyils.usher.pojo.DTO.NetNodeInfoDTO;
 import top.uhyils.usher.pojo.DTO.UserDTO;
-import top.uhyils.usher.pojo.NodeInvokeResult;
 import top.uhyils.usher.pojo.SqlGlobalVariables;
-import top.uhyils.usher.pojo.SqlInvokeCommand;
+import top.uhyils.usher.pojo.cqe.command.IdCommand;
 import top.uhyils.usher.pojo.cqe.query.BlackQuery;
-import top.uhyils.usher.pojo.entity.Company;
-import top.uhyils.usher.pojo.entity.NetNodeInfo;
-import top.uhyils.usher.repository.CompanyRepository;
-import top.uhyils.usher.repository.NetNodeInfoRepository;
-import top.uhyils.usher.service.GatewaySdkService;
+import top.uhyils.usher.service.CompanyService;
+import top.uhyils.usher.service.NetNodeInfoService;
 import top.uhyils.usher.util.Asserts;
 
 /**
@@ -46,31 +40,31 @@ import top.uhyils.usher.util.Asserts;
 public class MysqlServiceHandlerImpl implements MysqlServiceHandler {
 
     @Resource
-    private GatewaySdkService gatewaySdkService;
+    private NetNodeInfoService netNodeInfoService;
 
     @Resource
-    private CompanyRepository companyRepository;
+    private CompanyService companyService;
 
-    @Resource
-    private NetNodeInfoRepository netNodeInfoRepository;
-
-    @Resource
-    private NetNodeInfoAssembler nodeInfoAssembler;
 
     @Resource
     private GatewayAssembler gatewayAssembler;
 
+    @Resource
+    private NetNodeInfoAssembler nodeInfoAssembler;
+
     @Override
     public MysqlResponse mysqlLogin(MysqlAuthCommand command) {
-        MysqlTcpLink mysqlTcpLink = MysqlContent.MYSQL_TCP_INFO.get();
-        Company company = new Company(command);
-
         // 0.查询用户
-        company.completionByAk(companyRepository);
+        CompanyDTO companyDTO = companyService.findByAk(command.getUsername());
 
+        MysqlTcpLink mysqlTcpLink = MysqlContent.MYSQL_TCP_INFO.get();
         // 1.判断密码是否正确
-        if (company.checkSkByMysqlChallenge(mysqlTcpLink.randomByte(), command.getChallenge())) {
-            UserDTO userDTO = company.mysqlLogin();
+        if (MysqlUtil.checkSkByMysqlChallenge(companyDTO.getSk(), mysqlTcpLink.randomByte(), command.getChallenge())) {
+            // 2.登录成功  注意: 登录成功后,需要将用户信息存入tcp连接的缓存中,不需要token,和redis
+            String ip = mysqlTcpLink.findLocalAddress().getAddress().getHostName();
+            UserDTO userDTO = gatewayAssembler.toUserDTO(ip, companyDTO);
+            LoginInfoHelper.setIp(ip);
+            LoginInfoHelper.setUser(userDTO);
             CallNodeContent.CALLER_INFO.get().setUserDTO(userDTO);
             return new OkResponse(SqlTypeEnum.NULL);
         }
@@ -81,38 +75,23 @@ public class MysqlServiceHandlerImpl implements MysqlServiceHandler {
     public List<DatabaseInfo> getAllDatabaseInfo(BlackQuery blackQuery) {
         UserDTO userDTO = LoginInfoHelper.get().orElseThrow(() -> Asserts.makeException("未登录"));
         Asserts.assertTrue(userDTO != null, "未登录");
-        List<NetNodeInfo> callNodes = netNodeInfoRepository.findByUser(userDTO);
-        return new ArrayList<>(callNodes.stream()
-                                        .map(t -> t.toCallNode(null))
-                                        .map(CallNode::changeToDatabaseInfo)
-                                        .filter(Objects::nonNull)
-                                        .collect(Collectors.toMap(DatabaseInfo::getSchemaName, t -> t, (key1, key2) -> key2))
-                                        .values());
+        List<NetNodeInfoDTO> callNodes = netNodeInfoService.findWithDetailByCompanyId(IdCommand.build(userDTO.getId()));
+        return callNodes.ustream().distinct(NetNodeInfoDTO::getDatabase).map(t -> toDatabaseInfo(t.getDatabase())).filter(Objects::nonNull).toList();
     }
 
-
-    @Override
-    public NodeInvokeResult invokeCallNode(SqlInvokeCommand command) {
-        SqlInvokeCommand invokeCommand = gatewayAssembler.toInvoke(command);
-        return gatewaySdkService.invokeCallNode(invokeCommand);
-    }
-
-    @Override
-    public NodeInvokeResult invokeSingleQuerySql(SqlInvokeCommand command) {
-        SqlInvokeCommand invokeCommand = gatewayAssembler.toInvoke(command);
-        return gatewaySdkService.invokeCallNode(invokeCommand);
-    }
 
     @Override
     public List<CompanyInfo> queryUser(UserQuery userQuery) {
-        List<CompanyDTO> companyDTOS = gatewaySdkService.queryUser(gatewayAssembler.toUserQuery(userQuery));
-        return gatewayAssembler.toUserDTO(companyDTOS);
+        List<CompanyDTO> companyDTOS = companyService.queryCompany(gatewayAssembler.toUserQuery(userQuery));
+        return gatewayAssembler.toCompanyInfo(companyDTOS);
     }
 
     @Override
     public List<TableDTO> queryTable(TableQuery tableQuery) {
-        List<NetNodeInfoDTO> callNodeDTOS = gatewaySdkService.queryCallNode(gatewayAssembler.toCallNode(tableQuery));
-        return nodeInfoAssembler.toTableDTO(callNodeDTOS);
+        UserDTO userDTO = LoginInfoHelper.get().orElseThrow(() -> Asserts.makeException("未登录"));
+        Asserts.assertTrue(userDTO != null, "未登录");
+        List<NetNodeInfoDTO> callNodes = netNodeInfoService.findWithDetailByCompanyId(IdCommand.build(userDTO.getId()));
+        return nodeInfoAssembler.toTableDTO(userDTO.getId(), callNodes);
     }
 
     @Override
@@ -121,9 +100,19 @@ public class MysqlServiceHandlerImpl implements MysqlServiceHandler {
     }
 
     @Override
-    public List<TableDTO> findTableByCompanyAndDatabase(Long companyId, String database) {
-        List<NetNodeInfo> nodes = netNodeInfoRepository.findByCompanyIdAndDatabase(companyId, database);
-        List<NetNodeInfoDTO> netNodeInfoDTOS = nodeInfoAssembler.listEntityToDTO(nodes);
-        return nodeInfoAssembler.toTableDTO(netNodeInfoDTOS);
+    public List<TableDTO> findTableByCompanyAndDatabase(Long companyId, List<String> databases) {
+        return nodeInfoAssembler.toTableDTO(companyId, netNodeInfoService.findByCompanyIdAndDatabase(companyId, databases));
     }
+
+    private DatabaseInfo toDatabaseInfo(String database) {
+        DatabaseInfo databaseInfo = new DatabaseInfo();
+        databaseInfo.setCatalogName(CallNodeContent.CATALOG_NAME);
+        databaseInfo.setSchemaName(database);
+        databaseInfo.setDefaultCharacterSetName(CallNodeContent.DEFAULT_CHARACTER_SET_NAME);
+        databaseInfo.setDefaultCollationName(CallNodeContent.DEFAULT_COLLATION_NAME);
+        databaseInfo.setSqlPath(null);
+        databaseInfo.setDefaultEncryption("NO");
+        return databaseInfo;
+    }
+
 }

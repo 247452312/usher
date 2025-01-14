@@ -1,6 +1,7 @@
 package top.uhyils.usher.protocol.rpc;
 
 import top.uhyils.usher.pojo.DTO.CompanyDTO;
+import top.uhyils.usher.pojo.cqe.CompanyCreateCommand;
 import top.uhyils.usher.protocol.rpc.base.DTOProvider;
 
 /**
@@ -12,4 +13,12 @@ import top.uhyils.usher.protocol.rpc.base.DTOProvider;
  */
 public interface CompanyProvider extends DTOProvider<CompanyDTO> {
 
+    /**
+     * 创建厂商
+     *
+     * @param command
+     *
+     * @return
+     */
+    Boolean create(CompanyCreateCommand command);
 }

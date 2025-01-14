@@ -36,12 +36,6 @@ public class NetNodeInfoDO extends BaseDO {
     private String type;
 
 
-    /**
-     * 所属公司id
-     */
-    @TableField
-    private Long companyId;
-
     public String getDatabase() {
         return database;
     }
@@ -66,21 +60,8 @@ public class NetNodeInfoDO extends BaseDO {
         this.type = type;
     }
 
-    public Long getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
-    }
-
     @Override
     public String toString() {
-        return new ToStringBuilder(this)
-            .append("id", getId())
-            .append("database", getDatabase())
-            .append("table", getTable())
-            .append("type", getType())
-            .toString();
+        return new ToStringBuilder(this).append("id", getId()).append("database", getDatabase()).append("table", getTable()).append("type", getType()).toString();
     }
 }

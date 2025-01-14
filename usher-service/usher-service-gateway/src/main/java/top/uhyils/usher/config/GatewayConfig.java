@@ -8,8 +8,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 import top.uhyils.usher.pojo.cqe.SdkSqlInvokeCommand;
-import top.uhyils.usher.protocol.rpc.GatewaySdkProvider;
-import top.uhyils.usher.protocol.rpc.impl.GatewaySdkProviderImpl;
+import top.uhyils.usher.protocol.rpc.GatewayRpcProvider;
+import top.uhyils.usher.protocol.rpc.impl.GatewayRpcProviderImpl;
 import top.uhyils.usher.util.StringUtil;
 
 /**
@@ -26,8 +26,8 @@ public class GatewayConfig implements BeanPostProcessor {
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         Object o = BeanPostProcessor.super.postProcessBeforeInitialization(bean, beanName);
-        if (Objects.equals(beanName, StringUtil.firstToLowerCase(GatewaySdkProviderImpl.class.getSimpleName()))) {
-            return Proxy.newProxyInstance(bean.getClass().getClassLoader(), bean.getClass().getInterfaces(), new GatewaySdkRpcProviderHandler((GatewaySdkProvider) bean));
+        if (Objects.equals(beanName, StringUtil.firstToLowerCase(GatewayRpcProviderImpl.class.getSimpleName()))) {
+            return Proxy.newProxyInstance(bean.getClass().getClassLoader(), bean.getClass().getInterfaces(), new GatewaySdkRpcProviderHandler((GatewayRpcProvider) bean));
         }
         return o;
     }
@@ -42,10 +42,10 @@ public class GatewayConfig implements BeanPostProcessor {
      */
     private static class GatewaySdkRpcProviderHandler implements InvocationHandler {
 
-        private final GatewaySdkProvider gatewaySdkProvider;
+        private final GatewayRpcProvider gatewayRpcProvider;
 
-        private GatewaySdkRpcProviderHandler(GatewaySdkProvider gatewaySdkProvider) {
-            this.gatewaySdkProvider = gatewaySdkProvider;
+        private GatewaySdkRpcProviderHandler(GatewayRpcProvider gatewayRpcProvider) {
+            this.gatewayRpcProvider = gatewayRpcProvider;
         }
 
         @Override
@@ -54,7 +54,7 @@ public class GatewayConfig implements BeanPostProcessor {
                 return "GatewaySdk";
             }
             if (Objects.equals(method.getName(), INVOKE)) {
-                return gatewaySdkProvider.invokeRpc((SdkSqlInvokeCommand) args[0]);
+                return gatewayRpcProvider.invokeRpc((SdkSqlInvokeCommand) args[0]);
             }
             return method.invoke(proxy, args);
         }

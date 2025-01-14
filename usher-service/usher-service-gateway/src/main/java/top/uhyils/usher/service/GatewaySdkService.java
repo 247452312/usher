@@ -1,13 +1,8 @@
 package top.uhyils.usher.service;
 
-import java.util.List;
 import top.uhyils.usher.annotation.NotNull;
-import top.uhyils.usher.pojo.DTO.CompanyDTO;
-import top.uhyils.usher.pojo.DTO.NetNodeInfoDTO;
 import top.uhyils.usher.pojo.NodeInvokeResult;
 import top.uhyils.usher.pojo.SqlInvokeCommand;
-import top.uhyils.usher.pojo.cqe.CallNodeQuery;
-import top.uhyils.usher.pojo.cqe.UserQuery;
 
 /**
  * sdk gateway对外提供的方法
@@ -29,21 +24,4 @@ public interface GatewaySdkService extends BaseService {
     NodeInvokeResult invokeCallNode(SqlInvokeCommand command);
 
 
-    /**
-     * 查询user
-     *
-     * @param userQuery
-     *
-     * @return
-     */
-    List<CompanyDTO> queryUser(UserQuery userQuery);
-
-    /**
-     * 查询调用节点
-     *
-     * @param callNodeQuery
-     *
-     * @return
-     */
-    List<NetNodeInfoDTO> queryCallNode(CallNodeQuery callNodeQuery);
 }

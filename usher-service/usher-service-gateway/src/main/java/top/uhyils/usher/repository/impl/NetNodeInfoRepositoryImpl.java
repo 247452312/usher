@@ -1,24 +1,22 @@
 package top.uhyils.usher.repository.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import java.util.Collections;
 import java.util.List;
-import top.uhyils.usher.annotation.NotNull;
+import javax.annotation.Resource;
 import top.uhyils.usher.annotation.Repository;
 import top.uhyils.usher.assembler.NetNodeInfoAssembler;
-import top.uhyils.usher.content.CallNodeContent;
-import top.uhyils.usher.context.LoginInfoHelper;
 import top.uhyils.usher.dao.NetNodeInfoDao;
 import top.uhyils.usher.pojo.DO.NetNodeInfoDO;
 import top.uhyils.usher.pojo.DTO.NetNodeInfoDTO;
-import top.uhyils.usher.pojo.DTO.UserDTO;
-import top.uhyils.usher.pojo.DTO.base.IdDTO;
-import top.uhyils.usher.pojo.cqe.CallNodeQuery;
+import top.uhyils.usher.pojo.cqe.command.IdCommand;
+import top.uhyils.usher.pojo.entity.CompanyPower;
 import top.uhyils.usher.pojo.entity.NetNodeInfo;
+import top.uhyils.usher.repository.CompanyPowerRepository;
 import top.uhyils.usher.repository.NetNodeInfoRepository;
 import top.uhyils.usher.repository.base.AbstractRepository;
 import top.uhyils.usher.util.Asserts;
+import top.uhyils.usher.util.CollectionUtil;
 import top.uhyils.usher.util.StringUtil;
 
 
@@ -32,33 +30,29 @@ import top.uhyils.usher.util.StringUtil;
 @Repository
 public class NetNodeInfoRepositoryImpl extends AbstractRepository<NetNodeInfo, NetNodeInfoDO, NetNodeInfoDao, NetNodeInfoDTO, NetNodeInfoAssembler> implements NetNodeInfoRepository {
 
+    @Resource
+    private CompanyPowerRepository companyPowerRepository;
+
+
     protected NetNodeInfoRepositoryImpl(NetNodeInfoAssembler convert, NetNodeInfoDao dao) {
         super(convert, dao);
     }
 
     @Override
-    public List<NetNodeInfo> findByUser(UserDTO userDTO) {
-        LambdaQueryWrapper<NetNodeInfoDO> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(NetNodeInfoDO::getCompanyId, userDTO.getId());
-        List<NetNodeInfoDO> callNodeDOS = dao.selectList(queryWrapper);
-        return assembler.listToEntity(callNodeDOS);
-    }
+    public NetNodeInfo findNodeByDatabaseAndTable(Long companyId, String database, String table) {
 
-    @NotNull
-    @Override
-    public NetNodeInfo findNodeByDatabaseAndTable(String database, String table) {
-        Long companyId = LoginInfoHelper.get().map(IdDTO::getId).orElse(null);
-        Asserts.assertTrue(companyId != null, "用户未登录");
-        LambdaQueryChainWrapper<NetNodeInfoDO> wrapper = lambdaQuery();
         Asserts.assertTrue(StringUtil.isNotEmpty(database), "数据库名称不能为空");
         Asserts.assertTrue(StringUtil.isNotEmpty(table), "表名称不能为空");
 
-        wrapper.eq(NetNodeInfoDO::getCompanyId, companyId);
+        List<CompanyPower> powers = companyPowerRepository.findByCompanyId(companyId);
+        if (CollectionUtil.isEmpty(powers)) {
+            return null;
+        }
+        LambdaQueryChainWrapper<NetNodeInfoDO> wrapper = lambdaQuery();
+        wrapper.in(NetNodeInfoDO::getId, powers.ustream().map(CompanyPower::nodeId).toList());
         wrapper.eq(NetNodeInfoDO::getDatabase, database);
-        wrapper.eq(NetNodeInfoDO::getTable, table);
         NetNodeInfoDO dO = wrapper.one();
         Asserts.assertTrue(dO != null, "未查询到指定的节点,库:{},表:{}", database, table);
-
         return assembler.toEntity(dO);
 
 
@@ -66,23 +60,29 @@ public class NetNodeInfoRepositoryImpl extends AbstractRepository<NetNodeInfo, N
 
 
     @Override
-    public Boolean judgeSysTable(String database) {
-        return CallNodeContent.SYS_DATABASE.contains(database);
-    }
-
-    @Override
-    public List<NetNodeInfo> query(Long userId, CallNodeQuery callNodeQuery) {
-        LambdaQueryWrapper<NetNodeInfoDO> queryWrapper = Wrappers.lambdaQuery();
-        queryWrapper.eq(userId != null, NetNodeInfoDO::getCompanyId, userId);
-        List<NetNodeInfoDO> callNodeDOS = dao.selectList(queryWrapper);
-        return assembler.listToEntity(callNodeDOS);
-    }
-
-    @Override
-    public List<NetNodeInfo> findByCompanyIdAndDatabase(Long companyId, String database) {
+    public List<NetNodeInfo> findByCompanyIdAndDatabase(Long companyId, List<String> databases) {
+        List<CompanyPower> powers = companyPowerRepository.findByCompanyId(companyId);
+        if (CollectionUtil.isEmpty(powers)) {
+            return Collections.emptyList();
+        }
+        if (CollectionUtil.isEmpty(databases)) {
+            return Collections.emptyList();
+        }
         LambdaQueryChainWrapper<NetNodeInfoDO> wrapper = lambdaQuery();
-        wrapper.eq(NetNodeInfoDO::getCompanyId, companyId);
-        wrapper.eq(NetNodeInfoDO::getDatabase, database);
+        wrapper.in(NetNodeInfoDO::getId, powers.ustream().map(CompanyPower::nodeId).toList());
+        wrapper.in(NetNodeInfoDO::getDatabase, databases);
+        List<NetNodeInfoDO> list = wrapper.list();
+        return assembler.listToEntity(list);
+    }
+
+    @Override
+    public List<NetNodeInfo> findByCompanyId(IdCommand idCommand) {
+        List<CompanyPower> powers = companyPowerRepository.findByCompanyId(idCommand.getId());
+        if (CollectionUtil.isEmpty(powers)) {
+            return Collections.emptyList();
+        }
+        LambdaQueryChainWrapper<NetNodeInfoDO> wrapper = lambdaQuery();
+        wrapper.in(NetNodeInfoDO::getId, powers.ustream().map(CompanyPower::nodeId).toList());
         List<NetNodeInfoDO> list = wrapper.list();
         return assembler.listToEntity(list);
     }

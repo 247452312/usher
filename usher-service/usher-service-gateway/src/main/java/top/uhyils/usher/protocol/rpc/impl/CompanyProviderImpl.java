@@ -1,7 +1,8 @@
 package top.uhyils.usher.protocol.rpc.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 import top.uhyils.usher.pojo.DTO.CompanyDTO;
+import top.uhyils.usher.pojo.cqe.CompanyCreateCommand;
 import top.uhyils.usher.protocol.rpc.CompanyProvider;
 import top.uhyils.usher.protocol.rpc.base.BaseDefaultProvider;
 import top.uhyils.usher.rpc.annotation.RpcService;
@@ -19,8 +20,13 @@ import top.uhyils.usher.service.CompanyService;
 public class CompanyProviderImpl extends BaseDefaultProvider<CompanyDTO> implements CompanyProvider {
 
 
-    @Autowired
+    @Resource
     private CompanyService service;
+
+    @Override
+    public Boolean create(CompanyCreateCommand command) {
+        return service.create(command);
+    }
 
 
     @Override

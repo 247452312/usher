@@ -1,5 +1,6 @@
 package top.uhyils.usher.pojo.DTO;
 
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import top.uhyils.usher.pojo.DTO.base.IdDTO;
 
@@ -27,7 +28,7 @@ public class NetNodeInfoDetailDTO extends IdDTO {
     /**
      * 参数 http就是url method之类的, DB就是update select等
      */
-    private String params;
+    private JSONObject params;
 
 
     public String getQuerySqlType() {
@@ -46,11 +47,11 @@ public class NetNodeInfoDetailDTO extends IdDTO {
         this.nodeId = nodeId;
     }
 
-    public String getParams() {
+    public JSONObject getParams() {
         return params;
     }
 
-    public void setParams(String params) {
+    public void setParams(JSONObject params) {
         this.params = params;
     }
 

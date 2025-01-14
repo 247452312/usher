@@ -1,37 +1,44 @@
-package top.uhyils.usher.pojo.DTO;
+package top.uhyils.usher.pojo.cqe;
 
 import java.util.List;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import top.uhyils.usher.pojo.DTO.base.IdDTO;
+import top.uhyils.usher.pojo.DTO.NetNodeInfoDetailDTO;
+import top.uhyils.usher.pojo.cqe.command.base.AbstractCommand;
 
 /**
- * 网络调用独立可工作节点表(NetNodeInfo)表 对外数据传输载体
- *
  * @author uhyils <247452312@qq.com>
- * @version 1.0
- * @date 文件创建日期 2025年01月10日 15时22分
+ * @date 文件创建日期 2025年01月13日 18时52分
  */
-public class NetNodeInfoDTO extends IdDTO {
-
-    private static final long serialVersionUID = -1L;
+public class NetNodeCreateCommand extends AbstractCommand {
 
     /**
-     * 数据库名
+     * 获取所属公司
+     */
+    private Long companyId;
+
+    /**
+     * 获取当前节点所在库
      */
     private String database;
 
     /**
-     * 表名
+     * 获取当前节点映射的表
      */
     private String table;
 
     /**
-     * 类型
+     * 获取当前节点类型
      */
     private String type;
 
-
     private List<NetNodeInfoDetailDTO> details;
+
+    public Long getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Long companyId) {
+        this.companyId = companyId;
+    }
 
     public String getDatabase() {
         return database;
@@ -64,15 +71,4 @@ public class NetNodeInfoDTO extends IdDTO {
     public void setDetails(List<NetNodeInfoDetailDTO> details) {
         this.details = details;
     }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("id", getId())
-            .append("database", getDatabase())
-            .append("table", getTable())
-            .append("type", getType())
-            .toString();
-    }
-
 }

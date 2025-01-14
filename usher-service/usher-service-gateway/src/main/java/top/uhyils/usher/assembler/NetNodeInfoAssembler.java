@@ -2,6 +2,7 @@ package top.uhyils.usher.assembler;
 
 
 import com.alibaba.fastjson.JSONObject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -13,6 +14,7 @@ import top.uhyils.usher.pojo.DO.NetNodeInfoDO;
 import top.uhyils.usher.pojo.DTO.NetNodeInfoDTO;
 import top.uhyils.usher.pojo.DTO.NetNodeInfoDetailDTO;
 import top.uhyils.usher.pojo.TableInfo;
+import top.uhyils.usher.pojo.cqe.NetNodeCreateCommand;
 import top.uhyils.usher.pojo.entity.NetNodeInfo;
 import top.uhyils.usher.pojo.entity.NetNodeInfoDetail;
 import top.uhyils.usher.ustream.UStream;
@@ -30,11 +32,13 @@ public abstract class NetNodeInfoAssembler extends AbstractAssembler<NetNodeInfo
     @Resource
     private NetNodeInfoDetailAssembler netNodeInfoDetailAssembler;
 
-    public abstract List<TableDTO> toTableDTO(List<NetNodeInfoDTO> callNodeDTOS);
+    public List<TableDTO> toTableDTO(Long companyId, List<NetNodeInfoDTO> callNodeDTOS) {
+        return callNodeDTOS.ustream().map(t -> toTableDTO(companyId, t)).toList();
+    }
 
-    public TableDTO toTableDTO(NetNodeInfoDTO callNodeDTOS) {
+    public TableDTO toTableDTO(Long companyId, NetNodeInfoDTO callNodeDTOS) {
         TableDTO result = new TableDTO();
-        result.setCompanyId(callNodeDTOS.getCompanyId());
+        result.setCompanyId(companyId);
         result.setNodeId(callNodeDTOS.getId());
         result.setDatabase(callNodeDTOS.getDatabase());
         result.setTable(callNodeDTOS.getTable());
@@ -49,7 +53,7 @@ public abstract class NetNodeInfoAssembler extends AbstractAssembler<NetNodeInfo
         tableInfo.setTableName(nodeInfo.getTable());
         CallInfo callInfo = new CallInfo();
         UStream<NetNodeInfoDetailDTO> ustream = details.ustream();
-        Map<QuerySqlTypeEnum, JSONObject> map = ustream.toMap(t -> QuerySqlTypeEnum.findByName(t.getQuerySqlType()), t -> JSONObject.parseObject(t.getParams()));
+        Map<QuerySqlTypeEnum, JSONObject> map = ustream.toMap(t -> QuerySqlTypeEnum.findByName(t.getQuerySqlType()), NetNodeInfoDetailDTO::getParams);
         callInfo.setParams(map);
         callInfo.setSupportSqlTypes(ustream.map(t -> QuerySqlTypeEnum.findByName(t.getQuerySqlType())).toList());
         tableInfo.setCallInfo(callInfo);
@@ -59,5 +63,23 @@ public abstract class NetNodeInfoAssembler extends AbstractAssembler<NetNodeInfo
 
     public TableInfo toTableInfo(NetNodeInfo nodeInfo, List<NetNodeInfoDetail> details) {
         return toTableInfo(toDTO(nodeInfo), netNodeInfoDetailAssembler.listEntityToDTO(details));
+    }
+
+    public NetNodeInfo toEntity(NetNodeCreateCommand command) {
+        NetNodeInfoDO data = new NetNodeInfoDO();
+        data.setDatabase(command.getDatabase());
+        data.setTable(command.getTable());
+        data.setType(command.getType());
+        return new NetNodeInfo(data);
+    }
+
+    public List<NetNodeInfoDTO> listEntityToDTOWithDetail(List<NetNodeInfo> result) {
+        List<NetNodeInfoDTO> netNodeInfoDTOS = new ArrayList<>();
+        for (NetNodeInfo nodeInfo : result) {
+            NetNodeInfoDTO dto = toDTO(nodeInfo);
+            dto.setDetails(netNodeInfoDetailAssembler.listEntityToDTO(nodeInfo.details()));
+            netNodeInfoDTOS.add(dto);
+        }
+        return netNodeInfoDTOS;
     }
 }
